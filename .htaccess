@@ -1,0 +1,49 @@
+# Disable directory browsing
+Options -Indexes
+
+# Set default index file
+DirectoryIndex index.php
+
+# Apache 2.4+ - Modern Security
+<IfModule mod_authz_core.c>
+    # Prevent access to sensitive files
+    <FilesMatch "^\.|\.(txt|sql|log|ini|sh|bak|swp|dist|exe|bin|zip)$">
+        Require all denied
+    </FilesMatch>
+    
+    # Allow specific files that are needed
+    <Files "README.txt">
+        Require all granted
+    </Files>
+    <Files "manifest.json">
+        Require all granted
+    </Files>
+</IfModule>
+
+# PHP Security & Settings
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+# Browser Caching & Compatibility
+<IfModule mod_headers.c>
+    # Fix for Edge/Chrome Service Worker issues on some hosts
+    Header set Access-Control-Allow-Origin "*"
+    # Security Headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Set UTF-8
+AddDefaultCharset UTF-8

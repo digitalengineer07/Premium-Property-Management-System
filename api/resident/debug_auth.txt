@@ -1,0 +1,14 @@
+Array
+(
+    [SERVER_AUTH] => 
+    [HTTP_AUTH] => Bearer eyJpZCI6MSwidXNlcm5hbWUiOiJ2aWpheTIwMSIsInJvbGUiOiJyZXNpZGVudCIsInRpbWUiOjE3ODA4MDQzNDl9
+    [APACHE_HEADERS] => Array
+        (
+            [Host] => localhost
+            [Connection] => close
+            [Authorization] => Bearer eyJpZCI6MSwidXNlcm5hbWUiOiJ2aWpheTIwMSIsInJvbGUiOiJyZXNpZGVudCIsInRpbWUiOjE3ODA4MDQzNDl9
+            [Accept] => application/json
+        )
+
+    [RESOLVED_HEADER] => Bearer eyJpZCI6MSwidXNlcm5hbWUiOiJ2aWpheTIwMSIsInJvbGUiOiJyZXNpZGVudCIsInRpbWUiOjE3ODA4MDQzNDl9
+)

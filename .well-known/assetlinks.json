@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "in.succorkart.twa",
+    "sha256_cert_fingerprints": ["82:45:A9:27:FC:4E:2A:30:DD:B2:A5:2D:C3:89:52:42:32:89:5C:9F:85:9F:82:12:E7:06:1D:37:18:36:45:07"]
+  }
+}]
