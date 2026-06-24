@@ -239,18 +239,18 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <div class="panel animate-up">
-        <div class="panel-header" style="padding-bottom: 0; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
-            <div style="display: flex; gap: 24px; overflow-x: auto;">
+        <div class="panel-header" style="padding-bottom: 0; display: flex; flex-wrap: nowrap; gap: 24px; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto;">
+            <div style="display: flex; gap: 24px; white-space: nowrap; flex-shrink: 0;">
                 <a href="?status=active" style="padding: 12px 0; color: <?php echo $filter_status === 'active' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'active' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Active Residents</a>
                 <a href="?status=moved_out" style="padding: 12px 0; color: <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Past Residents</a>
             </div>
             
-            <form method="GET" class="filter-form" style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+            <form method="GET" class="filter-form" style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: nowrap; flex: 1; justify-content: flex-end; min-width: 400px;">
                 <input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>">
                 
-                <div style="position: relative; min-width: 280px;">
+                <div style="position: relative; flex: 1; max-width: 350px;">
                     <i class='bx bx-search' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
-                    <input name="q" placeholder="Search by name, phone or email..." value="<?php echo htmlspecialchars($query); ?>" style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC;">
+                    <input name="q" placeholder="Search by name, phone or email..." value="<?php echo htmlspecialchars($query); ?>" style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC; min-width: 150px;">
                 </div>
                 
                 <div style="position: relative; width: 110px;">
