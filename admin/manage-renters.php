@@ -308,7 +308,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             </div>
                         </td>
                         <td style="padding: 16px; font-weight: 700; color: var(--text-dark); font-size: 14px;">
-                            Room<br><?php echo htmlspecialchars($u['room_no']); ?>
+                            <?php echo htmlspecialchars($u['room_no']); ?>
                         </td>
                         <td style="padding: 16px;">
                             <div style="font-size: 12px;">
