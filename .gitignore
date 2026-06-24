@@ -1,1 +1,37 @@
-smtp_credentials.php
+# Environment variables and secrets
+.env
+.env.*
+*credentials.php
+secret*.php
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# Dependencies
+vendor/
+node_modules/
+
+# User uploads (if any)
+uploads/*
+!uploads/.gitkeep
