@@ -82,7 +82,7 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
                     
                     <p style='margin-top:30px;'>You can view the detailed breakdown and pay your bill from your resident dashboard.</p>
                     
-                    <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                    <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
                 </div>
                 <div class='footer'>
                     <p><strong>Madhav Kunj Administration</strong></p>
@@ -147,7 +147,7 @@ function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $a
                 
                 <p style='margin-top:30px;'>Please clear these payments by visiting your dashboard. If you have already paid, please ignore this email or upload your receipt for verification.</p>
                 
-                <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
             </div>
             <div class='footer'>
                 <p><strong>Madhav Kunj</strong></p>
@@ -292,7 +292,7 @@ function send_payment_receipt_email($to_email, $renter_name, $details, $amount_p
                 
                 <p style='margin-top:30px;'>Thank you for your prompt payment!</p>
                 
-                <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
             </div>
             <div class='footer'>
                 <p><strong>Madhav Kunj</strong></p>
@@ -375,7 +375,7 @@ function send_announcement_email($to_email, $renter_name, $announcement_title, $
                 
                 <p style='margin-top:30px;'>For more details, you can always visit your resident dashboard.</p>
                 
-                <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
             </div>
             <div class='footer'>
                 <p><strong>Madhav Kunj</strong></p>
@@ -436,7 +436,7 @@ function send_welcome_email($to_email, $renter_name) {
                 
                 <p style='margin-top:30px;'>Get started by logging into your dashboard. If you need any assistance, feel free to contact the management.</p>
                 
-                <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
             </div>
             <div class='footer'>
                 <p><strong>Madhav Kunj</strong></p>
