@@ -35,7 +35,7 @@ $admin_user = s($_SESSION['admin']);
         .bill-page {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 0 24px 40px;
+            padding: 0 24px 0px;
             box-sizing: border-box;
         }
 
