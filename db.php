@@ -19,19 +19,27 @@ if (session_status() === PHP_SESSION_NONE) {
 $is_cli = php_sapi_name() === 'cli';
 $is_localhost = $is_cli || (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] === 'localhost') || (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR'] === '127.0.0.1' || $_SERVER['REMOTE_ADDR'] === '::1' || strpos($_SERVER['REMOTE_ADDR'], '10.') === 0)) || (isset($_SERVER['SERVER_NAME']) && strpos($_SERVER['SERVER_NAME'], '192.168.') !== false);
 
+// Require secure credentials file if it exists
+if (file_exists(__DIR__ . '/db_credentials.php')) {
+    require_once __DIR__ . '/db_credentials.php';
+} else {
+    // Fallback defaults if the file is missing
+    $DB_LOCAL_HOST = 'localhost'; $DB_LOCAL_USER = 'root'; $DB_LOCAL_PASS = ''; $DB_LOCAL_NAME = 'renter_system';
+    $DB_PROD_HOST = 'localhost'; $DB_PROD_USER = 'root'; $DB_PROD_PASS = ''; $DB_PROD_NAME = 'renter_system';
+}
+
 if ($is_localhost) {
     // Local XAMPP Settings
-    $DB_HOST = 'localhost';
-    $DB_USER = 'root';
-    $DB_PASS = ''; 
-    $DB_NAME = 'renter_system';
+    $DB_HOST = $DB_LOCAL_HOST;
+    $DB_USER = $DB_LOCAL_USER;
+    $DB_PASS = $DB_LOCAL_PASS; 
+    $DB_NAME = $DB_LOCAL_NAME;
 } else {
     // HOSTINGER / PRODUCTION SETTINGS
-    // IMPORTANT: Hostinger database/user names usually start with a prefix like 'u123456789_'
-    $DB_HOST = 'localhost';           // Keep as 'localhost' unless Hostinger says otherwise
-    $DB_USER = 'u123456789_root';     // CHANGE THIS to your Hostinger MySQL Username
-    $DB_PASS = 'Your_DB_Password';    // CHANGE THIS to your Hostinger MySQL Password
-    $DB_NAME = 'u123456789_renter';   // CHANGE THIS to your Hostinger Database Name
+    $DB_HOST = $DB_PROD_HOST;
+    $DB_USER = $DB_PROD_USER;
+    $DB_PASS = $DB_PROD_PASS;
+    $DB_NAME = $DB_PROD_NAME;
 }
 
 // Try to connect to DB, but suppress explicit throw error warning so my UI can show instead
