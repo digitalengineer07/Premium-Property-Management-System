@@ -854,7 +854,6 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Maintenance (₹)</label>
                                 <input type="number" id="maintenance" placeholder="0" oninput="calculateBill()">
                             </div>
-                        </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Extra Amount (₹)</label>
