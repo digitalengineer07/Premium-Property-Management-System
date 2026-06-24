@@ -167,7 +167,7 @@ $admin_user = s($_SESSION['admin']);
 
     <div class="animate-up">
         <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
-            <div class="panel" style="padding: 40px;">
+            <div class="panel" style="padding: 40px 48px; border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); background: #ffffff; border-top: 5px solid var(--primary-purple);">
                 <?php if ($success): ?>
                     <div style="background: #F0FDF4; color: #10B981; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #DCFCE7;">
                         <?php echo $success; ?>
