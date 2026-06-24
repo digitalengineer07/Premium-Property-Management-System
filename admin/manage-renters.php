@@ -175,11 +175,16 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <?php include 'header.php'; ?>
 
     <div class="page-header-container animate-up" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
-        <div class="welcome" style="margin: 0;">
-            <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); margin: 0 0 8px 0;">
-                Manage Residents
-            </h1>
-            <p style="font-size: 15px; color: var(--text-gray); margin: 0;">View, manage and organize all residents in your property</p>
+        <div class="welcome" style="margin: 0; display: flex; align-items: center; gap: 16px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.15), rgba(98, 75, 255, 0.05)); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(98, 75, 255, 0.1); box-shadow: 0 4px 15px rgba(98, 75, 255, 0.05);">
+                <i class='bx bx-group' style="font-size: 28px; color: #624BFF;"></i>
+            </div>
+            <div>
+                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0 0 4px 0; background: linear-gradient(135deg, #1E293B 0%, #624BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Manage Residents
+                </h1>
+                <p style="font-size: 15px; color: var(--text-gray); margin: 0; font-weight: 500;">View, manage and organize all residents in your property</p>
+            </div>
         </div>
         <div style="display: flex; gap: 12px;">
             <a href="add-renter.php" class="btn-primary" style="padding: 10px 20px; border-radius: 10px; font-weight: 600;">
