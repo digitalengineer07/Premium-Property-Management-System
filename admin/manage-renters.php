@@ -337,7 +337,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             <?php endif; ?>
                         </td>
                         <td style="padding: 16px; color: #64748B; font-size: 13px; font-weight: 500;">
-                            <div style="display: flex; align-items: center; gap: 6px;">
+                            <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                                 <i class='bx bx-calendar' style="font-size: 16px; color: #94A3B8;"></i>
                                 <?php echo $u['joining_date'] ? date('d M Y', strtotime($u['joining_date'])) : 'N/A'; ?>
                             </div>
