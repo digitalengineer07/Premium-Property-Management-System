@@ -20,7 +20,7 @@ function get_phpmailer_instance() {
         $mail->Host       = 'smtp.hostinger.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'madhavkunj@succorkart.in';
-        $mail->Password   = 'FOrg3tNOt@2026';
+        $mail->Password   = 'F0rg3tN0t@2026';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
