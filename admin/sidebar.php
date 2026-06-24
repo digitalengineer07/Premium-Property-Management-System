@@ -20,8 +20,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <aside class="sidebar" id="mainSidebar">
     <div class="brand">
-        <img src="../assets/img/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
-        <span><?php echo HOUSE_NAME; ?></span>
+        <div class="brand-icon-wrapper">
+            <i class='bx bx-home-alt-2'></i>
+        </div>
+        <div class="brand-text">
+            <h3>Madhav Kunj</h3>
+            <p>Utility Management</p>
+        </div>
     </div>
     
     <nav class="nav">
@@ -53,7 +58,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="payment-verifications.php" class="nav-item <?php echo $current_page == 'payment-verifications.php' ? 'active' : ''; ?>" style="position: relative;">
             <i class='bx bx-check-shield'></i> <span>Verifications</span>
             <?php if ($pending_pay_count > 0): ?>
-                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #EF4444; color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid var(--white);"><?php echo $pending_pay_count; ?></span>
+                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #624BFF; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid var(--white);"><?php echo $pending_pay_count; ?></span>
             <?php endif; ?>
         </a>
         <a href="manage-announcements.php" class="nav-item <?php echo $current_page == 'manage-announcements.php' ? 'active' : ''; ?>">
@@ -67,11 +72,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
     </nav>
     
+    <div class="support-box">
+        <div class="support-icon"><i class='bx bx-headphone'></i></div>
+        <h4>Need Help?</h4>
+        <p>Our support team is ready to help you.</p>
+        <a href="manage-queries.php" class="btn-primary" style="padding: 8px 12px; font-size: 12px; border-radius: 8px; justify-content: center; width: 100%;">Contact Support</a>
+    </div>
+
     <div class="sidebar-footer">
         <a href="#" class="nav-item" id="themeToggleSidebar" style="display: flex; align-items: center; gap: 12px;">
-            <i class='bx bx-moon'></i> <span class="theme-text">Dark Mode</span>
+            <i class='bx bx-sun'></i> <span class="theme-text">Light Mode</span>
         </a>
-        <a href="logout.php" class="nav-item" style="display: flex; align-items: center; gap: 12px;">
+        <a href="logout.php" class="nav-item" style="display: flex; align-items: center; gap: 12px; color: #EF4444;">
             <i class='bx bx-log-out'></i> <span>Logout</span>
         </a>
     </div>
@@ -128,9 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (themeToggle) {
                 themeToggle.innerHTML = "<i class='bx bx-sun'></i> <span class='theme-text'>Light Mode</span>";
             }
-            const dashToggle = document.getElementById('themeToggle');
-            if (dashToggle) {
-                dashToggle.classList.replace('bx-moon', 'bx-sun');
+            const dashToggleIcon = document.querySelector('#themeToggle i');
+            if (dashToggleIcon) {
+                dashToggleIcon.classList.replace('bx-moon', 'bx-sun');
             }
         } else {
             document.documentElement.classList.remove('dark-theme');
@@ -138,9 +150,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (themeToggle) {
                 themeToggle.innerHTML = "<i class='bx bx-moon'></i> <span class='theme-text'>Dark Mode</span>";
             }
-            const dashToggle = document.getElementById('themeToggle');
-            if (dashToggle) {
-                dashToggle.classList.replace('bx-sun', 'bx-moon');
+            const dashToggleIcon = document.querySelector('#themeToggle i');
+            if (dashToggleIcon) {
+                dashToggleIcon.classList.replace('bx-sun', 'bx-moon');
             }
         }
     }

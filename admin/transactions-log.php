@@ -122,17 +122,7 @@ $total_pages = ceil($total_rows / $limit);
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search logs...">
-            </div>
-            <div class="user-profile">
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <div style="display: flex; justify-content: space-between; align-items: center;">

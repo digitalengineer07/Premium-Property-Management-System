@@ -97,20 +97,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search operational metrics...">
-            </div>
-            <div class="user-profile">
-                <button class="btn-outline" onclick="generateShareLink()">
-                    <i class='bx bx-share-alt'></i> <span class="hide-mobile">Share</span>
-                </button>
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up" style="margin-bottom: 20px;">
         <h1>Financial & Operational Reports</h1>

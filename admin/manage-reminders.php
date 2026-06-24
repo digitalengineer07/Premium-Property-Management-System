@@ -122,20 +122,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search reminders...">
-            </div>
-            <div class="user-profile">
-                <a href="auto-reminders.php" class="btn-primary" style="background: #10B981;">
-                    <i class='bx bx-play-circle'></i> <span class="hide-mobile">Run Auto-Reminders</span>
-                </a>
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <h1>Payment Reminders</h1>

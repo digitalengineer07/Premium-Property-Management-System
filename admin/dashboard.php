@@ -169,17 +169,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" id="globalSearch" placeholder="Search anything...">
-            </div>
-            <div class="user-profile">
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome-header animate-up">
         <div class="welcome-text">

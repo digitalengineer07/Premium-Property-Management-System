@@ -644,17 +644,7 @@ $admin_user = s($_SESSION['admin']);
     <?php include "sidebar.php"; ?>
 
     <main class="main">
-        <header class="header">
-            <div class="header-content">
-                <div class="search-bar">
-                    <i class='bx bx-search'></i>
-                    <input type="text" placeholder="Search billing details...">
-                </div>
-                <div class="user-profile">
-                    <i class='bx bx-moon' id="themeToggle"></i>
-                </div>
-            </div>
-        </header>
+        <?php include 'header.php'; ?>
 
         <div id="alertBox"
             style="position: fixed; top: 20px; right: 20px; z-index: 10000; padding: 15px 25px; border-radius: 12px; display: none;"

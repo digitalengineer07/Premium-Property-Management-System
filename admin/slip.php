@@ -271,17 +271,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
     </div>
 
     <div class="invoice-wrapper">
-        <header class="header">
-            <div class="brand-info">
-                <h2><i class='bx bx-home-alt-2'></i> <?php echo HOUSE_NAME; ?></h2>
-                <p><?php echo HOUSE_ADDRESS; ?></p>
-                <p style="margin-top: 5px; font-weight: 600;">Owner: <?php echo OWNER_NAME; ?></p>
-            </div>
-            <div class="bill-title">
-                <h1>Electricity Bill</h1>
-                <span><?php echo strtoupper($month_period); ?></span>
-            </div>
-        </header>
+        <?php include 'header.php'; ?>
 
         <div class="info-grid">
             <div class="info-group">

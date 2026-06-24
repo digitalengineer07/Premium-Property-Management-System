@@ -128,17 +128,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" id="renterFilter" placeholder="Live search residents...">
-            </div>
-            <div class="user-profile">
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up" style="text-align: center;">
         <h1>Manage Residents</h1>

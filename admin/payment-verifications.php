@@ -254,17 +254,7 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search transactions...">
-            </div>
-            <div class="user-profile">
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <h1><i class='bx bx-check-shield' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Payment Verifications</h1>

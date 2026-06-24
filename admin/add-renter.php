@@ -91,20 +91,7 @@ $admin_user = s($_SESSION['admin']);
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search onboarding details...">
-            </div>
-            <div class="user-profile">
-                <a href="manage-renters.php" class="btn-primary" style="padding: 8px 16px; font-size: 13px; margin-right: 10px;">
-                    <i class='bx bx-arrow-back'></i> <span class="hide-mobile">Back to List</span>
-                </a>
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <h1>Resident Onboarding</h1>

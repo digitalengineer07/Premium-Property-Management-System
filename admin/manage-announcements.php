@@ -100,17 +100,7 @@ while ($row = mysqli_fetch_assoc($res)) $announcements[] = $row;
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" placeholder="Search notices...">
-            </div>
-            <div class="user-profile">
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <h1>Official Announcements</h1>

@@ -178,20 +178,7 @@ $admin_user = s($_SESSION['admin']);
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <i class='bx bx-search'></i>
-                <input type="text" id="liveFilter" placeholder="Live filter records...">
-            </div>
-            <div class="user-profile">
-                <a href="manage-recharges.php" class="btn-primary" style="background: #F59E0B;">
-                    <i class='bx bx-plus-circle'></i> <span class="hide-mobile">Log Recharge</span>
-                </a>
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
         <h1><i class='bx bx-bolt' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Electricity Records</h1>

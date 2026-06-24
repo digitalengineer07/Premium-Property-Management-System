@@ -256,17 +256,7 @@ if ($elec_id > 0) {
 <?php include "sidebar.php"; ?>
 
 <main class="main">
-    <header class="header">
-        <div class="header-content">
-            <div class="search-bar">
-                <!-- Search bar spacer -->
-            </div>
-            <div class="user-profile">
-                <a href="electricity-list.php" class="btn-outline"><i class='bx bx-arrow-back'></i> <span class="hide-mobile">Back</span></a>
-                <i class='bx bx-moon' id="themeToggle"></i>
-            </div>
-        </div>
-    </header>
+    <?php include 'header.php'; ?>
 
     <div class="edit-page animate-up">
         <div class="welcome" style="margin-bottom: 32px;">
