@@ -199,7 +199,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
             </div>
 
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 12px; flex-wrap: nowrap;">
                 <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 10px 20px; border-radius: 8px;"><i class='bx bx-plus'></i> New Bill</a>
                 <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
                 <button onclick="openAgreementModal()" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-upload'></i> Agreement</button>
