@@ -55,7 +55,7 @@ autoAddColumn($conn, 'users', 'rent_maint_updated_by', "int(11) DEFAULT NULL");
 autoAddColumn($conn, 'users', 'base_reading', "int(11) DEFAULT '0'");
 autoAddColumn($conn, 'users', 'joining_date', "date DEFAULT NULL"); 
 autoAddColumn($conn, 'users', 'profile_pic', "varchar(255) DEFAULT NULL"); 
-
+autoAddColumn($conn, 'users', 'email', "varchar(255) DEFAULT NULL");
 
 // ==========================================
 // 2. ELECTRICITY TABLE - ALL POSSIBLE COLUMNS

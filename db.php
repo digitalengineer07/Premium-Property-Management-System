@@ -16,7 +16,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // --- ENVIRONMENT DETECTION ---
-$is_localhost = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['REMOTE_ADDR'] === '127.0.0.1' || $_SERVER['REMOTE_ADDR'] === '::1' || strpos($_SERVER['SERVER_NAME'], '192.168.') !== false || strpos($_SERVER['REMOTE_ADDR'], '10.') === 0);
+$is_cli = php_sapi_name() === 'cli';
+$is_localhost = $is_cli || (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] === 'localhost') || (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR'] === '127.0.0.1' || $_SERVER['REMOTE_ADDR'] === '::1' || strpos($_SERVER['REMOTE_ADDR'], '10.') === 0)) || (isset($_SERVER['SERVER_NAME']) && strpos($_SERVER['SERVER_NAME'], '192.168.') !== false);
 
 if ($is_localhost) {
     // Local XAMPP Settings
