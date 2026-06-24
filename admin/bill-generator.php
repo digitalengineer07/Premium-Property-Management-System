@@ -452,6 +452,11 @@ $admin_user = s($_SESSION['admin']);
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
         }
 
+        .btn-outline:active {
+            transform: scale(0.95);
+            background: rgba(255,255,255,0.2) !important;
+        }
+
         /* New Redesign Styles */
         .page-header-container {
             display: flex;
@@ -1376,31 +1381,7 @@ $admin_user = s($_SESSION['admin']);
         }
 
         function resetForm() {
-            document.getElementById('renterSelect').value = '';
-            document.getElementById('emptyState').style.display = 'flex';
-            document.getElementById('renterInfo').style.display = 'none';
-            document.getElementById('electricitySection').style.opacity = '0.5';
-            document.getElementById('electricitySection').style.pointerEvents = 'none';
-            document.getElementById('recentResidentsPanel').style.display = 'block';
-            document.getElementById('billSummaryPanel').style.display = 'none';
-            
-            const customSelectText = document.getElementById('customSelectText');
-            if (customSelectText) customSelectText.textContent = '-- Choose a Resident --';
-            
-            const options = document.querySelectorAll('.custom-option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            
-            document.getElementById('currentReading').value = '';
-            document.getElementById('previousReading').value = '';
-            document.getElementById('rentAmount').value = '';
-            document.getElementById('maintenance').value = '';
-            document.getElementById('dues').value = '';
-            document.getElementById('meterScreenshot').value = '';
-            document.getElementById('extraCharges').value = '';
-            document.getElementById('extraChargesDesc').value = '';
-            
-            updateSteps(1);
-            calculateBill();
+            window.location.reload();
         }
     </script>
 </body>
