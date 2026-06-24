@@ -682,7 +682,7 @@ $admin_user = s($_SESSION['admin']);
 
             <div class="bill-grid">
                 <div class="left-col">
-                    <div class="aesthetic-card animate-up" style="z-index: 50;">
+                    <div class="aesthetic-card animate-up" style="z-index: 50; background: linear-gradient(135deg, #F4F7FF 0%, #FFFFFF 100%);">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-user'></i>
@@ -764,7 +764,7 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                     </div>
 
-                    <div class="aesthetic-card" id="electricitySection">
+                    <div class="aesthetic-card" id="electricitySection" style="background: linear-gradient(135deg, #F9F5FF 0%, #FFFFFF 100%);">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-bolt'></i>
@@ -929,7 +929,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px;">
+            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px; background: linear-gradient(135deg, #F2FCF8 0%, #FFFFFF 100%);">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>
