@@ -239,7 +239,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <div class="panel animate-up">
-        <div class="panel-header" style="padding-bottom: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+        <div class="panel-header" style="padding-bottom: 0; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
             <div style="display: flex; gap: 24px; overflow-x: auto;">
                 <a href="?status=active" style="padding: 12px 0; color: <?php echo $filter_status === 'active' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'active' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Active Residents</a>
                 <a href="?status=moved_out" style="padding: 12px 0; color: <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Past Residents</a>
