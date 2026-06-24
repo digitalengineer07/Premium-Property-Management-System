@@ -36,7 +36,8 @@ if (!$user) {
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
            (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid,
-           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount
+           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount,
+           (SELECT GROUP_CONCAT(CONCAT(payment_mode, '|', paid_amount, '|', payment_date, '|', IFNULL(payment_time, '')) SEPARATOR '||') FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as payment_details
     FROM electricity e 
     WHERE e.user_id = ? 
     ORDER BY e.id DESC
@@ -49,10 +50,11 @@ mysqli_stmt_close($stmt);
 
 /* Fetch rent records (from electricity table as rent and maintenance combined) */
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount, r.maintenance, r.status, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = r.id) as total_paid
-    FROM electricity r 
-    WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
+    SELECT r.id, r.month, r.rent_amount, r.status, 0 as maintenance, 
+           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = r.id) as total_paid,
+           (SELECT GROUP_CONCAT(CONCAT(payment_mode, '|', paid_amount, '|', payment_date, '|', IFNULL(payment_time, '')) SEPARATOR '||') FROM payments WHERE bill_type = 'rent' AND bill_id = r.id) as payment_details
+    FROM rent r 
+    WHERE r.user_id = ? 
     ORDER BY r.id DESC
 ");
 mysqli_stmt_bind_param($stmt, "i", $id);
