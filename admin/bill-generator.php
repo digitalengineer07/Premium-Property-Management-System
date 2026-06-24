@@ -915,12 +915,11 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                             
                         </div>
+                        </div>
                     </div>
-                </div> <!-- End .left-col -->
-            </div> <!-- End .bill-grid -->
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; margin-top: -8px; padding: 16px 32px;">
+            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px;">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>
@@ -959,6 +958,9 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 </div>
             </div>
+
+                </div> <!-- End .left-col -->
+            </div> <!-- End .bill-grid -->
 
         </div> <!-- End .bill-page -->
 
