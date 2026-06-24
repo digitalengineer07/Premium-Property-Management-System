@@ -1366,6 +1366,7 @@ $admin_user = s($_SESSION['admin']);
 
                 if (data.success) {
                     showMsg('Bill generated successfully!', 'success');
+                    localStorage.removeItem('billFormState');
                     updateSteps(4);
                     // Refresh the "Last Reading" display without redirecting
                     document.getElementById('infoLastReading').textContent = curr;
@@ -1407,8 +1408,79 @@ $admin_user = s($_SESSION['admin']);
         }
 
         function resetForm() {
+            localStorage.removeItem('billFormState');
             window.location.reload();
         }
+
+        function saveFormState() {
+            const state = {
+                renterId: document.getElementById('renterSelect').value,
+                billDate: document.getElementById('billDate').value,
+                selectMonth: document.getElementById('selectMonth').value,
+                selectYear: document.getElementById('selectYear').value,
+                previousReading: document.getElementById('previousReading').value,
+                currentReading: document.getElementById('currentReading').value,
+                ratePerUnit: document.getElementById('ratePerUnit').value,
+                rentAmount: document.getElementById('rentAmount').value,
+                maintenance: document.getElementById('maintenance').value,
+                dues: document.getElementById('dues').value,
+                extraCharges: document.getElementById('extraCharges').value,
+                extraChargesDesc: document.getElementById('extraChargesDesc').value
+            };
+            localStorage.setItem('billFormState', JSON.stringify(state));
+        }
+
+        async function restoreFormState() {
+            const saved = localStorage.getItem('billFormState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    if (state.renterId) {
+                        const hiddenSelect = document.getElementById('renterSelect');
+                        hiddenSelect.value = state.renterId;
+                        const customSelect = document.getElementById('customRenterSelect');
+                        if (customSelect) {
+                            const options = customSelect.querySelectorAll('.custom-option');
+                            const selectText = document.getElementById('customSelectText');
+                            options.forEach(opt => opt.classList.remove('selected'));
+                            const targetOpt = Array.from(options).find(opt => opt.getAttribute('data-value') == state.renterId);
+                            if(targetOpt) {
+                                targetOpt.classList.add('selected');
+                                selectText.textContent = targetOpt.querySelector('.opt-name').textContent + ' - Room ' + targetOpt.querySelector('.opt-room').textContent;
+                            }
+                        }
+
+                        await loadRenterInfo();
+                        
+                        if(state.billDate) document.getElementById('billDate').value = state.billDate;
+                        if(state.selectMonth) document.getElementById('selectMonth').value = state.selectMonth;
+                        if(state.selectYear) document.getElementById('selectYear').value = state.selectYear;
+                        updateMonthField();
+                        
+                        if(state.previousReading) document.getElementById('previousReading').value = state.previousReading;
+                        if(state.currentReading) document.getElementById('currentReading').value = state.currentReading;
+                        if(state.ratePerUnit) document.getElementById('ratePerUnit').value = state.ratePerUnit;
+                        if(state.rentAmount) document.getElementById('rentAmount').value = state.rentAmount;
+                        if(state.maintenance) document.getElementById('maintenance').value = state.maintenance;
+                        if(state.dues) document.getElementById('dues').value = state.dues;
+                        if(state.extraCharges) document.getElementById('extraCharges').value = state.extraCharges;
+                        if(state.extraChargesDesc) document.getElementById('extraChargesDesc').value = state.extraChargesDesc;
+                        calculateBill();
+                    }
+                } catch(e) { console.error('Error restoring state', e); }
+            }
+        }
+
+        document.addEventListener('input', (e) => {
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                saveFormState();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreFormState();
+        });
+
     </script>
 </body>
 
