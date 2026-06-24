@@ -555,18 +555,18 @@ $admin_user = s($_SESSION['admin']);
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-top: 20px;
+            margin-top: 12px;
         }
         .guide-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 24px 20px;
+            padding: 16px 20px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            gap: 12px;
+            gap: 8px;
             transition: transform 0.2s;
         }
         .guide-card:hover {
@@ -574,15 +574,15 @@ $admin_user = s($_SESSION['admin']);
         }
         
         .guide-icon {
-            width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 8px;
+            width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 4px;
         }
         .guide-card:nth-child(1) .guide-icon { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
         .guide-card:nth-child(2) .guide-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
         .guide-card:nth-child(3) .guide-icon { background: rgba(16, 185, 129, 0.1); color: #10B981; }
         .guide-card:nth-child(4) .guide-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
 
-        .guide-card h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark); }
-        .guide-card p { margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.5; }
+        .guide-card h4 { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .guide-card p { margin: 0; font-size: 12px; color: var(--text-gray); line-height: 1.4; }
 
         .empty-state {
             background: #F8FAFC;
@@ -920,7 +920,7 @@ $admin_user = s($_SESSION['admin']);
             </div> <!-- End .bill-grid -->
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="margin-top: 24px; padding: 32px;">
+            <div class="aesthetic-card animate-up" style="margin-top: 24px; padding: 16px 32px;">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>
