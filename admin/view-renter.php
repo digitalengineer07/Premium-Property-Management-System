@@ -191,9 +191,9 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <?php echo htmlspecialchars($user['name']); ?>
                     </h2>
                     <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 13px; font-weight: 500;">
-                        <span><i class='bx bx-user-circle'></i> @<?php echo htmlspecialchars($user['username']); ?></span>
+                        <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-user-circle' style="font-size: 16px;"></i> @<?php echo htmlspecialchars($user['username']); ?></span>
                         <span style="color: var(--border);">|</span> 
-                        <span style="color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-door-open'></i> Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?></span>
+                        <span style="display: flex; align-items: center; gap: 4px; color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-door-open' style="font-size: 14px;"></i> Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?></span>
 
                     </div>
                 </div>
