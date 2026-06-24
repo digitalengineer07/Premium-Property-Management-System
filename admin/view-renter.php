@@ -652,28 +652,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
         document.getElementById('paymentTimeInput').value = now.toTimeString().slice(0, 5);
         
         document.getElementById('paymentModal').style.display = 'flex';
-        toggleOfflineFields();
     }
 
     function closePaymentModal() {
         document.getElementById('paymentModal').style.display = 'none';
-    }
-
-    function toggleOfflineFields() {
-        const mode = document.getElementById('paymentMode').value;
-        const offlineBox = document.getElementById('offlineFields');
-        const amountInput = document.getElementById('paidAmountInput');
-        const dateInput = document.getElementById('paymentDateInput');
-        
-        if (mode === 'Offline') {
-            offlineBox.style.display = 'block';
-            amountInput.required = true;
-            dateInput.required = true;
-        } else {
-            offlineBox.style.display = 'none';
-            amountInput.required = false;
-            dateInput.required = false;
-        }
     }
     
     function openAgreementModal() {
