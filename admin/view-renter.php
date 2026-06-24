@@ -173,7 +173,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- 1. Top Header Card -->
     <div class="panel animate-up" style="margin-bottom: 24px; padding: 32px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 24px;">
             <div style="display: flex; gap: 24px; align-items: center;">
                 <?php if ($user['profile_pic']): ?>
                     <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
