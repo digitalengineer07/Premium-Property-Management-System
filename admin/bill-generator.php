@@ -48,12 +48,12 @@ $admin_user = s($_SESSION['admin']);
 
         .aesthetic-card {
             background: var(--white);
-            border-radius: 24px;
-            padding: 32px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
             border: 1px solid var(--border);
             position: relative;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .aesthetic-card::before {
@@ -68,26 +68,37 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
 
         .section-title {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-dark);
+            min-width: 200px;
         }
 
         .section-title i {
-            font-size: 22px;
+            font-size: 20px;
             color: var(--primary-purple);
             background: rgba(98, 75, 255, 0.1);
             padding: 8px;
-            border-radius: 12px;
+            border-radius: 10px;
+        }
+
+        .panel-desc {
+            color: var(--text-gray);
+            font-size: 12px;
+            margin: 0;
+            flex: 1;
         }
 
         .form-group {
@@ -96,25 +107,25 @@ $admin_user = s($_SESSION['admin']);
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            font-size: 12px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 11px;
             color: var(--text-gray);
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 10px 14px;
             border: 1.5px solid var(--border);
-            border-radius: 14px;
+            border-radius: 10px;
             background: var(--bg-main);
             color: var(--text-dark);
             outline: none;
             transition: var(--transition);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
         }
 
@@ -126,10 +137,10 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .info-pill {
-            background: #F8F9FA;
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
+            background: #F8FAFC;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            padding: 16px;
             display: none;
         }
 
@@ -153,13 +164,13 @@ $admin_user = s($_SESSION['admin']);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px 18px;
+            padding: 10px 14px;
             border: 1.5px solid var(--border);
-            border-radius: 14px;
+            border-radius: 10px;
             background: var(--bg-main);
             color: var(--text-dark);
             cursor: pointer;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 500;
             transition: var(--transition);
         }
@@ -585,19 +596,19 @@ $admin_user = s($_SESSION['admin']);
 
         .empty-state {
             background: #F8FAFC;
-            border-radius: 16px;
+            border-radius: 12px;
             border: 1px dashed #CBD5E1;
-            padding: 30px;
+            padding: 20px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-top: 24px;
+            gap: 16px;
+            margin-top: 16px;
         }
         
         .empty-icon {
-            width: 60px; height: 60px; border-radius: 50%;
+            width: 44px; height: 44px; border-radius: 50%;
             background: rgba(98, 75, 255, 0.1);
-            color: #624BFF; font-size: 28px;
+            color: #624BFF; font-size: 20px;
             display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
 
@@ -674,7 +685,7 @@ $admin_user = s($_SESSION['admin']);
                                 <i class='bx bx-user'></i>
                                 <span>Select Resident Account</span>
                             </div>
-                            <p style="color: var(--text-gray); font-size: 13px; margin: 8px 0 0 0;">Choose the resident for whom you want to generate the bill</p>
+                            <p class="panel-desc">Choose the resident for whom you want to generate the bill</p>
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label>Resident Account</label>
@@ -725,8 +736,8 @@ $admin_user = s($_SESSION['admin']);
                         <div id="emptyState" class="empty-state">
                             <div class="empty-icon"><i class='bx bx-group'></i></div>
                             <div>
-                                <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-dark); font-weight: 700;">No resident selected</h4>
-                                <p style="margin: 0; font-size: 13px; color: var(--text-gray);">Select a resident to view details</p>
+                                <h4 style="margin: 0 0 2px 0; font-size: 14px; color: var(--text-dark); font-weight: 700;">No resident selected</h4>
+                                <p style="margin: 0; font-size: 12px; color: var(--text-gray);">Select a resident to view details</p>
                             </div>
                         </div>
 
@@ -756,10 +767,11 @@ $admin_user = s($_SESSION['admin']);
                                 <i class='bx bx-bolt'></i>
                                 <span>Electricity Details</span>
                             </div>
+                            <p class="panel-desc">Enter meter & usage details</p>
                         </div>
-                        <!-- Main Form Grid: Clean 2-Column Layout -->
+                        <!-- Main Form Grid: 4-Column Layout -->
                         <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Bill Date</label>
                                 <input type="date" id="billDate">
@@ -794,13 +806,12 @@ $admin_user = s($_SESSION['admin']);
                         </div>
 
                         <!-- Readings Section -->
-                        <div class="section-divider">
-                            <i class='bx bx-tachometer'></i>
-                            <h4>Meter Readings</h4>
+                        <div class="section-divider" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
+                            <h4 style="font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;"><i class='bx bx-tachometer' style="color: var(--primary-purple);"></i> METER READINGS</h4>
                         </div>
 
                         <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Last Reading</label>
                                 <input type="number" id="previousReading" disabled
@@ -826,13 +837,12 @@ $admin_user = s($_SESSION['admin']);
                         </div>
 
                         <!-- Fixed Charges Section -->
-                        <div class="section-divider">
-                            <i class='bx bx-home-heart'></i>
-                            <h4>Fixed Charges</h4>
+                        <div class="section-divider" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
+                            <h4 style="font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;"><i class='bx bx-home-heart' style="color: var(--primary-purple);"></i> FIXED CHARGES & ADJUSTMENTS</h4>
                         </div>
 
                         <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Rent (₹)</label>
                                 <input type="number" id="rentAmount" placeholder="0" oninput="calculateBill()">
@@ -844,35 +854,22 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                         </div>
 
-                        <!-- Extra Charges Section -->
-                        <div class="section-divider">
-                            <i class='bx bx-slider-alt'></i>
-                            <h4>Extra Adjustments</h4>
-                        </div>
-
-                        <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Extra Amount (₹)</label>
                                 <input type="number" id="extraCharges" placeholder="0" oninput="calculateBill()">
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Extra Details / Reason</label>
-                                <input type="text" id="extraChargesDesc" placeholder="e.g., Plumber fix"
-                                    oninput="calculateBill()">
+                                <label>Extra Reason</label>
+                                <input type="text" id="extraChargesDesc" placeholder="e.g., Fix" oninput="calculateBill()">
                             </div>
                         </div>
 
                         <!-- Attachment -->
-                        <div class="section-divider" style="border-top-style: solid;">
-                            <i class='bx bx-camera'></i>
-                            <h4>Meter Screenshot</h4>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Attach Image (Optional)</label>
+                        <div class="form-group" style="margin-top: 16px; margin-bottom: 0;">
+                            <label><i class='bx bx-camera'></i> Attach Meter Screenshot (Optional)</label>
                             <input type="file" id="meterScreenshot" accept="image/*"
-                                style="padding: 14px; border: 1.5px dashed var(--border); border-radius: 12px; height: auto; width: 100%; cursor: pointer; background: var(--bg-main);">
+                                style="padding: 10px; border: 1px dashed var(--border); border-radius: 10px; height: auto; width: 100%; cursor: pointer; background: #F8FAFC;">
                         </div>
                     </div>
                 </div>
