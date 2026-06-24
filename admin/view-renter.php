@@ -27,43 +27,6 @@ $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
 mysqli_stmt_close($stmt);
 
-if (!$user) {
-    echo "Resident not found";
-    exit;
-}
-
-/* Fetch electricity records */
-$stmt = mysqli_prepare($conn, "
-    SELECT e.*, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid,
-           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount
-    FROM electricity e 
-    WHERE e.user_id = ? 
-    ORDER BY e.id DESC
-");
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-$elec_res = mysqli_stmt_get_result($stmt);
-$elecs = []; while ($r = mysqli_fetch_assoc($elec_res)) $elecs[] = $r;
-mysqli_stmt_close($stmt);
-
-/* Fetch rent records (from electricity table as rent and maintenance combined) */
-$stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount, r.maintenance, r.status, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = r.id) as total_paid
-    FROM electricity r 
-    WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
-    ORDER BY r.id DESC
-");
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-$rent_res = mysqli_stmt_get_result($stmt);
-$rents = []; while ($r = mysqli_fetch_assoc($rent_res)) $rents[] = $r;
-mysqli_stmt_close($stmt);
-
-// Calculate advance paid
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = ? AND bill_type = 'advance'");
-mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
 $adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 $adv_paid = (float)$adv_paid_res['adv_paid'];
