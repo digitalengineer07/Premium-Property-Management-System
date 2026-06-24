@@ -15,12 +15,7 @@ while ($row = mysqli_fetch_assoc($renters_query)) {
     $renters[] = $row;
 }
 
-// Fetch recent residents for default view
-$recent_renters_query = mysqli_query($conn, "SELECT id, name, room_no FROM users WHERE status = 'active' ORDER BY id DESC LIMIT 4");
-$recent_renters = [];
-while ($row = mysqli_fetch_assoc($recent_renters_query)) {
-    $recent_renters[] = $row;
-}
+
 
 $admin_user = s($_SESSION['admin']);
 ?>
@@ -552,30 +547,6 @@ $admin_user = s($_SESSION['admin']);
             .bill-grid { grid-template-columns: 1fr !important; }
         }
 
-        /* Recent Residents */
-        .recent-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .recent-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            border-radius: 16px;
-            background: #F8FAFC;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .recent-item:hover {
-            border-color: var(--primary-purple);
-            background: var(--white);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transform: translateX(4px);
-        }
-        
         .avatar {
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--primary-purple); color: white;
@@ -907,32 +878,6 @@ $admin_user = s($_SESSION['admin']);
                 </div>
 
                 <div class="right-col bill-summary">
-                    <!-- Default Panel: Recent Residents -->
-                    <div id="recentResidentsPanel" class="aesthetic-card animate-up">
-                        <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
-                            <div class="section-title" style="font-size: 16px;"><i class='bx bx-group'></i> Recent Residents</div>
-                            <a href="manage-renters.php" class="btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;">View All</a>
-                        </div>
-                        <div class="recent-list">
-                            <?php foreach($recent_renters as $rr): 
-                                $names = explode(' ', trim($rr['name']));
-                                $initials = strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
-                            ?>
-                            <div class="recent-item" onclick="selectRenterDropdown(<?php echo $rr['id']; ?>)">
-                                <div class="avatar"><?php echo $initials; ?></div>
-                                <div class="info" style="flex:1; margin-left: 12px;">
-                                    <h4 style="margin:0; font-size:14px; font-weight:700; color: var(--text-dark);"><?php echo htmlspecialchars($rr['name']); ?></h4>
-                                    <p style="margin:0; font-size:12px; color:var(--text-gray);">Room <?php echo htmlspecialchars($rr['room_no']); ?></p>
-                                </div>
-                                <i class='bx bx-chevron-right' style="color:var(--text-gray); font-size: 20px;"></i>
-                            </div>
-                            <?php endforeach; ?>
-                            <?php if (empty($recent_renters)): ?>
-                                <p style="color: var(--text-gray); text-align: center; font-size: 13px;">No active residents found.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
                     <!-- Active Panel: Digital Wallet -->
                     <div id="billSummaryPanel" style="display: none;" class="animate-up">
                         <div class="wallet-card">
@@ -1266,7 +1211,6 @@ $admin_user = s($_SESSION['admin']);
                 document.getElementById('renterInfo').style.display = 'none';
                 document.getElementById('electricitySection').style.opacity = '0.5';
                 document.getElementById('electricitySection').style.pointerEvents = 'none';
-                document.getElementById('recentResidentsPanel').style.display = 'block';
                 document.getElementById('billSummaryPanel').style.display = 'none';
                 updateSteps(1);
                 return;
@@ -1280,7 +1224,6 @@ $admin_user = s($_SESSION['admin']);
             document.getElementById('renterInfo').style.display = 'block';
             document.getElementById('electricitySection').style.opacity = '1';
             document.getElementById('electricitySection').style.pointerEvents = 'auto';
-            document.getElementById('recentResidentsPanel').style.display = 'none';
             document.getElementById('billSummaryPanel').style.display = 'block';
             
             updateSteps(2);
