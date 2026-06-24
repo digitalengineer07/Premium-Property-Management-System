@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($username === '' || $password === '') {
             $error = "Please provide both username and password.";
         } else {
-            $stmt = mysqli_prepare($conn, "SELECT id, username, password FROM users WHERE username = ?");
+            $stmt = mysqli_prepare($conn, "SELECT id, username, password, status FROM users WHERE username = ?");
             if ($stmt) {
                 mysqli_stmt_bind_param($stmt, "s", $username);
                 mysqli_stmt_execute($stmt);
@@ -34,7 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($result && mysqli_num_rows($result) === 1) {
                     $user = mysqli_fetch_assoc($result);
-                        if (password_verify($password, $user['password'])) {
+                    if ($user['status'] === 'moved_out') {
+                        $error = "This account has been archived (Moved Out). Access is restricted.";
+                    } else if (password_verify($password, $user['password'])) {
                         // Success!
                         session_regenerate_id(true);
                         $_SESSION['user_id'] = (int)$user['id'];
