@@ -70,9 +70,11 @@ autoAddColumn($conn, 'electricity', 'meter_screenshot_thumb', "varchar(255) DEFA
 autoAddColumn($conn, 'electricity', 'bill_file', "varchar(255) DEFAULT NULL");
 
 // ==========================================
-// 3. PAYMENTS TABLE - ENUM UPDATE
+// 3. PAYMENTS TABLE - ENUM UPDATE & NEW COLUMNS
 // ==========================================
-echo "<h3>Checking 'payments' table ENUMs...</h3>";
+echo "<h3>Checking 'payments' table ENUMs & Columns...</h3>";
+autoAddColumn($conn, 'payments', 'recorded_by', "int(11) DEFAULT NULL");
+
 $res_payments = mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'bill_type'");
 if ($res_payments && mysqli_num_rows($res_payments) > 0) {
     $col = mysqli_fetch_assoc($res_payments);
@@ -81,13 +83,28 @@ if ($res_payments && mysqli_num_rows($res_payments) > 0) {
         if (mysqli_query($conn, $alter_enum)) {
             echo "<p style='color:green; font-weight:bold;'>✅ SUCCESS: Updated `bill_type` in `payments` to accept 'advance'.</p>";
         } else {
-            echo "<p style='color:red; font-weight:bold;'>❌ FAILED to update `payments` table: " . mysqli_error($conn) . "</p>";
+            echo "<p style='color:red; font-weight:bold;'>❌ FAILED to update `payments` table (bill_type): " . mysqli_error($conn) . "</p>";
         }
     } else {
         echo "<p style='color:gray;'>✔️ Payments table already supports 'advance'.</p>";
     }
 } else {
     echo "<p style='color:red;'>❌ Payments table or `bill_type` column not found.</p>";
+}
+
+$res_payment_mode = mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'payment_mode'");
+if ($res_payment_mode && mysqli_num_rows($res_payment_mode) > 0) {
+    $col = mysqli_fetch_assoc($res_payment_mode);
+    if (strpos($col['Type'], "'Cash'") === false) {
+        $alter_enum = "ALTER TABLE `payments` MODIFY COLUMN `payment_mode` enum('Online','Offline','Cash','UPI','Bank Transfer') DEFAULT 'Online'";
+        if (mysqli_query($conn, $alter_enum)) {
+            echo "<p style='color:green; font-weight:bold;'>✅ SUCCESS: Updated `payment_mode` in `payments` to accept 'Cash', 'UPI', 'Bank Transfer'.</p>";
+        } else {
+            echo "<p style='color:red; font-weight:bold;'>❌ FAILED to update `payments` table (payment_mode): " . mysqli_error($conn) . "</p>";
+        }
+    } else {
+        echo "<p style='color:gray;'>✔️ Payments table already supports extended payment modes.</p>";
+    }
 }
 
 // ==========================================
