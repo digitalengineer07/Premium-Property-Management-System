@@ -398,26 +398,28 @@ $admin_user = s($_SESSION['admin']);
                 
                 <div class="form-group">
                     <label>Payment Mode</label>
-                    <select name="payment_mode" id="paymentMode" onchange="toggleOfflineFields()" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
-                        <option value="Online">Online Payment (Full)</option>
-                        <option value="Offline">Offline / Cash</option>
+                    <select name="payment_mode" id="paymentMode" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
+                        <option value="Online">Online</option>
+                        <option value="Cash">Cash</option>
+                        <option value="UPI">UPI</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
                     </select>
                 </div>
 
-                <div id="offlineFields" style="display: none; border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
+                <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Amount Paid (₹)</label>
-                        <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
-                        <small style="color: var(--text-gray); font-size: 11px;">Partial or extra payments will be adjusted next month.</small>
+                        <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
+                        <small style="color: var(--text-gray); font-size: 11px;">You can enter a partial payment amount.</small>
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                         <div class="form-group">
                             <label>Date</label>
-                            <input type="date" name="payment_date" id="paymentDateInput" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
+                            <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
                         </div>
                         <div class="form-group">
                             <label>Time</label>
-                            <input type="time" name="payment_time" id="paymentTimeInput" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
+                            <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-main); color: var(--text-dark);">
                         </div>
                     </div>
                 </div>
