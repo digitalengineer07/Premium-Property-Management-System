@@ -748,7 +748,7 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                     </div>
 
-                    <div class="aesthetic-card" id="electricitySection" style="opacity: 0.7; pointer-events: none; transition: 0.3s;">
+                    <div class="aesthetic-card" id="electricitySection">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-bolt'></i>
@@ -1197,8 +1197,6 @@ $admin_user = s($_SESSION['admin']);
             if (!renterId) {
                 document.getElementById('emptyState').style.display = 'flex';
                 document.getElementById('renterInfo').style.display = 'none';
-                document.getElementById('electricitySection').style.opacity = '0.5';
-                document.getElementById('electricitySection').style.pointerEvents = 'none';
                 document.getElementById('billSummaryPanel').style.display = 'none';
                 updateSteps(1);
                 return;
@@ -1210,8 +1208,6 @@ $admin_user = s($_SESSION['admin']);
             
             document.getElementById('emptyState').style.display = 'none';
             document.getElementById('renterInfo').style.display = 'block';
-            document.getElementById('electricitySection').style.opacity = '1';
-            document.getElementById('electricitySection').style.pointerEvents = 'auto';
             document.getElementById('billSummaryPanel').style.display = 'block';
             
             updateSteps(2);
