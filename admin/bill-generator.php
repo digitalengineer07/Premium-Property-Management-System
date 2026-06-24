@@ -69,11 +69,17 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .section-title i {
-            font-size: 20px;
-            color: var(--primary-purple);
-            background: rgba(98, 75, 255, 0.1);
-            padding: 8px;
-            border-radius: 10px;
+            font-size: 22px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #624BFF 0%, #A855F7 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
         }
 
         .panel-desc {
