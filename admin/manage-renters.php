@@ -90,6 +90,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             .kpi-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 768px) {
+            .page-header-container { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
             .panel { background: transparent !important; box-shadow: none !important; padding: 0 !important; border: none !important; margin: 0 !important; width: 100% !important; }
             .panel-header { background: var(--white); border-radius: 16px; padding: 16px !important; margin-bottom: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); width: 100% !important; }
             
@@ -177,7 +178,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="page-header-container animate-up" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+    <div class="page-header-container animate-up" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: nowrap; gap: 20px;">
         <div class="welcome" style="margin: 0; display: flex; align-items: center; gap: 16px;">
             <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.15), rgba(98, 75, 255, 0.05)); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(98, 75, 255, 0.1); box-shadow: 0 4px 15px rgba(98, 75, 255, 0.05);">
                 <i class='bx bx-group' style="font-size: 28px; color: #624BFF;"></i>
