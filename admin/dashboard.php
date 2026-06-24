@@ -47,7 +47,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 $today_logins = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM login_logs WHERE DATE(login_time) = CURDATE() AND user_type='renter'"))['count'];
 $month_logins = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM login_logs WHERE MONTH(login_time) = MONTH(CURDATE()) AND YEAR(login_time) = YEAR(CURDATE()) AND user_type='renter'"))['count'];
 $unique_visitors = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(DISTINCT user_id) as count FROM login_logs WHERE user_type='renter'"))['count'];
-$total_renters_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM users"))['count'];
+$total_renters_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE status = 'active'"))['count'];
 $visitor_ratio = $total_renters_count > 0 ? round(($unique_visitors / $total_renters_count) * 100) : 0;
 
 /* Recent Login Activity */
