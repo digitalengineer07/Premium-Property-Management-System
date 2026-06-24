@@ -417,6 +417,41 @@ $admin_user = s($_SESSION['admin'] ?? '');
         </div>
     </div>
 
+    <!-- Payment History Timeline -->
+    <div class="panel animate-up" style="margin-bottom: 24px;">
+        <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-history'></i></div> Payment History</h4>
+        
+        <div style="position: relative; padding-left: 20px;">
+            <div style="position: absolute; top: 10px; bottom: 10px; left: 6px; width: 2px; background: var(--border); z-index: 1;"></div>
+            <?php if (empty($payment_history)): ?>
+                <div style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No payments recorded yet.</div>
+            <?php else: foreach ($payment_history as $p): ?>
+                <div style="display: flex; gap: 16px; position: relative; z-index: 2; margin-bottom: 20px;">
+                    <div style="width: 14px; height: 14px; border-radius: 50%; background: #10B981; border: 3px solid var(--white); margin-top: 2px; flex-shrink: 0; box-shadow: 0 0 0 1px #10B981;"></div>
+                    <div style="flex: 1; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div>
+                                <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
+                                <div style="font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 600; margin-top: 4px;">
+                                    <?php echo htmlspecialchars($p['bill_type']); ?> Bill • <?php echo htmlspecialchars($p['month'] ?? 'N/A'); ?>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700;"><?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                            </div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-gray); display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed var(--border); padding-top: 8px; margin-top: 8px;">
+                            <span><?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
+                            <?php if ($p['admin_name']): ?>
+                                <span><i class='bx bx-user' style="margin-right: 4px;"></i><?php echo htmlspecialchars($p['admin_name']); ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; endif; ?>
+        </div>
+    </div>
+
     <!-- 4. Documents Section -->
     <div class="panel animate-up" style="margin-bottom: 24px;">
         <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
