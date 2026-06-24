@@ -174,6 +174,16 @@ if (mysqli_stmt_execute($stmt)) {
     // Reset pending adjustment since it's now incorporated into this bill's "dues"
     mysqli_query($conn, "UPDATE users SET pending_adjustment = 0 WHERE id = $user_id");
     
+    // Fetch user details for email notification
+    $user_query = mysqli_query($conn, "SELECT name, email FROM users WHERE id = $user_id LIMIT 1");
+    if ($user_query && mysqli_num_rows($user_query) > 0) {
+        $user_data = mysqli_fetch_assoc($user_query);
+        if (!empty($user_data['email'])) {
+            require_once "utils_mailer.php";
+            send_new_bill_notification($user_data['email'], $user_data['name'], $month_display, $total_amount);
+        }
+    }
+
     // Clean buffer and send success
     if (ob_get_length()) ob_clean();
     echo json_encode([
