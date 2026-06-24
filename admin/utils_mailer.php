@@ -17,15 +17,18 @@ function get_phpmailer_instance() {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
+        // Load credentials from ignored file to prevent leaks
+        require_once __DIR__ . '/../smtp_credentials.php';
+
         $mail->Host       = 'smtp.hostinger.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'no-reply@subhadippramanik.me';
-        $mail->Password   = 'F0rg3tN0t@2026';
+        $mail->Username   = $SMTP_USER;
+        $mail->Password   = $SMTP_PASS;
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
         // Set default sender
-        $mail->setFrom('no-reply@subhadippramanik.me', 'Madhav Kunj Administration');
+        $mail->setFrom($SMTP_USER, 'Madhav Kunj Administration');
         return $mail;
     } catch (Exception $e) {
         error_log("Mailer configuration failed: {$mail->ErrorInfo}");
