@@ -45,7 +45,7 @@ $unified_tx_sql = "
     SELECT combined_tx.*, u.name as renter_name, u.room_no 
     FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, total_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
@@ -66,7 +66,7 @@ $count_sql = "
     SELECT COUNT(*) as total 
     FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, total_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
