@@ -313,42 +313,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <?php endif; ?>
     </div>
 
-    <!-- 3. Bottom Section (3 columns) -->
-    <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 24px; margin-bottom: 24px;" class="animate-up dashboard-grid-70">
-        <!-- Documents -->
-        <div class="panel">
-            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
-            
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <?php if (!empty($user['aadhaar_file'])): ?>
-                <div style="padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #FFFFFF;">
-                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px; margin-bottom: 12px;">Identity Proof (Aadhaar)</div>
-                    <div style="display: flex; gap: 12px; justify-content: space-between;">
-                        <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="padding: 8px 16px; border: 1px solid var(--primary-purple); color: var(--primary-purple); border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">View Document</a>
-                        <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class='bx bx-trash'></i></a>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <?php if (!empty($user['agreement_document'])): ?>
-                <div style="padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #FFFFFF;">
-                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px; margin-bottom: 12px;">Rental Agreement</div>
-                    <div style="display: flex; gap: 12px; justify-content: space-between;">
-                        <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="padding: 8px 16px; border: 1px solid #10B981; color: #10B981; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">View Document</a>
-                        <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class='bx bx-trash'></i></a>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document'])): ?>
-                <div style="padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px;">
-                    <i class='bx bx-folder-open' style="font-size: 24px; margin-bottom: 8px; color: #CBD5E1;"></i><br>
-                    No documents uploaded
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
+    <!-- 3. History Section (2 columns) -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="animate-up">
         <!-- Utility History -->
         <div class="panel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
@@ -439,6 +405,56 @@ $admin_user = s($_SESSION['admin'] ?? '');
             <div style="margin-top: 16px; padding-top: 16px;">
                 <a href="electricity-list.php?search=<?php echo urlencode($user['name']); ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All Rent History <i class='bx bx-right-arrow-alt'></i></a>
             </div>
+        </div>
+    </div>
+
+    <!-- 4. Documents Section -->
+    <div class="panel animate-up" style="margin-bottom: 24px;">
+        <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
+        
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <?php if (!empty($user['aadhaar_file'])): ?>
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <i class='bx bx-id-card'></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px; margin-bottom: 4px;">Aadhaar Card</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Identity Proof</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($user['agreement_document'])): ?>
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <i class='bx bx-file-blank'></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px; margin-bottom: 4px;">Rental Agreement</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Signed Document</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document'])): ?>
+            <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: #F8FAFC;">
+                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: #CBD5E1;"></i><br>
+                No documents uploaded yet
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </main>
