@@ -15,6 +15,13 @@ while ($row = mysqli_fetch_assoc($renters_query)) {
     $renters[] = $row;
 }
 
+// Fetch recent residents for default view
+$recent_renters_query = mysqli_query($conn, "SELECT id, name, room_no FROM users WHERE status = 'active' ORDER BY id DESC LIMIT 4");
+$recent_renters = [];
+while ($row = mysqli_fetch_assoc($recent_renters_query)) {
+    $recent_renters[] = $row;
+}
+
 $admin_user = s($_SESSION['admin']);
 ?>
 <!DOCTYPE html>
@@ -457,24 +464,177 @@ $admin_user = s($_SESSION['admin']);
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
         }
 
+        /* New Redesign Styles */
+        .page-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .header-illustration {
+            display: none;
+        }
+        @media (min-width: 1024px) {
+            .header-illustration {
+                display: block;
+                height: 100px;
+            }
+        }
+        
+        .steps-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #F1F5F9;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .step.active .step-circle {
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 4px 15px rgba(98, 75, 255, 0.3);
+        }
+
+        .step-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .step-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-gray);
+            white-space: nowrap;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #E2E8F0;
+            margin: 0 20px;
+            position: relative;
+        }
+        
+        @media (max-width: 1024px) {
+            .steps-container { overflow-x: auto; padding: 20px; gap: 20px; }
+            .step-line { min-width: 40px; }
+            .guide-container { grid-template-columns: 1fr 1fr; }
+        }
         @media (max-width: 768px) {
-            .aesthetic-card {
-                padding: 20px;
-            }
+            .guide-container { grid-template-columns: 1fr; }
+            .bill-grid { grid-template-columns: 1fr !important; }
+        }
 
-            .btn-primary,
-            .btn-outline {
-                width: 100% !important;
-                justify-content: center !important;
-            }
+        /* Recent Residents */
+        .recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .recent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-radius: 16px;
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .recent-item:hover {
+            border-color: var(--primary-purple);
+            background: var(--white);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transform: translateX(4px);
+        }
+        
+        .avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--primary-purple); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
 
-            .welcome h1 {
-                font-size: 24px;
-            }
+        /* Guide Cards */
+        .guide-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 24px;
+        }
+        .guide-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .guide-icon {
+            width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;
+        }
+        .guide-card:nth-child(1) .guide-icon { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
+        .guide-card:nth-child(2) .guide-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+        .guide-card:nth-child(3) .guide-icon { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+        .guide-card:nth-child(4) .guide-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
 
-            .form-grid {
-                grid-template-columns: 1fr !important;
-            }
+        .guide-card h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark); }
+        .guide-card p { margin: 0; font-size: 12px; color: var(--text-gray); line-height: 1.5; }
+
+        .empty-state {
+            background: #F8FAFC;
+            border-radius: 16px;
+            border: 1px dashed #CBD5E1;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .empty-icon {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: rgba(98, 75, 255, 0.1);
+            color: #624BFF; font-size: 28px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+
+        .bill-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 24px;
+            align-items: start;
         }
     </style>
 </head>
@@ -501,89 +661,135 @@ $admin_user = s($_SESSION['admin']);
             class="animate-up"></div>
 
         <div class="bill-page animate-up">
-            <div class="welcome" style="margin-bottom: 32px;">
-                <h1>Create New Bill</h1>
-                <p>Generate a professional utility bill for your renters</p>
+            <div class="page-header-container">
+                <div class="welcome">
+                    <h1>Create New Bill</h1>
+                    <p>Generate a professional utility bill for your renters</p>
+                </div>
+                <div class="header-illustration">
+                    <img src="../assets/img/login-illustration.png" alt="Illustration" style="height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(98, 75, 255, 0.2)); opacity: 0.9;">
+                </div>
+            </div>
+            
+            <div class="steps-container animate-up">
+                <div class="step active" id="step1">
+                    <div class="step-circle">1</div>
+                    <div class="step-info">
+                        <h4>Select Resident</h4>
+                        <p>Choose resident account</p>
+                    </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step2">
+                    <div class="step-circle">2</div>
+                    <div class="step-info">
+                        <h4>Electricity Details</h4>
+                        <p>Enter meter & usage</p>
+                    </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step3">
+                    <div class="step-circle">3</div>
+                    <div class="step-info">
+                        <h4>Bill Summary</h4>
+                        <p>Review & confirm</p>
+                    </div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" id="step4">
+                    <div class="step-circle">4</div>
+                    <div class="step-info">
+                        <h4>Generate Bill</h4>
+                        <p>Create & save bill</p>
+                    </div>
+                </div>
             </div>
 
             <div class="bill-grid">
                 <div class="left-col">
-                    <div class="aesthetic-card animate-up" style="margin-bottom: 24px; z-index: 50;">
+                    <div class="aesthetic-card animate-up" style="z-index: 50;">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-user'></i>
                                 <span>Select Resident Account</span>
                             </div>
+                            <p style="color: var(--text-gray); font-size: 13px; margin: 8px 0 0 0;">Choose the resident for whom you want to generate the bill</p>
                         </div>
-                        <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; align-items: end;">
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label>Choose Account</label>
-                                <div class="custom-select-wrapper">
-                                    <div class="custom-select" id="customRenterSelect">
-                                        <div class="custom-select-trigger">
-                                            <span id="customSelectText">-- Choose a Resident --</span>
-                                            <i class='bx bx-chevron-down'></i>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Resident Account</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select" id="customRenterSelect">
+                                    <div class="custom-select-trigger">
+                                        <span id="customSelectText">-- Choose a Resident --</span>
+                                        <i class='bx bx-chevron-down'></i>
+                                    </div>
+                                    <div class="custom-options-container">
+                                        <div class="custom-search-box">
+                                            <i class='bx bx-search'></i>
+                                            <input type="text" id="customSelectSearch"
+                                                placeholder="Search resident...">
                                         </div>
-                                        <div class="custom-options-container">
-                                            <div class="custom-search-box">
-                                                <i class='bx bx-search'></i>
-                                                <input type="text" id="customSelectSearch"
-                                                    placeholder="Search resident...">
-                                            </div>
-                                            <div class="custom-options-list">
-                                                <div class="custom-option" data-value="">-- Choose a Resident --</div>
-                                                <?php foreach ($renters as $renter): ?>
-                                                    <div class="custom-option" data-value="<?php echo $renter['id']; ?>"
-                                                        data-name="<?php echo htmlspecialchars($renter['name']); ?>"
-                                                        data-room="<?php echo htmlspecialchars($renter['room_no']); ?>">
-                                                        <div class="opt-name">
-                                                            <?php echo htmlspecialchars($renter['name']); ?></div>
-                                                        <div class="opt-room">
-                                                            <?php echo htmlspecialchars($renter['room_no']); ?></div>
-                                                    </div>
-                                                <?php endforeach; ?>
-                                            </div>
+                                        <div class="custom-options-list">
+                                            <div class="custom-option" data-value="">-- Choose a Resident --</div>
+                                            <?php foreach ($renters as $renter): ?>
+                                                <div class="custom-option" data-value="<?php echo $renter['id']; ?>"
+                                                    data-name="<?php echo htmlspecialchars($renter['name']); ?>"
+                                                    data-room="<?php echo htmlspecialchars($renter['room_no']); ?>">
+                                                    <div class="opt-name">
+                                                        <?php echo htmlspecialchars($renter['name']); ?></div>
+                                                    <div class="opt-room">
+                                                        <?php echo htmlspecialchars($renter['room_no']); ?></div>
+                                                </div>
+                                            <?php endforeach; ?>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Hidden native select to preserve backend logic -->
-                                <select id="renterSelect" onchange="loadRenterInfo()" style="display: none;">
-                                    <option value="">-- Choose a Resident --</option>
-                                    <?php foreach ($renters as $renter): ?>
-                                        <option value="<?php echo $renter['id']; ?>"
-                                            data-name="<?php echo htmlspecialchars($renter['name']); ?>"
-                                            data-room="<?php echo htmlspecialchars($renter['room_no']); ?>"
-                                            data-phone="<?php echo htmlspecialchars($renter['phone']); ?>">
-                                            <?php echo htmlspecialchars($renter['name']); ?> - Room
-                                            <?php echo htmlspecialchars($renter['room_no']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
                             </div>
-                            <div id="renterInfo" class="info-pill" style="margin-top: 0; padding: 15px 20px;">
-                                <div style="display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
-                                    <div><small style="color:var(--text-gray)">Name</small>
-                                        <div id="infoName" style="font-weight:600; font-size: 15px;">--</div>
-                                    </div>
-                                    <div><small style="color:var(--text-gray)">Room</small>
-                                        <div id="infoRoom" style="font-weight:600; font-size: 15px;">--</div>
-                                    </div>
-                                    <div><small style="color:var(--text-gray)">Previous Reading</small>
-                                        <div id="infoLastReading"
-                                            style="font-weight:700; color:var(--primary-purple); font-size: 15px;">
-                                            Loading...</div>
-                                    </div>
-                                    <div><small style="color:var(--text-gray)">Pending Balance</small>
-                                        <div id="infoBalance" style="font-weight:700; font-size: 15px;">--</div>
-                                    </div>
+
+                            <!-- Hidden native select to preserve backend logic -->
+                            <select id="renterSelect" onchange="loadRenterInfo()" style="display: none;">
+                                <option value="">-- Choose a Resident --</option>
+                                <?php foreach ($renters as $renter): ?>
+                                    <option value="<?php echo $renter['id']; ?>"
+                                        data-name="<?php echo htmlspecialchars($renter['name']); ?>"
+                                        data-room="<?php echo htmlspecialchars($renter['room_no']); ?>"
+                                        data-phone="<?php echo htmlspecialchars($renter['phone']); ?>">
+                                        <?php echo htmlspecialchars($renter['name']); ?> - Room
+                                        <?php echo htmlspecialchars($renter['room_no']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div id="emptyState" class="empty-state">
+                            <div class="empty-icon"><i class='bx bx-group'></i></div>
+                            <div>
+                                <h4 style="margin: 0 0 4px 0; font-size: 15px; color: var(--text-dark); font-weight: 700;">No resident selected</h4>
+                                <p style="margin: 0; font-size: 13px; color: var(--text-gray);">Select a resident to view details</p>
+                            </div>
+                        </div>
+
+                        <div id="renterInfo" class="info-pill" style="margin-top: 24px; padding: 15px 20px;">
+                            <div style="display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
+                                <div><small style="color:var(--text-gray)">Name</small>
+                                    <div id="infoName" style="font-weight:600; font-size: 15px;">--</div>
+                                </div>
+                                <div><small style="color:var(--text-gray)">Room</small>
+                                    <div id="infoRoom" style="font-weight:600; font-size: 15px;">--</div>
+                                </div>
+                                <div><small style="color:var(--text-gray)">Previous Reading</small>
+                                    <div id="infoLastReading"
+                                        style="font-weight:700; color:var(--primary-purple); font-size: 15px;">
+                                        Loading...</div>
+                                </div>
+                                <div><small style="color:var(--text-gray)">Pending Balance</small>
+                                    <div id="infoBalance" style="font-weight:700; font-size: 15px;">--</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="aesthetic-card">
+                    <div class="aesthetic-card" id="electricitySection" style="opacity: 0.5; pointer-events: none; transition: 0.3s;">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-bolt'></i>
@@ -711,52 +917,120 @@ $admin_user = s($_SESSION['admin']);
                 </div>
 
                 <div class="right-col bill-summary">
-                    <!-- Digital Wallet Layout -->
-                    <div class="wallet-card">
-                        <div class="wallet-header">
-                            <div style="flex: 1; padding-right: 15px;">
-                                <p>Resident Info</p>
-                                <h3 id="receiptRenter">Not Selected</h3>
-                            </div>
-                            <div style="text-align: right; flexShrink: 0;">
-                                <p>Billing Cycle</p>
-                                <h3 id="receiptMonthYear">--</h3>
-                            </div>
+                    <!-- Default Panel: Recent Residents -->
+                    <div id="recentResidentsPanel" class="aesthetic-card animate-up">
+                        <div class="panel-header" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div class="section-title" style="font-size: 16px;"><i class='bx bx-group'></i> Recent Residents</div>
+                            <a href="manage-renters.php" class="btn-outline" style="padding: 6px 12px; font-size: 12px; border-radius: 8px;">View All</a>
                         </div>
-
-                        <div class="test-fix" style="display:none;"></div>
-
-                        <div class="wallet-total">
-                            <p>Total Payable</p>
-                            <h1 id="calcTotal">₹0</h1>
-                        </div>
-
-                        <div class="wallet-details">
-                            <div class="wallet-row"><span>Units Consumed</span><span id="calcUnits">0</span></div>
-                            <div class="wallet-row"><span>Electricity Cost</span><span id="calcElectricity">₹0</span>
+                        <div class="recent-list">
+                            <?php foreach($recent_renters as $rr): 
+                                $names = explode(' ', trim($rr['name']));
+                                $initials = strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
+                            ?>
+                            <div class="recent-item" onclick="selectRenterDropdown(<?php echo $rr['id']; ?>)">
+                                <div class="avatar"><?php echo $initials; ?></div>
+                                <div class="info" style="flex:1; margin-left: 12px;">
+                                    <h4 style="margin:0; font-size:14px; font-weight:700; color: var(--text-dark);"><?php echo htmlspecialchars($rr['name']); ?></h4>
+                                    <p style="margin:0; font-size:12px; color:var(--text-gray);">Room <?php echo htmlspecialchars($rr['room_no']); ?></p>
+                                </div>
+                                <i class='bx bx-chevron-right' style="color:var(--text-gray); font-size: 20px;"></i>
                             </div>
-                            <div class="wallet-divider"></div>
-                            <div class="wallet-row"><span>Standard Rent</span><span id="calcRent">₹0</span></div>
-                            <div class="wallet-row"><span>Maintenance</span><span id="calcMaintenance">₹0</span></div>
-                            <div class="wallet-divider"></div>
-                            <div class="wallet-row"><span>Arrears/Dues</span><span id="calcDues">₹0</span></div>
-                            <div class="wallet-row" id="extraChargesDiv" style="display: none;"><span>Extra
-                                    Charges</span><span id="calcExtraCharges">₹0</span></div>
+                            <?php endforeach; ?>
+                            <?php if (empty($recent_renters)): ?>
+                                <p style="color: var(--text-gray); text-align: center; font-size: 13px;">No active residents found.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
 
-                    <button class="btn-primary"
-                        style="width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px; padding: 14px; background: #624BFF; border: none; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.3);"
-                        onclick="generateBill()">
-                        <i class='bx bx-printer'></i> Generate & Print
-                    </button>
-                    <button class="btn-outline"
-                        style="width: 100%; margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; border: 1.5px solid var(--border);"
-                        onclick="resetForm()">
-                        <i class='bx bx-refresh'></i> Reset Form
-                    </button>
+                    <!-- Active Panel: Digital Wallet -->
+                    <div id="billSummaryPanel" style="display: none;" class="animate-up">
+                        <div class="wallet-card">
+                            <div class="wallet-header">
+                                <div style="flex: 1; padding-right: 15px;">
+                                    <p>Resident Info</p>
+                                    <h3 id="receiptRenter">Not Selected</h3>
+                                </div>
+                                <div style="text-align: right; flexShrink: 0;">
+                                    <p>Billing Cycle</p>
+                                    <h3 id="receiptMonthYear">--</h3>
+                                </div>
+                            </div>
+    
+                            <div class="test-fix" style="display:none;"></div>
+    
+                            <div class="wallet-total">
+                                <p>Total Payable</p>
+                                <h1 id="calcTotal">₹0</h1>
+                            </div>
+    
+                            <div class="wallet-details">
+                                <div class="wallet-row"><span>Units Consumed</span><span id="calcUnits">0</span></div>
+                                <div class="wallet-row"><span>Electricity Cost</span><span id="calcElectricity">₹0</span>
+                                </div>
+                                <div class="wallet-divider"></div>
+                                <div class="wallet-row"><span>Standard Rent</span><span id="calcRent">₹0</span></div>
+                                <div class="wallet-row"><span>Maintenance</span><span id="calcMaintenance">₹0</span></div>
+                                <div class="wallet-divider"></div>
+                                <div class="wallet-row"><span>Arrears/Dues</span><span id="calcDues">₹0</span></div>
+                                <div class="wallet-row" id="extraChargesDiv" style="display: none;"><span>Extra
+                                        Charges</span><span id="calcExtraCharges">₹0</span></div>
+                            </div>
+                        </div>
+    
+                        <button class="btn-primary"
+                            style="width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px; padding: 14px; background: #624BFF; border: none; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.3);"
+                            onclick="generateBill()">
+                            <i class='bx bx-printer'></i> Generate & Print
+                        </button>
+                        <button class="btn-outline"
+                            style="width: 100%; margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; border: 1.5px solid var(--border);"
+                            onclick="resetForm()">
+                            <i class='bx bx-refresh'></i> Reset Form
+                        </button>
+                    </div>
                 </div>
             </div> <!-- End .bill-grid -->
+
+            <!-- Bottom Guide Section -->
+            <div class="aesthetic-card animate-up" style="margin-top: 24px; padding: 32px;">
+                <div class="section-title" style="margin-bottom: 8px;">
+                    <i class='bx bx-book-open'></i>
+                    <span>Bill Generation Guide</span>
+                </div>
+                <p style="color: var(--text-gray); font-size: 14px; margin: 0 0 16px 0;">Follow these simple steps to generate a new bill</p>
+                <div class="guide-container">
+                    <div class="guide-card purple">
+                        <div class="guide-icon"><i class='bx bx-user'></i></div>
+                        <div>
+                            <h4>Select Resident</h4>
+                            <p>Choose the resident account from the dropdown</p>
+                        </div>
+                    </div>
+                    <div class="guide-card blue">
+                        <div class="guide-icon"><i class='bx bx-bolt'></i></div>
+                        <div>
+                            <h4>Enter Details</h4>
+                            <p>Add meter reading and electricity usage details</p>
+                        </div>
+                    </div>
+                    <div class="guide-card green">
+                        <div class="guide-icon"><i class='bx bx-calculator'></i></div>
+                        <div>
+                            <h4>Review Bill</h4>
+                            <p>Review all charges and calculate the total</p>
+                        </div>
+                    </div>
+                    <div class="guide-card orange">
+                        <div class="guide-icon"><i class='bx bx-file'></i></div>
+                        <div>
+                            <h4>Generate</h4>
+                            <p>Generate and save the bill. It's that simple!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div> <!-- End .bill-page -->
 
         <!-- Crop Modal -->
@@ -955,19 +1229,71 @@ $admin_user = s($_SESSION['admin']);
 
         let selectedRenterId = null;
 
+        function updateSteps(step) {
+            document.getElementById('step1').classList.remove('active', 'completed');
+            document.getElementById('step2').classList.remove('active', 'completed');
+            document.getElementById('step3').classList.remove('active', 'completed');
+            document.getElementById('step4').classList.remove('active', 'completed');
+            
+            if(step >= 1) document.getElementById('step1').classList.add('active');
+            if(step >= 2) {
+                document.getElementById('step1').classList.add('completed');
+                document.getElementById('step2').classList.add('active');
+            }
+            if(step >= 3) {
+                document.getElementById('step2').classList.add('completed');
+                document.getElementById('step3').classList.add('active');
+            }
+            if(step >= 4) {
+                document.getElementById('step3').classList.add('completed');
+                document.getElementById('step4').classList.add('active');
+            }
+        }
+
+        function selectRenterDropdown(id) {
+            const hiddenSelect = document.getElementById('renterSelect');
+            hiddenSelect.value = id;
+            hiddenSelect.dispatchEvent(new Event('change'));
+            
+            // Also update custom select visually
+            const customSelect = document.getElementById('customRenterSelect');
+            const options = customSelect.querySelectorAll('.custom-option');
+            const selectText = document.getElementById('customSelectText');
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            const targetOpt = Array.from(options).find(opt => opt.getAttribute('data-value') == id);
+            if(targetOpt) {
+                targetOpt.classList.add('selected');
+                selectText.textContent = targetOpt.querySelector('.opt-name').textContent + ' - Room ' + targetOpt.querySelector('.opt-room').textContent;
+            }
+        }
+
         async function loadRenterInfo() {
             const select = document.getElementById('renterSelect');
             const renterId = select.value;
             if (!renterId) {
-                document.getElementById('renterInfo').classList.remove('active');
-                document.getElementById('receiptRenter').textContent = `Not Selected`;
+                document.getElementById('emptyState').style.display = 'flex';
+                document.getElementById('renterInfo').style.display = 'none';
+                document.getElementById('electricitySection').style.opacity = '0.5';
+                document.getElementById('electricitySection').style.pointerEvents = 'none';
+                document.getElementById('recentResidentsPanel').style.display = 'block';
+                document.getElementById('billSummaryPanel').style.display = 'none';
+                updateSteps(1);
                 return;
             }
             selectedRenterId = renterId;
             const option = select.options[select.selectedIndex];
             document.getElementById('infoName').textContent = option.dataset.name;
             document.getElementById('infoRoom').textContent = option.dataset.room;
-            document.getElementById('renterInfo').classList.add('active');
+            
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('renterInfo').style.display = 'block';
+            document.getElementById('electricitySection').style.opacity = '1';
+            document.getElementById('electricitySection').style.pointerEvents = 'auto';
+            document.getElementById('recentResidentsPanel').style.display = 'none';
+            document.getElementById('billSummaryPanel').style.display = 'block';
+            
+            updateSteps(2);
 
             // Update Receipt Preview
             document.getElementById('receiptRenter').textContent = `${option.dataset.name} (Rm ${option.dataset.room})`;
@@ -1040,6 +1366,12 @@ $admin_user = s($_SESSION['admin']);
             }
 
             document.getElementById('calcTotal').textContent = '₹' + Math.round(total).toLocaleString();
+            
+            if (curr > 0 && curr >= prev) {
+                updateSteps(3); // Bill Summary active
+            } else {
+                updateSteps(2);
+            }
         }
 
         async function generateBill() {
@@ -1119,7 +1451,19 @@ $admin_user = s($_SESSION['admin']);
 
         function resetForm() {
             document.getElementById('renterSelect').value = '';
-            document.getElementById('renterInfo').classList.remove('active');
+            document.getElementById('emptyState').style.display = 'flex';
+            document.getElementById('renterInfo').style.display = 'none';
+            document.getElementById('electricitySection').style.opacity = '0.5';
+            document.getElementById('electricitySection').style.pointerEvents = 'none';
+            document.getElementById('recentResidentsPanel').style.display = 'block';
+            document.getElementById('billSummaryPanel').style.display = 'none';
+            
+            const customSelectText = document.getElementById('customSelectText');
+            if (customSelectText) customSelectText.textContent = '-- Choose a Resident --';
+            
+            const options = document.querySelectorAll('.custom-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            
             document.getElementById('currentReading').value = '';
             document.getElementById('previousReading').value = '';
             document.getElementById('rentAmount').value = '';
@@ -1128,6 +1472,8 @@ $admin_user = s($_SESSION['admin']);
             document.getElementById('meterScreenshot').value = '';
             document.getElementById('extraCharges').value = '';
             document.getElementById('extraChargesDesc').value = '';
+            
+            updateSteps(1);
             calculateBill();
         }
     </script>
