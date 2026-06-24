@@ -2,7 +2,7 @@
 session_start();
 require_once '../db.php';
 
-if (!isset($_SESSION['admin_logged_in'])) {
+if (!isset($_SESSION['admin'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Unauthorized access']);
     exit;
