@@ -175,11 +175,16 @@ $admin_user = s($_SESSION['admin'] ?? '');
     <div class="panel animate-up" style="margin-bottom: 24px; padding: 32px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 24px;">
             <div style="display: flex; gap: 24px; align-items: center;">
-                <?php if ($user['profile_pic']): ?>
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
-                <?php else: ?>
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
-                <?php endif; ?>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                    <?php if ($user['profile_pic']): ?>
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
+                    <?php else: ?>
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                    <?php endif; ?>
+                    <?php if (($user['status'] ?? 'active') == 'active'): ?>
+                        <span style="color: #10B981; font-weight: 600; font-size: 12px; background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px;"><i class='bx bxs-circle' style="font-size: 8px;"></i> Active</span>
+                    <?php endif; ?>
+                </div>
                 
                 <div>
                     <h2 style="font-weight: 800; font-size: 24px; margin: 0 0 8px 0; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
@@ -189,10 +194,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <span><i class='bx bx-user-circle'></i> @<?php echo htmlspecialchars($user['username']); ?></span>
                         <span style="color: var(--border);">|</span> 
                         <span style="color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-door-open'></i> Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?></span>
-                        <?php if (($user['status'] ?? 'active') == 'active'): ?>
-                            <span style="color: var(--border);">|</span>
-                            <span style="color: #10B981; font-weight: 600;"><i class='bx bxs-circle' style="font-size: 8px;"></i> Active</span>
-                        <?php endif; ?>
+
                     </div>
                 </div>
             </div>
