@@ -36,7 +36,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="bill-generator.php" class="nav-item <?php echo $current_page == 'bill-generator.php' ? 'active' : ''; ?>">
             <i class='bx bx-bolt-circle'></i> Bill Generator
         </a>
-        <a href="manage-renters.php" class="nav-item <?php echo ($current_page == 'manage-renters.php' || $current_page == 'view-renter.php') ? 'active' : ''; ?>">
+        <a href="manage-renters.php" class="nav-item <?php echo ($current_page == 'manage-renters.php' || $current_page == 'view-renter.php' || $current_page == 'edit-renter.php') ? 'active' : ''; ?>">
             <i class='bx bx-user'></i> Manage Residents
         </a>
         <a href="electricity-list.php" class="nav-item <?php echo $current_page == 'electricity-list.php' ? 'active' : ''; ?>">
