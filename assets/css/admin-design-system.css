@@ -323,10 +323,10 @@ body.dark-theme .support-box .support-icon {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--white);
+    background: transparent;
     padding: 16px 32px;
     margin: -32px -32px 32px -32px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     z-index: 100;
 }
 
