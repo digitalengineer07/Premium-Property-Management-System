@@ -624,7 +624,7 @@ $admin_user = s($_SESSION['admin']);
 
         <div class="bill-page animate-up">
             <div class="page-header-container">
-                <div class="welcome" style="margin-bottom: 0;">
+                <div class="welcome" style="margin-bottom: 0; transform: translateY(-20px);">
                     <h1 style="font-size: 38px; font-weight: 800; letter-spacing: -1.5px; background: linear-gradient(135deg, #0F172A 0%, #624BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
                         <i class='bx bx-receipt' style="color: #624BFF; -webkit-text-fill-color: #624BFF; font-size: 42px;"></i>
                         Create New Bill
