@@ -49,17 +49,6 @@ $admin_user = s($_SESSION['admin']);
             margin-bottom: 20px;
         }
 
-        .aesthetic-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--primary-purple);
-            border-radius: 24px 24px 0 0;
-        }
-
         .panel-header {
             display: flex;
             align-items: center;
