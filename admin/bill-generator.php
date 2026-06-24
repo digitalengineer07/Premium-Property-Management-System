@@ -33,9 +33,9 @@ $admin_user = s($_SESSION['admin']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
         .bill-page {
-            max-width: 100%;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 0;
+            padding: 0 24px 40px;
             box-sizing: border-box;
         }
 
