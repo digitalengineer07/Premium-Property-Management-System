@@ -71,6 +71,15 @@ mysqli_stmt_close($stmt);
 
 $advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
 
+/* Fetch detailed payment history log */
+$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id WHERE p.user_id = ? ORDER BY p.id DESC");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$payment_res = mysqli_stmt_get_result($stmt);
+$payment_history = [];
+while ($r = mysqli_fetch_assoc($payment_res)) $payment_history[] = $r;
+mysqli_stmt_close($stmt);
+
 $admin_user = s($_SESSION['admin'] ?? '');
 ?>
 <!DOCTYPE html>
