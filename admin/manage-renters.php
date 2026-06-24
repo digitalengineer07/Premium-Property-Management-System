@@ -83,6 +83,12 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         /* Card View for Residents is specific to this page list */
+        @media (max-width: 1024px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 480px) {
+            .kpi-grid { grid-template-columns: 1fr !important; }
+        }
         @media (max-width: 768px) {
             .panel { background: transparent !important; box-shadow: none !important; padding: 0 !important; border: none !important; margin: 0 !important; width: 100% !important; }
             .panel-header { background: var(--white); border-radius: 16px; padding: 16px !important; margin-bottom: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); width: 100% !important; }
@@ -186,7 +192,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <!-- KPI Cards -->
-    <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px;">
+    <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
         <div class="aesthetic-card" style="padding: 20px; display: flex; align-items: center; gap: 20px;">
             <div class="kpi-icon" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
                 <i class='bx bx-user'></i>
