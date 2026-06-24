@@ -452,6 +452,11 @@ $admin_user = s($_SESSION['admin']);
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
         }
 
+        .btn-primary:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
         .btn-outline:active {
             transform: scale(0.95);
             background: rgba(255,255,255,0.2) !important;
@@ -911,7 +916,7 @@ $admin_user = s($_SESSION['admin']);
                             
                             <!-- Right: Actions -->
                             <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px;">
-                                <button type="button" class="btn-primary hover-scale" style="width: 100%; background: white; color: #624BFF; border: none; padding: 16px; font-weight: 700; font-size: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onclick="generateBill()">
+                                <button type="button" id="generateBtn" class="btn-primary hover-scale" style="width: 100%; background: white; color: #624BFF; border: none; padding: 16px; font-weight: 700; font-size: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onclick="generateBill()">
                                     <i class='bx bx-printer' style="font-size: 20px;"></i> Generate Bill
                                 </button>
                                 <button type="button" class="btn-outline" style="width: 100%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="resetForm()">
@@ -1309,6 +1314,12 @@ $admin_user = s($_SESSION['admin']);
             const curr = document.getElementById('currentReading').value;
             if (!curr) { showMsg('Enter current reading', 'error'); return; }
 
+            const btn = document.getElementById('generateBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin' style='font-size: 20px;'></i> Generating...";
+            btn.style.pointerEvents = 'none';
+            btn.style.opacity = '0.8';
+
             const fd = new FormData();
             fd.append('csrf', '<?php echo getCsrfToken(); ?>');
             fd.append('user_id', selectedRenterId);
@@ -1368,6 +1379,11 @@ $admin_user = s($_SESSION['admin']);
             } catch (e) {
                 console.error(e);
                 showMsg('Network error: Unable to connect to server.', 'error');
+            } finally {
+                const btn = document.getElementById('generateBtn');
+                btn.innerHTML = "<i class='bx bx-printer' style='font-size: 20px;'></i> Generate Bill";
+                btn.style.pointerEvents = 'auto';
+                btn.style.opacity = '1';
             }
         }
 
