@@ -19,13 +19,13 @@ function get_phpmailer_instance() {
         $mail->isSMTP();
         $mail->Host       = 'smtp.hostinger.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'madhavkunj@succorkart.in';
+        $mail->Username   = 'no-reply@subhadippramanik.me';
         $mail->Password   = 'F0rg3tN0t@2026';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
         // Set default sender
-        $mail->setFrom('madhavkunj@succorkart.in', 'Madhav Kunj Administration');
+        $mail->setFrom('no-reply@subhadippramanik.me', 'Madhav Kunj Administration');
         return $mail;
     } catch (Exception $e) {
         error_log("Mailer configuration failed: {$mail->ErrorInfo}");
