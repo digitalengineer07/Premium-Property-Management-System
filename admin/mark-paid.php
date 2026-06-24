@@ -63,8 +63,8 @@ if ($type === 'advance') {
 $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
 $remaining_amount = max(0, $bill_amount - $already_paid);
 
-$paid_amount = $remaining_amount; // Default for Online
-if ($payment_mode === 'Offline' && isset($_POST['paid_amount'])) {
+$paid_amount = $remaining_amount; // Default
+if (isset($_POST['paid_amount']) && is_numeric($_POST['paid_amount'])) {
     $paid_amount = (float)$_POST['paid_amount'];
 }
 
@@ -82,8 +82,8 @@ elseif ($delta < 0) $adj_type = 'remaining';
 
 /* 3. Record Payment */
 $actual_bill_id = ($type === 'advance') ? 0 : $id; // For advance, there is no specific bill_id
-$stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, payment_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-mysqli_stmt_bind_param($stmt, "isissddssss", 
+$stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, payment_time, recorded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+mysqli_stmt_bind_param($stmt, "isissddssssi", 
     $bill['user_id'], 
     $type, 
     $actual_bill_id, 
@@ -94,7 +94,8 @@ mysqli_stmt_bind_param($stmt, "isissddssss",
     $delta, 
     $adj_type, 
     $payment_date, 
-    $payment_time
+    $payment_time,
+    $admin_id
 );
 mysqli_stmt_execute($stmt);
 if (mysqli_stmt_error($stmt)) {
