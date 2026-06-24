@@ -155,13 +155,18 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <h1>Edit Profile</h1>
-        <p>Modify details for <?php echo htmlspecialchars($user['name']); ?></p>
+    <div class="animate-up" style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;">
+        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <i class='bx bx-user-pin' style="font-size: 28px;"></i>
+        </div>
+        <div>
+            <h1 style="font-size: 24px; font-weight: 700; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Edit Profile</h1>
+            <p style="font-size: 14px; color: var(--text-gray); margin: 4px 0 0 0;">Modify details and configurations for <span style="font-weight: 600; color: var(--primary-purple);"><?php echo htmlspecialchars($user['name']); ?></span></p>
+        </div>
     </div>
 
-    <div class="animate-up" style="margin-top: 30px;">
-        <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
+    <div class="animate-up">
+        <div style="max-width: 1000px; margin: 0 auto; width: 100%;">
             <div class="panel" style="padding: 40px;">
                 <?php if ($success): ?>
                     <div style="background: #F0FDF4; color: #10B981; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #DCFCE7;">
