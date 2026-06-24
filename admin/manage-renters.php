@@ -233,21 +233,30 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <div class="panel animate-up">
-        <div class="panel-header" style="padding-bottom: 0;">
-            <div style="display: flex; gap: 16px; border-bottom: 1px solid var(--border); overflow-x: auto; margin-bottom: 15px;">
-                <a href="?status=active" style="padding: 10px 16px; color: <?php echo $filter_status === 'active' ? 'var(--primary)' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'active' ? 'var(--primary)' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Active Residents</a>
-                <a href="?status=moved_out" style="padding: 10px 16px; color: <?php echo $filter_status === 'moved_out' ? 'var(--primary)' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'moved_out' ? 'var(--primary)' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Past Residents</a>
+        <div class="panel-header" style="padding-bottom: 0; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); margin-bottom: 20px;">
+            <div style="display: flex; gap: 24px; overflow-x: auto;">
+                <a href="?status=active" style="padding: 12px 0; color: <?php echo $filter_status === 'active' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'active' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Active Residents</a>
+                <a href="?status=moved_out" style="padding: 12px 0; color: <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'moved_out' ? '#624BFF' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Past Residents</a>
             </div>
-            <form method="GET" class="filter-form" style="width: 100%; margin-bottom: 15px;">
+            
+            <form method="GET" class="filter-form" style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
                 <input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>">
-                <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%;">
-                    <div style="position: relative; flex: 1; min-width: 200px;">
-                        <i class='bx bx-search' style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
-                        <input name="q" placeholder="Search by name..." value="<?php echo htmlspecialchars($query); ?>" class="btn-outline" style="width: 100%; text-align: left; cursor: text; padding-left: 45px;">
-                    </div>
-                    <input name="room" placeholder="Room..." value="<?php echo htmlspecialchars($room); ?>" class="btn-outline" style="width: 100px; text-align: left; cursor: text;">
-                    <button type="submit" class="btn-primary">Search</button>
+                
+                <div style="position: relative; min-width: 280px;">
+                    <i class='bx bx-search' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
+                    <input name="q" placeholder="Search by name, phone or email..." value="<?php echo htmlspecialchars($query); ?>" style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC;">
                 </div>
+                
+                <div style="position: relative; width: 110px;">
+                    <input name="room" placeholder="Room" value="<?php echo htmlspecialchars($room); ?>" style="width: 100%; padding: 10px 30px 10px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC;">
+                    <i class='bx bx-chevron-down' style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
+                </div>
+
+                <button type="button" class="btn-outline" style="padding: 10px 16px; border-radius: 10px; border: 1px solid var(--border); font-size: 13px; color: var(--text-dark); background: transparent; display: flex; align-items: center; gap: 6px;">
+                    <i class='bx bx-filter-alt'></i> Filter
+                </button>
+                
+                <button type="submit" class="btn-primary" style="padding: 10px 24px; border-radius: 10px; font-size: 13px; background: #624BFF;">Search</button>
             </form>
         </div>
 
