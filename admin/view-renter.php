@@ -36,8 +36,7 @@ if (!$user) {
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
            (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid,
-           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount,
-           (SELECT GROUP_CONCAT(CONCAT(payment_mode, '|', paid_amount, '|', payment_date, '|', IFNULL(payment_time, '')) SEPARATOR '||') FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as payment_details
+           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount
     FROM electricity e 
     WHERE e.user_id = ? 
     ORDER BY e.id DESC
@@ -50,11 +49,10 @@ mysqli_stmt_close($stmt);
 
 /* Fetch rent records (from electricity table as rent and maintenance combined) */
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount, r.status, 0 as maintenance, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = r.id) as total_paid,
-           (SELECT GROUP_CONCAT(CONCAT(payment_mode, '|', paid_amount, '|', payment_date, '|', IFNULL(payment_time, '')) SEPARATOR '||') FROM payments WHERE bill_type = 'rent' AND bill_id = r.id) as payment_details
-    FROM rent r 
-    WHERE r.user_id = ? 
+    SELECT r.id, r.month, r.rent_amount, r.maintenance, r.status, 
+           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = r.id) as total_paid
+    FROM electricity r 
+    WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
     ORDER BY r.id DESC
 ");
 mysqli_stmt_bind_param($stmt, "i", $id);
@@ -331,40 +329,19 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Month</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Units</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Amount</th>
-                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Payment Info</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Status</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($elecs)): ?>
-                            <tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No utility records.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No utility records.</td></tr>
                         <?php else: ?>
                             <?php $shown_elecs = array_slice($elecs, 0, 3); foreach ($shown_elecs as $e): ?>
                             <tr style="border-bottom: 1px solid var(--border);">
                                 <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($e['month']); ?></td>
                                 <td style="padding: 12px 8px; font-size: 12px; color: var(--text-gray);"><?php echo htmlspecialchars($e['units_consumed'] ?? ($e['current_reading'] - $e['previous_reading'])); ?> Units</td>
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['total_amount'], 2); ?></td>
-                                <td style="padding: 12px 8px; font-size: 11px; color: var(--text-gray);">
-                                    <?php 
-                                    if(!empty($e['payment_details'])) {
-                                        $pd = explode('||', $e['payment_details']);
-                                        foreach($pd as $p) {
-                                            $parts = explode('|', $p);
-                                            $mode = $parts[0] ?? '';
-                                            $amt = $parts[1] ?? '0';
-                                            $dt = $parts[2] ?? '';
-                                            $tm = $parts[3] ?? '';
-                                            $timeStr = !empty($tm) ? date("h:i A", strtotime($tm)) : '';
-                                            $dateStr = !empty($dt) ? date("d M y", strtotime($dt)) : '';
-                                            $icon = $mode == 'Offline' ? '<i class="bx bx-money" style="color:#10B981" title="Cash"></i>' : '<i class="bx bx-credit-card" style="color:#3B82F6" title="Online"></i>';
-                                            echo "<div style='margin-bottom: 4px; white-space: nowrap;'>$icon <strong>₹$amt</strong> <span style='font-size:10px;'>($dateStr $timeStr)</span></div>";
-                                        }
-                                    } else {
-                                        echo "-";
-                                    }
-                                    ?>
-                                </td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
                                     <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['total_amount'] - $e['total_paid']); ?>
@@ -398,40 +375,19 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Month</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Details</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Total</th>
-                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Payment Info</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Status</th>
                             <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($rents)): ?>
-                            <tr><td colspan="6" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No rent records.</td></tr>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No rent records.</td></tr>
                         <?php else: ?>
                             <?php $shown_rents = array_slice($rents, 0, 3); foreach ($shown_rents as $r): ?>
                             <tr style="border-bottom: 1px solid var(--border);">
                                 <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($r['month']); ?></td>
                                 <td style="padding: 12px 8px; font-size: 10px; color: var(--text-gray);">Rent: ₹<?php echo number_format($r['rent_amount']); ?><br>Maint: ₹<?php echo number_format($r['maintenance']); ?></td>
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
-                                <td style="padding: 12px 8px; font-size: 11px; color: var(--text-gray);">
-                                    <?php 
-                                    if(!empty($r['payment_details'])) {
-                                        $pd = explode('||', $r['payment_details']);
-                                        foreach($pd as $p) {
-                                            $parts = explode('|', $p);
-                                            $mode = $parts[0] ?? '';
-                                            $amt = $parts[1] ?? '0';
-                                            $dt = $parts[2] ?? '';
-                                            $tm = $parts[3] ?? '';
-                                            $timeStr = !empty($tm) ? date("h:i A", strtotime($tm)) : '';
-                                            $dateStr = !empty($dt) ? date("d M y", strtotime($dt)) : '';
-                                            $icon = $mode == 'Offline' ? '<i class="bx bx-money" style="color:#10B981" title="Cash"></i>' : '<i class="bx bx-credit-card" style="color:#3B82F6" title="Online"></i>';
-                                            echo "<div style='margin-bottom: 4px; white-space: nowrap;'>$icon <strong>₹$amt</strong> <span style='font-size:10px;'>($dateStr $timeStr)</span></div>";
-                                        }
-                                    } else {
-                                        echo "-";
-                                    }
-                                    ?>
-                                </td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
                                     <?php if($r['status'] != 'Paid'): $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $r['total_paid']); ?>
