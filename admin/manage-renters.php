@@ -313,8 +313,46 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease;">
+        <div class="panel" style="max-width: 360px; width: 100%; padding: 32px; background: var(--white); text-align: center; transform: scale(0.8); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div style="width: 72px; height: 72px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <i class='bx bx-check' style="font-size: 40px; color: #10B981;"></i>
+            </div>
+            <h3 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 12px;">Success!</h3>
+            <p id="successMessageText" style="color: var(--text-gray); font-size: 15px; line-height: 1.5; margin-bottom: 24px;"></p>
+            <button onclick="closeSuccessModal()" class="btn-primary" style="width: 100%; justify-content: center; background: #10B981; border: none; padding: 12px; font-size: 15px;">Continue</button>
+        </div>
+    </div>
+
 <script>
     const CSRF_TOKEN = '<?php echo getCsrfToken(); ?>';
+    
+    // Custom Success Modal Logic
+    let successCallback = null;
+    function showSuccessMessage(msg, callback) {
+        document.getElementById('successMessageText').textContent = msg;
+        const modal = document.getElementById('successModal');
+        const panel = modal.querySelector('.panel');
+        modal.style.display = 'flex';
+        // Trigger reflow
+        void modal.offsetWidth;
+        modal.style.opacity = '1';
+        panel.style.transform = 'scale(1)';
+        successCallback = callback;
+    }
+
+    function closeSuccessModal() {
+        const modal = document.getElementById('successModal');
+        const panel = modal.querySelector('.panel');
+        modal.style.opacity = '0';
+        panel.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            modal.style.display = 'none';
+            if (successCallback) successCallback();
+        }, 300);
+    }
+
     document.getElementById('renterFilter')?.addEventListener('keyup', function(e) {
         let term = e.target.value.toLowerCase();
         let rows = document.querySelectorAll('#renterTable tr');
@@ -394,8 +432,10 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             });
             const data = await res.json();
             if (data.success) {
-                alert(data.message);
-                location.reload();
+                closeMoveOutModal();
+                showSuccessMessage(data.message, () => {
+                    location.reload();
+                });
             } else {
                 alert(data.error);
             }
