@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     )");
                     
                     if (!empty($email)) {
-                        send_welcome_email($email, $name);
+                        send_welcome_email($email, $name, $new_id, $username, $password);
                     }
                     mysqli_query($conn, "INSERT IGNORE INTO welcome_logs (user_id) VALUES ($new_id)");
 
