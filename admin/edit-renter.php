@@ -160,9 +160,9 @@ $admin_user = s($_SESSION['admin']);
         <p>Modify details for <?php echo htmlspecialchars($user['name']); ?></p>
     </div>
 
-    <div class="dashboard-grid-70 animate-up" style="margin-top: 30px; grid-template-columns: 1fr;">
-        <div style="max-width: 700px; margin: 0 auto; width: 100%;">
-            <div class="panel">
+    <div class="animate-up" style="margin-top: 30px;">
+        <div style="max-width: 1200px; margin: 0 auto; width: 100%;">
+            <div class="panel" style="padding: 40px;">
                 <?php if ($success): ?>
                     <div style="background: #F0FDF4; color: #10B981; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #DCFCE7;">
                         <?php echo $success; ?>
@@ -176,96 +176,109 @@ $admin_user = s($_SESSION['admin']);
 
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
-                    <div class="form-group">
-                        <label>Resident Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required>
-                    </div>
+                    <!-- Personal Information -->
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);"><i class='bx bx-user'></i> Personal Information</h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                            <div class="form-group">
+                                <label>Resident Full Name</label>
+                                <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>Room No</label>
+                                <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>" style="background: #F8FAFC;">
+                            </div>
+                        </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                        <div class="form-group">
-                            <label>Room No</label>
-                            <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                        <div class="form-group">
-                            <label>WhatsApp Number</label>
-                            <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>">
-                        </div>
-                        <div class="form-group">
-                            <label>Joining Date</label>
-                            <input type="date" name="joining_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Initial Meter Reading (Last Month Units)</label>
-                        <input type="number" name="base_reading" value="<?php echo (int)$user['base_reading']; ?>" <?php echo $has_bills ? 'disabled' : ''; ?>>
-                        <?php if($has_bills): ?>
-                            <p style="font-size: 11px; color: #EF4444; margin-top: 5px;"><i class='bx bx-info-circle'></i> Editing disabled because bills have already been generated.</p>
-                        <?php else: ?>
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 5px;">This setting is locked once the first bill is generated.</p>
-                        <?php endif; ?>
-                    </div>
-                    
-                    <div class="form-group" style="padding-top: 15px; border-top: 1px solid var(--border); margin-top: 15px;">
-                        <label>Advance Payment (₹)</label>
-                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'], 2, '.', ''); ?>">
-                        <p style="font-size: 11px; color: var(--text-gray); margin-top: 5px;">This is the deposit amount stored for the renter. Only admins can modify this value.</p>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
-                        <div class="form-group">
-                            <label>Monthly Rent Amount (₹)</label>
-                            <input type="number" step="0.01" name="fixed_rent" value="<?php echo number_format($user['fixed_rent'] ?? 0, 2, '.', ''); ?>">
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 5px;">Fixed monthly rent for this renter. Only admins can modify this value.</p>
-                        </div>
-                        <div class="form-group">
-                            <label>Monthly Maintenance Amount (₹)</label>
-                            <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2, '.', ''); ?>">
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 5px;">Fixed monthly maintenance for this renter. Only admins can modify this value.</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px;">
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>WhatsApp Number</label>
+                                <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" style="background: #F8FAFC;">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Additional Notes / About</label>
-                        <textarea name="about" rows="4" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:12px; background:var(--bg-main); color:var(--text-dark); outline:none; font-family:inherit;"><?php echo htmlspecialchars($user['about']); ?></textarea>
+                    <!-- Lease & Financial Details -->
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);"><i class='bx bx-wallet'></i> Lease & Financial Details</h4>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                            <div class="form-group">
+                                <label>Joining Date</label>
+                                <input type="date" name="joining_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>" style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>Initial Meter Reading (Units)</label>
+                                <input type="number" name="base_reading" value="<?php echo (int)$user['base_reading']; ?>" <?php echo $has_bills ? 'disabled' : ''; ?> style="background: <?php echo $has_bills ? '#F1F5F9' : '#F8FAFC'; ?>;">
+                                <?php if($has_bills): ?>
+                                    <p style="font-size: 11px; color: #EF4444; margin-top: 6px; font-weight: 500;"><i class='bx bx-lock-alt'></i> Locked after first bill is generated.</p>
+                                <?php else: ?>
+                                    <p style="font-size: 11px; color: var(--text-gray); margin-top: 6px;">Locked once the first bill is generated.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px;">
+                            <div class="form-group">
+                                <label>Monthly Rent (₹)</label>
+                                <input type="number" step="0.01" name="fixed_rent" value="<?php echo number_format($user['fixed_rent'] ?? 0, 2, '.', ''); ?>" style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>Monthly Maintenance (₹)</label>
+                                <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2, '.', ''); ?>" style="background: #F8FAFC;">
+                            </div>
+                            <div class="form-group">
+                                <label>Advance Deposit (₹)</label>
+                                <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'], 2, '.', ''); ?>" style="background: #F8FAFC;">
+                            </div>
+                        </div>
                     </div>
 
-                    <div style="margin-bottom: 24px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-top: 1px solid var(--border); padding-top: 20px;">Documents & Files</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                    <!-- Notes & Documents -->
+                    <div style="margin-bottom: 32px;">
+                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);"><i class='bx bx-note'></i> Additional Information</h4>
+                        
+                        <div class="form-group">
+                            <label>Admin Notes / About</label>
+                            <textarea name="about" rows="3" style="width:100%; padding:14px; border:1px solid var(--border); border-radius:12px; background:#F8FAFC; color:var(--text-dark); outline:none; font-family:inherit; transition: all 0.2s ease; resize: vertical;"><?php echo htmlspecialchars($user['about']); ?></textarea>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 40px;">
+                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);"><i class='bx bx-folder'></i> Documents & Files</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Identity Proof (Aadhaar)</label>
-                                <input type="file" name="aadhaar_file" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-main); color: var(--text-dark);">
+                                <input type="file" name="aadhaar_file" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 12px; border: 1px dashed var(--primary-purple); border-radius: 12px; background: #F8FAFC; color: var(--text-dark); cursor: pointer;">
                                 <?php if (!empty($user['aadhaar_file'])): ?>
-                                    <p style="font-size: 11px; color: #10B981; margin-top: 6px;"><i class='bx bx-check-circle'></i> Document already uploaded. Select carefully if you wish to overwrite it.</p>
+                                    <p style="font-size: 12px; color: #10B981; margin-top: 8px; font-weight: 500;"><i class='bx bx-check-circle'></i> Document exists. Select new file to overwrite.</p>
                                 <?php else: ?>
-                                    <p style="font-size: 11px; color: var(--text-gray); margin-top: 6px;">Accepted: PDF, JPG, PNG.</p>
+                                    <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Accepted: PDF, JPG, PNG.</p>
                                 <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <label>Rental Agreement</label>
-                                <input type="file" name="agreement_document" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-main); color: var(--text-dark);">
+                                <input type="file" name="agreement_document" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 12px; border: 1px dashed var(--primary-purple); border-radius: 12px; background: #F8FAFC; color: var(--text-dark); cursor: pointer;">
                                 <?php if (!empty($user['agreement_document'])): ?>
-                                    <p style="font-size: 11px; color: #10B981; margin-top: 6px;"><i class='bx bx-check-circle'></i> Document already uploaded. Select carefully if you wish to overwrite it.</p>
+                                    <p style="font-size: 12px; color: #10B981; margin-top: 8px; font-weight: 500;"><i class='bx bx-check-circle'></i> Document exists. Select new file to overwrite.</p>
                                 <?php else: ?>
-                                    <p style="font-size: 11px; color: var(--text-gray); margin-top: 6px;">Accepted: PDF, JPG, PNG.</p>
+                                    <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Accepted: PDF, JPG, PNG.</p>
                                 <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 15px;">Update Profile</button>
+                    <div style="display: flex; justify-content: flex-end; padding-top: 24px; border-top: 1px solid var(--border);">
+                        <button type="submit" class="btn-primary" style="padding: 14px 40px; font-size: 15px; font-weight: 600; border-radius: 10px; display: inline-flex; justify-content: center;"><i class='bx bx-save'></i> Save Profile Changes</button>
                 </form>
             </div>
         </div>
