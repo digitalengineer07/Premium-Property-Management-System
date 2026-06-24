@@ -32,18 +32,11 @@ $admin_user = s($_SESSION['admin']);
     <!-- Cropper.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style>
-        /* Layout Overhaul for Centering */
         .bill-page {
-            max-width: 900px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 0 24px 40px;
+            padding: 0;
             box-sizing: border-box;
-        }
-
-        .bill-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
         }
 
         .aesthetic-card {
@@ -614,9 +607,18 @@ $admin_user = s($_SESSION['admin']);
 
         .bill-grid {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 24px;
+            grid-template-columns: 1fr auto;
+            gap: 32px;
             align-items: start;
+            width: 100%;
+        }
+        
+        .right-col {
+            min-width: 0;
+        }
+        
+        #billSummaryPanel {
+            width: 420px;
         }
     </style>
 </head>
