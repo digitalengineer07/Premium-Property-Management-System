@@ -21,8 +21,8 @@ function get_phpmailer_instance() {
         $mail->SMTPAuth   = true;
         $mail->Username   = 'no-reply@subhadippramanik.me';
         $mail->Password   = 'F0rg3tN0t@2026';
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
 
         // Set default sender
         $mail->setFrom('no-reply@subhadippramanik.me', 'Madhav Kunj Administration');
