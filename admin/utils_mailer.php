@@ -460,52 +460,61 @@ function send_welcome_email($to_email, $renter_name) {
 function send_move_out_thank_you_email($to_email, $renter_name) {
     if (empty($to_email)) return false;
 
-    $subject = "Thank You for Staying at Madhav Kunj!";
-    
-    $message = "
-    <html>
-    <head>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-            .header { background: #6366F1; color: white; padding: 40px 20px; text-align: center; }
-            .content { padding: 40px; }
-            .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
-            .info-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #6366F1; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h1 style='margin:0; font-size: 28px;'>Farewell from Madhav Kunj!</h1>
-                <p style='margin-top:10px; opacity: 0.9;'>We hope you had a great stay.</p>
-            </div>
-            <div class='content'>
-                <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
-                <p>We are writing to confirm that your move-out process has been completed successfully in our system.</p>
-                
-                <div class='info-box'>
-                    <p style='margin-top:0; color:#334155;'>Thank you for choosing Madhav Kunj as your home. We truly appreciate you as a resident and hope your time with us was comfortable and pleasant. We wish you the very best in your future endeavors!</p>
+    $mail = get_phpmailer_instance();
+    if (!$mail) return false;
+
+    try {
+        $mail->addAddress($to_email, $renter_name);
+        $mail->Subject = "Thank You for Staying at Madhav Kunj!";
+        $mail->isHTML(true);
+
+        $message = "
+        <html>
+        <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
+                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .header { background: #6366F1; color: white; padding: 40px 20px; text-align: center; }
+                .content { padding: 40px; }
+                .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
+                .info-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #6366F1; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1 style='margin:0; font-size: 28px;'>Farewell from Madhav Kunj!</h1>
+                    <p style='margin-top:10px; opacity: 0.9;'>We hope you had a great stay.</p>
                 </div>
-                
-                <p style='margin-top:30px;'>Please note that your access to the resident dashboard has now been archived. If you ever need past payment receipts or have any questions regarding your deposit or account, please feel free to reach out to the management directly.</p>
-                
-                <p>Safe travels and best wishes!</p>
+                <div class='content'>
+                    <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
+                    <p>We are writing to confirm that your move-out process has been completed successfully in our system.</p>
+                    
+                    <div class='info-box'>
+                        <p style='margin-top:0; color:#334155;'>Thank you for choosing Madhav Kunj as your home. We truly appreciate you as a resident and hope your time with us was comfortable and pleasant. We wish you the very best in your future endeavors!</p>
+                    </div>
+                    
+                    <p style='margin-top:30px;'>Please note that your access to the resident dashboard has now been archived. If you ever need past payment receipts or have any questions regarding your deposit or account, please feel free to reach out to the management directly.</p>
+                    
+                    <p>Safe travels and best wishes!</p>
+                </div>
+                <div class='footer'>
+                    <p><strong>Madhav Kunj Administration</strong></p>
+                    <p>&copy; " . date('Y') . " All rights reserved.</p>
+                </div>
             </div>
-            <div class='footer'>
-                <p><strong>Madhav Kunj Administration</strong></p>
-                <p>&copy; " . date('Y') . " All rights reserved.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
+        </body>
+        </html>
+        ";
 
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-    $headers .= "From: Madhav Kunj <madhavkunj@succorkart.in>\r\n";
+        $mail->Body = $message;
+        $mail->AltBody = "Hi $renter_name, your move-out process has been completed. Thank you for staying at Madhav Kunj! Safe travels and best wishes.";
 
-    return @mail($to_email, $subject, $message, $headers);
+        return $mail->send();
+    } catch (Exception $e) {
+        error_log("Failed to send move out email: {$mail->ErrorInfo}");
+        return false;
+    }
 }
 ?>
