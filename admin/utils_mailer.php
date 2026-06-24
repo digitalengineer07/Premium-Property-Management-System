@@ -101,6 +101,10 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
 }
 
 /**
+ * Sends a professional HTML email reminder to a renter.
+ */
+function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $amount_due, $pdf_file_path = null) {
+    if (empty($to_email)) return false;
 
     $subject = "Action Required: Payment Reminder for Madhav Kunj";
     
