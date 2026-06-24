@@ -371,8 +371,8 @@ body.dark-theme .support-box .support-icon {
 }
 
 .search-bar {
-    background: var(--bg-main);
-    border: 1px solid transparent;
+    background: var(--white);
+    border: 1px solid var(--border);
     padding: 12px 24px;
     border-radius: 30px;
     display: flex;
