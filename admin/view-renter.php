@@ -258,56 +258,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
     </div>
 
     <!-- 2. Middle Section -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="animate-up dashboard-grid-70">
-        <!-- Contact Details -->
-        <div class="panel">
-            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-user-circle'></i></div> Contact Details</h4>
-            
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-phone'></i></div>
-                    <div style="flex: 1;">
-                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Phone</div>
-                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['phone'] ?: 'N/A'); ?></div>
-                    </div>
-                    <div style="color: var(--text-gray);"><i class='bx bx-phone-call'></i></div>
-                </div>
-                
-                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-envelope'></i></div>
-                    <div style="flex: 1;">
-                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Email</div>
-                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['email'] ?: 'N/A'); ?></div>
-                    </div>
-                    <div style="color: #EF4444;"><i class='bx bx-envelope'></i></div>
-                </div>
-                
-                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(37,211,102,0.08); display: flex; align-items: center; justify-content: center; color: #25D366; font-size: 20px;"><i class='bx bxl-whatsapp'></i></div>
-                    <div style="flex: 1;">
-                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">WhatsApp</div>
-                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['whatsapp'] ?: 'N/A'); ?></div>
-                    </div>
-                    <div style="color: #25D366;"><i class='bx bxl-whatsapp'></i></div>
-                </div>
-                
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-calendar'></i></div>
-                    <div style="flex: 1;">
-                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Member Since</div>
-                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo !empty($user['joining_date']) ? date('M d, Y', strtotime($user['joining_date'])) : 'N/A'; ?></div>
-                    </div>
-                </div>
-            </div>
-            
-            <?php if(!empty($user['about'])): ?>
-            <div style="margin-top: 24px; padding: 16px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border);">
-                <h4 style="font-size: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;"><i class='bx bx-note'></i> Admin Notes</h4>
-                <p style="font-size: 13px; line-height: 1.5; color: var(--text-dark); margin: 0;"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
-            </div>
-            <?php endif; ?>
-        </div>
-
+    <div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 24px;" class="animate-up">
         <!-- Financial Snapshot -->
         <div class="panel">
             <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-wallet'></i></div> Financial Snapshot</h4>
@@ -352,6 +303,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
             </div>
         </div>
+        
+        <?php if(!empty($user['about'])): ?>
+        <!-- Admin Notes -->
+        <div class="panel">
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-note'></i></div> Admin Notes</h4>
+            <p style="font-size: 14px; line-height: 1.6; color: var(--text-dark); margin: 0;"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- 3. Bottom Section (3 columns) -->
