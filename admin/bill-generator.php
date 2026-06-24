@@ -1313,6 +1313,13 @@ $admin_user = s($_SESSION['admin']);
             if (!selectedRenterId) { showMsg('Please select a renter', 'error'); return; }
             const curr = document.getElementById('currentReading').value;
             if (!curr) { showMsg('Enter current reading', 'error'); return; }
+            
+            const currVal = parseFloat(curr);
+            const prevVal = parseFloat(document.getElementById('previousReading').value) || 0;
+            if (currVal < prevVal) {
+                showMsg('Current reading cannot be less than the last reading', 'error');
+                return;
+            }
 
             const btn = document.getElementById('generateBtn');
             const originalText = btn.innerHTML;
