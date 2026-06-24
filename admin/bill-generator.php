@@ -1415,6 +1415,7 @@ $admin_user = s($_SESSION['admin']);
 
                 if (data.success) {
                     showMsg('Bill generated successfully!', 'success');
+                    updateSteps(4);
                     // Refresh the "Last Reading" display without redirecting
                     document.getElementById('infoLastReading').textContent = curr;
                     document.getElementById('previousReading').value = curr;
