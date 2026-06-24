@@ -358,6 +358,54 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </tbody>
             </table>
         </div>
+
+        <!-- Pagination -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 16px;">
+            <div style="color: var(--text-gray); font-size: 13px;">
+                Showing <?php echo $total_rows > 0 ? $offset + 1 : 0; ?> to <?php echo min($offset + $limit, $total_rows); ?> of <?php echo $total_rows; ?> residents
+            </div>
+            
+            <?php if ($total_pages > 1): ?>
+            <div style="display: flex; gap: 8px;">
+                <?php
+                // Preserve query string
+                $qs = $_GET;
+                
+                // Prev button
+                if ($page > 1) {
+                    $qs['page'] = $page - 1;
+                    echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-dark); text-decoration: none; font-size: 14px;"><i class="bx bx-chevron-left"></i></a>';
+                } else {
+                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: #CBD5E1; font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-left"></i></div>';
+                }
+
+                // Page numbers
+                for ($i = 1; $i <= $total_pages; $i++) {
+                    if ($i == $page) {
+                        echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #624BFF; color: #FFFFFF; font-weight: 600; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2);">' . $i . '</div>';
+                    } else {
+                        if ($total_pages > 5 && $i > 3 && $i < $total_pages && abs($i - $page) > 1) {
+                            if ($i == 4 && $page > 4) echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">...</div>';
+                            if ($i == $total_pages - 1 && $page < $total_pages - 3) echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">...</div>';
+                            continue;
+                        }
+                        
+                        $qs['page'] = $i;
+                        echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #F8FAFC; color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500;">' . $i . '</a>';
+                    }
+                }
+
+                // Next button
+                if ($page < $total_pages) {
+                    $qs['page'] = $page + 1;
+                    echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-dark); text-decoration: none; font-size: 14px;"><i class="bx bx-chevron-right"></i></a>';
+                } else {
+                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: #CBD5E1; font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-right"></i></div>';
+                }
+                ?>
+            </div>
+            <?php endif; ?>
+        </div>
     </div>
 </main>
 
