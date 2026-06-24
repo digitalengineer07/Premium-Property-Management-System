@@ -177,7 +177,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="page-header-container animate-up" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+    <div class="page-header-container animate-up" style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 24px; gap: 20px;">
         <div class="welcome" style="margin: 0; display: flex; align-items: center; gap: 16px;">
             <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.15), rgba(98, 75, 255, 0.05)); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(98, 75, 255, 0.1); box-shadow: 0 4px 15px rgba(98, 75, 255, 0.05);">
                 <i class='bx bx-group' style="font-size: 28px; color: #624BFF;"></i>
