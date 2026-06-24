@@ -25,6 +25,7 @@ try {
                 0
             ) as last_reading
         FROM users u 
+        WHERE u.status = 'active'
         ORDER BY u.name ASC
     ";
 

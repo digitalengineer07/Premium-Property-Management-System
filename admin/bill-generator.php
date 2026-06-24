@@ -9,7 +9,7 @@ if (!isset($_SESSION['admin'])) {
 }
 
 // Fetch all renters for dropdown
-$renters_query = mysqli_query($conn, "SELECT id, name, room_no, phone FROM users ORDER BY name ASC");
+$renters_query = mysqli_query($conn, "SELECT id, name, room_no, phone FROM users WHERE status = 'active' ORDER BY name ASC");
 $renters = [];
 while ($row = mysqli_fetch_assoc($renters_query)) {
     $renters[] = $row;
