@@ -552,21 +552,26 @@ $admin_user = s($_SESSION['admin']);
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-top: 24px;
+            margin-top: 20px;
         }
         .guide-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 24px;
+            padding: 24px 20px;
             border: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            gap: 16px;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            transition: transform 0.2s;
+        }
+        .guide-card:hover {
+            transform: translateY(-4px);
         }
         
         .guide-icon {
-            width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;
+            width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 8px;
         }
         .guide-card:nth-child(1) .guide-icon { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
         .guide-card:nth-child(2) .guide-icon { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
@@ -574,7 +579,7 @@ $admin_user = s($_SESSION['admin']);
         .guide-card:nth-child(4) .guide-icon { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
 
         .guide-card h4 { margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark); }
-        .guide-card p { margin: 0; font-size: 12px; color: var(--text-gray); line-height: 1.5; }
+        .guide-card p { margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.5; }
 
         .empty-state {
             background: #F8FAFC;
@@ -910,21 +915,23 @@ $admin_user = s($_SESSION['admin']);
 
             <!-- Bottom Guide Section -->
             <div class="aesthetic-card animate-up" style="margin-top: 24px; padding: 32px;">
-                <div class="section-title" style="margin-bottom: 8px;">
-                    <i class='bx bx-book-open'></i>
-                    <span>Bill Generation Guide</span>
+                <div class="panel-header">
+                    <div class="section-title">
+                        <i class='bx bx-book-open'></i>
+                        <span>Bill Generation Guide</span>
+                    </div>
+                    <p class="panel-desc">Follow these simple steps to generate a new bill</p>
                 </div>
-                <p style="color: var(--text-gray); font-size: 14px; margin: 0 0 16px 0;">Follow these simple steps to generate a new bill</p>
                 <div class="guide-container">
                     <div class="guide-card purple">
                         <div class="guide-icon"><i class='bx bx-user'></i></div>
                         <div>
                             <h4>Select Resident</h4>
-                            <p>Choose the resident account from the dropdown</p>
+                            <p>Choose the resident account from the dropdown list</p>
                         </div>
                     </div>
                     <div class="guide-card blue">
-                        <div class="guide-icon"><i class='bx bx-bolt'></i></div>
+                        <div class="guide-icon"><i class='bx bxs-bolt'></i></div>
                         <div>
                             <h4>Enter Details</h4>
                             <p>Add meter reading and electricity usage details</p>
@@ -934,7 +941,7 @@ $admin_user = s($_SESSION['admin']);
                         <div class="guide-icon"><i class='bx bx-calculator'></i></div>
                         <div>
                             <h4>Review Bill</h4>
-                            <p>Review all charges and calculate the total</p>
+                            <p>Review all charges and verify the calculated total</p>
                         </div>
                     </div>
                     <div class="guide-card orange">
