@@ -11,8 +11,10 @@ if (!isset($_SESSION['admin'])) {
 $query = trim($_GET['q'] ?? '');
 $room = trim($_GET['room'] ?? '');
 
-$sql = "SELECT id, username, name, phone, room_no, profile_pic, last_login, agreement_expiry_date, fixed_rent, fixed_maintenance FROM users WHERE 1=1";
-$params = []; $types = "";
+$filter_status = $_GET['status'] ?? 'active';
+
+$sql = "SELECT id, username, name, phone, room_no, profile_pic, last_login, agreement_expiry_date, fixed_rent, fixed_maintenance, status FROM users WHERE status = ?";
+$params = [$filter_status]; $types = "s";
 if ($query !== '') {
     $sql .= " AND (username LIKE ? OR name LIKE ?)";
     $qlike = "%{$query}%"; $params[] = $qlike; $params[] = $qlike; $types .= "ss";
@@ -151,8 +153,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <div class="panel animate-up">
-        <div class="panel-header">
-            <form method="GET" class="filter-form" style="width: 100%;">
+        <div class="panel-header" style="padding-bottom: 0;">
+            <div style="display: flex; gap: 16px; border-bottom: 1px solid var(--border); overflow-x: auto; margin-bottom: 15px;">
+                <a href="?status=active" style="padding: 10px 16px; color: <?php echo $filter_status === 'active' ? 'var(--primary)' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'active' ? 'var(--primary)' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Active Residents</a>
+                <a href="?status=moved_out" style="padding: 10px 16px; color: <?php echo $filter_status === 'moved_out' ? 'var(--primary)' : 'var(--text-gray)'; ?>; border-bottom: 2px solid <?php echo $filter_status === 'moved_out' ? 'var(--primary)' : 'transparent'; ?>; text-decoration: none; font-weight: 600; white-space: nowrap;">Past Residents</a>
+            </div>
+            <form method="GET" class="filter-form" style="width: 100%; margin-bottom: 15px;">
+                <input type="hidden" name="status" value="<?php echo htmlspecialchars($filter_status); ?>">
                 <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%;">
                     <div style="position: relative; flex: 1; min-width: 200px;">
                         <i class='bx bx-search' style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
@@ -208,7 +215,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </td>
                         <td>
                             <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
-                                <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px;">Active</span>
+                                <?php if ($u['status'] === 'active'): ?>
+                                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px;">Active</span>
+                                <?php else: ?>
+                                    <span class="badge" style="background: rgba(100, 116, 139, 0.1); color: #64748B; border: 1px solid rgba(100, 116, 139, 0.2); border-radius: 10px;">Moved Out</span>
+                                <?php endif; ?>
                                 <?php 
                                     if (!empty($u['agreement_expiry_date'])) {
                                         $days = (strtotime($u['agreement_expiry_date']) - time()) / 86400;
@@ -226,14 +237,21 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <a href="view-renter.php?id=<?php echo $u['id']; ?>" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(99, 102, 241, 0.1); color: #6366F1; border: 1px solid rgba(99, 102, 241, 0.2);" title="View Profile">
                                     <i class='bx bx-user'></i>
                                 </a>
+                                <?php if ($u['status'] === 'active'): ?>
                                 <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" class="btn-primary" style="padding: 8px 16px; font-size: 13px; border-radius: 12px; background: #6366F1; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);">Bill</a>
                                 <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2);" title="Change Password">
                                     <i class='bx bx-lock-alt'></i>
                                 </button>
+                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(100, 116, 139, 0.1); color: #64748B; border: 1px solid rgba(100, 116, 139, 0.2);" title="Move Out Renter">
+                                    <i class='bx bx-exit'></i>
+                                </button>
+                                <?php endif; ?>
                                 <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2);" title="Delete Resident">
                                     <i class='bx bx-trash'></i>
                                 </button>
+                                <?php if ($u['status'] === 'active'): ?>
                                 <a href="../onboarding-guide.php?id=<?php echo $u['id']; ?>" target="_blank" class="btn-outline" style="padding: 8px 16px; font-size: 13px; border-radius: 12px; background: rgba(255,255,255,0.05); color: var(--text-gray);" title="Download Guide">Guide</a>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
@@ -318,6 +336,44 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 closePasswordModal();
             } else {
                 alert(data.message);
+            }
+        } catch (e) {
+            alert("Network error occurred.");
+        }
+    }
+
+    function moveOutRenter(id, name) {
+        document.getElementById('moveOutUserId').value = id;
+        document.getElementById('moveOutUsername').textContent = `Archive resident ${name}?`;
+        document.getElementById('moveOutDateInput').value = new Date().toISOString().split('T')[0];
+        document.getElementById('moveOutModal').style.display = 'flex';
+    }
+
+    function closeMoveOutModal() {
+        document.getElementById('moveOutModal').style.display = 'none';
+    }
+
+    async function submitMoveOut() {
+        const id = document.getElementById('moveOutUserId').value;
+        const moveDate = document.getElementById('moveOutDateInput').value;
+        
+        if (!moveDate) {
+            alert("Move Out Date is required");
+            return;
+        }
+
+        try {
+            const res = await fetch('ajax_move_out.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `user_id=${id}&move_out_date=${encodeURIComponent(moveDate)}`
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert(data.error);
             }
         } catch (e) {
             alert("Network error occurred.");
