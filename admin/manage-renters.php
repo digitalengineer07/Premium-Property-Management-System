@@ -263,83 +263,93 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         <div id="deleteAlert" style="display:none; background: #FEF2F2; color: #EF4444; padding: 12px; border-radius: 12px; margin-bottom: 16px; border: 1px solid #FEE2E2;"></div>
 
         <div class="table-responsive">
-            <table>
+            <table style="border-collapse: separate; border-spacing: 0 12px; width: 100%;">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Room</th>
-                        <th>Status</th>
-                        <th>Action</th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: left;">Resident <i class='bx bx-sort-alt-2'></i></th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: left;">Room</th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: left;">Rent (₹)</th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: left;">Status</th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: left;">Added On</th>
+                        <th style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #94A3B8; font-weight: 700; border-bottom: none; padding-bottom: 0; text-align: right;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="renterTable">
                     <?php if (empty($users)): ?>
-                        <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-gray);">No residents found.</td></tr>
+                        <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-gray); background: #FFFFFF; border-radius: 12px;">No residents found.</td></tr>
                     <?php else: foreach ($users as $u): ?>
-                    <tr>
-                        <td>
-                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
-                                <div style="display: flex; gap: 12px; align-items: center;">
-                                    <div class="avatar" style="width: 36px; height: 36px; background-image: url('../<?php echo $u['profile_pic'] ?: 'assets/img/default-avatar.png'; ?>'); background-size: cover;"></div>
-                                    <div>
-                                        <div style="font-weight: 600;"><?php echo htmlspecialchars($u['name']); ?></div>
-                                        <div style="font-size: 11px; color: var(--text-gray); display: flex; flex-direction: column;">
-                                            <span>@<?php echo htmlspecialchars($u['username']); ?></span>
-                                            <?php if(!empty($u['email'])): ?>
-                                                <span style="font-size: 10px; opacity: 0.8;"><?php echo htmlspecialchars($u['email']); ?></span>
-                                            <?php endif; ?>
-                                        </div>
+                    <tr style="background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: all 0.2s ease;">
+                        <td style="padding: 16px; border-radius: 12px 0 0 12px;">
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                <?php if ($u['profile_pic']): ?>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($u['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
+                                <?php else: ?>
+                                    <?php 
+                                        $initials = '';
+                                        $nameParts = explode(' ', $u['name']);
+                                        if (isset($nameParts[0])) $initials .= strtoupper(substr($nameParts[0], 0, 1));
+                                        if (isset($nameParts[1])) $initials .= strtoupper(substr($nameParts[1], 0, 1));
+                                    ?>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 2px solid #FFFFFF; box-shadow: 0 2px 5px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                                <?php endif; ?>
+                                <div>
+                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($u['name']); ?></div>
+                                    <div style="font-size: 12px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 6px;">
+                                        <?php echo htmlspecialchars($u['phone']); ?>
+                                        <i class='bx bx-envelope' style="font-size: 14px; color: #94A3B8; cursor: pointer;" title="<?php echo htmlspecialchars($u['email']); ?>"></i>
                                     </div>
                                 </div>
-                                <?php if ($u['fixed_rent'] > 0 || $u['fixed_maintenance'] > 0): ?>
-                                <div style="font-size: 11px; color: var(--text-gray); text-align: right; white-space: nowrap;">
-                                    <span style="font-weight: 600; color: #10B981;">Rent:</span> ₹<?php echo number_format($u['fixed_rent'], 2); ?> <br>
-                                    <span style="font-weight: 600; color: #F59E0B;">Maint:</span> ₹<?php echo number_format($u['fixed_maintenance'], 2); ?>
-                                </div>
-                                <?php endif; ?>
                             </div>
                         </td>
-                        <td>
-                            <span class="btn-outline" style="padding: 4px 10px; font-size: 13px; border-radius: 8px; border: none; background: rgba(0,0,0,0.03); color: var(--text-dark);">Room <?php echo htmlspecialchars($u['room_no']); ?></span>
+                        <td style="padding: 16px; font-weight: 700; color: var(--text-dark); font-size: 14px;">
+                            Room<br><?php echo htmlspecialchars($u['room_no']); ?>
                         </td>
-                        <td>
-                            <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start;">
-                                <?php if ($u['status'] === 'active'): ?>
-                                    <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 10px;">Active</span>
-                                <?php else: ?>
-                                    <span class="badge" style="background: rgba(100, 116, 139, 0.1); color: #64748B; border: 1px solid rgba(100, 116, 139, 0.2); border-radius: 10px;">Moved Out</span>
-                                <?php endif; ?>
-                                <?php 
-                                    if (!empty($u['agreement_expiry_date'])) {
-                                        $days = (strtotime($u['agreement_expiry_date']) - time()) / 86400;
-                                        if ($days < 0) {
-                                            echo '<span style="font-size: 9px; padding: 2px 6px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 6px; font-weight: 700;">Expired</span>';
-                                        } elseif ($days <= 30) {
-                                            echo '<span style="font-size: 9px; padding: 2px 6px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 6px; font-weight: 700;">Expiring</span>';
-                                        }
-                                    }
-                                ?>
+                        <td style="padding: 16px;">
+                            <div style="font-size: 12px;">
+                                <span style="color: #10B981; font-weight: 600;">Rent:</span> ₹<?php echo number_format($u['fixed_rent'], 2); ?> <br>
+                                <span style="color: #F59E0B; font-weight: 600;">Maint:</span> ₹<?php echo number_format($u['fixed_maintenance'], 2); ?>
                             </div>
                         </td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="view-renter.php?id=<?php echo $u['id']; ?>" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(99, 102, 241, 0.1); color: #6366F1; border: 1px solid rgba(99, 102, 241, 0.2);" title="View Profile">
+                        <td style="padding: 16px;">
+                            <?php if ($u['status'] === 'active'): ?>
+                                <span style="padding: 6px 12px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                                    <div style="width: 6px; height: 6px; background: #10B981; border-radius: 50%;"></div> Active
+                                </span>
+                            <?php else: ?>
+                                <span style="padding: 6px 12px; background: #FEF2F2; color: #EF4444; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                                    <div style="width: 6px; height: 6px; background: #EF4444; border-radius: 50%;"></div> Inactive
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                        <td style="padding: 16px; color: #64748B; font-size: 13px; font-weight: 500;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <i class='bx bx-calendar' style="font-size: 16px; color: #94A3B8;"></i>
+                                <?php echo $u['joining_date'] ? date('d M Y', strtotime($u['joining_date'])) : 'N/A'; ?>
+                            </div>
+                        </td>
+                        <td style="padding: 16px; border-radius: 0 12px 12px 0;">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <a href="view-renter.php?id=<?php echo $u['id']; ?>" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none;" title="View Profile">
                                     <i class='bx bx-user'></i>
                                 </a>
                                 <?php if ($u['status'] === 'active'): ?>
-                                <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" class="btn-primary" style="padding: 8px 16px; font-size: 13px; border-radius: 12px; background: #6366F1; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);">Bill</a>
-                                <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.2);" title="Change Password">
+                                <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" style="height: 32px; padding: 0 12px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; text-decoration: none; gap: 4px;" title="Generate Bill">
+                                    <i class='bx bx-receipt'></i> Bill
+                                </a>
+                                <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
                                     <i class='bx bx-lock-alt'></i>
                                 </button>
-                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(100, 116, 139, 0.1); color: #64748B; border: 1px solid rgba(100, 116, 139, 0.2);" title="Move Out Renter">
+                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: #F8FAFC; color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
                                     <i class='bx bx-exit'></i>
                                 </button>
                                 <?php endif; ?>
-                                <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" class="btn-outline" style="padding: 8px 12px; font-size: 13px; border-radius: 12px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.2);" title="Delete Resident">
+                                <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Delete Resident">
                                     <i class='bx bx-trash'></i>
                                 </button>
                                 <?php if ($u['status'] === 'active'): ?>
-                                <a href="../onboarding-guide.php?id=<?php echo $u['id']; ?>" target="_blank" class="btn-outline" style="padding: 8px 16px; font-size: 13px; border-radius: 12px; background: rgba(255,255,255,0.05); color: var(--text-gray);" title="Download Guide">Guide</a>
+                                <a href="../onboarding-guide.php?id=<?php echo $u['id']; ?>" target="_blank" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); color: #64748B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; text-decoration: none;" title="Download Guide">
+                                    Guide
+                                </a>
                                 <?php endif; ?>
                             </div>
                         </td>
