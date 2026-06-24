@@ -2,11 +2,105 @@
 // admin/utils_mailer.php
 require_once __DIR__ . "/../db.php";
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__ . '/../libs/PHPMailer/Exception.php';
+require_once __DIR__ . '/../libs/PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/../libs/PHPMailer/SMTP.php';
+
 /**
- * Sends a professional HTML email reminder to a renter.
+ * Configure and return a new PHPMailer instance using Hostinger SMTP
  */
-function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $amount_due, $pdf_file_path = null) {
+function get_phpmailer_instance() {
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.hostinger.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'madhavkunj@succorkart.in';
+        $mail->Password   = 'FOrg3tNOt@2026';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->Port       = 465;
+
+        // Set default sender
+        $mail->setFrom('madhavkunj@succorkart.in', 'Madhav Kunj Administration');
+        return $mail;
+    } catch (Exception $e) {
+        error_log("Mailer configuration failed: {$mail->ErrorInfo}");
+        return null;
+    }
+}
+
+/**
+ * Sends a notification when a new bill is generated.
+ */
+function send_new_bill_notification($to_email, $renter_name, $bill_month, $amount_due) {
     if (empty($to_email)) return false;
+
+    $mail = get_phpmailer_instance();
+    if (!$mail) return false;
+
+    try {
+        $mail->addAddress($to_email, $renter_name);
+        $mail->Subject = "New Bill Generated - $bill_month - Madhav Kunj";
+        $mail->isHTML(true);
+
+        $message = "
+        <html>
+        <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
+                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .header { background: #624BFF; color: white; padding: 40px 20px; text-align: center; }
+                .content { padding: 40px; }
+                .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
+                .btn { display: inline-block; padding: 14px 28px; background: #624BFF; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 25px; }
+                .bill-box { background: #f1f5f9; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #624BFF; }
+                .total { font-size: 24px; font-weight: 800; color: #ef4444; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1 style='margin:0; font-size: 28px;'>Madhav Kunj</h1>
+                    <p style='margin-top:10px; opacity: 0.9;'>New Bill Generated</p>
+                </div>
+                <div class='content'>
+                    <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
+                    <p>Your rent and electricity bill for <strong>" . htmlspecialchars($bill_month) . "</strong> has been generated.</p>
+                    
+                    <div class='bill-box'>
+                        <p style='margin-bottom:10px;'>Total Amount Due:</p>
+                        <div class='total'>₹" . number_format($amount_due, 2) . "</div>
+                    </div>
+                    
+                    <p style='margin-top:30px;'>You can view the detailed breakdown and pay your bill from your resident dashboard.</p>
+                    
+                    <center><a href='http://".$_SERVER['HTTP_HOST']."/login.php' class='btn'>Log In to Dashboard</a></center>
+                </div>
+                <div class='footer'>
+                    <p><strong>Madhav Kunj Administration</strong></p>
+                    <p>&copy; " . date('Y') . " All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        $mail->Body = $message;
+        $mail->AltBody = "Hi $renter_name, your bill for $bill_month has been generated. Total due: ₹$amount_due. Please login to your dashboard to view.";
+
+        return $mail->send();
+    } catch (Exception $e) {
+        error_log("Failed to send new bill email: {$mail->ErrorInfo}");
+        return false;
+    }
+}
+
+/**
 
     $subject = "Action Required: Payment Reminder for Madhav Kunj";
     
