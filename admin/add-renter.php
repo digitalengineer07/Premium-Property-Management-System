@@ -173,7 +173,7 @@ $admin_user = s($_SESSION['admin']);
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Room No / Floor</label>
-                                <input type="text" name="room_no" placeholder="e.g. 104, 2nd Floor">
+                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104, 2nd Floor">
                             </div>
                             <div class="form-group">
                                 <label>Phone Number</label>
@@ -208,7 +208,7 @@ $admin_user = s($_SESSION['admin']);
                             <label>Starting Meter Reading (Previous Month Units)</label>
                             <div style="position: relative;">
                                 <i class='bx bx-bolt-circle' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                <input type="number" name="base_reading" value="0" style="padding-left: 45px;">
+                                <input type="number" id="baseReadingInput" name="base_reading" value="0" style="padding-left: 45px; transition: background-color 0.3s ease;">
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">This will be used as the "Last Reading" for the first bill.</p>
                         </div>
@@ -290,6 +290,31 @@ document.querySelectorAll('.pwd-toggle').forEach(icon => {
             this.classList.toggle('bx-hide');
         }
     });
+});
+
+// Auto-fetch last meter reading when Room No is entered
+document.getElementById('roomNoInput')?.addEventListener('blur', async function(e) {
+    const roomNo = e.target.value.trim();
+    if (!roomNo) return;
+    
+    try {
+        const res = await fetch(`../api/admin/get_last_room_reading.php?room=${encodeURIComponent(roomNo)}`);
+        const data = await res.json();
+        
+        if (data.status === 'success' && data.last_reading > 0) {
+            const baseReadingInput = document.getElementById('baseReadingInput');
+            baseReadingInput.value = data.last_reading;
+            // Visual feedback
+            baseReadingInput.style.backgroundColor = 'rgba(16, 185, 129, 0.1)';
+            baseReadingInput.style.borderColor = '#10B981';
+            setTimeout(() => {
+                baseReadingInput.style.backgroundColor = '';
+                baseReadingInput.style.borderColor = '';
+            }, 1500);
+        }
+    } catch (err) {
+        console.error("Failed to fetch last reading", err);
+    }
 });
 </script>
 
