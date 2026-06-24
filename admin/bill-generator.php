@@ -920,7 +920,7 @@ $admin_user = s($_SESSION['admin']);
             </div> <!-- End .bill-grid -->
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="max-width: 950px; margin: 12px auto 0; padding: 16px 32px;">
+            <div class="aesthetic-card animate-up" style="max-width: 950px; margin: -4px auto 0; padding: 16px 32px;">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>
