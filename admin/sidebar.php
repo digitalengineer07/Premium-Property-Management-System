@@ -183,18 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.remove('show');
     });
 
-    // Prevent background scroll when hovering sidebar
-    sidebar?.addEventListener('mouseenter', () => {
-        if (window.innerWidth > 1024) { // Only on desktop
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = '8px'; // Prevent layout shift
-        }
-    });
-    sidebar?.addEventListener('mouseleave', () => {
-        if (window.innerWidth > 1024) {
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }
-    });
+
 });
 </script>
