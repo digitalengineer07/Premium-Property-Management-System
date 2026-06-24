@@ -147,6 +147,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 gap: 8px !important;
                 width: 100% !important;
             }
+            .table-responsive::-webkit-scrollbar {
+                display: none;
+            }
 
             #renterTable td:last-child div a, 
             #renterTable td:last-child div button {
@@ -380,7 +383,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
 
         <!-- Pagination -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; flex-wrap: wrap; gap: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; margin-bottom: -8px; flex-wrap: wrap; gap: 16px;">
             <div style="color: var(--text-gray); font-size: 13px;">
                 Showing <?php echo $total_rows > 0 ? $offset + 1 : 0; ?> to <?php echo min($offset + $limit, $total_rows); ?> of <?php echo $total_rows; ?> residents
             </div>
