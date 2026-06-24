@@ -38,7 +38,7 @@ $rev_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amoun
 $rev_adv = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type='advance'"))['total'];
 $total_revenue_total = $rev_elec + $rev_rent + $p_elec + $p_rent + $rev_adv;
 
-$renters = mysqli_query($conn, "SELECT * FROM users ORDER BY id ASC");
+$renters = mysqli_query($conn, "SELECT * FROM users WHERE status = 'active' ORDER BY id ASC");
 $elec_records = mysqli_query($conn, "SELECT e.*, u.name as renter_name FROM electricity e JOIN users u ON e.user_id = u.id ORDER BY e.id DESC LIMIT 6");
 
 $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
