@@ -56,6 +56,8 @@ autoAddColumn($conn, 'users', 'base_reading', "int(11) DEFAULT '0'");
 autoAddColumn($conn, 'users', 'joining_date', "date DEFAULT NULL"); 
 autoAddColumn($conn, 'users', 'profile_pic', "varchar(255) DEFAULT NULL"); 
 autoAddColumn($conn, 'users', 'email', "varchar(255) DEFAULT NULL");
+autoAddColumn($conn, 'users', 'status', "enum('active','moved_out') DEFAULT 'active'");
+autoAddColumn($conn, 'users', 'move_out_date', "date DEFAULT NULL");
 
 // ==========================================
 // 2. ELECTRICITY TABLE - ALL POSSIBLE COLUMNS
