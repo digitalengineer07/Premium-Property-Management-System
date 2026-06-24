@@ -606,19 +606,10 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .bill-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 32px;
-            align-items: start;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
             width: 100%;
-        }
-        
-        .right-col {
-            min-width: 0;
-        }
-        
-        #billSummaryPanel {
-            width: 420px;
         }
     </style>
 </head>
@@ -875,54 +866,57 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 </div>
 
-                <div class="right-col bill-summary">
-                    <!-- Active Panel: Digital Wallet -->
-                    <div id="billSummaryPanel" style="display: none;" class="animate-up">
-                        <div class="wallet-card">
-                            <div class="wallet-header">
-                                <div style="flex: 1; padding-right: 15px;">
-                                    <p>Resident Info</p>
-                                    <h3 id="receiptRenter">Not Selected</h3>
-                                </div>
-                                <div style="text-align: right; flexShrink: 0;">
-                                    <p>Billing Cycle</p>
-                                    <h3 id="receiptMonthYear">--</h3>
+                    <!-- Horizontal Summary Panel -->
+                    <div id="billSummaryPanel" class="aesthetic-card animate-up" style="display: none; background: linear-gradient(135deg, #624BFF 0%, #4B36D3 100%); color: white; border: none; padding: 24px;">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px;">
+                            
+                            <!-- Left: Total & Info -->
+                            <div style="flex: 1; min-width: 250px;">
+                                <p style="color: rgba(255,255,255,0.8); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Total Payable</p>
+                                <h1 id="calcTotal" style="font-size: 42px; margin: 0; font-weight: 800; letter-spacing: -1px;">₹0</h1>
+                                <div style="margin-top: 12px; display: flex; gap: 16px; font-size: 14px; color: rgba(255,255,255,0.9);">
+                                    <div><i class='bx bx-user'></i> <span id="receiptRenter">Not Selected</span></div>
+                                    <div><i class='bx bx-calendar'></i> <span id="receiptMonthYear">--</span></div>
                                 </div>
                             </div>
-    
-                            <div class="test-fix" style="display:none;"></div>
-    
-                            <div class="wallet-total">
-                                <p>Total Payable</p>
-                                <h1 id="calcTotal">₹0</h1>
-                            </div>
-    
-                            <div class="wallet-details">
-                                <div class="wallet-row"><span>Units Consumed</span><span id="calcUnits">0</span></div>
-                                <div class="wallet-row"><span>Electricity Cost</span><span id="calcElectricity">₹0</span>
+                            
+                            <!-- Middle: Breakdown -->
+                            <div style="flex: 2; min-width: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; font-size: 14px;">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8);">Units Consumed</span><strong id="calcUnits">0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8);">Standard Rent</span><strong id="calcRent">₹0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8);">Electricity Cost</span><strong id="calcElectricity">₹0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8);">Maintenance</span><strong id="calcMaintenance">₹0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <span style="color: rgba(255,255,255,0.8);">Arrears/Dues</span><strong id="calcDues">₹0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between;" id="extraChargesDiv">
+                                        <span style="color: rgba(255,255,255,0.8);">Extra Charges</span><strong id="calcExtraCharges">₹0</strong>
+                                    </div>
                                 </div>
-                                <div class="wallet-divider"></div>
-                                <div class="wallet-row"><span>Standard Rent</span><span id="calcRent">₹0</span></div>
-                                <div class="wallet-row"><span>Maintenance</span><span id="calcMaintenance">₹0</span></div>
-                                <div class="wallet-divider"></div>
-                                <div class="wallet-row"><span>Arrears/Dues</span><span id="calcDues">₹0</span></div>
-                                <div class="wallet-row" id="extraChargesDiv" style="display: none;"><span>Extra
-                                        Charges</span><span id="calcExtraCharges">₹0</span></div>
                             </div>
+                            
+                            <!-- Right: Actions -->
+                            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px;">
+                                <button type="button" class="btn-primary hover-scale" style="width: 100%; background: white; color: #624BFF; border: none; padding: 16px; font-weight: 700; font-size: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onclick="generateBill()">
+                                    <i class='bx bx-printer' style="font-size: 20px;"></i> Generate Bill
+                                </button>
+                                <button type="button" class="btn-outline" style="width: 100%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="resetForm()">
+                                    <i class='bx bx-refresh'></i> Reset Form
+                                </button>
+                            </div>
+                            
                         </div>
-    
-                        <button class="btn-primary"
-                            style="width: 100%; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 15px; padding: 14px; background: #624BFF; border: none; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.3);"
-                            onclick="generateBill()">
-                            <i class='bx bx-printer'></i> Generate & Print
-                        </button>
-                        <button class="btn-outline"
-                            style="width: 100%; margin-top: 12px; display: flex; justify-content: center; align-items: center; gap: 8px; border: 1.5px solid var(--border);"
-                            onclick="resetForm()">
-                            <i class='bx bx-refresh'></i> Reset Form
-                        </button>
                     </div>
-                </div>
+                </div> <!-- End .left-col -->
             </div> <!-- End .bill-grid -->
 
             <!-- Bottom Guide Section -->
