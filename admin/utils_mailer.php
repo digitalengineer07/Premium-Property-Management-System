@@ -397,61 +397,80 @@ function send_announcement_email($to_email, $renter_name, $announcement_title, $
 /**
  * Sends a welcome email to a new renter.
  */
-function send_welcome_email($to_email, $renter_name) {
+function send_welcome_email($to_email, $renter_name, $user_id = 0, $username = '', $password = '') {
     if (empty($to_email)) return false;
 
-    $subject = "Welcome to Madhav Kunj - Your Resident Dashboard";
-    
-    $message = "
-    <html>
-    <head>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-            .header { background: #10B981; color: white; padding: 40px 20px; text-align: center; }
-            .content { padding: 40px; }
-            .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
-            .btn { display: inline-block; padding: 14px 28px; background: #10B981; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 25px; }
-            .info-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10B981; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h1 style='margin:0; font-size: 28px;'>Welcome to Madhav Kunj!</h1>
-                <p style='margin-top:10px; opacity: 0.9;'>We are thrilled to have you here.</p>
-            </div>
-            <div class='content'>
-                <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
-                <p>Welcome to Madhav Kunj! We have created an account for you on our resident portal where you can manage your tenancy digitally.</p>
-                
-                <div class='info-box'>
-                    <p style='margin-top:0; font-weight:700; color:#10B981;'>What you can do in your dashboard:</p>
-                    • <strong>Check Rent & Bills:</strong> View your monthly rent and electricity statements.<br>
-                    • <strong>Payment Status:</strong> Check your due amounts and payment history.<br>
-                    • <strong>Notify Admin:</strong> Send payment receipts easily by submitting your UTR.<br>
-                    • <strong>Support:</strong> Raise queries or reach out for help anytime.
+    $mail = get_phpmailer_instance();
+    if (!$mail) return false;
+
+    try {
+        $mail->addAddress($to_email, $renter_name);
+        $mail->Subject = "Welcome to Madhav Kunj - Your Resident Guide & Access";
+        $mail->isHTML(true);
+
+        $guide_link = "https://succorkart.in/onboarding-guide.php?id=" . $user_id . "&pass=" . urlencode($password);
+        $login_link = "https://succorkart.in/login.php";
+
+        $message = "
+        <html>
+        <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
+                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .header { background: #10B981; color: white; padding: 40px 20px; text-align: center; }
+                .content { padding: 40px; }
+                .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
+                .btn { display: inline-block; padding: 14px 28px; background: #10B981; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 15px; }
+                .btn-outline { display: inline-block; padding: 14px 28px; background: transparent; color: #10B981 !important; text-decoration: none; border-radius: 12px; font-weight: 700; border: 2px solid #10B981; margin-top: 15px; margin-left: 10px; }
+                .info-box { background: #f8fafc; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #10B981; }
+                .cred-box { background: #F0FDF4; padding: 15px; border-radius: 12px; margin-top: 15px; border: 1px solid #DCFCE7; }
+                .cred-item { font-family: monospace; font-size: 16px; font-weight: 800; color: #047857; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1 style='margin:0; font-size: 28px;'>Welcome to Madhav Kunj!</h1>
+                    <p style='margin-top:10px; opacity: 0.9;'>We are thrilled to have you here.</p>
                 </div>
-                
-                <p style='margin-top:30px;'>Get started by logging into your dashboard. If you need any assistance, feel free to contact the management.</p>
-                
-                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
-            </div>
-            <div class='footer'>
-                <p><strong>Madhav Kunj</strong></p>
-                <p>&copy; " . date('Y') . " All rights reserved.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
+                <div class='content'>
+                    <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
+                    <p>Welcome to Madhav Kunj! We have created an account for you on our resident portal where you can manage your tenancy digitally.</p>
+                    
+                    <div class='cred-box'>
+                        <p style='margin: 0 0 10px 0; font-weight: 700; color: #065F46;'>Your Temporary Login Details:</p>
+                        <p style='margin: 0;'>Username: <span class='cred-item'>" . htmlspecialchars($username) . "</span></p>
+                        <p style='margin: 5px 0 0 0;'>Password: <span class='cred-item'>" . htmlspecialchars($password) . "</span></p>
+                    </div>
 
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
-    $headers .= "From: Madhav Kunj <madhavkunj@succorkart.in>\r\n";
+                    <div class='info-box'>
+                        <p style='margin-top:0; font-weight:700; color:#10B981;'>Your Personalized Resident Guide</p>
+                        <p style='font-size: 14px; color: #334155; margin-bottom: 0;'>We have generated a personalized Resident Handbook for you. It contains everything you need to know about paying rent, raising tickets, and community guidelines.</p>
+                    </div>
+                    
+                    <div style='text-align: center; margin-top: 30px;'>
+                        <a href='" . $guide_link . "' class='btn'>View & Download Guide</a>
+                        <a href='" . $login_link . "' class='btn-outline'>Log In to Portal</a>
+                    </div>
+                </div>
+                <div class='footer'>
+                    <p><strong>Madhav Kunj Administration</strong></p>
+                    <p>&copy; " . date('Y') . " All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
 
-    return @mail($to_email, $subject, $message, $headers);
+        $mail->Body = $message;
+        $mail->AltBody = "Hi $renter_name, Welcome to Madhav Kunj! Login with Username: $username and Password: $password. View your Resident Guide at: $guide_link";
+
+        return $mail->send();
+    } catch (Exception $e) {
+        error_log("Failed to send welcome email: {$mail->ErrorInfo}");
+        return false;
+    }
 }
 
 /**
