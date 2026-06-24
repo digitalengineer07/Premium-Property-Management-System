@@ -90,25 +90,26 @@ $admin_user = s($_SESSION['admin']);
         .form-group label {
             display: block;
             margin-bottom: 6px;
-            font-weight: 700;
-            font-size: 11px;
-            color: var(--text-gray);
+            font-weight: 800;
+            font-size: 11.5px;
+            color: #475569;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
         }
 
         .form-group input,
         .form-group select {
             width: 100%;
             padding: 10px 14px;
-            border: 1.5px solid var(--border);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 10px;
-            background: var(--bg-main);
+            background: var(--white);
             color: var(--text-dark);
             outline: none;
             transition: var(--transition);
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.015);
         }
 
         .form-group input:focus,
@@ -682,7 +683,7 @@ $admin_user = s($_SESSION['admin']);
 
             <div class="bill-grid">
                 <div class="left-col">
-                    <div class="aesthetic-card animate-up" style="z-index: 50; background: linear-gradient(135deg, #F4F7FF 0%, #FFFFFF 100%);">
+                    <div class="aesthetic-card animate-up" style="z-index: 50; background: #F4F7FF; border-color: #E0E7FF;">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-user'></i>
@@ -764,7 +765,7 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                     </div>
 
-                    <div class="aesthetic-card" id="electricitySection" style="background: linear-gradient(135deg, #F9F5FF 0%, #FFFFFF 100%);">
+                    <div class="aesthetic-card" id="electricitySection" style="background: #FFFFFF;">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-bolt'></i>
@@ -929,7 +930,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px; background: linear-gradient(135deg, #F2FCF8 0%, #FFFFFF 100%);">
+            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px; background: #F8FAFC;">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>
