@@ -768,7 +768,7 @@ $admin_user = s($_SESSION['admin']);
                     <div class="aesthetic-card" id="electricitySection" style="background: #FFFFFF;">
                         <div class="panel-header">
                             <div class="section-title">
-                                <i class='bx bx-bolt'></i>
+                                <i class='bx bxs-zap' style="color: #F59E0B; background: rgba(245, 158, 11, 0.15);"></i>
                                 <span>Electricity Details</span>
                             </div>
                             <p class="panel-desc">Enter meter & usage details</p>
