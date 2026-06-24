@@ -285,7 +285,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-gray); background: #FFFFFF; border-radius: 12px;">No residents found.</td></tr>
                     <?php else: foreach ($users as $u): ?>
                     <tr style="background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: all 0.2s ease;">
-                        <td style="padding: 16px; border-radius: 12px 0 0 12px;">
+                        <td style="padding: 12px 16px; border-radius: 12px 0 0 12px;">
                             <div style="display: flex; gap: 12px; align-items: center;">
                                 <?php if ($u['profile_pic']): ?>
                                     <div style="width: 40px; height: 40px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($u['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
@@ -308,7 +308,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                         }
                                         $displayName = count($words) > $keepWords ? implode(' ', array_slice($words, 0, $keepWords)) . '...' : $fullName;
                                     ?>
-                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px;" title="<?php echo htmlspecialchars($fullName); ?>"><?php echo htmlspecialchars($displayName); ?></div>
+                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;" title="<?php echo htmlspecialchars($fullName); ?>"><?php echo htmlspecialchars($displayName); ?></div>
                                     <div style="font-size: 12px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 6px;">
                                         <?php echo htmlspecialchars($u['phone']); ?>
                                         <i class='bx bx-envelope' style="font-size: 14px; color: #94A3B8; cursor: pointer;" title="<?php echo htmlspecialchars($u['email']); ?>"></i>
@@ -316,16 +316,16 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </div>
                             </div>
                         </td>
-                        <td style="padding: 16px; font-weight: 700; color: var(--text-dark); font-size: 14px;">
+                        <td style="padding: 12px 10px; font-weight: 700; color: var(--text-dark); font-size: 14px;">
                             <?php echo htmlspecialchars($u['room_no']); ?>
                         </td>
-                        <td style="padding: 16px;">
+                        <td style="padding: 12px 10px;">
                             <div style="font-size: 12px;">
                                 <span style="color: #10B981; font-weight: 600;">Rent:</span> ₹<?php echo number_format($u['fixed_rent'], 2); ?> <br>
                                 <span style="color: #F59E0B; font-weight: 600;">Maint:</span> ₹<?php echo number_format($u['fixed_maintenance'], 2); ?>
                             </div>
                         </td>
-                        <td style="padding: 16px;">
+                        <td style="padding: 12px 10px;">
                             <?php if ($u['status'] === 'active'): ?>
                                 <span style="padding: 6px 12px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
                                     <div style="width: 6px; height: 6px; background: #10B981; border-radius: 50%;"></div> Active
@@ -336,19 +336,19 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </span>
                             <?php endif; ?>
                         </td>
-                        <td style="padding: 16px; color: #64748B; font-size: 13px; font-weight: 500;">
+                        <td style="padding: 12px 10px; color: #64748B; font-size: 13px; font-weight: 500;">
                             <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                                 <i class='bx bx-calendar' style="font-size: 16px; color: #94A3B8;"></i>
                                 <?php echo $u['joining_date'] ? date('d M Y', strtotime($u['joining_date'])) : 'N/A'; ?>
                             </div>
                         </td>
-                        <td style="padding: 16px; border-radius: 0 12px 12px 0;">
-                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                        <td style="padding: 12px 16px; border-radius: 0 12px 12px 0;">
+                            <div style="display: flex; gap: 4px; justify-content: flex-end;">
                                 <a href="view-renter.php?id=<?php echo $u['id']; ?>" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none;" title="View Profile">
                                     <i class='bx bx-user'></i>
                                 </a>
                                 <?php if ($u['status'] === 'active'): ?>
-                                <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" style="height: 32px; padding: 0 12px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; text-decoration: none; gap: 4px;" title="Generate Bill">
+                                <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" style="height: 32px; padding: 0 8px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; text-decoration: none; gap: 4px;" title="Generate Bill">
                                     <i class='bx bx-receipt'></i> Bill
                                 </a>
                                 <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
