@@ -13,17 +13,55 @@ $room = trim($_GET['room'] ?? '');
 
 $filter_status = $_GET['status'] ?? 'active';
 
-$sql = "SELECT id, username, name, phone, room_no, profile_pic, last_login, agreement_expiry_date, fixed_rent, fixed_maintenance, status FROM users WHERE status = ?";
+// KPI Queries
+$kpi_res = mysqli_query($conn, "SELECT 
+    COUNT(id) as total_residents, 
+    SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_residents,
+    SUM(CASE WHEN status = 'moved_out' THEN 1 ELSE 0 END) as inactive_residents,
+    COUNT(DISTINCT room_no) as total_rooms
+    FROM users");
+$kpi = mysqli_fetch_assoc($kpi_res);
+$total_residents = $kpi['total_residents'] ?: 0;
+$active_residents = $kpi['active_residents'] ?: 0;
+$inactive_residents = $kpi['inactive_residents'] ?: 0;
+$total_rooms = $kpi['total_rooms'] ?: 0;
+
+// Pagination variables
+$limit = 10;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Count total rows for pagination
+$count_sql = "SELECT COUNT(id) as total FROM users WHERE status = ?";
+$count_params = [$filter_status]; $count_types = "s";
+if ($query !== '') {
+    $count_sql .= " AND (username LIKE ? OR name LIKE ?)";
+    $qlike = "%{$query}%"; $count_params[] = $qlike; $count_params[] = $qlike; $count_types .= "ss";
+}
+if ($room !== '') {
+    $count_sql .= " AND room_no LIKE ?";
+    $rlike = "%{$room}%"; $count_params[] = $rlike; $count_types .= "s";
+}
+$count_stmt = mysqli_prepare($conn, $count_sql);
+if ($count_params) mysqli_stmt_bind_param($count_stmt, $count_types, ...$count_params);
+mysqli_stmt_execute($count_stmt);
+$total_rows = mysqli_fetch_assoc(mysqli_stmt_get_result($count_stmt))['total'];
+mysqli_stmt_close($count_stmt);
+
+$total_pages = ceil($total_rows / $limit);
+
+$sql = "SELECT id, username, name, phone, email, room_no, profile_pic, last_login, agreement_expiry_date, fixed_rent, fixed_maintenance, joining_date, status FROM users WHERE status = ?";
 $params = [$filter_status]; $types = "s";
 if ($query !== '') {
     $sql .= " AND (username LIKE ? OR name LIKE ?)";
-    $qlike = "%{$query}%"; $params[] = $qlike; $params[] = $qlike; $types .= "ss";
+    $params[] = $qlike; $params[] = $qlike; $types .= "ss";
 }
 if ($room !== '') {
     $sql .= " AND room_no LIKE ?";
-    $rlike = "%{$room}%"; $params[] = $rlike; $types .= "s";
+    $params[] = $rlike; $types .= "s";
 }
-$sql .= " ORDER BY name ASC";
+$sql .= " ORDER BY name ASC LIMIT ? OFFSET ?";
+$params[] = $limit; $params[] = $offset; $types .= "ii";
 
 $stmt = mysqli_prepare($conn, $sql);
 if ($params) mysqli_stmt_bind_param($stmt, $types, ...$params);
@@ -130,15 +168,67 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up" style="text-align: center;">
-        <h1>Manage Residents</h1>
-        <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
-            <a href="add-renter.php" class="btn-primary" style="background: transparent; border: 1.5px solid #10B981; color: #10B981; padding: 10px 24px; border-radius: 14px;">
-                <i class='bx bx-plus' style='font-size: 18px;'></i> Add New
+    <div class="page-header-container animate-up" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
+        <div class="welcome" style="margin: 0;">
+            <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); margin: 0 0 8px 0;">
+                Manage Residents
+            </h1>
+            <p style="font-size: 15px; color: var(--text-gray); margin: 0;">View, manage and organize all residents in your property</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="add-renter.php" class="btn-primary" style="padding: 10px 20px; border-radius: 10px; font-weight: 600;">
+                <i class='bx bx-plus'></i> Add New Resident
             </a>
-            <a href="manage-renters.php" class="btn-outline" style="padding: 10px 24px; border-radius: 14px; border: 1.5px solid var(--border);">
-                View All
+            <a href="manage-renters.php" class="btn-outline" style="padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border); font-weight: 600;">
+                <i class='bx bx-list-ul'></i> View All Residents
             </a>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div class="aesthetic-card" style="padding: 20px; display: flex; align-items: center; gap: 20px;">
+            <div class="kpi-icon" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                <i class='bx bx-user'></i>
+            </div>
+            <div>
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: var(--text-gray); font-weight: 600;">Total Residents</p>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); line-height: 1;"><?php echo $total_residents; ?></h3>
+                <p style="margin: 6px 0 0 0; font-size: 11px; color: var(--text-gray);">All registered residents</p>
+            </div>
+        </div>
+
+        <div class="aesthetic-card" style="padding: 20px; display: flex; align-items: center; gap: 20px;">
+            <div class="kpi-icon" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16, 185, 129, 0.1); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                <i class='bx bx-check-circle'></i>
+            </div>
+            <div>
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: var(--text-gray); font-weight: 600;">Active Residents</p>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); line-height: 1;"><?php echo $active_residents; ?></h3>
+                <p style="margin: 6px 0 0 0; font-size: 11px; color: var(--text-gray);">Currently staying</p>
+            </div>
+        </div>
+
+        <div class="aesthetic-card" style="padding: 20px; display: flex; align-items: center; gap: 20px;">
+            <div class="kpi-icon" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                <i class='bx bx-pause-circle'></i>
+            </div>
+            <div>
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: var(--text-gray); font-weight: 600;">Inactive Residents</p>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); line-height: 1;"><?php echo $inactive_residents; ?></h3>
+                <p style="margin: 6px 0 0 0; font-size: 11px; color: var(--text-gray);">Not active</p>
+            </div>
+        </div>
+
+        <div class="aesthetic-card" style="padding: 20px; display: flex; align-items: center; gap: 20px;">
+            <div class="kpi-icon" style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                <i class='bx bx-door-open'></i>
+            </div>
+            <div>
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: var(--text-gray); font-weight: 600;">Total Rooms</p>
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark); line-height: 1;"><?php echo $total_rooms; ?></h3>
+                <p style="margin: 6px 0 0 0; font-size: 11px; color: var(--text-gray);">In all blocks</p>
+            </div>
         </div>
     </div>
 
