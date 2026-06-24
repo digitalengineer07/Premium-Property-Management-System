@@ -763,7 +763,7 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                     </div>
 
-                    <div class="aesthetic-card" id="electricitySection" style="opacity: 0.5; pointer-events: none; transition: 0.3s;">
+                    <div class="aesthetic-card" id="electricitySection" style="opacity: 0.7; pointer-events: none; transition: 0.3s;">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-bolt'></i>
@@ -771,9 +771,9 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                             <p class="panel-desc">Enter meter & usage details</p>
                         </div>
-                        <!-- Main Form Grid: 4-Column Layout -->
+                        <!-- Main Form Grid: 2-Column Layout for balance -->
                         <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label>Bill Date</label>
                                 <input type="date" id="billDate">
