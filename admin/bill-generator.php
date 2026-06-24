@@ -466,7 +466,10 @@ $admin_user = s($_SESSION['admin']);
         @media (min-width: 1024px) {
             .header-illustration {
                 display: block;
-                height: 100px;
+                height: 160px;
+                transform: translateY(-5px) scale(1.1);
+                margin-right: 20px;
+                filter: contrast(1.1) brightness(1.05);
             }
         }
         
@@ -621,9 +624,12 @@ $admin_user = s($_SESSION['admin']);
 
         <div class="bill-page animate-up">
             <div class="page-header-container">
-                <div class="welcome">
-                    <h1>Create New Bill</h1>
-                    <p>Generate a professional utility bill for your renters</p>
+                <div class="welcome" style="margin-bottom: 0;">
+                    <h1 style="font-size: 38px; font-weight: 800; letter-spacing: -1.5px; background: linear-gradient(135deg, #0F172A 0%, #624BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
+                        <i class='bx bx-receipt' style="color: #624BFF; -webkit-text-fill-color: #624BFF; font-size: 42px;"></i>
+                        Create New Bill
+                    </h1>
+                    <p style="font-size: 16px; color: var(--text-gray); font-weight: 500; margin: 0;">Generate a professional utility bill for your renters</p>
                 </div>
                 <div class="header-illustration">
                     <img src="../assets/img/login-illustration.png" alt="Illustration" style="height: 100%; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(98, 75, 255, 0.2)); opacity: 0.9;">
