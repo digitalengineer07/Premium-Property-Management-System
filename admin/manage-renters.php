@@ -289,6 +289,30 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
     </div>
 
+    <!-- Move Out Modal -->
+    <div id="moveOutModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div class="panel animate-up" style="max-width: 400px; width: 100%; padding: 32px; background: var(--white);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 64px; height: 64px; background: rgba(100, 116, 139, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <i class='bx bx-exit' style="font-size: 32px; color: #64748B;"></i>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Move Out Resident</h3>
+                <p id="moveOutUsername" style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">They will be archived but history is saved.</p>
+            </div>
+            
+            <input type="hidden" id="moveOutUserId">
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label>Move Out Date</label>
+                <input type="date" id="moveOutDateInput" class="btn-outline" style="width: 100%; text-align: left; cursor: text;" required>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px;">
+                <button onclick="closeMoveOutModal()" class="btn-outline" style="justify-content: center;">Cancel</button>
+                <button onclick="submitMoveOut()" class="btn-primary" style="justify-content: center; background: #64748B;">Confirm Move Out</button>
+            </div>
+        </div>
+    </div>
+
 <script>
     const CSRF_TOKEN = '<?php echo getCsrfToken(); ?>';
     document.getElementById('renterFilter')?.addEventListener('keyup', function(e) {
