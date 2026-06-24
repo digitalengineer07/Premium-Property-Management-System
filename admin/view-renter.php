@@ -173,8 +173,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- 1. Top Header Card -->
     <div class="panel animate-up" style="margin-bottom: 24px; padding: 32px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 24px;">
-            <div style="display: flex; gap: 24px; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 16px;">
+            <div style="display: flex; gap: 16px; align-items: center;">
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
                     <?php if ($user['profile_pic']): ?>
                         <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
@@ -199,13 +199,13 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
             </div>
 
-            <div style="display: flex; gap: 12px; flex-wrap: nowrap;">
-                <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 10px 20px; border-radius: 8px;"><i class='bx bx-plus'></i> New Bill</a>
-                <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
-                <button onclick="openAgreementModal()" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-upload'></i> Agreement</button>
+            <div style="display: flex; gap: 8px; flex-wrap: nowrap;">
+                <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 8px 16px; border-radius: 8px; white-space: nowrap; font-size: 13px;"><i class='bx bx-plus'></i> New Bill</a>
+                <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 8px 16px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 13px;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
+                <button onclick="openAgreementModal()" class="btn-outline" style="padding: 8px 16px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 13px;"><i class='bx bx-upload'></i> Agreement</button>
                 
                 <div style="position: relative; display: inline-block;">
-                    <button onclick="document.getElementById('moreDropdown').style.display = document.getElementById('moreDropdown').style.display === 'flex' ? 'none' : 'flex'" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
+                    <button onclick="document.getElementById('moreDropdown').style.display = document.getElementById('moreDropdown').style.display === 'flex' ? 'none' : 'flex'" class="btn-outline" style="padding: 8px 16px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 13px;"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
                     <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: #FFFFFF; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 180px; z-index: 100; flex-direction: column; overflow: hidden;">
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
