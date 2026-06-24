@@ -1316,9 +1316,12 @@ $admin_user = s($_SESSION['admin']);
 
             const btn = document.getElementById('generateBtn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin' style='font-size: 20px;'></i> Generating...";
+            btn.innerHTML = "<i class='bx bx-loader bx-spin' style='font-size: 20px;'></i> Generating...";
             btn.style.pointerEvents = 'none';
             btn.style.opacity = '0.8';
+
+            // Force browser repaint to show loading animation
+            await new Promise(resolve => setTimeout(resolve, 50));
 
             const fd = new FormData();
             fd.append('csrf', '<?php echo getCsrfToken(); ?>');
