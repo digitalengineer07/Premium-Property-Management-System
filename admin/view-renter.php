@@ -164,275 +164,321 @@ $admin_user = s($_SESSION['admin'] ?? '');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <div class="welcome-top" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-            <a href="manage-renters.php" class="btn-outline back-btn-mobile" style="padding: 10px 20px;"><i class='bx bx-arrow-back'></i></a>
-            <div style="flex: 1;">
-                <h1 style="margin: 0; margin-bottom: 4px; font-size: 32px; font-weight: 800;"><?php echo ucwords(htmlspecialchars($user['name'])); ?></h1>
-                <p style="margin: 0; color: var(--text-gray); font-size: 15px;">Full history and documentation for resident at <?php echo ucwords(HOUSE_NAME); ?></p>
+        <?php 
+        $initials = '';
+        $nameParts = explode(' ', $user['name']);
+        if (isset($nameParts[0])) $initials .= strtoupper(substr($nameParts[0], 0, 1));
+        if (isset($nameParts[1])) $initials .= strtoupper(substr($nameParts[1], 0, 1));
+    ?>
+
+    <!-- 1. Top Header Card -->
+    <div class="panel animate-up" style="margin-bottom: 24px; padding: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px;">
+            <div style="display: flex; gap: 24px; align-items: center;">
+                <?php if ($user['profile_pic']): ?>
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
+                <?php else: ?>
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                <?php endif; ?>
+                
+                <div>
+                    <h2 style="font-weight: 800; font-size: 24px; margin: 0 0 8px 0; color: var(--text-dark); display: flex; align-items: center; gap: 12px;">
+                        <?php echo htmlspecialchars($user['name']); ?>
+                    </h2>
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 13px; font-weight: 500;">
+                        <span><i class='bx bx-user-circle'></i> @<?php echo htmlspecialchars($user['username']); ?></span>
+                        <span style="color: var(--border);">|</span> 
+                        <span style="color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-door-open'></i> Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?></span>
+                        <?php if (($user['status'] ?? 'active') == 'active'): ?>
+                            <span style="color: var(--border);">|</span>
+                            <span style="color: #10B981; font-weight: 600;"><i class='bx bxs-circle' style="font-size: 8px;"></i> Active</span>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 10px 20px; border-radius: 8px;"><i class='bx bx-plus'></i> New Bill</a>
+                <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
+                <button onclick="openAgreementModal()" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-upload'></i> Agreement</button>
+                
+                <div style="position: relative; display: inline-block;">
+                    <button onclick="document.getElementById('moreDropdown').style.display = document.getElementById('moreDropdown').style.display === 'flex' ? 'none' : 'flex'" class="btn-outline" style="padding: 10px 20px; border-radius: 8px; background: transparent;"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
+                    <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: #FFFFFF; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 180px; z-index: 100; flex-direction: column; overflow: hidden;">
+                        <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
+                        <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 32px; align-items: center; border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 18px;"><i class='bx bx-phone'></i></div>
+                <div>
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['phone'] ?: 'No Phone Number'); ?></div>
+                    <div style="color: var(--text-gray); font-size: 11px;">Phone</div>
+                </div>
+            </div>
+            
+            <div style="width: 1px; height: 32px; background: var(--border);"></div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 18px;"><i class='bx bx-envelope'></i></div>
+                <div>
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['email'] ?: 'No Email Address'); ?></div>
+                    <div style="color: var(--text-gray); font-size: 11px;">Email</div>
+                </div>
+            </div>
+
+            <div style="width: 1px; height: 32px; background: var(--border);"></div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(37,211,102,0.08); display: flex; align-items: center; justify-content: center; color: #25D366; font-size: 18px;"><i class='bx bxl-whatsapp'></i></div>
+                <div>
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['whatsapp'] ?: 'No WhatsApp'); ?></div>
+                    <div style="color: var(--text-gray); font-size: 11px;">WhatsApp</div>
+                </div>
+            </div>
+
+            <?php if(!empty($user['joining_date'])): ?>
+            <div style="width: 1px; height: 32px; background: var(--border);"></div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 18px;"><i class='bx bx-calendar'></i></div>
+                <div>
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo date('M d, Y', strtotime($user['joining_date'])); ?></div>
+                    <div style="color: var(--text-gray); font-size: 11px;">Member Since</div>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 
-        
-    <div class="panel animate-up" style="padding: 0; overflow: hidden; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: none;">
-        <div style="height: 160px; background: linear-gradient(135deg, var(--primary-purple), #93A5CF); position: relative;">
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(circle at right, #fff 0%, transparent 50%);"></div>
-        </div>
-        
-        <div class="hero-card-padding" style="padding: 0 32px 32px 32px; position: relative;">
-            <div class="hero-header-row" style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; margin-top: -60px; margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 24px;">
-                <div class="hero-profile-group" style="display: flex; align-items: flex-end; gap: 24px;">
-                    <div class="avatar" style="width: 130px; height: 130px; border: 6px solid var(--bg-main); background-image: url('../<?php echo $user['profile_pic'] ?: 'assets/img/default-avatar.png'; ?>'); background-size: cover; background-position: center; border-radius: 24px; box-shadow: var(--card-shadow); flex-shrink: 0; background-color: var(--bg-main); z-index: 2;"></div>
-                    <div style="padding-bottom: 4px; width: 100%;">
-                        <h2 style="font-weight: 800; font-size: 32px; line-height: 1.1; margin-bottom: 4px; color: var(--text-dark);"><?php echo htmlspecialchars($user['name']); ?></h2>
-                        <p class="hero-details-text" style="color: var(--text-gray); font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                            <i class='bx bx-user-circle' style="font-size: 18px;"></i> @<?php echo htmlspecialchars($user['username']); ?> 
-                            <span style="color: var(--border);">|</span> 
-                            <span style="color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 2px 10px; border-radius: 20px; font-weight: 700; font-size: 12px;"><i class='bx bx-door-open'></i> Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?></span>
-                        </p>
+    <!-- 2. Middle Section -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;" class="animate-up dashboard-grid-70">
+        <!-- Contact Details -->
+        <div class="panel">
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-user-circle'></i></div> Contact Details</h4>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-phone'></i></div>
+                    <div style="flex: 1;">
+                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Phone</div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['phone'] ?: 'N/A'); ?></div>
                     </div>
+                    <div style="color: var(--text-gray);"><i class='bx bx-phone-call'></i></div>
                 </div>
                 
-                <div style="display: flex; gap: 12px; padding-bottom: 6px; flex-wrap: wrap;">
-                    <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 10px 18px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);"><i class='bx bx-plus'></i> New Bill</a>
-                    <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 10px 18px; background: transparent;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
-                    <button onclick="openAgreementModal()" class="btn-outline" style="padding: 10px 18px; background: transparent;"><i class='bx bx-upload'></i> Agreement</button>
-                    <button onclick="openAadhaarModal()" class="btn-outline" style="padding: 10px 18px; background: transparent;"><i class='bx bx-id-card'></i> Aadhaar</button>
-                    <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>')" class="btn-outline" style="padding: 10px 18px; border-color: #FCA5A5; color: #EF4444; background: rgba(239, 68, 68, 0.05);"><i class='bx bx-lock-alt'></i> Password</button>
+                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-envelope'></i></div>
+                    <div style="flex: 1;">
+                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Email</div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['email'] ?: 'N/A'); ?></div>
+                    </div>
+                    <div style="color: #EF4444;"><i class='bx bx-envelope'></i></div>
                 </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
                 
-                <!-- Contact Info -->
-                <div>
-                    <h4 style="font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 700;">Contact Details</h4>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--text-dark);">
-                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 18px;"><i class='bx bx-phone'></i></div>
-                            <?php echo htmlspecialchars($user['phone'] ?: 'No Phone Number'); ?>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--text-dark);">
-                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(239,68,68,0.08); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 18px;"><i class='bx bx-envelope'></i></div>
-                            <?php echo htmlspecialchars($user['email'] ?: 'No Email Address'); ?>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--text-dark);">
-                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(37,211,102,0.08); display: flex; align-items: center; justify-content: center; color: #25D366; font-size: 18px;"><i class='bx bxl-whatsapp'></i></div>
-                            <?php echo htmlspecialchars($user['whatsapp'] ?: 'No WhatsApp'); ?>
-                        </div>
-                        <?php if(!empty($user['joining_date'])): ?>
-                        <div style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; color: var(--text-dark);">
-                            <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 18px;"><i class='bx bx-calendar-plus'></i></div>
-                            Joined: <?php echo date('M d, Y', strtotime($user['joining_date'])); ?>
-                        </div>
-                        <?php endif; ?>
+                <div style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(37,211,102,0.08); display: flex; align-items: center; justify-content: center; color: #25D366; font-size: 20px;"><i class='bx bxl-whatsapp'></i></div>
+                    <div style="flex: 1;">
+                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">WhatsApp</div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($user['whatsapp'] ?: 'N/A'); ?></div>
+                    </div>
+                    <div style="color: #25D366;"><i class='bx bxl-whatsapp'></i></div>
+                </div>
+                
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-calendar'></i></div>
+                    <div style="flex: 1;">
+                        <div style="color: var(--text-gray); font-size: 12px; margin-bottom: 2px;">Member Since</div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px;"><?php echo !empty($user['joining_date']) ? date('M d, Y', strtotime($user['joining_date'])) : 'N/A'; ?></div>
                     </div>
                 </div>
-
-                <!-- Financial Status -->
-                <div>
-                    <h4 style="font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 700;">Financial Snapshot</h4>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <?php if ($user['pending_adjustment'] != 0): ?>
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)'; ?>; border: 1px solid <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'; ?>;">
-                            <span style="font-size: 14px; font-weight: 600; color: <?php echo $user['pending_adjustment'] > 0 ? '#059669' : '#DC2626'; ?>; display: flex; align-items: center; gap: 8px;"><i class='bx bx-wallet-alt' style="font-size: 18px;"></i> <?php echo $user['pending_adjustment'] > 0 ? 'Total Credit' : 'Pending Due'; ?></span>
-                            <span style="font-weight: 800; font-size: 16px; color: <?php echo $user['pending_adjustment'] > 0 ? '#059669' : '#DC2626'; ?>;">₹<?php echo number_format(abs($user['pending_adjustment']), 2); ?></span>
-                        </div>
-                        <?php endif; ?>
-
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: transparent; border: 1px solid var(--border);">
-                            <div style="display: flex; flex-direction: column;">
-                                <span style="font-size: 14px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px;"><i class='bx bx-money' style="color: var(--primary-purple); font-size: 18px;"></i> Security Deposit</span>
-                                <?php if ($advance_due > 0): ?>
-                                    <span style="font-size: 12px; color: #EF4444; font-weight: 600; margin-top: 4px;">Due: ₹<?php echo number_format($advance_due, 2); ?></span>
-                                    <button onclick="openPaymentModal('advance', <?php echo $user['id']; ?>, <?php echo $advance_due; ?>, 'Advance Security')" class="btn-primary" style="margin-top: 8px; font-size: 11px; padding: 4px 10px; width: max-content;">Mark Paid</button>
-                                <?php elseif (($user['advance_payment'] ?? 0) > 0): ?>
-                                    <span style="font-size: 12px; color: #10B981; font-weight: 600; margin-top: 4px;">Fully Paid</span>
-                                <?php endif; ?>
-                            </div>
-                            <span style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></span>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 12px; background: transparent; border: 1px solid var(--border);">
-                            <div style="display: flex; flex-direction: column;">
-                                <span style="font-size: 14px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px;"><i class='bx bx-home-circle' style="color: #10B981; font-size: 18px;"></i> Fixed Charges</span>
-                                <span style="font-size: 12px; color: var(--text-gray); margin-left: 26px; font-weight: 500;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?> &bull; Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></span>
-                            </div>
-                            <span style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format(($user['fixed_rent'] ?? 0) + ($user['fixed_maintenance'] ?? 0), 2); ?></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Documents -->
-                <div>
-                    <h4 style="font-size: 13px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; font-weight: 700;">Documentation</h4>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <?php if (!empty($user['aadhaar_file'])): ?>
-                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px;">
-                                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-                                    <div style="width: 40px; height: 40px; background: rgba(98, 75, 255, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i class='bx bx-id-card' style="font-size: 20px; color: var(--primary-purple);"></i>
-                                    </div>
-                                    <div style="overflow: hidden;">
-                                        <div style="font-weight: 600; font-size: 13px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Identity Proof (Aadhaar)</div>
-                                        <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="font-size: 11px; color: var(--primary-purple); text-decoration: none; font-weight: 500;">View Document <i class='bx bx-link-external'></i></a>
-                                    </div>
-                                </div>
-                                <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('WARNING: Are you sure you want to delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.1); color: #EF4444; text-decoration: none; flex-shrink: 0; transition: all 0.2s ease;" onmouseover="this.style.background='#EF4444'; this.style.color='white';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#EF4444';">
-                                    <i class='bx bx-trash' style="font-size: 18px;"></i>
-                                </a>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($user['agreement_document'])): ?>
-                            <?php 
-                                $expiry_status = "";
-                                if ($user['agreement_expiry_date']) {
-                                    $days = (strtotime($user['agreement_expiry_date']) - time()) / 86400;
-                                    if ($days < 0) $expiry_status = "Expired";
-                                    elseif ($days <= 30) $expiry_status = "Expiring Soon";
-                                }
-                            ?>
-                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; position: relative;">
-                                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
-                                    <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                        <i class='bx bx-file' style="font-size: 20px; color: #10B981;"></i>
-                                    </div>
-                                    <div style="overflow: hidden;">
-                                        <div style="font-weight: 600; font-size: 13px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rental Agreement</div>
-                                        <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="font-size: 11px; color: #10B981; text-decoration: none; font-weight: 500;">View Document <i class='bx bx-link-external'></i></a>
-                                    </div>
-                                </div>
-                                
-                                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                                    <?php if ($expiry_status): ?>
-                                        <span style="font-size: 10px; padding: 4px 8px; border-radius: 20px; font-weight: 600; background: <?php echo $expiry_status == 'Expired' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)'; ?>; color: <?php echo $expiry_status == 'Expired' ? '#EF4444' : '#F59E0B'; ?>;">
-                                            <?php echo $expiry_status; ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('WARNING: Are you sure you want to delete this Rental Agreement?');" style="width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.1); color: #EF4444; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#EF4444'; this.style.color='white';" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.color='#EF4444';">
-                                        <i class='bx bx-trash' style="font-size: 18px;"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document'])): ?>
-                            <div style="background: transparent; padding: 24px; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 500; color: var(--text-gray); border: 1px dashed var(--border);">
-                                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; display: block; color: var(--text-gray); opacity: 0.5;"></i>
-                                No documents uploaded yet
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
             </div>
             
             <?php if(!empty($user['about'])): ?>
-            <div style="margin-top: 32px; padding: 20px; background: transparent; border-radius: 16px; border: 1px solid var(--border);">
-                <h4 style="font-size: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 6px;"><i class='bx bx-note'></i> Admin Notes / About</h4>
-                <p style="font-size: 15px; line-height: 1.6; color: var(--text-dark); margin: 0; font-weight: 500;"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
+            <div style="margin-top: 24px; padding: 16px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border);">
+                <h4 style="font-size: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700;"><i class='bx bx-note'></i> Admin Notes</h4>
+                <p style="font-size: 13px; line-height: 1.5; color: var(--text-dark); margin: 0;"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
             </div>
             <?php endif; ?>
-
         </div>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;" class="animate-up">
+
+        <!-- Financial Snapshot -->
         <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">Utility History</h2>
-                    <span class="badge" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);"><?php echo count($elecs); ?> Records</span>
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-wallet'></i></div> Financial Snapshot</h4>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; color: #10B981; font-size: 20px;"><i class='bx bx-check-shield'></i></div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">Security Deposit</div>
+                            <?php if ($advance_due > 0): ?>
+                                <div style="color: #EF4444; font-size: 12px; font-weight: 600; margin-top: 2px;">Due: ₹<?php echo number_format($advance_due, 2); ?></div>
+                                <button onclick="openPaymentModal('advance', <?php echo $user['id']; ?>, <?php echo $advance_due; ?>, 'Advance Security')" class="btn-primary" style="margin-top: 6px; font-size: 11px; padding: 4px 10px; width: max-content;">Mark Paid</button>
+                            <?php else: ?>
+                                <div style="color: #10B981; font-size: 12px; font-weight: 500; margin-top: 2px;">Fully Paid</div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 16px; color: #10B981;">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Units</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($elecs)): ?>
-                                <tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-gray);">No electricity records.</td></tr>
-                            <?php else: foreach ($elecs as $e): ?>
-                            <tr>
-                                <td style="font-weight: 600;"><?php echo htmlspecialchars($e['month']); ?></td>
-                                <td><?php echo htmlspecialchars($e['units_consumed'] ?? ($e['current_reading'] - $e['previous_reading'])); ?> Units</td>
-                                <td style="font-weight: 700;">
-                                    ₹<?php echo number_format($e['total_amount'], 2); ?>
-                                    <?php if ($e['total_paid'] > 0): ?>
-                                        <div style="font-size: 10px; font-weight: 600; color: #10B981;">
-                                            Paid: ₹<?php echo number_format($e['total_paid'], 0); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : ($e['status'] == 'Partial' ? 'badge-pending' : 'badge-due'); ?>" style="<?php echo $e['status'] == 'Partial' ? 'background: rgba(245, 158, 11, 0.1); color: #F59E0B;' : ''; ?>"><?php echo $e['status']; ?></span></td>
-                                <td>
-                                    <div style="display: flex; gap: 8px;">
-                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;" target="_blank">Slip</a>
-                                        <a href="update-electricity.php?user_id=<?php echo $e['user_id']; ?>&id=<?php echo $e['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-edit'></i></a>
-                                        <a href="delete-bill.php?id=<?php echo $e['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px; color: #EF4444; border-color: #FCA5A5;" onclick="return confirm('Delete this utility bill completely?');"><i class='bx bx-trash'></i></a>
-                                        <?php if($e['status'] != 'Paid'): 
-                                                $remaining = max(0, $e['total_amount'] - $e['total_paid']); ?>
-                                            <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">Pay</button>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 20px;"><i class='bx bx-home'></i></div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">Fixed Charges</div>
+                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?> &bull; Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 16px; color: #3B82F6;">₹<?php echo number_format(($user['fixed_rent'] ?? 0) + ($user['fixed_maintenance'] ?? 0), 2); ?></div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.2)' : ($user['pending_adjustment'] < 0 ? 'rgba(239,68,68,0.2)' : 'var(--border)'); ?>; border-radius: 12px; background: <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.05)' : ($user['pending_adjustment'] < 0 ? 'rgba(239,68,68,0.05)' : 'transparent'); ?>;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(239,68,68,0.1); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 20px;"><i class='bx bx-file'></i></div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo $user['pending_adjustment'] > 0 ? 'Total Credit' : 'Total Outstanding'; ?></div>
+                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;"><?php echo $user['pending_adjustment'] == 0 ? 'All pending dues cleared' : ($user['pending_adjustment'] > 0 ? 'Credit balance available' : 'Pending dues to be paid'); ?></div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 16px; color: <?php echo $user['pending_adjustment'] > 0 ? '#10B981' : '#94A3B8'; ?>;"><?php echo $user['pending_adjustment'] < 0 ? '<span style="color:#EF4444;">₹'.number_format(abs($user['pending_adjustment']), 2).'</span>' : '₹'.number_format($user['pending_adjustment'], 2); ?></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- 3. Bottom Section (3 columns) -->
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr 1.5fr; gap: 24px; margin-bottom: 24px;" class="animate-up dashboard-grid-70">
+        <!-- Documents -->
         <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">Rent History</h2>
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <?php if (!empty($user['aadhaar_file'])): ?>
+                <div style="padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #FFFFFF;">
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px; margin-bottom: 12px;">Identity Proof (Aadhaar)</div>
+                    <div style="display: flex; gap: 12px; justify-content: space-between;">
+                        <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="padding: 8px 16px; border: 1px solid var(--primary-purple); color: var(--primary-purple); border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">View Document</a>
+                        <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class='bx bx-trash'></i></a>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($rents)): ?>
-                                <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-gray);">No rent records.</td></tr>
-                            <?php else: foreach ($rents as $r): ?>
-                            <tr>
-                                <td style="font-weight: 600;"><?php echo htmlspecialchars($r['month']); ?></td>
-                                <td style="font-weight: 700;">
-                                    <div style="font-size: 11px; color: var(--text-gray); margin-bottom: 2px;">
-                                        Rent: ₹<?php echo number_format($r['rent_amount'], 2); ?> <br>
-                                        Maint: ₹<?php echo number_format($r['maintenance'], 2); ?>
-                                    </div>
-                                    <span style="color: var(--text-dark);">Total: ₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></span>
-                                    <?php if ($r['total_paid'] > 0): ?>
-                                        <div style="font-size: 10px; font-weight: 600; color: #10B981;">
-                                            Paid: ₹<?php echo number_format($r['total_paid'], 0); ?>
-                                        </div>
+                <?php endif; ?>
+
+                <?php if (!empty($user['agreement_document'])): ?>
+                <div style="padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #FFFFFF;">
+                    <div style="font-weight: 600; color: var(--text-dark); font-size: 13px; margin-bottom: 12px;">Rental Agreement</div>
+                    <div style="display: flex; gap: 12px; justify-content: space-between;">
+                        <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="padding: 8px 16px; border: 1px solid #10B981; color: #10B981; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; justify-content: center; flex: 1;">View Document</a>
+                        <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none;"><i class='bx bx-trash'></i></a>
+                    </div>
+                </div>
+                <?php endif; ?>
+
+                <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document'])): ?>
+                <div style="padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px;">
+                    <i class='bx bx-folder-open' style="font-size: 24px; margin-bottom: 8px; color: #CBD5E1;"></i><br>
+                    No documents uploaded
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Utility History -->
+        <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Utility History</h4>
+                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($elecs); ?> Records</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Month</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Units</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Amount</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Status</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($elecs)): ?>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No utility records.</td></tr>
+                        <?php else: ?>
+                            <?php $shown_elecs = array_slice($elecs, 0, 3); foreach ($shown_elecs as $e): ?>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($e['month']); ?></td>
+                                <td style="padding: 12px 8px; font-size: 12px; color: var(--text-gray);"><?php echo htmlspecialchars($e['units_consumed'] ?? ($e['current_reading'] - $e['previous_reading'])); ?> Units</td>
+                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['total_amount'], 2); ?></td>
+                                <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
+                                <td style="padding: 12px 8px;">
+                                    <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['total_amount'] - $e['total_paid']); ?>
+                                        <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
+                                    <?php else: ?>
+                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" target="_blank" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
                                     <?php endif; ?>
                                 </td>
-                                <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : ($r['status'] == 'Partial' ? 'badge-pending' : 'badge-due'); ?>" style="<?php echo $r['status'] == 'Partial' ? 'background: rgba(245, 158, 11, 0.1); color: #F59E0B;' : ''; ?>"><?php echo $r['status']; ?></span></td>
-                                <td>
-                                    <?php if($r['status'] != 'Paid'): 
-                                            $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $r['total_paid']); ?>
-                                        <button onclick="openPaymentModal('electricity', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">Pay</button>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px;">
+                <a href="electricity-list.php?search=<?php echo urlencode($user['name']); ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All Utility History <i class='bx bx-right-arrow-alt'></i></a>
+            </div>
+        </div>
+
+        <!-- Rent History -->
+        <div class="panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Rent History</h4>
+                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($rents); ?> Records</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Month</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Details</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Total</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Status</th>
+                            <th style="padding: 12px 8px; text-align: left; font-size: 11px; color: var(--text-gray); text-transform: uppercase;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($rents)): ?>
+                            <tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No rent records.</td></tr>
+                        <?php else: ?>
+                            <?php $shown_rents = array_slice($rents, 0, 3); foreach ($shown_rents as $r): ?>
+                            <tr style="border-bottom: 1px solid var(--border);">
+                                <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($r['month']); ?></td>
+                                <td style="padding: 12px 8px; font-size: 10px; color: var(--text-gray);">Rent: ₹<?php echo number_format($r['rent_amount']); ?><br>Maint: ₹<?php echo number_format($r['maintenance']); ?></td>
+                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
+                                <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
+                                <td style="padding: 12px 8px;">
+                                    <?php if($r['status'] != 'Paid'): $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $r['total_paid']); ?>
+                                        <button onclick="openPaymentModal('electricity', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
+                                    <?php else: ?>
+                                        <span style="color: var(--text-gray); padding: 4px 12px; font-size: 11px; font-weight: 600;">-</span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
-                            <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px;">
+                <a href="electricity-list.php?search=<?php echo urlencode($user['name']); ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All Rent History <i class='bx bx-right-arrow-alt'></i></a>
+            </div>
+        </div>
     </div>
 </main>
     <!-- Password Reset Modal -->
