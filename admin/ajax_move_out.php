@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Verify user exists and is currently active
-    $check_q = mysqli_query($conn, "SELECT id, status FROM users WHERE id = $user_id");
+    $check_q = mysqli_query($conn, "SELECT id, name, email, status FROM users WHERE id = $user_id");
     if (mysqli_num_rows($check_q) === 0) {
         echo json_encode(['success' => false, 'error' => 'User not found']);
         exit;
@@ -36,7 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     mysqli_stmt_bind_param($stmt, "si", $move_out_date, $user_id);
     
     if (mysqli_stmt_execute($stmt)) {
-        echo json_encode(['success' => true, 'message' => 'Renter successfully moved out. Their history has been preserved.']);
+        // Send Thank You Email
+        require_once 'utils_mailer.php';
+        if (!empty($user_data['email'])) {
+            send_move_out_thank_you_email($user_data['email'], $user_data['name']);
+        }
+        
+        echo json_encode(['success' => true, 'message' => 'Renter successfully moved out. A thank you email has been sent to them.']);
     } else {
         echo json_encode(['success' => false, 'error' => 'Database update failed: ' . mysqli_error($conn)]);
     }
