@@ -385,8 +385,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 Showing <?php echo $total_rows > 0 ? $offset + 1 : 0; ?> to <?php echo min($offset + $limit, $total_rows); ?> of <?php echo $total_rows; ?> residents
             </div>
             
-            <?php if ($total_pages > 1): ?>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 8px; margin-left: auto;">
                 <?php
                 // Preserve query string
                 $qs = $_GET;
@@ -400,13 +399,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 }
 
                 // Page numbers
-                for ($i = 1; $i <= $total_pages; $i++) {
+                $visible_pages = max(1, $total_pages);
+                for ($i = 1; $i <= $visible_pages; $i++) {
                     if ($i == $page) {
                         echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #624BFF; color: #FFFFFF; font-weight: 600; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2);">' . $i . '</div>';
                     } else {
-                        if ($total_pages > 5 && $i > 3 && $i < $total_pages && abs($i - $page) > 1) {
+                        if ($visible_pages > 5 && $i > 3 && $i < $visible_pages && abs($i - $page) > 1) {
                             if ($i == 4 && $page > 4) echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">...</div>';
-                            if ($i == $total_pages - 1 && $page < $total_pages - 3) echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">...</div>';
+                            if ($i == $visible_pages - 1 && $page < $visible_pages - 3) echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">...</div>';
                             continue;
                         }
                         
@@ -424,7 +424,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 }
                 ?>
             </div>
-            <?php endif; ?>
         </div>
     </div>
 </main>
