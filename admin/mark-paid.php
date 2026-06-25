@@ -83,7 +83,7 @@ elseif ($delta < 0) $adj_type = 'remaining';
 /* 3. Record Payment */
 $actual_bill_id = ($type === 'advance') ? 0 : $id; // For advance, there is no specific bill_id
 $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, payment_time, recorded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-mysqli_stmt_bind_param($stmt, "isissddssssi", 
+mysqli_stmt_bind_param($stmt, "isisdsddsssi", 
     $bill['user_id'], 
     $type, 
     $actual_bill_id, 
