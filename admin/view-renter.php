@@ -589,13 +589,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- Payment Mode Modal -->
     <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-        <div class="panel animate-up" style="max-width: 450px; width: 100%; padding: 32px;">
-            <div style="text-align: center; margin-bottom: 24px;">
-                <div style="width: 64px; height: 64px; background: rgba(16, 185, 129, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                    <i class='bx bx-credit-card' style="font-size: 32px; color: #10B981;"></i>
+        <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
                 </div>
-                <h3 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Record Payment</h3>
-                <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">Select payment method and amount.</p>
+                <div>
+                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                    <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+                </div>
             </div>
             
             <form action="mark-paid.php" method="POST">
@@ -604,37 +606,50 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <input type="hidden" name="type" id="paymentBillType">
                 <input type="hidden" name="bill_amount" id="paymentBillAmount">
                 
-                <div class="form-group">
-                    <label>Payment Mode</label>
-                    <select name="payment_mode" id="paymentMode" required>
-                        <option value="Online">Online</option>
-                        <option value="Cash">Cash</option>
-                        <option value="UPI">UPI</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Payment Mode</label>
+                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                                <option value="Online">Online</option>
+                                <option value="Cash">Cash</option>
+                                <option value="UPI">UPI</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Amount Paid (₹)</label>
+                            <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                            <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 4px;">Partial payments are allowed.</small>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                            <div class="form-group">
+                                <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Date</label>
+                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Time</label>
+                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 16px;">
+                            <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Cash Received By</label>
+                            <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: #F8FAFC;">
+                                <i class='bx bx-user' style="color: var(--primary-purple);"></i>
+                                <span style="font-size: 14px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div style="border-top: 1px dashed var(--border); padding-top: 20px; margin-top: 20px;">
-                    <div class="form-group">
-                        <label>Amount Paid (₹)</label>
-                        <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required>
-                        <small style="color: var(--text-gray); font-size: 11px;">You can enter a partial payment amount.</small>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" name="payment_date" id="paymentDateInput" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Time</label>
-                            <input type="time" name="payment_time" id="paymentTimeInput" required>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px; margin-top: 24px;">
-                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="justify-content: center;">Cancel</button>
-                    <button type="submit" class="btn-primary" style="justify-content: center; background: #10B981;">Confirm Payment</button>
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 10px 24px;">Cancel</button>
+                    <button type="submit" class="btn-primary" style="background: #10B981; padding: 10px 24px;">Confirm Payment</button>
                 </div>
             </form>
         </div>
