@@ -189,16 +189,16 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 650px;
+            margin: 40px auto;
             padding: 0 24px 40px;
             box-sizing: border-box;
         }
         .aesthetic-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            padding: 32px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
             position: relative;
             margin-bottom: 20px;
@@ -206,64 +206,67 @@ if ($elec_id > 0) {
         .panel-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-            margin-bottom: 20px;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
         }
         .section-title {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 800;
             color: var(--text-dark);
+            letter-spacing: -0.5px;
         }
         .section-title i {
-            font-size: 20px;
-            color: var(--primary-purple);
-            background: rgba(98, 75, 255, 0.1);
+            font-size: 22px;
+            color: var(--white);
+            background: var(--primary-purple);
             padding: 8px;
-            border-radius: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(98, 75, 255, 0.3);
         }
         .form-group { margin-bottom: 24px; }
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: 800;
-            font-size: 11.5px;
-            color: #475569;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--text-gray);
             text-transform: uppercase;
-            letter-spacing: 0.6px;
+            letter-spacing: 1px;
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 10px;
-            background: var(--white);
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-main);
             color: var(--text-dark);
             outline: none;
-            transition: var(--transition);
+            transition: all 0.2s ease;
             font-size: 14px;
             font-weight: 600;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.015);
             box-sizing: border-box;
         }
         .form-group input:focus, .form-group select:focus {
             border-color: var(--primary-purple);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1);
         }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
+        .welcome h1 { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; color: var(--text-dark); }
+        .welcome p { color: var(--text-gray); font-size: 15px; }
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
-            .edit-page { padding: 0 16px 40px; }
-            .aesthetic-card { padding: 20px; }
+            .edit-page { padding: 0 16px 40px; margin-top: 20px; }
+            .aesthetic-card { padding: 24px; }
         }
     </style>
 </head>
