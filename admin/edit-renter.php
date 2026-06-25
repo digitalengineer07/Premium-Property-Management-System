@@ -155,19 +155,17 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="animate-up" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;">
-        <div style="display: flex; align-items: center; gap: 16px;">
-            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <i class='bx bx-user-pin' style="font-size: 28px;"></i>
-            </div>
-            <div>
-                <h1 style="font-size: 24px; font-weight: 700; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Edit Profile</h1>
-                <p style="font-size: 14px; color: var(--text-gray); margin: 4px 0 0 0;">Modify details and configurations for <span style="font-weight: 600; color: var(--primary-purple);"><?php echo htmlspecialchars($user['name']); ?></span></p>
-            </div>
-        </div>
-        <a href="view-renter.php?id=<?php echo $user['id']; ?>" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: #475569; border: 1px solid #CBD5E1; text-decoration: none; transition: all 0.2s ease; background: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#94A3B8'; this.style.color='#1E293B'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#CBD5E1'; this.style.color='#475569'; this.style.transform='none';">
-            <i class='bx bx-left-arrow-alt' style="font-size: 20px;"></i> Back to Profile
+    <div class="animate-up" style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;">
+        <a href="view-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; background: #ffffff; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+            <i class='bx bx-arrow-back' style="font-size: 24px; color: #64748B;"></i>
         </a>
+        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <i class='bx bx-user-pin' style="font-size: 28px;"></i>
+        </div>
+        <div>
+            <h1 style="font-size: 24px; font-weight: 700; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Edit Profile</h1>
+            <p style="font-size: 14px; color: var(--text-gray); margin: 4px 0 0 0;">Modify details and configurations for <span style="font-weight: 600; color: var(--primary-purple);"><?php echo htmlspecialchars($user['name']); ?></span></p>
+        </div>
     </div>
 
     <div class="animate-up">
