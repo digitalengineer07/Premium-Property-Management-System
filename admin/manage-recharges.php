@@ -144,10 +144,10 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                         
                         <!-- Recharge Amount -->
                         <div class="form-group" style="margin: 0;">
-                            <label style="display: block; font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Recharge Amount (₹)</label>
-                            <div style="position: relative;">
-                                <i class='bx bx-rupee' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 22px; color: #94A3B8;"></i>
-                                <input type="number" step="0.01" name="amount" placeholder="0.00" required style="width: 100%; padding: 16px 16px 16px 48px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 16px; font-weight: 600; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                            <label style="display: block; font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Recharge Amount</label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <span style="position: absolute; left: 16px; font-size: 16px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                <input type="number" step="0.01" name="amount" placeholder="0.00" required style="width: 100%; padding: 16px 16px 16px 40px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 16px; font-weight: 600; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
                             </div>
                         </div>
                         
