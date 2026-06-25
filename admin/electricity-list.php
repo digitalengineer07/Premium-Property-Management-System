@@ -297,7 +297,7 @@ $admin_user = s($_SESSION['admin']);
                         </td>
                     </tr>
                     <?php foreach ($month_rows as $r): ?>
-                    <tr>
+                    <tr id="elec-row-<?php echo $r['id']; ?>">
                         <td style="font-weight: 600;">
                             <?php echo htmlspecialchars($r['name']); ?>
                             <div style="font-size: 11px; font-weight: 400; color: var(--text-gray);">Room <?php echo htmlspecialchars($r['room_no']); ?></div>
@@ -320,14 +320,20 @@ $admin_user = s($_SESSION['admin']);
                         </td>
                         <td><?php echo htmlspecialchars($r['units']); ?> Units</td>
                         <td style="font-weight: 700; color: var(--text-dark);">₹<?php echo number_format($r['amount'], 2); ?></td>
-                        <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
                         <td>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;">Slip</a>
+                            <span class="badge badge-<?php echo strtolower($r['status']); ?>" id="status-badge-<?php echo $r['id']; ?>"><?php echo htmlspecialchars($r['status']); ?></span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <?php if (!empty($r['bill_file'])): ?>
+                                    <a href="../<?php echo htmlspecialchars($r['bill_file']); ?>" target="_blank" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-file'></i></a>
+                                <?php else: ?>
+                                    <a href="slip.php?elec_id=<?php echo (int)$r['id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-file'></i></a>
+                                <?php endif; ?>
                                 <a href="update-electricity.php?user_id=<?php echo $r['user_id'] ?? 0; ?>&id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-edit'></i></a>
                                 <?php if($r['status'] != 'Paid'): ?>
                                     <a href="delete-bill.php?id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px; color: #EF4444; border-color: #FCA5A5;" onclick="return confirm('Delete this utility bill completely?');"><i class='bx bx-trash'></i></a>
-                                    <button onclick="openPaymentModal(<?php echo $r['id']; ?>, <?php echo $r['amount']; ?>, '<?php echo addslashes($r['month']); ?>', '<?php echo addslashes($r['name']); ?>')" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">Mark Paid</button>
+                                    <button id="mark-paid-btn-<?php echo $r['id']; ?>" onclick="openPaymentModal(<?php echo $r['id']; ?>, <?php echo $r['amount']; ?>, '<?php echo addslashes($r['month']); ?>', '<?php echo addslashes($r['name']); ?>')" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">Mark Paid</button>
                                 <?php endif; ?>
                             </div>
                         </td>
@@ -450,7 +456,7 @@ $admin_user = s($_SESSION['admin']);
                 </div>
             </div>
             
-            <form action="mark-paid.php" method="POST">
+            <form action="mark-paid.php" method="POST" id="paymentForm">
                 <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="id" id="paymentBillId">
                 <input type="hidden" name="type" value="electricity">
@@ -531,6 +537,42 @@ $admin_user = s($_SESSION['admin']);
     function closePaymentModal() {
         document.getElementById('paymentModal').style.display = 'none';
     }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = 'Processing...';
+        submitBtn.disabled = true;
+
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form)
+        }).then(res => {
+            if (res.ok) {
+                closePaymentModal();
+                
+                // Update UI dynamically
+                const billId = document.getElementById('paymentBillId').value;
+                const statusBadge = document.getElementById('status-badge-' + billId);
+                if (statusBadge) {
+                    statusBadge.className = 'badge badge-paid';
+                    statusBadge.innerText = 'Paid';
+                }
+                const markPaidBtn = document.getElementById('mark-paid-btn-' + billId);
+                if (markPaidBtn) markPaidBtn.remove();
+                
+            } else {
+                alert('An error occurred processing the payment.');
+            }
+        }).catch(err => {
+            alert('Network error. Please try again.');
+        }).finally(() => {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
+        });
+    });
 </script>
 
 </body>
