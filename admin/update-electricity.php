@@ -255,8 +255,10 @@ if ($elec_id > 0) {
         }
         .welcome p { color: var(--text-gray); font-size: 14px; font-weight: 500; }
         .section-divider {
-            display: inline-block;
-            padding: 6px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
             background: #F8FAFC;
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -266,6 +268,45 @@ if ($elec_id > 0) {
             text-transform: uppercase;
             letter-spacing: 1px;
             margin: 10px 0 14px 0;
+        }
+        .section-divider i {
+            font-size: 16px;
+        }
+        .form-sections-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        .premium-block {
+            background: #F8FAFC;
+            border: 1px solid rgba(0,0,0,0.04);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .premium-block:last-child {
+            margin-bottom: 0;
+        }
+        .premium-block .section-divider {
+            margin: 0 0 20px 0;
+            background: var(--white);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: none;
+        }
+        .premium-block .form-group input, 
+        .premium-block .form-group select {
+            background: var(--white);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.015);
+            border-color: rgba(0,0,0,0.06);
+        }
+        .premium-block .form-group input:focus, 
+        .premium-block .form-group select:focus {
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.12);
+        }
+        @media (max-width: 1024px) {
+            .form-sections-layout { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
             .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
@@ -304,92 +345,98 @@ if ($elec_id > 0) {
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
                 <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($elec_row['user_id'] ?? $user_id); ?>">
 
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Resident</label>
-                        <select disabled style="background: var(--bg-main); border-color: transparent; cursor: not-allowed; color: var(--text-gray); font-weight: 600;">
-                            <?php 
-                            mysqli_data_seek($users_q, 0);
-                            while ($u = mysqli_fetch_assoc($users_q)):
-                                $sel = (($elec_row['user_id'] ?? $user_id) == $u['id']) ? "selected" : "";
-                                $label = ($u['name'] ?: $u['username']) . " — Room " . ($u['room_no'] ?: 'N/A');
-                            ?>
-                            <option value="<?php echo $u['id']; ?>" <?php echo $sel; ?>>
-                                <?php echo htmlspecialchars($label); ?>
-                            </option>
-                            <?php endwhile; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Billing Month <span style="color:#EF4444">*</span></label>
-                        <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. 2024-02">
-                    </div>
-                </div>
-
-                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
-                    <div class="section-divider"><i class='bx bx-tachometer'></i> Readings & Rates</div>
-                </div>
-
-                <div class="form-grid-3">
-                    <div class="form-group">
-                        <label>Previous Reading</label>
-                        <input name="previous_reading" type="number" value="<?php echo htmlspecialchars($elec_row['previous_reading'] ?? ''); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Current Reading <span style="color:#EF4444">*</span></label>
-                        <input name="current_reading" type="number" value="<?php echo htmlspecialchars($elec_row['current_reading'] ?? ''); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Rate per Unit (₹)</label>
-                        <input name="rate_per_unit" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rate_per_unit'] ?? '8'); ?>">
-                    </div>
-                </div>
-
-                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
-                    <div class="section-divider"><i class='bx bx-building-house'></i> Fixed Charges</div>
-                </div>
-                
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Rent Amount (₹)</label>
-                        <input name="rent_amount" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rent_amount'] ?? '0'); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Maintenance (₹)</label>
-                        <input name="maintenance" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['maintenance'] ?? '0'); ?>">
-                    </div>
-                </div>
-
-                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
-                    <div class="section-divider"><i class='bx bx-plus-circle'></i> Extra Adjustments</div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Extra Charges (₹)</label>
-                        <input name="extra_charges" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['extra_charges'] ?? '0'); ?>">
-                    </div>
-                    <div class="form-group">
-                        <label>Extra Detail</label>
-                        <input name="extra_charges_desc" type="text" value="<?php echo htmlspecialchars($elec_row['extra_charges_desc'] ?? ''); ?>">
-                    </div>
-                </div>
-
-                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
-                    <div class="section-divider"><i class='bx bx-file'></i> Backup / External Bill</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Upload Manual PDF Scan (Optional)</label>
-                    <input type="file" name="bill_file" accept=".jpg,.png,.jpeg,.pdf" style="padding: 10px; cursor: pointer; background: transparent; border: 1px dashed var(--border);">
+                <div class="form-sections-layout">
                     
-                    <?php if (!empty($elec_row['bill_file'])): ?>
-                        <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <a href="../<?php echo htmlspecialchars($elec_row['bill_file']); ?>" target="_blank" class="btn-outline" style="font-size: 12px; padding: 6px 14px;"><i class='bx bx-download'></i> View Current Scan</a>
-                            <a href="slip.php?elec_id=<?php echo (int)$elec_row['id']; ?>" target="_blank" class="btn-primary" style="font-size: 12px; padding: 6px 14px; background: var(--primary-purple);"><i class='bx bx-receipt'></i> View Gen PDF</a>
+                    <!-- LEFT COLUMN -->
+                    <div class="layout-col">
+                        <div class="premium-block">
+                            <div class="section-divider"><i class='bx bx-user-circle'></i> Basic Info</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Resident</label>
+                                    <select disabled style="cursor: not-allowed; color: var(--text-gray); font-weight: 600;">
+                                        <?php 
+                                        mysqli_data_seek($users_q, 0);
+                                        while ($u = mysqli_fetch_assoc($users_q)):
+                                            $sel = (($elec_row['user_id'] ?? $user_id) == $u['id']) ? "selected" : "";
+                                            $label = ($u['name'] ?: $u['username']) . " — Room " . ($u['room_no'] ?: 'N/A');
+                                        ?>
+                                        <option value="<?php echo $u['id']; ?>" <?php echo $sel; ?>>
+                                            <?php echo htmlspecialchars($label); ?>
+                                        </option>
+                                        <?php endwhile; ?>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Billing Month <span style="color:#EF4444">*</span></label>
+                                    <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. 2024-02">
+                                </div>
+                            </div>
                         </div>
-                    <?php endif; ?>
+
+                        <div class="premium-block">
+                            <div class="section-divider"><i class='bx bx-tachometer'></i> Readings & Rates</div>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label>Previous Reading</label>
+                                    <input name="previous_reading" type="number" value="<?php echo htmlspecialchars($elec_row['previous_reading'] ?? ''); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Current Reading <span style="color:#EF4444">*</span></label>
+                                    <input name="current_reading" type="number" value="<?php echo htmlspecialchars($elec_row['current_reading'] ?? ''); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Rate (₹)</label>
+                                    <input name="rate_per_unit" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rate_per_unit'] ?? '8'); ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="layout-col">
+                        <div class="premium-block">
+                            <div class="section-divider"><i class='bx bx-building-house'></i> Fixed Charges</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Rent Amount (₹)</label>
+                                    <input name="rent_amount" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rent_amount'] ?? '0'); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Maintenance (₹)</label>
+                                    <input name="maintenance" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['maintenance'] ?? '0'); ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="premium-block">
+                            <div class="section-divider"><i class='bx bx-plus-circle'></i> Extra Adjustments</div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Extra Charges (₹)</label>
+                                    <input name="extra_charges" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['extra_charges'] ?? '0'); ?>">
+                                </div>
+                                <div class="form-group">
+                                    <label>Extra Detail</label>
+                                    <input name="extra_charges_desc" type="text" value="<?php echo htmlspecialchars($elec_row['extra_charges_desc'] ?? ''); ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="premium-block">
+                            <div class="section-divider"><i class='bx bx-file'></i> Backup / External Bill</div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Upload Manual PDF Scan (Optional)</label>
+                                <input type="file" name="bill_file" accept=".jpg,.png,.jpeg,.pdf" style="padding: 10px; cursor: pointer; background: transparent; border: 1px dashed var(--border);">
+                                <?php if (!empty($elec_row['bill_file'])): ?>
+                                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                        <a href="../<?php echo htmlspecialchars($elec_row['bill_file']); ?>" target="_blank" class="btn-outline" style="font-size: 12px; padding: 6px 14px;"><i class='bx bx-download'></i> View Current Scan</a>
+                                        <a href="slip.php?elec_id=<?php echo (int)$elec_row['id']; ?>" target="_blank" class="btn-primary" style="font-size: 12px; padding: 6px 14px; background: var(--primary-purple);"><i class='bx bx-receipt'></i> View Gen PDF</a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" name="save_elec" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; margin-top: 10px; font-size: 15px; background: #10B981;">
