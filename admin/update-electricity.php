@@ -189,7 +189,7 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 30px auto;
             padding: 0 24px 30px;
             box-sizing: border-box;
