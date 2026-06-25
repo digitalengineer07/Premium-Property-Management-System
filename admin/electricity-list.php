@@ -267,7 +267,21 @@ $admin_user = s($_SESSION['admin']);
                         foreach ($rows as $r) {
                             $grouped[$r['month']][] = $r;
                         }
-                        foreach ($grouped as $month => $month_rows): 
+                        
+                        // Pagination setup
+                        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+                        $limit = 2; // Show exactly 2 months per page
+                        $total_pages = ceil(count($grouped) / $limit);
+                        $offset = ($page - 1) * $limit;
+                        $paginated_grouped = array_slice($grouped, $offset, $limit, true);
+
+                        // Preserve existing URL params for pagination links
+                        $query_params = $_GET;
+                        unset($query_params['page']);
+                        $base_query_string = http_build_query($query_params);
+                        $page_link_prefix = "?" . ($base_query_string ? $base_query_string . "&" : "");
+
+                        foreach ($paginated_grouped as $month => $month_rows): 
                     ?>
                     <tr class="month-group-header" style="background: rgba(98, 75, 255, 0.03); border-bottom: 2px solid rgba(98, 75, 255, 0.1);">
                         <td colspan="7" style="padding: 14px 20px; font-weight: 800; color: var(--primary-purple); font-size: 15px;">
@@ -322,6 +336,24 @@ $admin_user = s($_SESSION['admin']);
                 </tbody>
             </table>
         </div>
+
+        <?php if (isset($total_pages) && $total_pages > 1): ?>
+            <div id="pagination" style="display: flex; justify-content: center; gap: 12px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10; align-items: center;">
+                <?php if ($page > 1): ?>
+                    <a href="<?php echo $page_link_prefix; ?>page=<?php echo $page - 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
+                <?php else: ?>
+                    <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
+                <?php endif; ?>
+                
+                <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--primary-purple); color: #fff; font-weight: 800; font-size: 18px; box-shadow: 0 8px 16px -4px rgba(98, 75, 255, 0.4);"><?php echo $page; ?></div>
+                
+                <?php if ($page < $total_pages): ?>
+                    <a href="<?php echo $page_link_prefix; ?>page=<?php echo $page + 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></a>
+                <?php else: ?>
+                    <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </main>
 
