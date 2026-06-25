@@ -72,12 +72,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
     </nav>
     
-    <div class="support-box">
-        <div class="support-icon"><i class='bx bx-headphone'></i></div>
-        <h4>Need Help?</h4>
-        <p>Our support team is ready to help you.</p>
-        <a href="manage-queries.php" class="btn-primary" style="padding: 8px 12px; font-size: 12px; border-radius: 8px; justify-content: center; width: 100%;">Contact Support</a>
-    </div>
 
     <div class="sidebar-footer">
         <a href="#" class="nav-item" id="themeToggleSidebar" style="display: flex; align-items: center; gap: 12px;">
