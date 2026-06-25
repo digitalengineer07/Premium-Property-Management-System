@@ -347,8 +347,8 @@ if ($elec_id > 0) {
                     </div>
                 </div>
 
-                <div class="form-group" style="padding-top: 15px; border-top: 1px solid var(--border);">
-                    <h4 style="font-size: 13px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px;">Readings & Rates</h4>
+                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
+                    <div class="section-divider"><i class='bx bx-tachometer'></i> Readings & Rates</div>
                 </div>
 
                 <div class="form-grid">
@@ -366,8 +366,8 @@ if ($elec_id > 0) {
                     </div>
                 </div>
 
-                <div class="form-group" style="padding-top: 15px; border-top: 1px solid var(--border);">
-                    <h4 style="font-size: 13px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px;">Fixed Charges</h4>
+                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
+                    <div class="section-divider"><i class='bx bx-building-house'></i> Fixed Charges</div>
                 </div>
                 
                 <div class="form-grid">
@@ -381,8 +381,8 @@ if ($elec_id > 0) {
                     </div>
                 </div>
 
-                <div class="form-group" style="padding-top: 15px; border-top: 1px solid var(--border);">
-                    <h4 style="font-size: 13px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px;">Extra Adjustments</h4>
+                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
+                    <div class="section-divider"><i class='bx bx-plus-circle'></i> Extra Adjustments</div>
                 </div>
 
                 <div class="form-grid">
@@ -396,8 +396,8 @@ if ($elec_id > 0) {
                     </div>
                 </div>
 
-                <div class="form-group" style="padding-top: 15px; border-top: 1px solid var(--border);">
-                    <h4 style="font-size: 13px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px;">Backup / External Bill</h4>
+                <div class="form-group" style="text-align: center; border-top: 1px dashed rgba(0,0,0,0.08); margin-top: 30px;">
+                    <div class="section-divider"><i class='bx bx-file'></i> Backup / External Bill</div>
                 </div>
 
                 <div class="form-group">
