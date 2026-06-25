@@ -116,36 +116,46 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         </div>
     <?php endif; ?>
 
-    <div class="dashboard-grid-70 animate-up">
+    <div class="dashboard-grid-70 animate-up" style="gap: 32px;">
         <div class="left-col">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">Recharge History</h2>
+            <div class="panel" style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 24px; border: 1px solid #F1F5F9;">
+                <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 16px; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-history' style="color: #64748B;"></i> Recharge History
+                    </h2>
                 </div>
                 <div class="table-responsive">
-                    <table>
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
                         <thead>
                             <tr>
-                                <th>Date & Time</th>
-                                <th>Amount</th>
-                                <th>Notes</th>
-                                <th>Action</th>
+                                <th style="padding: 12px 16px; font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E2E8F0; text-align: left;">Date & Time</th>
+                                <th style="padding: 12px 16px; font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E2E8F0; text-align: left;">Amount</th>
+                                <th style="padding: 12px 16px; font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E2E8F0; text-align: left;">Notes</th>
+                                <th style="padding: 12px 16px; font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #E2E8F0; text-align: right;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($recharges)): ?>
-                                <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-gray);">No recharge records yet.</td></tr>
+                                <tr><td colspan="4" style="text-align: center; padding: 40px; color: #94A3B8; font-size: 15px; background: #F8FAFC; border-radius: 12px;">No recharge records yet.</td></tr>
                             <?php else: foreach ($recharges as $r): ?>
-                                <tr class="animate-up">
-                                    <td data-label="Date & Time">
-                                        <div style="font-weight: 600;"><?php echo date('M d, Y', strtotime($r['recharge_date'])); ?></div>
-                                        <div style="font-size: 12px; color: var(--text-gray);"><?php echo date('h:i A', strtotime($r['recharge_time'])); ?></div>
+                                <tr class="animate-up" style="transition: all 0.2s ease;">
+                                    <td data-label="Date & Time" style="padding: 16px; background: #fff; border-bottom: 1px solid #F1F5F9;">
+                                        <div style="font-weight: 700; color: #1E293B; font-size: 15px;"><?php echo date('M d, Y', strtotime($r['recharge_date'])); ?></div>
+                                        <div style="font-size: 13px; color: #64748B; font-weight: 500; margin-top: 2px;"><i class='bx bx-time-five' style="vertical-align: middle;"></i> <?php echo date('h:i A', strtotime($r['recharge_time'])); ?></div>
                                     </td>
-                                    <td data-label="Amount" style="font-weight: 700; color: #EF4444;">₹<?php echo number_format($r['amount'], 2); ?></td>
-                                    <td data-label="Note" style="font-size: 13px; color: var(--text-gray);"><?php echo htmlspecialchars($r['notes']); ?></td>
-                                    <td data-label="Actions">
-                                        <a href="?delete=<?php echo $r['id']; ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.1); padding: 8px; border-radius: 10px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;" onclick="return confirm('Delete this record?')">
-                                            <i class='bx bx-trash'></i>
+                                    <td data-label="Amount" style="padding: 16px; background: #fff; border-bottom: 1px solid #F1F5F9;">
+                                        <span style="background: #FEF2F2; color: #EF4444; padding: 6px 12px; border-radius: 8px; font-weight: 700; font-size: 14px; border: 1px solid #FEE2E2; display: inline-block;">
+                                            - ₹<?php echo number_format($r['amount'], 2); ?>
+                                        </span>
+                                    </td>
+                                    <td data-label="Note" style="padding: 16px; background: #fff; border-bottom: 1px solid #F1F5F9;">
+                                        <div style="font-size: 14px; color: #475569; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo htmlspecialchars($r['notes']); ?>">
+                                            <?php echo htmlspecialchars($r['notes']) ?: '<span style="color: #CBD5E1; font-style: italic;">No notes</span>'; ?>
+                                        </div>
+                                    </td>
+                                    <td data-label="Actions" style="padding: 16px; background: #fff; border-bottom: 1px solid #F1F5F9; text-align: right;">
+                                        <a href="?delete=<?php echo $r['id']; ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.2); background: #FEF2F2; padding: 8px; border-radius: 10px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; margin-left: auto;" onclick="return confirm('Delete this record?')" onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
+                                            <i class='bx bx-trash' style="font-size: 18px;"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -157,31 +167,39 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         </div>
 
         <div class="right-col">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">Log New Recharge</h2>
+            <div class="panel" style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 24px; border: 1px solid #F1F5F9; position: sticky; top: 24px;">
+                <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 16px; margin-bottom: 24px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-plus-circle' style="color: #F59E0B;"></i> Log New Recharge
+                    </h2>
                 </div>
                 <form method="POST">
-                    <div class="form-group">
-                        <label>Recharge Amount (₹)</label>
-                        <input type="number" step="0.01" name="amount" placeholder="0.00" required>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" name="recharge_date" value="<?php echo date('Y-m-d'); ?>" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Time</label>
-                            <input type="time" name="recharge_time" value="<?php echo date('H:i'); ?>" required>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Recharge Amount (₹)</label>
+                        <div style="position: relative;">
+                            <i class='bx bx-rupee' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8;"></i>
+                            <input type="number" step="0.01" name="amount" placeholder="0.00" required style="width: 100%; padding: 14px 14px 14px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 600; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Notes (Optional)</label>
-                        <textarea name="notes" rows="3" placeholder="e.g. Done via GPAY"></textarea>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Date</label>
+                            <input type="date" name="recharge_date" value="<?php echo date('Y-m-d'); ?>" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'">
+                        </div>
+                        <div class="form-group">
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Time</label>
+                            <input type="time" name="recharge_time" value="<?php echo date('H:i'); ?>" required style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'">
+                        </div>
                     </div>
-                    <button type="submit" name="add_recharge" class="btn-primary" style="width: 100%; justify-content: center;">
-                        <i class='bx bx-plus'></i> Add Recharge
+                    
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Notes (Optional)</label>
+                        <textarea name="notes" rows="3" placeholder="e.g. Done via GPAY" style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 14px; color: #1E293B; outline: none; transition: all 0.2s ease; resize: none; font-family: inherit;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'"></textarea>
+                    </div>
+                    
+                    <button type="submit" name="add_recharge" class="btn-primary" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); border: none; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 14px; box-shadow: 0 8px 16px rgba(245, 158, 11, 0.2); transition: all 0.3s ease;">
+                        <i class='bx bx-plus-circle' style="font-size: 22px;"></i> Add Recharge
                     </button>
                 </form>
             </div>
