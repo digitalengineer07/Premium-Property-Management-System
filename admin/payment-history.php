@@ -31,7 +31,7 @@ if (!$user) {
 }
 
 /* Fetch detailed payment history log */
-$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id WHERE p.user_id = ? ORDER BY p.id DESC");
+$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC");
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
 $payment_res = mysqli_stmt_get_result($stmt);
@@ -106,26 +106,55 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                         <?php foreach ($payment_history as $p): ?>
                             <div style="position: relative; z-index: 2; margin-bottom: 24px;">
                                 <div style="position: absolute; left: -32px; top: 14px; width: 14px; height: 14px; border-radius: 50%; background: #10B981; border: 3px solid #fff; box-shadow: 0 0 0 1px #10B981;"></div>
-                                <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#CBD5E1'" onmouseout="this.style.borderColor='var(--border)'">
-                                    
-                                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                                        <div style="font-weight: 800; color: var(--text-dark); font-size: 20px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
-                                        <div style="font-size: 13px; color: var(--text-gray); font-weight: 500;">
-                                            <span style="color: var(--text-dark); font-weight: 600; text-transform: capitalize;"><?php echo htmlspecialchars($p['bill_type']); ?></span> Bill • <?php echo htmlspecialchars($p['month'] ?? 'N/A'); ?>
+                                <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;" onmouseover="this.style.borderColor='#CBD5E1'" onmouseout="this.style.borderColor='var(--border)'">
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                                            <div style="font-weight: 800; color: var(--text-dark); font-size: 20px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
+                                            <div style="font-size: 13px; color: var(--text-gray); font-weight: 500;">
+                                                <span style="color: var(--text-dark); font-weight: 600; text-transform: capitalize;"><?php echo htmlspecialchars($p['bill_type']); ?></span> Bill • <?php echo htmlspecialchars($p['month'] ?? 'N/A'); ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                    
-                                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                                        <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
-                                        <div style="font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px;">
-                                            <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
-                                            <?php if ($p['admin_name']): ?>
-                                                <span style="color: #E2E8F0;">|</span>
-                                                <span style="display: flex; align-items: center; gap: 4px; font-weight: 500;"><i class='bx bx-user'></i> <?php echo htmlspecialchars($p['admin_name']); ?></span>
-                                            <?php endif; ?>
+                                        
+                                        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+                                            <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                                            <div style="font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px;">
+                                                <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
+                                                <?php if ($p['admin_name']): ?>
+                                                    <span style="color: #E2E8F0;">|</span>
+                                                    <span style="display: flex; align-items: center; gap: 4px; font-weight: 500;"><i class='bx bx-user'></i> <?php echo htmlspecialchars($p['admin_name']); ?></span>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </div>
 
+                                    <?php if ($p['bill_type'] === 'electricity' && (isset($p['elec_amount']) || isset($p['rent_amount']))): ?>
+                                        <div style="margin-top: 16px; background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                                            <div style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Bill Breakdown</div>
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-dark);">
+                                                <?php if ($p['rent_amount'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Rent:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['rent_amount'], 2); ?></span></div>
+                                                <?php endif; ?>
+                                                <?php if ($p['elec_amount'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Electricity:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['elec_amount'], 2); ?></span></div>
+                                                <?php endif; ?>
+                                                <?php if ($p['maintenance'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Maintenance:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['maintenance'], 2); ?></span></div>
+                                                <?php endif; ?>
+                                                <?php if ($p['past_dues'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Past Dues:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['past_dues'], 2); ?></span></div>
+                                                <?php endif; ?>
+                                                <?php if ($p['extra_charges'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Extra (<?php echo htmlspecialchars($p['extra_charges_desc'] ?? 'Charge'); ?>):</span> <span style="font-weight: 600;">₹<?php echo number_format($p['extra_charges'], 2); ?></span></div>
+                                                <?php endif; ?>
+                                                <?php if ($p['adjustment_amount'] > 0): ?>
+                                                    <div style="display: flex; justify-content: space-between;">
+                                                        <span>Adjustment (<?php echo htmlspecialchars($p['adjustment_type'] ?? 'discount'); ?>):</span>
+                                                        <span style="font-weight: 600; color: #EF4444;">-₹<?php echo number_format($p['adjustment_amount'], 2); ?></span>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>
