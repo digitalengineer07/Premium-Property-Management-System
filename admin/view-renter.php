@@ -314,6 +314,17 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                     <div style="font-weight: 700; font-size: 16px; color: var(--text-gray);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                 </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-history'></i></div>
+                        <div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">Payment History</div>
+                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;"><?php echo count($payment_history); ?> transactions recorded</div>
+                        </div>
+                    </div>
+                    <div style="font-weight: 700; font-size: 16px; color: var(--primary-purple);">₹<?php echo number_format(array_sum(array_column($payment_history, 'paid_amount')), 2); ?></div>
+                </div>
             </div>
         </div>
         
