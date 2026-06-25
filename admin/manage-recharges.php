@@ -127,29 +127,36 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                     </h2>
                 </div>
                 <form method="POST">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; align-items: start;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
                         
+                        <!-- Recharge Amount -->
                         <div class="form-group" style="margin: 0;">
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Recharge Amount (₹)</label>
+                            <label style="display: block; font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Recharge Amount (₹)</label>
                             <div style="position: relative;">
-                                <i class='bx bx-rupee' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8;"></i>
-                                <input type="number" step="0.01" name="amount" placeholder="0.00" required style="width: 100%; padding: 16px 16px 16px 44px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 16px; font-weight: 600; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                                <i class='bx bx-rupee' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 22px; color: #94A3B8;"></i>
+                                <input type="number" step="0.01" name="amount" placeholder="0.00" required style="width: 100%; padding: 16px 16px 16px 48px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 16px; font-weight: 600; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
                             </div>
                         </div>
                         
+                        <!-- Date & Time -->
                         <div class="form-group" style="margin: 0;">
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Date & Time</label>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                <input type="date" name="recharge_date" value="<?php echo date('Y-m-d'); ?>" required style="width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
-                                <input type="time" name="recharge_time" value="<?php echo date('H:i'); ?>" required style="width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                            <label style="display: block; font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Date & Time</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div style="position: relative;">
+                                    <input type="date" name="recharge_date" value="<?php echo date('Y-m-d'); ?>" required style="width: 100%; padding: 16px 16px 16px 16px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                                </div>
+                                <div style="position: relative;">
+                                    <input type="time" name="recharge_time" value="<?php echo date('H:i'); ?>" required style="width: 100%; padding: 16px 16px 16px 16px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease; cursor: pointer;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="form-group" style="margin: 0;">
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Notes (Optional)</label>
+                        <!-- Notes (Full Width) -->
+                        <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 700; color: #64748B; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Notes (Optional)</label>
                             <div style="position: relative;">
-                                <i class='bx bx-note' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8;"></i>
-                                <input type="text" name="notes" placeholder="e.g. Done via GPAY" style="width: 100%; padding: 16px 16px 16px 44px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
+                                <i class='bx bx-note' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 22px; color: #94A3B8;"></i>
+                                <input type="text" name="notes" placeholder="e.g. Done via GPAY" style="width: 100%; padding: 16px 16px 16px 48px; border-radius: 14px; border: 1px solid #E2E8F0; background: #F8FAFC; font-size: 15px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='#F59E0B'; this.style.background='#fff'; this.style.boxShadow='0 0 0 4px rgba(245, 158, 11, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.background='#F8FAFC'; this.style.boxShadow='none';">
                             </div>
                         </div>
                         
