@@ -1525,7 +1525,20 @@ $admin_user = s($_SESSION['admin']);
         });
         
         document.addEventListener('DOMContentLoaded', () => {
-            restoreFormState();
+            const urlParams = new URLSearchParams(window.location.search);
+            const getUserId = urlParams.get('user_id');
+            
+            if (getUserId) {
+                selectRenterDropdown(getUserId);
+                setTimeout(() => {
+                    const step2 = document.getElementById('step2');
+                    if (step2) {
+                        step2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 300);
+            } else {
+                restoreFormState();
+            }
         });
 
     </script>
