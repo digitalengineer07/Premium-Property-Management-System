@@ -272,8 +272,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <div class="panel">
             <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-wallet'></i></div> Financial Snapshot</h4>
             
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; color: #10B981; font-size: 20px;"><i class='bx bx-check-shield'></i></div>
                         <div>
@@ -289,26 +289,30 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div style="font-weight: 700; font-size: 16px; color: #10B981;">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 20px;"><i class='bx bx-home'></i></div>
                         <div>
                             <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">Fixed Charges</div>
-                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?> &bull; Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
+                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?> • Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
                         </div>
                     </div>
                     <div style="font-weight: 700; font-size: 16px; color: #3B82F6;">₹<?php echo number_format(($user['fixed_rent'] ?? 0) + ($user['fixed_maintenance'] ?? 0), 2); ?></div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.2)' : ($user['pending_adjustment'] < 0 ? 'rgba(239,68,68,0.2)' : 'var(--border)'); ?>; border-radius: 12px; background: <?php echo $user['pending_adjustment'] > 0 ? 'rgba(16,185,129,0.05)' : ($user['pending_adjustment'] < 0 ? 'rgba(239,68,68,0.05)' : 'transparent'); ?>;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(239,68,68,0.1); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 20px;"><i class='bx bx-file'></i></div>
                         <div>
-                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo $user['pending_adjustment'] > 0 ? 'Total Credit' : 'Total Outstanding'; ?></div>
-                            <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;"><?php echo $user['pending_adjustment'] == 0 ? 'All pending dues cleared' : ($user['pending_adjustment'] > 0 ? 'Credit balance available' : 'Pending dues to be paid'); ?></div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;">Total Outstanding</div>
+                            <?php if(($user['pending_adjustment'] ?? 0) > 0): ?>
+                                <div style="color: #EF4444; font-size: 12px; font-weight: 600; margin-top: 2px;">Action required</div>
+                            <?php else: ?>
+                                <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">All pending dues cleared</div>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div style="font-weight: 700; font-size: 16px; color: <?php echo $user['pending_adjustment'] > 0 ? '#10B981' : '#94A3B8'; ?>;"><?php echo $user['pending_adjustment'] < 0 ? '<span style="color:#EF4444;">₹'.number_format(abs($user['pending_adjustment']), 2).'</span>' : '₹'.number_format($user['pending_adjustment'], 2); ?></div>
+                    <div style="font-weight: 700; font-size: 16px; color: var(--text-gray);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                 </div>
             </div>
         </div>
