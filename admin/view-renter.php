@@ -388,7 +388,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <!-- Rent History -->
         <div class="panel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Rent History</h4>
+                <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Rent + Main. History</h4>
                 <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($rents); ?> Records</span>
             </div>
             
