@@ -366,7 +366,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </table>
             </div>
             <div style="margin-top: 16px; padding-top: 16px;">
-                <a href="electricity-list.php?search=<?php echo urlencode($user['name']); ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All Utility History <i class='bx bx-right-arrow-alt'></i></a>
+                <a href="user-history.php?id=<?php echo $id; ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
             </div>
         </div>
 
@@ -410,9 +410,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
-            <div style="margin-top: 16px; padding-top: 16px;">
-                <a href="electricity-list.php?search=<?php echo urlencode($user['name']); ?>" style="color: var(--primary-purple); font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px;">View All Rent History <i class='bx bx-right-arrow-alt'></i></a>
             </div>
         </div>
     </div>
