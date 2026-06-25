@@ -39,78 +39,82 @@ $admin_user = s($_SESSION['admin']);
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
-        .timeline-container {
+        .log-list {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .log-item {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px 24px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             position: relative;
-            max-width: 800px;
-            margin: 0 auto 40px auto;
-            padding: 20px 0;
+            overflow: hidden;
         }
-        /* Vertical line */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            bottom: 20px;
-            left: 24px;
-            width: 2px;
-            background: #E2E8F0;
-            border-radius: 2px;
+        .log-item:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+            border-color: #CBD5E1;
         }
-        .timeline-item {
-            position: relative;
-            margin-bottom: 24px;
-            padding-left: 70px;
-            display: block; /* for search filtering */
-        }
-        .timeline-icon {
-            position: absolute;
-            left: 5px;
-            top: 0;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px; /* modern squircle */
+        .log-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(98, 75, 255, 0.1);
+            color: #624BFF;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            z-index: 1;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            background: #ffffff;
-            border: 2px solid #ffffff;
+            font-size: 24px;
+            margin-right: 20px;
+            flex-shrink: 0;
         }
-        .timeline-content {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 20px 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-            border: 1px solid #F1F5F9;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .log-icon.resident {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
         }
-        .timeline-content:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            border-color: #E2E8F0;
-        }
-        .timeline-header {
+        .log-details {
+            flex: 1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px dashed #E2E8F0;
+            flex-direction: column;
+            gap: 8px;
         }
-        .timeline-user {
-            font-weight: 800;
+        .log-user {
             font-size: 16px;
+            font-weight: 800;
             color: #0F172A;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
-        .timeline-time {
+        .log-role {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .log-role.admin { background: #EEF2FF; color: #4F46E5; }
+        .log-role.resident { background: #ECFDF5; color: #10B981; }
+
+        .log-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 13px;
-            color: #64748B;
             font-weight: 600;
+            color: #64748B;
+        }
+        .log-meta .bx { font-size: 16px; opacity: 0.7; }
+        .log-time {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -119,55 +123,66 @@ $admin_user = s($_SESSION['admin']);
             border-radius: 8px;
             border: 1px solid #F1F5F9;
         }
-        .timeline-body {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
+        .log-time.active { 
+            color: #10B981; 
+            background: #ECFDF5;
+            border-color: #D1FAE5;
         }
-        .timeline-ip {
+        .pulse {
+            width: 8px; height: 8px; background: #10B981; border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            animation: pulse 1.5s infinite;
+            margin-right: 2px;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .log-extra {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        .log-ip {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-family: monospace;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             color: #475569;
             background: #F1F5F9;
             padding: 6px 12px;
             border-radius: 8px;
-            font-weight: 500;
         }
-        .timeline-status {
-            color: #10B981; 
-            font-size: 13px; 
-            font-weight: 600; 
-            display: flex; 
-            align-items: center; 
-            gap: 6px; 
-            margin-left: auto;
-            background: #ECFDF5;
-            padding: 6px 12px;
-            border-radius: 8px;
+        .log-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #10B981;
         }
 
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .timeline-container::before {
-                left: 14px;
-            }
-            .timeline-icon {
-                left: -6px;
-            }
-            .timeline-item {
-                padding-left: 50px;
-            }
-            .timeline-header {
+        /* Mobile */
+        @media (max-width: 768px) {
+            .log-item {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 12px;
             }
-            .timeline-time {
-                align-self: flex-start;
+            .log-extra {
+                align-items: flex-start;
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px dashed #E2E8F0;
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .log-meta {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -184,46 +199,49 @@ $admin_user = s($_SESSION['admin']);
         <p style="color: #64748B; font-size: 16px;">Tracking the last 200 login events for transparency</p>
     </div>
 
-    <div class="timeline-container animate-up" id="logTable">
+    <div class="log-list animate-up" id="logTable">
         <?php while($row = mysqli_fetch_assoc($logs)): ?>
         <?php 
             $isAdmin = ($row['user_type'] == 'admin');
-            $icon = $isAdmin ? 'bx-shield-quarter' : 'bx-user';
-            $color = $isAdmin ? '#624BFF' : '#10B981';
-            $bg = $isAdmin ? 'rgba(98,75,255,0.1)' : 'rgba(16,185,129,0.1)';
+            $iconClass = $isAdmin ? 'bx-shield-quarter' : 'bx-user';
+            $bgClass = $isAdmin ? '' : 'resident';
         ?>
-        <div class="timeline-item">
-            <div class="timeline-icon" style="color: <?php echo $color; ?>; background: <?php echo $bg; ?>; border-color: <?php echo $bg; ?>;">
-                <i class='bx <?php echo $icon; ?>'></i>
+        <div class="log-item">
+            <div class="log-icon <?php echo $bgClass; ?>">
+                <i class='bx <?php echo $iconClass; ?>'></i>
             </div>
-            <div class="timeline-content">
-                <div class="timeline-header">
-                    <div class="timeline-user">
-                        <?php 
-                        if ($isAdmin) echo "Administrator";
-                        else echo htmlspecialchars($row['name'] ?? 'Unknown User') . " <span style='color: #94A3B8; font-weight: 500; font-size: 14px;'>— Room " . ($row['room_no'] ?? 'N/A') . "</span>";
-                        ?>
-                    </div>
-                    <div class="timeline-time">
-                        <i class='bx bx-log-in-circle' style="font-size: 16px; color: #10B981;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
-                        <i class='bx bx-right-arrow-alt' style="color: #CBD5E1; margin: 0 4px;"></i>
-                        <?php if ($row['logout_time']): ?>
-                            <i class='bx bx-log-out-circle' style="font-size: 16px; color: #EF4444;"></i> <?php echo date('g:i A', strtotime($row['logout_time'])); ?>
-                        <?php else: ?>
-                            <span style="color: #10B981; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 6px; height: 6px; background: #10B981; border-radius: 50%; box-shadow: 0 0 0 2px rgba(16,185,129,0.2);"></span> Active Now</span>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <div class="timeline-body">
-                    <span class="badge" style="background: <?php echo $isAdmin ? '#EEF2FF' : '#ECFDF5'; ?>; color: <?php echo $isAdmin ? '#4F46E5' : '#10B981'; ?>; padding: 6px 12px; font-size: 12px; border-radius: 8px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: none;">
+            <div class="log-details">
+                <div class="log-user">
+                    <?php 
+                    if ($isAdmin) echo "Administrator";
+                    else echo htmlspecialchars($row['name'] ?? 'Unknown User') . " <span style='color: #94A3B8; font-weight: 500; font-size: 14px;'>— Room " . ($row['room_no'] ?? 'N/A') . "</span>";
+                    ?>
+                    <span class="log-role <?php echo $isAdmin ? 'admin' : 'resident'; ?>">
                         <?php echo ucfirst($row['user_type']); ?>
                     </span>
-                    <div class="timeline-ip">
-                        <i class='bx bx-laptop' style="font-size: 15px; color: #94A3B8;"></i> <?php echo $row['ip_address']; ?>
-                    </div>
-                    <div class="timeline-status">
-                        <i class='bx bxs-check-circle' style="font-size: 16px;"></i> Success
-                    </div>
+                </div>
+                <div class="log-meta">
+                    <span class="log-time">
+                        <i class='bx bx-log-in-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
+                    </span>
+                    <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
+                    <?php if ($row['logout_time']): ?>
+                        <span class="log-time">
+                            <i class='bx bx-log-out-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
+                        </span>
+                    <?php else: ?>
+                        <span class="log-time active">
+                            <span class="pulse"></span> Active Now
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="log-extra">
+                <div class="log-status">
+                    <i class='bx bxs-check-circle'></i> Success
+                </div>
+                <div class="log-ip">
+                    <i class='bx bx-laptop'></i> <?php echo $row['ip_address']; ?>
                 </div>
             </div>
         </div>
@@ -231,7 +249,7 @@ $admin_user = s($_SESSION['admin']);
     </div>
 
     <!-- Pagination -->
-    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; position: relative; z-index: 10;">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; margin-top: 40px; position: relative; z-index: 10;">
         <?php if ($page > 1): ?>
             <a href="?page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
                 <i class='bx bx-chevron-left' style="font-size: 24px;"></i>
@@ -253,10 +271,10 @@ $admin_user = s($_SESSION['admin']);
 <script>
     document.getElementById('logFilter')?.addEventListener('keyup', function(e) {
         let term = e.target.value.toLowerCase();
-        let rows = document.querySelectorAll('.timeline-item');
+        let rows = document.querySelectorAll('.log-item');
         rows.forEach(row => {
             let text = row.innerText.toLowerCase();
-            row.style.display = text.includes(term) ? 'block' : 'none';
+            row.style.display = text.includes(term) ? 'flex' : 'none';
         });
     });
 </script>
