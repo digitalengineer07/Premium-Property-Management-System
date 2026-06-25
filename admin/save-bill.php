@@ -44,6 +44,55 @@ if ($current_reading <= 0) {
     exit;
 }
 
+// Ensure $bill_month is provided and valid before proceeding with advanced validations
+if (empty($bill_month)) {
+    echo json_encode(['success' => false, 'message' => 'Bill month is required']);
+    exit;
+}
+
+$incoming_date = DateTime::createFromFormat('Y-m', $bill_month);
+if (!$incoming_date) {
+    echo json_encode(['success' => false, 'message' => 'Invalid bill month format']);
+    exit;
+}
+
+// Fetch the latest bill for chronological validation
+$latest_query = mysqli_query($conn, "SELECT month, current_reading FROM electricity WHERE user_id = $user_id ORDER BY id DESC LIMIT 1");
+if ($latest_query && mysqli_num_rows($latest_query) > 0) {
+    $latest_bill = mysqli_fetch_assoc($latest_query);
+    $latest_month_str = $latest_bill['month'];
+    $latest_date = DateTime::createFromFormat('F Y', $latest_month_str);
+    
+    if ($latest_date) {
+        $latest_ts = (int)$latest_date->format('Ym');
+        $incoming_ts = (int)$incoming_date->format('Ym');
+        
+        // 1. Prevent Past or Current Month Generation
+        if ($incoming_ts <= $latest_ts) {
+            echo json_encode(['success' => false, 'message' => 'Bill generation for previous or current months is not allowed because newer bills already exist. Please generate bills in chronological order.']);
+            exit;
+        }
+        
+        // 2. Prevent Skipped Months
+        $expected_next = clone $latest_date;
+        $expected_next->modify('+1 month');
+        $expected_ts = (int)$expected_next->format('Ym');
+        
+        if ($incoming_ts > $expected_ts) {
+            $skipped_month_name = $expected_next->format('F Y');
+            $incoming_month_name = $incoming_date->format('F');
+            echo json_encode(['success' => false, 'message' => "The bill for $skipped_month_name has not been generated yet. Please generate the $skipped_month_name bill before creating the $incoming_month_name bill to maintain accurate billing records."]);
+            exit;
+        }
+        
+        // 3. Validate Meter Reading Sequence
+        if ($current_reading < (int)$latest_bill['current_reading']) {
+            echo json_encode(['success' => false, 'message' => 'Current meter reading cannot be less than the previous recorded reading (' . $latest_bill['current_reading'] . ' units).']);
+            exit;
+        }
+    }
+}
+
 // Calculate values
 $units_consumed = max(0, $current_reading - $previous_reading);
 $electricity_amount = $units_consumed * $rate_per_unit;
