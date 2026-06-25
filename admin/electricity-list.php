@@ -450,7 +450,7 @@ $admin_user = s($_SESSION['admin']);
                 </div>
             </div>
             
-            <form action="mark-paid.php" method="POST">
+            <form id="paymentForm" action="mark-paid.php" method="POST">
                 <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="id" id="paymentBillId">
                 <input type="hidden" name="type" value="electricity">
@@ -531,6 +531,51 @@ $admin_user = s($_SESSION['admin']);
     function closePaymentModal() {
         document.getElementById('paymentModal').style.display = 'none';
     }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const origText = submitBtn.innerHTML;
+        submitBtn.innerHTML = 'Processing...';
+        submitBtn.disabled = true;
+
+        fetch('mark-paid.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const billId = document.getElementById('paymentBillId').value;
+                // Find the row to update UI dynamically without refreshing
+                const editLink = document.querySelector(`a[href*="id=${billId}"]`);
+                if (editLink) {
+                    const tr = editLink.closest('tr');
+                    if (tr) {
+                        const badge = tr.querySelector('.badge');
+                        if (badge) {
+                            badge.className = 'badge badge-paid';
+                            badge.textContent = 'Paid';
+                        }
+                        const markPaidBtn = tr.querySelector(`button[onclick*="openPaymentModal(${billId}"]`);
+                        if (markPaidBtn) markPaidBtn.style.display = 'none';
+                    }
+                }
+                closePaymentModal();
+            } else {
+                alert(data.error || 'Payment failed');
+            }
+        })
+        .catch(err => alert('Error processing payment. Please try again.'))
+        .finally(() => {
+            submitBtn.innerHTML = origText;
+            submitBtn.disabled = false;
+        });
+    });
 </script>
 
 </body>

@@ -137,6 +137,13 @@ if ($uRow = mysqli_fetch_assoc($qUser)) {
 
 logAction($conn, "admin", $admin_id, "Marked {$type} id {$actual_bill_id} (user {$bill['user_id']}) as Paid via {$payment_mode} (Paid: ₹{$paid_amount})");
 
+// If AJAX request, return JSON
+if (isset($_POST['ajax']) && $_POST['ajax'] == '1') {
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true]);
+    exit;
+}
+
 // Redirect
 $redirect = ($type === 'rent' || $type === 'advance') ? "view-renter.php?id=" . $bill['user_id'] : "electricity-list.php";
 if (isset($_SERVER['HTTP_REFERER'])) {
