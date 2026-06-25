@@ -339,7 +339,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <div class="panel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Utility History</h4>
-                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($elecs); ?> Records</span>
+                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($elecs) > 3 ? 'Last 3 Months' : (count($elecs) == 1 ? '1 Month' : count($elecs) . ' Months'); ?></span>
             </div>
             
             <div class="table-responsive">
@@ -385,7 +385,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <div class="panel">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700;">Rent + Main. History</h4>
-                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($rents); ?> Records</span>
+                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;"><?php echo count($rents) > 3 ? 'Last 3 Months' : (count($rents) == 1 ? '1 Month' : count($rents) . ' Months'); ?></span>
             </div>
             
             <div class="table-responsive">
