@@ -156,17 +156,12 @@ $admin_user = s($_SESSION['admin']);
     <?php include 'header.php'; ?>
 
     <div class="animate-up" style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;">
-        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); flex-shrink: 0;">
+        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
             <i class='bx bx-user-pin' style="font-size: 28px;"></i>
         </div>
-        <div style="flex: 1; min-width: 0;">
+        <div>
             <h1 style="font-size: 24px; font-weight: 700; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Edit Profile</h1>
-            <p style="font-size: 14px; color: var(--text-gray); margin: 4px 0 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Modify details and configurations for <span style="font-weight: 600; color: var(--primary-purple);"><?php echo htmlspecialchars($user['name']); ?></span></p>
-        </div>
-        <div style="flex-shrink: 0;">
-            <a href="view-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 12px; background: #ffffff; color: #475569; font-size: 14px; font-weight: 600; text-decoration: none; border: 1px solid #E2E8F0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.color='#0F172A'; this.style.borderColor='#CBD5E1';" onmouseout="this.style.background='#ffffff'; this.style.color='#475569'; this.style.borderColor='#E2E8F0';">
-                <i class='bx bx-arrow-back' style="font-size: 18px;"></i> Back to Profile
-            </a>
+            <p style="font-size: 14px; color: var(--text-gray); margin: 4px 0 0 0;">Modify details and configurations for <span style="font-weight: 600; color: var(--primary-purple);"><?php echo htmlspecialchars($user['name']); ?></span></p>
         </div>
     </div>
 
