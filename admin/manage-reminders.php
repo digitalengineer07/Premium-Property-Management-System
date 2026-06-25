@@ -168,6 +168,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
+    <!-- DEPLOYED_V2_FIX -->
+
     <div class="welcome animate-up">
         <h1>Payment Reminders</h1>
         <p>Manage automatic and manual billing alerts</p>
