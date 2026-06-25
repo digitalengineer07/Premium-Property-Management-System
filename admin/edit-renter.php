@@ -261,7 +261,7 @@ $admin_user = s($_SESSION['admin']);
                             <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
                                 <i class='bx bx-folder' style="font-size: 16px;"></i> DOCUMENTS & FILES
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0;">
                                     <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Identity Proof (Aadhaar)</label>
                                     <input type="file" name="aadhaar_file" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-purple); background: #ffffff; font-size: 13px; color: #1E293B; cursor: pointer;">
