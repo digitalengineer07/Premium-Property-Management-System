@@ -183,7 +183,7 @@ $admin_user = s($_SESSION['admin']);
     <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 32px;">
         <div style="display: flex; align-items: center; gap: 18px;">
             <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #624BFF 0%, #8B78FF 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(98, 75, 255, 0.25);">
-                <i class='bx bx-bolt' style="color: white; font-size: 30px;"></i>
+                <i class='bx bxs-zap' style="color: white; font-size: 30px;"></i>
             </div>
             <div>
                 <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Electricity Records</h1>
