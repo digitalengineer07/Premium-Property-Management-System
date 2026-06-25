@@ -91,12 +91,18 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <div class="welcome-title-row" style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-            <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px;"><i class='bx bx-arrow-back'></i></a>
-            <h1 style="margin: 0;">Meter Recharges</h1>
+    <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; gap: 18px;">
+            <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-color: #E2E8F0;"><i class='bx bx-arrow-back' style="font-size: 20px; color: #64748B;"></i></a>
+            
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(245, 158, 11, 0.25);">
+                <i class='bx bx-receipt' style="color: white; font-size: 30px;"></i>
+            </div>
+            <div>
+                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Meter Recharges</h1>
+                <p style="margin: 6px 0 0 0; color: #64748B; font-size: 15px; font-weight: 500;">Log and track your electricity meter expenses</p>
+            </div>
         </div>
-        <p>Log and track your electricity meter expenses</p>
     </div>
 
     <?php if ($success): ?>
