@@ -181,9 +181,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                     </div>
 
                     <?php if ($total_pages > 1): ?>
-                        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10; align-items: center;">
+                        <div id="pagination" style="display: flex; justify-content: center; gap: 12px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10; align-items: center;">
                             <?php if ($page > 1): ?>
-                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
                             <?php else: ?>
                                 <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
