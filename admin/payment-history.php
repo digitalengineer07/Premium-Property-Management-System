@@ -181,12 +181,19 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                     </div>
 
                     <?php if ($total_pages > 1): ?>
-                        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10;">
+                        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10; align-items: center;">
                             <?php if ($page > 1): ?>
-                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>" class="btn-outline" style="text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: 600;">Previous</a>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
+                            <?php else: ?>
+                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
+                            
+                            <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--primary-purple); color: #fff; font-weight: 800; font-size: 18px; box-shadow: 0 8px 16px -4px rgba(98, 75, 255, 0.4);"><?php echo $page; ?></div>
+                            
                             <?php if ($page < $total_pages): ?>
-                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" class="btn-primary" style="text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(98,75,255,0.2);">Next</a>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></a>
+                            <?php else: ?>
+                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
