@@ -244,13 +244,14 @@ if ($elec_id > 0) {
         }
         .welcome { text-align: left; margin-bottom: 20px !important; border-bottom: 2px dashed rgba(0,0,0,0.06); padding-bottom: 16px; }
         .welcome h1 { 
-            font-size: 32px; 
+            font-size: 36px; 
             font-weight: 900; 
             letter-spacing: -1.2px; 
-            margin-bottom: 4px; 
-            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary-purple) 100%);
+            margin-bottom: 2px; 
+            background: linear-gradient(135deg, #624BFF 0%, #D946EF 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: inline-block;
         }
         .welcome p { color: var(--text-gray); font-size: 14px; font-weight: 500; }
         .section-divider {
@@ -289,9 +290,14 @@ if ($elec_id > 0) {
         <?php endif; ?>
 
         <div class="aesthetic-card">
-            <div class="welcome">
-                <h1>Edit Bill</h1>
-                <p>Modify readings, rates, or update fixed charges for Bill #<?php echo $elec_id; ?></p>
+            <div class="welcome" style="display: flex; align-items: center; gap: 20px;">
+                <div style="background: linear-gradient(135deg, rgba(98,75,255,0.1), rgba(217,70,239,0.1)); padding: 18px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(98,75,255,0.2);">
+                    <i class='bx bx-edit-alt' style="font-size: 38px; color: var(--primary-purple);"></i>
+                </div>
+                <div>
+                    <h1>Edit Bill</h1>
+                    <p style="margin: 0;">Modify readings, rates, or update fixed charges for Bill #<?php echo $elec_id; ?></p>
+                </div>
             </div>
 
             <form method="POST" enctype="multipart/form-data">
