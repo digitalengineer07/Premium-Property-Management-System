@@ -194,50 +194,66 @@ if ($elec_id > 0) {
             padding: 0 24px 40px;
             box-sizing: border-box;
         }
-        .panel { 
-            border: 1px solid var(--border); 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
-            border-radius: 20px; 
-            padding: 30px; 
+        .aesthetic-card {
             background: var(--white);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+            position: relative;
+            margin-bottom: 20px;
         }
-        .panel-header { 
-            border-bottom: 1px solid var(--border); 
-            padding-bottom: 16px; 
-            margin-bottom: 24px;
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
         .section-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 18px;
+            gap: 12px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-dark);
         }
         .section-title i {
-            font-size: 24px;
+            font-size: 20px;
             color: var(--primary-purple);
+            background: rgba(98, 75, 255, 0.1);
+            padding: 8px;
+            border-radius: 10px;
         }
         .form-group { margin-bottom: 24px; }
-        .form-group label { 
-            display: block; 
-            margin-bottom: 10px; 
-            font-weight: 600; 
-            font-size: 12px; 
-            color: var(--text-gray); 
-            text-transform: uppercase; 
-            letter-spacing: 0.8px;
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 800;
+            font-size: 11.5px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
         }
         .form-group input, .form-group select {
-            width: 100%; padding: 14px 18px; border: 1.5px solid var(--border); border-radius: 14px;
-            background: var(--bg-main); color: var(--text-dark); outline: none; transition: var(--transition);
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 10px;
+            background: var(--white);
+            color: var(--text-dark);
+            outline: none;
+            transition: var(--transition);
             font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.015);
             box-sizing: border-box;
         }
-        .form-group input:focus, .form-group select:focus { 
-            border-color: var(--primary-purple); 
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-purple);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.08); 
+            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.08);
         }
         .form-grid {
             display: grid;
@@ -247,7 +263,7 @@ if ($elec_id > 0) {
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .edit-page { padding: 0 16px 40px; }
-            .panel { padding: 20px; }
+            .aesthetic-card { padding: 20px; }
         }
     </style>
 </head>
@@ -270,7 +286,7 @@ if ($elec_id > 0) {
             </div>
         <?php endif; ?>
 
-        <div class="panel">
+        <div class="aesthetic-card">
             <div class="panel-header">
                 <div class="section-title">
                     <i class='bx bx-edit'></i>
