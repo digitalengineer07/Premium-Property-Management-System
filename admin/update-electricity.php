@@ -189,49 +189,24 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 950px;
-            margin: 40px auto;
-            padding: 0 24px 40px;
+            max-width: 1050px;
+            margin: 30px auto;
+            padding: 0 24px 30px;
             box-sizing: border-box;
         }
         .aesthetic-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 35px;
+            padding: 24px 32px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
             position: relative;
             margin-bottom: 20px;
         }
-        .panel-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 2px dashed rgba(0,0,0,0.06);
-            padding-bottom: 20px;
-            margin-bottom: 28px;
-        }
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
-        }
-        .section-title i {
-            font-size: 24px;
-            color: var(--white);
-            background: linear-gradient(135deg, var(--primary-purple), #9333EA);
-            padding: 10px;
-            border-radius: 14px;
-            box-shadow: 0 6px 15px rgba(98, 75, 255, 0.3);
-        }
-        .form-group { margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 700;
             font-size: 11.5px;
             color: var(--text-gray);
@@ -240,7 +215,7 @@ if ($elec_id > 0) {
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border: 1.5px solid var(--border);
             border-radius: 12px;
             background: var(--bg-main);
@@ -259,19 +234,24 @@ if ($elec_id > 0) {
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 16px;
         }
-        .welcome { text-align: left; margin-bottom: 24px !important; border-bottom: 2px dashed rgba(0,0,0,0.06); padding-bottom: 20px; }
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .welcome { text-align: left; margin-bottom: 20px !important; border-bottom: 2px dashed rgba(0,0,0,0.06); padding-bottom: 16px; }
         .welcome h1 { 
             font-size: 32px; 
             font-weight: 900; 
             letter-spacing: -1.2px; 
-            margin-bottom: 6px; 
+            margin-bottom: 4px; 
             background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .welcome p { color: var(--text-gray); font-size: 16px; font-weight: 500; }
+        .welcome p { color: var(--text-gray); font-size: 14px; font-weight: 500; }
         .section-divider {
             display: inline-block;
             padding: 6px 16px;
@@ -283,13 +263,13 @@ if ($elec_id > 0) {
             color: var(--primary-purple);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin: 15px 0 20px 0;
+            margin: 10px 0 14px 0;
         }
         @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .edit-page { padding: 0 16px 40px; margin-top: 20px; }
-            .aesthetic-card { padding: 24px; }
-            .welcome h1 { font-size: 28px; }
+            .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+            .edit-page { padding: 0 16px 30px; margin-top: 15px; }
+            .aesthetic-card { padding: 20px; }
+            .welcome h1 { font-size: 26px; }
         }
     </style>
 </head>
@@ -317,23 +297,23 @@ if ($elec_id > 0) {
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
                 <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($elec_row['user_id'] ?? $user_id); ?>">
 
-                <div class="form-group">
-                    <label>Resident</label>
-                    <select disabled style="background: var(--bg-main); border-color: transparent; cursor: not-allowed; color: var(--text-gray); font-weight: 600;">
-                        <?php 
-                        mysqli_data_seek($users_q, 0);
-                        while ($u = mysqli_fetch_assoc($users_q)):
-                            $sel = (($elec_row['user_id'] ?? $user_id) == $u['id']) ? "selected" : "";
-                            $label = ($u['name'] ?: $u['username']) . " — Room " . ($u['room_no'] ?: 'N/A');
-                        ?>
-                        <option value="<?php echo $u['id']; ?>" <?php echo $sel; ?>>
-                            <?php echo htmlspecialchars($label); ?>
-                        </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-
                 <div class="form-grid">
+                    <div class="form-group">
+                        <label>Resident</label>
+                        <select disabled style="background: var(--bg-main); border-color: transparent; cursor: not-allowed; color: var(--text-gray); font-weight: 600;">
+                            <?php 
+                            mysqli_data_seek($users_q, 0);
+                            while ($u = mysqli_fetch_assoc($users_q)):
+                                $sel = (($elec_row['user_id'] ?? $user_id) == $u['id']) ? "selected" : "";
+                                $label = ($u['name'] ?: $u['username']) . " — Room " . ($u['room_no'] ?: 'N/A');
+                            ?>
+                            <option value="<?php echo $u['id']; ?>" <?php echo $sel; ?>>
+                                <?php echo htmlspecialchars($label); ?>
+                            </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+
                     <div class="form-group">
                         <label>Billing Month <span style="color:#EF4444">*</span></label>
                         <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. 2024-02">
@@ -344,7 +324,7 @@ if ($elec_id > 0) {
                     <div class="section-divider"><i class='bx bx-tachometer'></i> Readings & Rates</div>
                 </div>
 
-                <div class="form-grid">
+                <div class="form-grid-3">
                     <div class="form-group">
                         <label>Previous Reading</label>
                         <input name="previous_reading" type="number" value="<?php echo htmlspecialchars($elec_row['previous_reading'] ?? ''); ?>">
