@@ -77,6 +77,14 @@ while($row = mysqli_fetch_assoc($res2)) {
 // Fetch recently sent reminders
 $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name FROM payment_reminders h JOIN users u ON h.user_id = u.id ORDER BY h.sent_at DESC LIMIT 10");
 
+// Calculate KPIs
+$kpi_unpaid = count($dues);
+
+$month_q = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM payment_reminders WHERE MONTH(sent_at) = MONTH(CURRENT_DATE()) AND YEAR(sent_at) = YEAR(CURRENT_DATE())");
+$kpi_sent = mysqli_fetch_assoc($month_q)['cnt'];
+
+$kpi_scheduled = count(array_filter($dues, function($d) { return $d['reminder_status'] == 'Enabled'; }));
+
 $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
@@ -180,9 +188,75 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     <!-- DEPLOYED_V3_FIX -->
 
-    <div class="welcome animate-up">
-        <h1>Payment Reminders</h1>
-        <p>Manage automatic and manual billing alerts</p>
+    <div class="welcome animate-up" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                <i class='bx bx-bell'></i>
+            </div>
+            <div>
+                <h1 style="margin-bottom: 2px;">Payment Reminders</h1>
+                <p style="margin: 0; color: var(--text-gray); font-size: 14px; font-weight: 600;">Manage automatic and manual billing alerts</p>
+            </div>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="auto-reminders.php" class="btn-outline" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
+                <i class='bx bx-cog'></i> Reminder Settings
+            </a>
+            <button class="btn-primary" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                <i class='bx bx-plus'></i> Create Reminder
+            </button>
+        </div>
+    </div>
+
+    <!-- KPI Grid -->
+    <div class="kpi-grid-4 animate-up" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px;">
+        <div style="background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 20px; align-items: center;">
+            <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">
+                <i class='bx bxs-file-blank'></i>
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Unpaid Bills</div>
+                <div style="font-size: 28px; font-weight: 800; color: #EF4444; line-height: 1; margin-bottom: 6px;"><?php echo $kpi_unpaid; ?></div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-gray);"><?php echo $kpi_unpaid; ?> residents with pending dues</div>
+            </div>
+        </div>
+
+        <div style="background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 20px; align-items: center;">
+            <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">
+                <i class='bx bx-time-five'></i>
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Reminders Sent</div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
+                    <div style="font-size: 28px; font-weight: 800; color: #F59E0B; line-height: 1;"><?php echo $kpi_sent; ?></div>
+                </div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-gray); display: flex; align-items: center; gap: 8px;">
+                    This month <span style="color: #10B981; font-weight: 700; background: #ECFDF5; padding: 2px 6px; border-radius: 4px; font-size: 10px;"><i class='bx bx-trending-up'></i> 8%</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 20px; align-items: center;">
+            <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">
+                <i class='bx bx-send'></i>
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Scheduled Today</div>
+                <div style="font-size: 28px; font-weight: 800; color: #3B82F6; line-height: 1; margin-bottom: 6px;"><?php echo $kpi_scheduled; ?></div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-gray);">Reminders pending</div>
+            </div>
+        </div>
+
+        <div style="background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 20px; align-items: center;">
+            <div style="width: 56px; height: 56px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0;">
+                <i class='bx bx-check-circle'></i>
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">Success Rate</div>
+                <div style="font-size: 28px; font-weight: 800; color: #10B981; line-height: 1; margin-bottom: 6px;"><?php echo $kpi_success; ?>%</div>
+                <div style="font-size: 12px; font-weight: 600; color: var(--text-gray);">Delivery success</div>
+            </div>
+        </div>
     </div>
 
     <?php if($success_msg): ?>
