@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
                     logAction($conn, "admin", $_SESSION['admin_id'], "Generated PDF slip for electricity ID $elec_id");
                 }
 
-                header("Location: electricity-record.php");
+                header("Location: electricity-list.php");
                 exit;
             }
         }
