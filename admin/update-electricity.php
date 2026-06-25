@@ -377,12 +377,18 @@ if ($elec_id > 0) {
                         <div class="section-divider"><i class='bx bx-building-house'></i> Fixed Charges</div>
                         <div class="form-grid" style="margin-top: auto;">
                             <div class="form-group">
-                                <label>Rent Amount (₹)</label>
-                                <input name="rent_amount" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rent_amount'] ?? '0'); ?>">
+                                <label>Rent Amount</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input name="rent_amount" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rent_amount'] ?? '0'); ?>" style="padding-left: 40px;">
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label>Maintenance (₹)</label>
-                                <input name="maintenance" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['maintenance'] ?? '0'); ?>">
+                                <label>Maintenance</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input name="maintenance" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['maintenance'] ?? '0'); ?>" style="padding-left: 40px;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -400,8 +406,11 @@ if ($elec_id > 0) {
                                 <input name="current_reading" type="number" value="<?php echo htmlspecialchars($elec_row['current_reading'] ?? ''); ?>" required>
                             </div>
                             <div class="form-group">
-                                <label>Rate (₹)</label>
-                                <input name="rate_per_unit" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rate_per_unit'] ?? '8'); ?>">
+                                <label>Rate</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input name="rate_per_unit" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['rate_per_unit'] ?? '8'); ?>" style="padding-left: 40px;">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -410,8 +419,11 @@ if ($elec_id > 0) {
                         <div class="section-divider"><i class='bx bx-plus-circle'></i> Extra Adjustments</div>
                         <div class="form-grid" style="margin-top: auto;">
                             <div class="form-group">
-                                <label>Extra Charges (₹)</label>
-                                <input name="extra_charges" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['extra_charges'] ?? '0'); ?>">
+                                <label>Extra Charges</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input name="extra_charges" type="number" step="0.01" value="<?php echo htmlspecialchars($elec_row['extra_charges'] ?? '0'); ?>" style="padding-left: 40px;">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label>Extra Detail</label>
