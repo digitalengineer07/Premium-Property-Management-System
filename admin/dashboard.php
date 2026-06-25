@@ -897,8 +897,11 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid (₹)</label>
-                        <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                            <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                        </div>
                         <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                     </div>
                 </div>

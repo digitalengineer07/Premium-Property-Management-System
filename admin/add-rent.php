@@ -79,8 +79,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
 
                     <div class="form-group">
-                        <label>Rent Amount (₹)</label>
-                        <input type="number" name="rent_amount" required placeholder="0">
+                        <label>Rent Amount</label>
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                            <input type="number" name="rent_amount" required placeholder="0" style="padding-left: 40px;">
+                        </div>
                     </div>
 
                     <div class="form-group">
