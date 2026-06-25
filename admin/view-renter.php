@@ -228,7 +228,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 18px;"><i class='bx bx-phone'></i></div>
                 <div>
                     <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['phone'] ?: 'No Phone Number'); ?></div>
-                    <div style="color: var(--text-gray); font-size: 11px;">Phone</div>
                 </div>
             </div>
             
@@ -238,7 +237,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(98,75,255,0.08); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 18px;"><i class='bx bx-envelope'></i></div>
                 <div>
                     <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['email'] ?: 'No Email Address'); ?></div>
-                    <div style="color: var(--text-gray); font-size: 11px;">Email</div>
                 </div>
             </div>
 
@@ -248,7 +246,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(37,211,102,0.08); display: flex; align-items: center; justify-content: center; color: #25D366; font-size: 18px;"><i class='bx bxl-whatsapp'></i></div>
                 <div>
                     <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($user['whatsapp'] ?: 'No WhatsApp'); ?></div>
-                    <div style="color: var(--text-gray); font-size: 11px;">WhatsApp</div>
                 </div>
             </div>
 
@@ -259,7 +256,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(59,130,246,0.08); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 18px;"><i class='bx bx-calendar'></i></div>
                 <div>
                     <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo date('M d, Y', strtotime($user['joining_date'])); ?></div>
-                    <div style="color: var(--text-gray); font-size: 11px;">Member Since</div>
                 </div>
             </div>
             <?php endif; ?>
