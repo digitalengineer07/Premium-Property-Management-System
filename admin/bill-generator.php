@@ -829,14 +829,20 @@ $admin_user = s($_SESSION['admin']);
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Rate (₹) / Unit</label>
-                                <input type="number" id="ratePerUnit" value="<?php echo DEFAULT_RATE; ?>"
-                                    oninput="calculateBill()">
+                                <label>Rate / Unit</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" id="ratePerUnit" value="<?php echo DEFAULT_RATE; ?>"
+                                        oninput="calculateBill()" style="padding-left: 40px;">
+                                </div>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Past Dues (₹)</label>
-                                <input type="number" id="dues" placeholder="0" oninput="calculateBill()">
+                                <label>Past Dues</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" id="dues" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                </div>
                             </div>
                         </div>
 
@@ -848,18 +854,27 @@ $admin_user = s($_SESSION['admin']);
                         <div class="form-grid"
                             style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Rent (₹)</label>
-                                <input type="number" id="rentAmount" placeholder="0" oninput="calculateBill()">
+                                <label>Rent</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" id="rentAmount" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                </div>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Maintenance (₹)</label>
-                                <input type="number" id="maintenance" placeholder="0" oninput="calculateBill()">
+                                <label>Maintenance</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" id="maintenance" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                </div>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Extra Amount (₹)</label>
-                                <input type="number" id="extraCharges" placeholder="0" oninput="calculateBill()">
+                                <label>Extra Amount</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" id="extraCharges" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                </div>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">

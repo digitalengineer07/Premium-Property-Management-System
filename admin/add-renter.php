@@ -204,11 +204,11 @@ $admin_user = s($_SESSION['admin']);
                     <div style="margin-bottom: 30px;">
                         <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Financial Initial Setup</h4>
                         <div class="form-group">
-                            <label>Advance Payment (₹)</label>
+                            <label>Advance Payment</label>
                             <div style="display: flex; gap: 10px; align-items: stretch;">
-                                <div style="position: relative; flex: 1;">
-                                    <i class='bx bx-money' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="number" step="0.01" name="advance_payment" value="0" style="padding-left: 45px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                <div style="position: relative; flex: 1; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" step="0.01" name="advance_payment" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
                                 <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
                             </div>
@@ -220,18 +220,18 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
-                                <label>Monthly Rent Amount (₹)</label>
-                                <div style="position: relative;">
-                                    <i class='bx bx-home-circle' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="number" step="0.01" name="fixed_rent" value="0" style="padding-left: 45px;" placeholder="0">
+                                <label>Monthly Rent Amount</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" step="0.01" name="fixed_rent" value="0" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
                             <div class="form-group">
-                                <label>Monthly Maintenance Amount (₹)</label>
-                                <div style="position: relative;">
-                                    <i class='bx bx-wrench' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="number" step="0.01" name="fixed_maintenance" value="0" style="padding-left: 45px;" placeholder="0">
+                                <label>Monthly Maintenance Amount</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" step="0.01" name="fixed_maintenance" value="0" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly maintenance for this renter.</p>
                             </div>
