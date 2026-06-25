@@ -23,7 +23,7 @@ if ($filter_user !== '') {
 if ($filter_status !== '') {
     $sql .= " AND e.status = ?"; $params[] = $filter_status; $types .= "s";
 }
-$sql .= " ORDER BY e.id DESC";
+$sql .= " ORDER BY STR_TO_DATE(CONCAT('01 ', e.month), '%d %M %Y') DESC, e.id DESC";
 
 $stmt = mysqli_prepare($conn, $sql);
 if ($params) mysqli_stmt_bind_param($stmt, $types, ...$params);
@@ -254,9 +254,35 @@ $admin_user = s($_SESSION['admin']);
                     </tr>
                 </thead>
                 <tbody id="elecTable">
+                    <style>
+                        @media (max-width: 768px) {
+                            tr.month-group-header { margin-bottom: 0 !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; }
+                            tr.month-group-header td { display: block !important; width: 100% !important; padding-right: 20px !important; border-bottom: 2px solid rgba(98, 75, 255, 0.1) !important; margin-bottom: 0 !important; }
+                        }
+                    </style>
                     <?php if (empty($rows)): ?>
                         <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--text-gray);">No records found.</td></tr>
-                    <?php else: foreach ($rows as $r): ?>
+                    <?php else: 
+                        $grouped = [];
+                        foreach ($rows as $r) {
+                            $grouped[$r['month']][] = $r;
+                        }
+                        foreach ($grouped as $month => $month_rows): 
+                    ?>
+                    <tr class="month-group-header" style="background: rgba(98, 75, 255, 0.03); border-bottom: 2px solid rgba(98, 75, 255, 0.1);">
+                        <td colspan="7" style="padding: 14px 20px; font-weight: 800; color: var(--primary-purple); font-size: 15px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <i class='bx bx-calendar' style="font-size: 18px;"></i>
+                                    <?php echo htmlspecialchars($month); ?>
+                                </div>
+                                <span style="font-size: 11px; font-weight: 700; background: white; padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple);">
+                                    <?php echo count($month_rows); ?> Bills
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php foreach ($month_rows as $r): ?>
                     <tr>
                         <td style="font-weight: 600;">
                             <?php echo htmlspecialchars($r['name']); ?>
@@ -292,7 +318,7 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                         </td>
                     </tr>
-                    <?php endforeach; endif; ?>
+                    <?php endforeach; endforeach; endif; ?>
                 </tbody>
             </table>
         </div>
