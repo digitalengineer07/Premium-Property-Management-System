@@ -189,7 +189,7 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 850px;
+            max-width: 950px;
             margin: 40px auto;
             padding: 0 24px 40px;
             box-sizing: border-box;
@@ -261,12 +261,12 @@ if ($elec_id > 0) {
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        .welcome { text-align: center; margin-bottom: 40px !important; }
+        .welcome { text-align: left; margin-bottom: 24px !important; border-bottom: 2px dashed rgba(0,0,0,0.06); padding-bottom: 20px; }
         .welcome h1 { 
-            font-size: 36px; 
+            font-size: 32px; 
             font-weight: 900; 
-            letter-spacing: -1.5px; 
-            margin-bottom: 8px; 
+            letter-spacing: -1.2px; 
+            margin-bottom: 6px; 
             background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -301,11 +301,6 @@ if ($elec_id > 0) {
     <?php include 'header.php'; ?>
 
     <div class="edit-page animate-up">
-        <div class="welcome" style="margin-bottom: 32px;">
-            <h1>Edit Bill</h1>
-            <p>Modify readings, rates, or update fixed charges</p>
-        </div>
-
         <?php if ($errmsg): ?>
             <div style="background: #FEE2E2; color: #EF4444; padding: 15px; border-radius: 12px; margin-bottom: 24px; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px;">
                 <i class='bx bx-error-circle' style="font-size: 20px;"></i> <?php echo htmlspecialchars($errmsg); ?>
@@ -313,11 +308,9 @@ if ($elec_id > 0) {
         <?php endif; ?>
 
         <div class="aesthetic-card">
-            <div class="panel-header">
-                <div class="section-title">
-                    <i class='bx bx-edit'></i>
-                    <span>Bill Overview (ID: #<?php echo $elec_id; ?>)</span>
-                </div>
+            <div class="welcome">
+                <h1>Edit Bill</h1>
+                <p>Modify readings, rates, or update fixed charges for Bill #<?php echo $elec_id; ?></p>
             </div>
 
             <form method="POST" enctype="multipart/form-data">
