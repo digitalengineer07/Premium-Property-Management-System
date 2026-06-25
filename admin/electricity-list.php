@@ -228,26 +228,50 @@ $admin_user = s($_SESSION['admin']);
         </div>
     </div>
 
-    <div class="panel animate-up" id="records-panel">
-        <div class="panel-header">
-            <form id="filter-form" onsubmit="event.preventDefault(); submitFilterForm();" method="GET" style="display: flex; gap: 12px; align-items: center; flex: 1; flex-wrap: wrap; width: 100%;">
-                <div class="filter-row" style="display: flex; gap: 6px; flex: 1; flex-wrap: nowrap; width: 100%;">
-                    <select name="month" class="btn-outline" style="flex: 1; min-width: 0; padding: 8px 6px; font-size: 12px; text-align: left;">
-                        <option value="">All Months</option>
-                        <?php foreach ($months as $m): ?>
-                            <option value="<?php echo htmlspecialchars($m); ?>" <?php if ($filter_month == $m) echo 'selected'; ?>><?php echo htmlspecialchars($m); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <input name="user" placeholder="Resident..." value="<?php echo htmlspecialchars($filter_user); ?>" class="btn-outline" style="flex: 1.2; min-width: 0; padding: 8px 6px; font-size: 12px; text-align: left; cursor: text;">
-                    <select name="status" class="btn-outline" style="flex: 0.8; min-width: 0; padding: 8px 6px; font-size: 12px; text-align: left;">
-                        <option value="">Status</option>
-                        <option value="Paid" <?php if($filter_status == 'Paid') echo 'selected'; ?>>Paid</option>
-                        <option value="Due" <?php if($filter_status == 'Due') echo 'selected'; ?>>Due</option>
-                    </select>
+    <div class="panel animate-up" id="records-panel" style="background: #ffffff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.04); padding: 24px; margin-bottom: 24px;">
+        <div class="panel-header" style="border-bottom: none; padding: 0; margin-bottom: 24px;">
+            <form id="filter-form" onsubmit="event.preventDefault(); submitFilterForm();" method="GET" style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; width: 100%;">
+                
+                <div class="filter-row" style="display: flex; gap: 12px; flex: 1; min-width: 280px; flex-wrap: wrap;">
+                    
+                    <!-- Month Filter -->
+                    <div style="flex: 1; min-width: 130px; position: relative;">
+                        <i class='bx bx-calendar' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
+                        <select name="month" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
+                            <option value="">All Months</option>
+                            <?php foreach ($months as $m): ?>
+                                <option value="<?php echo htmlspecialchars($m); ?>" <?php if ($filter_month == $m) echo 'selected'; ?>><?php echo htmlspecialchars($m); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <i class='bx bx-chevron-down' style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; pointer-events: none; font-size: 18px;"></i>
+                    </div>
+                    
+                    <!-- Resident Filter -->
+                    <div style="flex: 1.2; min-width: 150px; position: relative;">
+                        <i class='bx bx-user' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
+                        <input name="user" placeholder="Search Resident..." value="<?php echo htmlspecialchars($filter_user); ?>" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s;">
+                    </div>
+                    
+                    <!-- Status Filter -->
+                    <div style="flex: 0.8; min-width: 120px; position: relative;">
+                        <i class='bx bx-pie-chart-alt-2' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
+                        <select name="status" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
+                            <option value="">All Status</option>
+                            <option value="Paid" <?php if($filter_status == 'Paid') echo 'selected'; ?>>Paid</option>
+                            <option value="Due" <?php if($filter_status == 'Due') echo 'selected'; ?>>Due</option>
+                        </select>
+                        <i class='bx bx-chevron-down' style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; pointer-events: none; font-size: 18px;"></i>
+                    </div>
+                    
                 </div>
+                
                 <div class="filter-actions" style="display: flex; gap: 12px;">
-                    <button type="submit" class="btn-primary">Filter</button>
-                    <a href="electricity-list.php#records-panel" class="btn-outline">Reset</a>
+                    <button type="submit" class="btn-primary" style="padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); border: none; cursor: pointer; background: linear-gradient(135deg, #624BFF 0%, #8B78FF 100%); transition: all 0.3s ease;">
+                        <i class='bx bx-filter-alt' style="font-size: 18px;"></i> Filter
+                    </button>
+                    <a href="electricity-list.php#records-panel" class="btn-outline" style="padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 12px; display: flex; align-items: center; gap: 6px; color: #64748B; border-color: #E2E8F0; text-decoration: none; background: #fff; transition: all 0.3s ease;">
+                        <i class='bx bx-reset' style="font-size: 18px;"></i> Reset
+                    </a>
                 </div>
             </form>
         </div>
