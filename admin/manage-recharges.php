@@ -185,7 +185,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         </div>
 
         <!-- BOTTOM SECTION: Recharge History -->
-        <div class="animate-up" style="animation-delay: 0.2s;">
+        <div id="history" class="animate-up" style="animation-delay: 0.2s;">
             <div class="panel" style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 32px; border: 1px solid #F1F5F9;">
                 <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 20px; margin-bottom: 24px;">
                     <h2 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 10px;">
@@ -237,7 +237,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                 <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; padding-top: 32px; border-top: 1px solid #F1F5F9;">
                     
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+                        <a href="?page=<?php echo $page - 1; ?>#history" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
                             <i class='bx bx-chevron-left' style="font-size: 22px;"></i>
                         </a>
                     <?php else: ?>
@@ -251,7 +251,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                     </div>
                     
                     <?php if ($page < $totalPages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+                        <a href="?page=<?php echo $page + 1; ?>#history" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
                             <i class='bx bx-chevron-right' style="font-size: 22px;"></i>
                         </a>
                     <?php else: ?>
