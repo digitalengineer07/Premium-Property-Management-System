@@ -142,12 +142,22 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             display: none;
         }
 
+        .reminders-custom-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
         /* Premium Mobile Overrides */
+        @media (max-width: 1024px) {
+            .reminders-custom-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 768px) {
             .welcome { text-align: center !important; margin-bottom: 25px !important; margin-top: 15px !important; }
             .welcome h1 { font-size: 24px !important; }
             
-            .dashboard-grid-70 {
+            .reminders-custom-grid {
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 24px !important;
@@ -168,7 +178,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <!-- DEPLOYED_V2_FIX -->
+    <!-- DEPLOYED_V3_FIX -->
 
     <div class="welcome animate-up">
         <h1>Payment Reminders</h1>
@@ -186,7 +196,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
     <?php endif; ?>
 
-    <div class="dashboard-grid-70 animate-up" style="align-items: stretch;">
+    <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
         <div class="left-col">
             <div class="panel" style="height: 100%;">
                 <div class="panel-header" style="margin-bottom: 24px;">
