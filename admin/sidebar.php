@@ -39,7 +39,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="manage-renters.php" class="nav-item <?php echo (in_array($current_page, ['manage-renters.php', 'view-renter.php', 'edit-renter.php', 'payment-history.php', 'user-history.php'])) ? 'active' : ''; ?>">
             <i class='bx bx-user'></i> Manage Residents
         </a>
-        <a href="electricity-list.php" class="nav-item <?php echo $current_page == 'electricity-list.php' ? 'active' : ''; ?>">
+        <a href="electricity-list.php" class="nav-item <?php echo in_array($current_page, ['electricity-list.php', 'update-electricity.php']) ? 'active' : ''; ?>">
             <i class='bx bxs-bolt'></i> <span>Electricity Record</span>
         </a>
         <a href="visitor-logs.php" class="nav-item <?php echo $current_page == 'visitor-logs.php' ? 'active' : ''; ?>">
