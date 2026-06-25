@@ -234,29 +234,29 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
 
                 <!-- Pagination Controls -->
                 <?php if ($totalPages > 1): ?>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 16px; padding-top: 24px; border-top: 1px solid #F1F5F9;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 16px; padding-top: 32px; border-top: 1px solid #F1F5F9;">
                     
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>" class="btn-outline" style="padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: #475569; border: 1px solid #CBD5E1; text-decoration: none; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#94A3B8'; this.style.color='#1E293B'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#CBD5E1'; this.style.color='#475569'; this.style.transform='none';">
-                            <i class='bx bx-chevron-left' style="font-size: 20px;"></i> Previous
+                        <a href="?page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+                            <i class='bx bx-chevron-left' style="font-size: 22px;"></i>
                         </a>
                     <?php else: ?>
-                        <div style="padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: #94A3B8; border: 1px solid #E2E8F0; display: inline-flex; align-items: center; gap: 8px; background: #F8FAFC; cursor: not-allowed; opacity: 0.7;">
-                            <i class='bx bx-chevron-left' style="font-size: 20px;"></i> Previous
+                        <div style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94A3B8; border: 1px solid #E2E8F0; background: #F8FAFC; cursor: not-allowed; opacity: 0.6;">
+                            <i class='bx bx-chevron-left' style="font-size: 22px;"></i>
                         </div>
                     <?php endif; ?>
                     
-                    <div style="font-size: 14px; font-weight: 700; color: #64748B; background: #F8FAFC; padding: 8px 16px; border-radius: 10px; border: 1px solid #E2E8F0;">
-                        Page <?php echo $page; ?> of <?php echo $totalPages; ?>
+                    <div style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #ffffff; background: var(--primary-purple, #624BFF); box-shadow: 0 8px 16px rgba(98, 75, 255, 0.3);">
+                        <?php echo $page; ?>
                     </div>
                     
                     <?php if ($page < $totalPages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>" class="btn-outline" style="padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: #475569; border: 1px solid #CBD5E1; text-decoration: none; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.02);" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#94A3B8'; this.style.color='#1E293B'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#CBD5E1'; this.style.color='#475569'; this.style.transform='none';">
-                            Next <i class='bx bx-chevron-right' style="font-size: 20px;"></i>
+                        <a href="?page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #64748B; border: 1px solid #E2E8F0; text-decoration: none; transition: all 0.2s ease; background: #fff;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#fff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+                            <i class='bx bx-chevron-right' style="font-size: 22px;"></i>
                         </a>
                     <?php else: ?>
-                        <div style="padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: #94A3B8; border: 1px solid #E2E8F0; display: inline-flex; align-items: center; gap: 8px; background: #F8FAFC; cursor: not-allowed; opacity: 0.7;">
-                            Next <i class='bx bx-chevron-right' style="font-size: 20px;"></i>
+                        <div style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94A3B8; border: 1px solid #E2E8F0; background: #F8FAFC; cursor: not-allowed; opacity: 0.6;">
+                            <i class='bx bx-chevron-right' style="font-size: 22px;"></i>
                         </div>
                     <?php endif; ?>
                     
