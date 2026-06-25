@@ -189,7 +189,7 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 650px;
+            max-width: 850px;
             margin: 40px auto;
             padding: 0 24px 40px;
             box-sizing: border-box;
@@ -197,7 +197,7 @@ if ($elec_id > 0) {
         .aesthetic-card {
             background: var(--white);
             border-radius: 20px;
-            padding: 32px;
+            padding: 35px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
             position: relative;
@@ -207,46 +207,46 @@ if ($elec_id > 0) {
             display: flex;
             align-items: center;
             gap: 15px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 16px;
-            margin-bottom: 24px;
+            border-bottom: 2px dashed rgba(0,0,0,0.06);
+            padding-bottom: 20px;
+            margin-bottom: 28px;
         }
         .section-title {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-dark);
             letter-spacing: -0.5px;
         }
         .section-title i {
-            font-size: 22px;
+            font-size: 24px;
             color: var(--white);
-            background: var(--primary-purple);
-            padding: 8px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(98, 75, 255, 0.3);
+            background: linear-gradient(135deg, var(--primary-purple), #9333EA);
+            padding: 10px;
+            border-radius: 14px;
+            box-shadow: 0 6px 15px rgba(98, 75, 255, 0.3);
         }
         .form-group { margin-bottom: 24px; }
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-gray);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 18px;
             border: 1.5px solid var(--border);
             border-radius: 12px;
             background: var(--bg-main);
             color: var(--text-dark);
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 14px;
             font-weight: 600;
             box-sizing: border-box;
@@ -254,19 +254,42 @@ if ($elec_id > 0) {
         .form-group input:focus, .form-group select:focus {
             border-color: var(--primary-purple);
             background: var(--white);
-            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.12);
         }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        .welcome h1 { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; color: var(--text-dark); }
-        .welcome p { color: var(--text-gray); font-size: 15px; }
+        .welcome { text-align: center; margin-bottom: 40px !important; }
+        .welcome h1 { 
+            font-size: 36px; 
+            font-weight: 900; 
+            letter-spacing: -1.5px; 
+            margin-bottom: 8px; 
+            background: linear-gradient(135deg, var(--text-dark) 0%, var(--primary-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .welcome p { color: var(--text-gray); font-size: 16px; font-weight: 500; }
+        .section-divider {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 15px 0 20px 0;
+        }
         @media (max-width: 768px) {
             .form-grid { grid-template-columns: 1fr; }
             .edit-page { padding: 0 16px 40px; margin-top: 20px; }
             .aesthetic-card { padding: 24px; }
+            .welcome h1 { font-size: 28px; }
         }
     </style>
 </head>
