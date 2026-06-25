@@ -39,16 +39,71 @@ $admin_user = s($_SESSION['admin']);
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
-        .log-list {
+        .premium-timeline {
             max-width: 900px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
         }
-        .log-item {
+        
+        .pt-item {
+            display: flex;
+            position: relative;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* The Continuous Vertical Line */
+        .pt-item::before {
+            content: '';
+            position: absolute;
+            left: 25px; /* Center of the 52px dot */
+            top: 52px;  /* Start below the dot */
+            bottom: -24px; /* Reach the next item */
+            width: 2px;
+            background: linear-gradient(to bottom, #E2E8F0, #F1F5F9);
+            z-index: 0;
+            border-radius: 2px;
+        }
+        /* Hide line on last item */
+        .pt-item:last-child::before {
+            display: none;
+        }
+
+        /* The Premium Dot/Icon */
+        .pt-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px; /* Squircle */
             display: flex;
             align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            z-index: 1;
+            flex-shrink: 0;
+            background: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border: 2px solid #ffffff;
+            transition: transform 0.3s ease;
+        }
+        .pt-item:hover .pt-icon {
+            transform: scale(1.05);
+        }
+
+        .pt-icon.admin {
+            background: rgba(98, 75, 255, 0.1);
+            color: #624BFF;
+            border-color: rgba(98, 75, 255, 0.05);
+        }
+        .pt-icon.resident {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+            border-color: rgba(16, 185, 129, 0.05);
+        }
+
+        /* The Content Card (Horizontal Layout) */
+        .pt-card {
+            flex: 1;
             background: #ffffff;
             border: 1px solid #E2E8F0;
             border-radius: 16px;
@@ -57,35 +112,30 @@ $admin_user = s($_SESSION['admin']);
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             position: relative;
             overflow: hidden;
+            
+            /* Inner layout */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .log-item:hover {
+        .pt-card:hover {
             box-shadow: 0 12px 30px rgba(0,0,0,0.06);
             transform: translateY(-2px);
             border-color: #CBD5E1;
         }
-        .log-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            background: rgba(98, 75, 255, 0.1);
-            color: #624BFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-right: 20px;
-            flex-shrink: 0;
-        }
-        .log-icon.resident {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-        }
-        .log-details {
-            flex: 1;
+
+        .pt-left {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
+        .pt-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
         .log-user {
             font-size: 16px;
             font-weight: 800;
@@ -140,12 +190,6 @@ $admin_user = s($_SESSION['admin']);
             100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        .log-extra {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
         .log-ip {
             display: flex;
             align-items: center;
@@ -168,11 +212,25 @@ $admin_user = s($_SESSION['admin']);
 
         /* Mobile */
         @media (max-width: 768px) {
-            .log-item {
+            .pt-item {
+                gap: 16px;
+            }
+            .pt-item::before {
+                left: 20px;
+                top: 40px;
+            }
+            .pt-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                border-radius: 12px;
+            }
+            .pt-card {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 16px;
             }
-            .log-extra {
+            .pt-right {
                 align-items: flex-start;
                 margin-top: 16px;
                 padding-top: 16px;
@@ -199,49 +257,55 @@ $admin_user = s($_SESSION['admin']);
         <p style="color: #64748B; font-size: 16px;">Tracking the last 200 login events for transparency</p>
     </div>
 
-    <div class="log-list animate-up" id="logTable">
+    <div class="premium-timeline animate-up" id="logTable">
         <?php while($row = mysqli_fetch_assoc($logs)): ?>
         <?php 
             $isAdmin = ($row['user_type'] == 'admin');
             $iconClass = $isAdmin ? 'bx-shield-quarter' : 'bx-user';
-            $bgClass = $isAdmin ? '' : 'resident';
+            $bgClass = $isAdmin ? 'admin' : 'resident';
         ?>
-        <div class="log-item">
-            <div class="log-icon <?php echo $bgClass; ?>">
+        <div class="pt-item">
+            <!-- Timeline Icon -->
+            <div class="pt-icon <?php echo $bgClass; ?>">
                 <i class='bx <?php echo $iconClass; ?>'></i>
             </div>
-            <div class="log-details">
-                <div class="log-user">
-                    <?php 
-                    if ($isAdmin) echo "Administrator";
-                    else echo htmlspecialchars($row['name'] ?? 'Unknown User') . " <span style='color: #94A3B8; font-weight: 500; font-size: 14px;'>— Room " . ($row['room_no'] ?? 'N/A') . "</span>";
-                    ?>
-                    <span class="log-role <?php echo $isAdmin ? 'admin' : 'resident'; ?>">
-                        <?php echo ucfirst($row['user_type']); ?>
-                    </span>
-                </div>
-                <div class="log-meta">
-                    <span class="log-time">
-                        <i class='bx bx-log-in-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
-                    </span>
-                    <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
-                    <?php if ($row['logout_time']): ?>
+            
+            <!-- Content Card -->
+            <div class="pt-card">
+                <div class="pt-left">
+                    <div class="log-user">
+                        <?php 
+                        if ($isAdmin) echo "Administrator";
+                        else echo htmlspecialchars($row['name'] ?? 'Unknown User') . " <span style='color: #94A3B8; font-weight: 500; font-size: 14px;'>— Room " . ($row['room_no'] ?? 'N/A') . "</span>";
+                        ?>
+                        <span class="log-role <?php echo $isAdmin ? 'admin' : 'resident'; ?>">
+                            <?php echo ucfirst($row['user_type']); ?>
+                        </span>
+                    </div>
+                    <div class="log-meta">
                         <span class="log-time">
-                            <i class='bx bx-log-out-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
+                            <i class='bx bx-log-in-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
                         </span>
-                    <?php else: ?>
-                        <span class="log-time active">
-                            <span class="pulse"></span> Active Now
-                        </span>
-                    <?php endif; ?>
+                        <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
+                        <?php if ($row['logout_time']): ?>
+                            <span class="log-time">
+                                <i class='bx bx-log-out-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="log-time active">
+                                <span class="pulse"></span> Active Now
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-            <div class="log-extra">
-                <div class="log-status">
-                    <i class='bx bxs-check-circle'></i> Success
-                </div>
-                <div class="log-ip">
-                    <i class='bx bx-laptop'></i> <?php echo $row['ip_address']; ?>
+                
+                <div class="pt-right">
+                    <div class="log-status">
+                        <i class='bx bxs-check-circle'></i> Success
+                    </div>
+                    <div class="log-ip">
+                        <i class='bx bx-laptop'></i> <?php echo $row['ip_address']; ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -271,7 +335,7 @@ $admin_user = s($_SESSION['admin']);
 <script>
     document.getElementById('logFilter')?.addEventListener('keyup', function(e) {
         let term = e.target.value.toLowerCase();
-        let rows = document.querySelectorAll('.log-item');
+        let rows = document.querySelectorAll('.pt-item');
         rows.forEach(row => {
             let text = row.innerText.toLowerCase();
             row.style.display = text.includes(term) ? 'flex' : 'none';
