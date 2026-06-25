@@ -8,13 +8,23 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-// Fetch all logs with user names
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+$limit = 10;
+$offset = ($page - 1) * $limit;
+
+$total_q = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM login_logs");
+$total_row = mysqli_fetch_assoc($total_q);
+$total_records = $total_row['cnt'];
+$total_pages = ceil($total_records / $limit);
+
+// Fetch paginated logs
 $logs = mysqli_query($conn, "
     SELECT l.*, u.name, u.room_no 
     FROM login_logs l 
     LEFT JOIN users u ON l.user_id = u.id 
     ORDER BY l.login_time DESC 
-    LIMIT 200
+    LIMIT $limit OFFSET $offset
 ");
 
 $admin_user = s($_SESSION['admin']);
@@ -195,7 +205,13 @@ $admin_user = s($_SESSION['admin']);
                         ?>
                     </div>
                     <div class="timeline-time">
-                        <i class='bx bx-time-five' style="font-size: 16px;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
+                        <i class='bx bx-log-in-circle' style="font-size: 16px; color: #10B981;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
+                        <i class='bx bx-right-arrow-alt' style="color: #CBD5E1; margin: 0 4px;"></i>
+                        <?php if ($row['logout_time']): ?>
+                            <i class='bx bx-log-out-circle' style="font-size: 16px; color: #EF4444;"></i> <?php echo date('g:i A', strtotime($row['logout_time'])); ?>
+                        <?php else: ?>
+                            <span style="color: #10B981; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 4px;"><span style="display: inline-block; width: 6px; height: 6px; background: #10B981; border-radius: 50%; box-shadow: 0 0 0 2px rgba(16,185,129,0.2);"></span> Active Now</span>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="timeline-body">
@@ -212,6 +228,23 @@ $admin_user = s($_SESSION['admin']);
             </div>
         </div>
         <?php endwhile; ?>
+    </div>
+
+    <!-- Pagination -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 40px;">
+        <?php if ($page > 1): ?>
+            <a href="?page=<?php echo $page - 1; ?>" class="btn-outline" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class='bx bx-left-arrow-alt' style="font-size: 20px;"></i> Previous
+            </a>
+        <?php endif; ?>
+        
+        <div style="font-weight: 600; color: #64748B; font-size: 14px;">Page <?php echo $page; ?> of <?php echo $total_pages ?: 1; ?></div>
+        
+        <?php if ($page < $total_pages): ?>
+            <a href="?page=<?php echo $page + 1; ?>" class="btn-primary" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                Next <i class='bx bx-right-arrow-alt' style="font-size: 20px;"></i>
+            </a>
+        <?php endif; ?>
     </div>
 </main>
 
