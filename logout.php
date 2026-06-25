@@ -1,10 +1,10 @@
 <?php
 session_start();
-// Check if it's an admin or renter logout
-$redirect = "login.php"; // Default to resident login
-if (isset($_SESSION['admin_id'])) {
-    $redirect = "admin/login.php";
+if (isset($_SESSION['login_log_id'])) {
+    require_once "db.php";
+    $log_id = (int)$_SESSION['login_log_id'];
+    @mysqli_query($conn, "UPDATE login_logs SET logout_time = NOW() WHERE id = $log_id");
 }
 session_destroy();
-header("Location: $redirect");
+header("Location: login.php");
 exit;
