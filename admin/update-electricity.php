@@ -332,6 +332,7 @@ if ($elec_id > 0) {
 
         <div class="aesthetic-card">
             <div class="welcome" style="display: flex; align-items: center; gap: 20px;">
+                <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: -4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; background: #ffffff; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';"><i class='bx bx-arrow-back' style="font-size: 24px; color: #64748B;"></i></a>
                 <div style="background: linear-gradient(135deg, rgba(98,75,255,0.1), rgba(217,70,239,0.1)); padding: 18px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(98,75,255,0.2);">
                     <i class='bx bx-edit-alt' style="font-size: 38px; color: var(--primary-purple);"></i>
                 </div>
