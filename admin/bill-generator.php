@@ -1378,10 +1378,22 @@ $admin_user = s($_SESSION['admin']);
                     const slipLink = document.createElement('a');
                     slipLink.href = 'slip.php?elec_id=' + data.bill_id;
                     slipLink.target = '_blank';
-                    slipLink.textContent = ' [View PDF Slip]';
+                    slipLink.innerHTML = "<i class='bx bxs-file-pdf' style='font-size: 16px; margin-right: 4px;'></i> View Slip";
+                    slipLink.style.display = 'inline-flex';
+                    slipLink.style.alignItems = 'center';
+                    slipLink.style.background = '#10B981';
                     slipLink.style.color = '#fff';
-                    slipLink.style.fontWeight = 'bold';
-                    slipLink.style.marginLeft = '10px';
+                    slipLink.style.padding = '6px 12px';
+                    slipLink.style.borderRadius = '8px';
+                    slipLink.style.fontSize = '13px';
+                    slipLink.style.fontWeight = '700';
+                    slipLink.style.textDecoration = 'none';
+                    slipLink.style.marginLeft = '16px';
+                    slipLink.style.boxShadow = '0 4px 6px rgba(16, 185, 129, 0.2)';
+                    slipLink.style.transition = 'transform 0.2s';
+                    slipLink.onmouseover = () => slipLink.style.transform = 'scale(1.05)';
+                    slipLink.onmouseout = () => slipLink.style.transform = 'scale(1)';
+                    
                     document.getElementById('alertBox').appendChild(slipLink);
 
                     calculateBill();
@@ -1401,11 +1413,27 @@ $admin_user = s($_SESSION['admin']);
 
         function showMsg(m, t) {
             const box = document.getElementById('alertBox');
-            box.textContent = m;
-            box.style.display = 'block';
-            box.style.background = (t == 'success') ? '#10B981' : '#EF4444';
-            box.style.color = 'white';
-            setTimeout(() => { box.style.display = 'none'; }, 4000);
+            box.style.display = 'flex';
+            box.style.alignItems = 'center';
+            box.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+            box.style.border = '1px solid';
+            box.style.transition = 'all 0.3s ease';
+            
+            if (t == 'success') {
+                box.style.background = '#ECFDF5';
+                box.style.color = '#065F46';
+                box.style.borderColor = '#A7F3D0';
+                box.innerHTML = `<i class='bx bx-check-circle' style='font-size: 24px; color: #10B981; margin-right: 12px;'></i> <div style='font-weight: 600; font-size: 14px;'>${m}</div>`;
+            } else {
+                box.style.background = '#FEF2F2';
+                box.style.color = '#991B1B';
+                box.style.borderColor = '#FECACA';
+                box.innerHTML = `<i class='bx bx-error-circle' style='font-size: 24px; color: #EF4444; margin-right: 12px;'></i> <div style='font-weight: 600; font-size: 14px;'>${m}</div>`;
+            }
+            
+            if(window.alertTimeout) clearTimeout(window.alertTimeout);
+            // keep it visible slightly longer since it has a button
+            window.alertTimeout = setTimeout(() => { box.style.display = 'none'; }, 6000);
         }
 
         function resetForm() {
