@@ -189,9 +189,10 @@ if ($elec_id > 0) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
         .edit-page {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 24px 30px;
+            width: 100%;
+            max-width: 100%;
+            margin: 30px 0;
+            padding: 0;
             box-sizing: border-box;
         }
         .aesthetic-card {
