@@ -857,12 +857,85 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 <div style="position: relative; padding-left: 12px; display: flex; flex-direction: column; gap: 16px;">
                     <div style="position: absolute; top: 8px; bottom: 8px; left: 3px; width: 2px; background: var(--border); z-index: 1;"></div>
                     <?php while($log = mysqli_fetch_assoc($recent_logins)): ?>
-                    <div style="display: flex; gap: 12px; position: relative; z-index: 2;">
-                        <div style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; border: 2px solid var(--white); margin-top: 4px; flex-shrink: 0; box-sizing: content-box;"></div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; color: var(--text-dark); font-size: 13px;"><?php echo htmlspecialchars($log['name']); ?></div>
-                            <div style="color: var(--text-gray); font-size: 11px; margin-top: 2px;"><?php echo date('M d, H:i', strtotime($log['login_time'])); ?> <span style="margin-left: 6px; padding: 2px 6px; background: rgba(16,185,129,0.1); color: #10B981; border-radius: 4px; font-size: 9px; font-weight: 700; display: inline-block;">LOGGED IN</span></div>
+                </div>
+                    <?php endwhile; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Payment Mode Modal -->
+<div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+            <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
+            </div>
+            <div>
+                <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+            </div>
+        </div>
+        
+        <form action="mark-paid.php" method="POST">
+            <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+            <input type="hidden" name="id" id="paymentBillId">
+            <input type="hidden" name="type" id="paymentBillType">
+            <input type="hidden" name="bill_amount" id="paymentBillAmount">
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Payment Mode</label>
+                        <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                            <option value="Online">Online</option>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Amount Paid (₹)</label>
+                        <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                        <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 4px;">Partial payments are allowed.</small>
+                    </div>
+                </div>
+                
+                <div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Date</label>
+                            <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
                         </div>
+                        <div class="form-group">
+                            <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Time</label>
+                            <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-dark);">
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 16px;">
+                        <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-gray); margin-bottom: 6px; display: block;">Cash Received By</label>
+                        <div style="display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: #F8FAFC;">
+                            <i class='bx bx-user' style="color: var(--primary-purple);"></i>
+                            <span style="font-size: 14px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 10px 24px;">Cancel</button>
+                <button type="submit" class="btn-primary" style="background: #10B981; padding: 10px 24px;">Confirm Payment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Dashboard Live Search
+    document.getElementById('globalSearch')?.addEventListener('keyup', function(e) {
         let term = e.target.value.toLowerCase();
         let rows = document.querySelectorAll('tbody tr');
         rows.forEach(row => {
@@ -870,6 +943,14 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
             row.style.display = text.includes(term) ? '' : 'none';
         });
     });
+
+    function handlePaymentModeChange() {
+        const mode = document.getElementById('paymentMode').value;
+        const receiverGroup = document.getElementById('cashReceiverGroup');
+        if(receiverGroup) {
+            receiverGroup.style.display = (mode === 'Cash') ? 'block' : 'none';
+        }
+    }
 
     // Payment Modal Logic
     function openPaymentModal(type, id, amount, month) {
@@ -885,7 +966,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         document.getElementById('paymentTimeInput').value = now.toTimeString().slice(0, 5);
         
         document.getElementById('paymentModal').style.display = 'flex';
-
+        handlePaymentModeChange();
     }
 
     function closePaymentModal() {
