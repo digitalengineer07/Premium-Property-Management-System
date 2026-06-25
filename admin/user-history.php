@@ -70,9 +70,10 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
 </head>
 <body>
     <?php include "sidebar.php"; ?>
-    <?php include 'header.php'; ?>
 
     <main class="main" style="padding: 24px;">
+        <?php include 'header.php'; ?>
+
         <div class="welcome" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">Comprehensive History</h1>
