@@ -180,9 +180,16 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <h1><i class='bx bx-bolt' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Electricity Records</h1>
-        <p>Viewing all historical utility billing</p>
+    <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
+        <div>
+            <h1><i class='bx bx-bolt' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Electricity Records</h1>
+            <p style="margin: 0;">Viewing all historical utility billing</p>
+        </div>
+        <div>
+            <a href="manage-recharges.php" class="btn-primary" style="background: #F59E0B; border: none; padding: 10px 20px; font-weight: 700; border-radius: 12px; font-size: 15px; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                <i class='bx bx-plus-circle' style="font-size: 20px;"></i> Log Recharge
+            </a>
+        </div>
     </div>
 
     <!-- Monthly Tracking HUD -->
