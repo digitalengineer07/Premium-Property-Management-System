@@ -367,7 +367,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                     <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['total_amount'] - $e['total_paid']); ?>
                                         <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
                                     <?php else: ?>
-                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" target="_blank" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
+                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
