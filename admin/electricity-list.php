@@ -323,7 +323,7 @@ $admin_user = s($_SESSION['admin']);
                         <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
                         <td>
                             <div style="display: flex; gap: 8px;">
-                                <a href="slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;" target="_blank">Slip</a>
+                                <a href="slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;">Slip</a>
                                 <a href="update-electricity.php?user_id=<?php echo $r['user_id'] ?? 0; ?>&id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-edit'></i></a>
                                 <a href="delete-bill.php?id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px; color: #EF4444; border-color: #FCA5A5;" onclick="return confirm('Delete this utility bill completely?');"><i class='bx bx-trash'></i></a>
                                 <?php if($r['status'] != 'Paid'): ?>
