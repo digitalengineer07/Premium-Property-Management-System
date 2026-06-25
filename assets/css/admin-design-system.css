@@ -1183,4 +1183,5 @@ tr:hover td {
         width: 100% !important;
         min-width: 0 !important;
     }
-}
+}
+.btn-primary:active, .btn-outline:active { transform: scale(0.96); transition: transform 0.1s; }
