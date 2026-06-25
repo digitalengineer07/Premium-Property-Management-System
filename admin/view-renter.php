@@ -315,7 +315,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div style="font-weight: 700; font-size: 16px; color: var(--text-gray);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-history'></i></div>
                         <div>
@@ -429,38 +429,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
         </div>
     </div>
 
-    <!-- Payment History Timeline -->
-    <div class="panel animate-up" style="margin-bottom: 24px;">
-        <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-history'></i></div> Payment History</h4>
-        
-        <?php if (empty($payment_history)): ?>
-            <div style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px;">No payments recorded yet.</div>
-        <?php else: ?>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-                <?php foreach ($payment_history as $p): ?>
-                    <div style="background: #fff; padding: 16px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <div>
-                                <div style="font-weight: 800; color: var(--text-dark); font-size: 16px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
-                                <div style="font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; margin-top: 4px;">
-                                    <?php echo htmlspecialchars($p['bill_type']); ?> Bill • <?php echo htmlspecialchars($p['month'] ?? 'N/A'); ?>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; border: 1px solid #A7F3D0;"><i class='bx bx-check' ></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
-                            </div>
-                        </div>
-                        <div style="font-size: 11px; color: var(--text-gray); display: flex; align-items: center; justify-content: space-between; border-top: 1px dashed #CBD5E1; padding-top: 12px; margin-top: 12px;">
-                            <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
-                            <?php if ($p['admin_name']): ?>
-                                <span style="display: flex; align-items: center; gap: 4px; font-weight: 500;"><i class='bx bx-user'></i><?php echo htmlspecialchars($p['admin_name']); ?></span>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
 
     <!-- 4. Documents Section -->
     <div class="panel animate-up" style="margin-bottom: 24px;">
