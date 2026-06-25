@@ -448,6 +448,14 @@ $admin_user = s($_SESSION['admin']);
     </div>
 
 <script>
+    function handlePaymentModeChange() {
+        const mode = document.getElementById('paymentMode').value;
+        const receiverGroup = document.getElementById('cashReceiverGroup');
+        if(receiverGroup) {
+            receiverGroup.style.display = (mode === 'Cash') ? 'block' : 'none';
+        }
+    }
+
     function openPaymentModal(id, amount, month, name) {
         document.getElementById('paymentBillId').value = id;
         document.getElementById('paymentBillAmount').value = amount;
@@ -459,6 +467,7 @@ $admin_user = s($_SESSION['admin']);
         document.getElementById('paymentTimeInput').value = now.toTimeString().slice(0, 5);
         
         document.getElementById('paymentModal').style.display = 'flex';
+        handlePaymentModeChange();
     }
 
     function closePaymentModal() {
