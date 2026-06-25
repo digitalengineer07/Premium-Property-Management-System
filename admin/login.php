@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $ip_esc = mysqli_real_escape_string($conn, $ip);
                         $admin_id = (int)$admin['id'];
                         @mysqli_query($conn, "INSERT INTO login_logs (user_id, user_type, ip_address, login_time) VALUES ($admin_id, 'admin', '$ip_esc', NOW())");
+                        $_SESSION['login_log_id'] = mysqli_insert_id($conn);
 
                         header("Location: dashboard.php");
                         exit;

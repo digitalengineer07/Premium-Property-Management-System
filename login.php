@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         // Use @ to suppress if table doesn't exist yet
                         @mysqli_query($conn, "INSERT INTO login_logs (user_id, user_type, ip_address, login_time) VALUES ($user_id_log, 'renter', '$ip_esc', NOW())");
+                        $_SESSION['login_log_id'] = mysqli_insert_id($conn);
                         @mysqli_query($conn, "UPDATE users SET last_login = NOW() WHERE id = $user_id_log");
                         // --- END LOGIN TRACKING ---
 
