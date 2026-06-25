@@ -54,13 +54,6 @@ mysqli_stmt_close($stmt);
 
 $total_outstanding = max(0, $total_billed - $total_paid_overall);
 
-// CSRF Token
-function getCsrfToken() {
-    if (empty($_SESSION['csrf'])) {
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf'];
-}
 $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
 
 ?>
