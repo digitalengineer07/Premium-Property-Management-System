@@ -313,9 +313,9 @@ $admin_user = s($_SESSION['admin']);
     </div>
 
     <!-- Pagination -->
-    <div id="pagination" style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; margin-top: 40px; position: relative; z-index: 10;">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; margin-top: 40px; position: relative; z-index: 10;">
         <?php if ($page > 1): ?>
-            <a href="?page=<?php echo $page - 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
+            <a href="?page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
                 <i class='bx bx-chevron-left' style="font-size: 24px;"></i>
             </a>
         <?php endif; ?>
@@ -325,7 +325,7 @@ $admin_user = s($_SESSION['admin']);
         </div>
         
         <?php if ($page < $total_pages): ?>
-            <a href="?page=<?php echo $page + 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
+            <a href="?page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
                 <i class='bx bx-chevron-right' style="font-size: 24px;"></i>
             </a>
         <?php endif; ?>
