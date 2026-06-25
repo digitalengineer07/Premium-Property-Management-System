@@ -188,32 +188,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                 <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
                             
-                            <?php
-                            $start_page = max(1, $page - 1);
-                            $end_page = min($total_pages, $page + 1);
-
-                            if ($start_page > 1) {
-                                echo '<a href="?id='.$id.'&page=1" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; font-weight: 700; font-size: 15px; transition: 0.2s;" onmouseover="this.style.borderColor=\'var(--text-gray)\'" onmouseout="this.style.borderColor=\'var(--border)\'">1</a>';
-                                if ($start_page > 2) {
-                                    echo '<div style="width: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-gray); font-weight: 600;">...</div>';
-                                }
-                            }
-
-                            for ($i = $start_page; $i <= $end_page; $i++) {
-                                if ($i == $page) {
-                                    echo '<div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--primary-purple); color: #fff; font-weight: 800; font-size: 18px; box-shadow: 0 8px 16px -4px rgba(98, 75, 255, 0.4);">' . $i . '</div>';
-                                } else {
-                                    echo '<a href="?id='.$id.'&page='.$i.'" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; font-weight: 700; font-size: 15px; transition: 0.2s;" onmouseover="this.style.borderColor=\'var(--text-gray)\'" onmouseout="this.style.borderColor=\'var(--border)\'">' . $i . '</a>';
-                                }
-                            }
-
-                            if ($end_page < $total_pages) {
-                                if ($end_page < $total_pages - 1) {
-                                    echo '<div style="width: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-gray); font-weight: 600;">...</div>';
-                                }
-                                echo '<a href="?id='.$id.'&page='.$total_pages.'" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; font-weight: 700; font-size: 15px; transition: 0.2s;" onmouseover="this.style.borderColor=\'var(--text-gray)\'" onmouseout="this.style.borderColor=\'var(--border)\'">'.$total_pages.'</a>';
-                            }
-                            ?>
+                            <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--primary-purple); color: #fff; font-weight: 800; font-size: 18px; box-shadow: 0 8px 16px -4px rgba(98, 75, 255, 0.4);"><?php echo $page; ?></div>
                             
                             <?php if ($page < $total_pages): ?>
                                 <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></a>
