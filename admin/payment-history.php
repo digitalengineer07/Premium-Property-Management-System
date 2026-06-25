@@ -30,16 +30,31 @@ if (!$user) {
     exit;
 }
 
-/* Fetch detailed payment history log */
-$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC");
-mysqli_stmt_bind_param($stmt, "i", $id);
+// Pagination setup
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
+// Get total count and sum
+$count_stmt = mysqli_prepare($conn, "SELECT COUNT(*) as total, SUM(paid_amount) as total_paid FROM payments WHERE user_id = ?");
+mysqli_stmt_bind_param($count_stmt, "i", $id);
+mysqli_stmt_execute($count_stmt);
+$count_res = mysqli_stmt_get_result($count_stmt);
+$count_row = mysqli_fetch_assoc($count_res);
+$total_transactions = (int)($count_row['total'] ?? 0);
+$total_paid = (float)($count_row['total_paid'] ?? 0);
+mysqli_stmt_close($count_stmt);
+
+$total_pages = ceil($total_transactions / $limit);
+
+/* Fetch detailed payment history log with LIMIT */
+$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC LIMIT ? OFFSET ?");
+mysqli_stmt_bind_param($stmt, "iii", $id, $limit, $offset);
 mysqli_stmt_execute($stmt);
 $payment_res = mysqli_stmt_get_result($stmt);
 $payment_history = [];
 while ($r = mysqli_fetch_assoc($payment_res)) $payment_history[] = $r;
 mysqli_stmt_close($stmt);
-
-$total_paid = array_sum(array_column($payment_history, 'paid_amount'));
 $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
 
 ?>
@@ -84,7 +99,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                             <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">Recorded historically</div>
                         </div>
                     </div>
-                    <div style="font-weight: 800; font-size: 20px; color: var(--primary-purple);"><?php echo count($payment_history); ?></div>
+                    <div style="font-weight: 800; font-size: 20px; color: var(--primary-purple);"><?php echo $total_transactions; ?></div>
                 </div>
 
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
@@ -164,6 +179,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                    <?php if ($total_pages > 1): ?>
+                        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px; margin-bottom: 24px; position: relative; z-index: 10;">
+                            <?php if ($page > 1): ?>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>" class="btn-outline" style="text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: 600;">Previous</a>
+                            <?php endif; ?>
+                            <?php if ($page < $total_pages): ?>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" class="btn-primary" style="text-decoration: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(98,75,255,0.2);">Next</a>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
