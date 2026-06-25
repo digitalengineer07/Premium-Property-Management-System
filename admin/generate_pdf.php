@@ -10,110 +10,114 @@ require_once __DIR__ . '/../db.php';   // DB connection
 
 // Check if vendor folder exists (prevent fatal crash if user didn't upload it)
 if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    function generateSlipPdf($conn, $elec_id) {
-        return false; // Silently fail or handle gracefully if called
+    if (!function_exists('generateSlipPdf')) {
+        function generateSlipPdf($conn, $elec_id) {
+            return false; // Silently fail or handle gracefully if called
+        }
     }
     return; // Stop execution of this file
 }
 require_once __DIR__ . '/../vendor/autoload.php';
 
-function generateSlipPdf($conn, $elec_id) {
-    // fetch electricity row and user
-    $stmt = mysqli_prepare($conn, "SELECT e.*, u.name, u.room_no, u.username FROM electricity e LEFT JOIN users u ON e.user_id = u.id WHERE e.id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $elec_id);
-    mysqli_stmt_execute($stmt);
-    $res = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($res);
-    mysqli_stmt_close($stmt);
+if (!function_exists('generateSlipPdf')) {
+    function generateSlipPdf($conn, $elec_id) {
+        // fetch electricity row and user
+        $stmt = mysqli_prepare($conn, "SELECT e.*, u.name, u.room_no, u.username FROM electricity e LEFT JOIN users u ON e.user_id = u.id WHERE e.id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $elec_id);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($res);
+        mysqli_stmt_close($stmt);
 
-    if (!$row) return false;
+        if (!$row) return false;
 
-    // prepare variables
-    $date = date("d / m / Y", strtotime($row['payment_date'] ?? $row['created_at'] ?? date('Y-m-d')));
-    $name = $row['name'] ?: $row['username'] ?: 'N/A';
-    $room = $row['room_no'] ?: 'N/A';
-    $prev = (int)($row['previous_reading'] ?? 0);
-    $curr = (int)($row['current_reading'] ?? 0);
-    $units = (int)($row['units_consumed'] ?? ($curr - $prev));
-    $rate = number_format((float)($row['rate_per_unit'] ?? 0), 2);
-    $amount = number_format((float)($row['amount'] ?? ($units * ($row['rate_per_unit'] ?? 0))), 2);
-    $total_amount = number_format((float)($row['total_amount'] ?? $row['amount'] ?? 0), 2);
-    $rent_text = isset($row['rent_amount']) ? "₹" . number_format((float)$row['rent_amount'],2) : "N.A";
+        // prepare variables
+        $date = date("d / m / Y", strtotime($row['payment_date'] ?? $row['created_at'] ?? date('Y-m-d')));
+        $name = $row['name'] ?: $row['username'] ?: 'N/A';
+        $room = $row['room_no'] ?: 'N/A';
+        $prev = (int)($row['previous_reading'] ?? 0);
+        $curr = (int)($row['current_reading'] ?? 0);
+        $units = (int)($row['units_consumed'] ?? ($curr - $prev));
+        $rate = number_format((float)($row['rate_per_unit'] ?? 0), 2);
+        $amount = number_format((float)($row['amount'] ?? ($units * ($row['rate_per_unit'] ?? 0))), 2);
+        $total_amount = number_format((float)($row['total_amount'] ?? $row['amount'] ?? 0), 2);
+        $rent_text = isset($row['rent_amount']) ? "₹" . number_format((float)$row['rent_amount'],2) : "N.A";
 
-    // Build simple HTML for slip (inline styles for PDF)
-    $html = '
-    <!doctype html>
-    <html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta charset="utf-8">
-      <style>
-        body { font-family: Arial, Helvetica, sans-serif; color:#111; }
-        .slip { width:100%; border-collapse: collapse; border:1px solid #000; }
-        .slip td, .slip th { border:1px solid #000; padding:8px; vertical-align:top; }
-        .title { text-align:center; font-weight:700; font-size:20px; padding:12px; }
-        .muted { color:#333; font-size:13px; }
-      </style>
-    </head>
-    <body>
-    <table class="slip">
-      <tr>
-        <td style="width:20%;">Date: ' . htmlspecialchars($date) . '</td>
-        <td class="title">Electricity Bill ('.htmlspecialchars($room).')</td>
-        <td style="width:20%; text-align:right">Name: ' . htmlspecialchars($name) . '</td>
-      </tr>
-      <tr>
-        <td style="padding:12px;">
-          <strong>Unit Consumed:</strong> ' . htmlspecialchars($curr) . '
-        </td>
-        <td style="padding:12px;">
-          <strong>Rent:</strong> ' . $rent_text . '
-        </td>
-        <td style="padding:12px; vertical-align:top;">
-          <strong>Total Amount:</strong> ₹' . $total_amount . '<br>
-          <strong>Dues:</strong> N.A<br>
-          <strong>Rate Per Unit:</strong> ₹' . $rate . '
-        </td>
-      </tr>
-      <tr>
-        <td style="padding:16px;">
-          <strong>Unit Consumed in Last Month:</strong> ' . htmlspecialchars($prev) . '<br>
-          <strong>Total Unit Consumed:</strong> ' . htmlspecialchars($curr) . ' - ' . htmlspecialchars($prev) . '<br>
-          &nbsp;&nbsp;&nbsp;&nbsp;: ' . htmlspecialchars($units) . ' X ₹' . $rate . ' = ₹' . $amount . '
-        </td>
-        <td colspan="2" style="padding:16px;">
-          <div style="font-size:14px;">Notes: This bill is generated by Rent Manager.</div>
-        </td>
-      </tr>
-    </table>
-    </body>
-    </html>';
+        // Build simple HTML for slip (inline styles for PDF)
+        $html = '
+        <!doctype html>
+        <html>
+        <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, Helvetica, sans-serif; color:#111; }
+            .slip { width:100%; border-collapse: collapse; border:1px solid #000; }
+            .slip td, .slip th { border:1px solid #000; padding:8px; vertical-align:top; }
+            .title { text-align:center; font-weight:700; font-size:20px; padding:12px; }
+            .muted { color:#333; font-size:13px; }
+          </style>
+        </head>
+        <body>
+        <table class="slip">
+          <tr>
+            <td style="width:20%;">Date: ' . htmlspecialchars($date) . '</td>
+            <td class="title">Electricity Bill ('.htmlspecialchars($room).')</td>
+            <td style="width:20%; text-align:right">Name: ' . htmlspecialchars($name) . '</td>
+          </tr>
+          <tr>
+            <td style="padding:12px;">
+              <strong>Unit Consumed:</strong> ' . htmlspecialchars($curr) . '
+            </td>
+            <td style="padding:12px;">
+              <strong>Rent:</strong> ' . $rent_text . '
+            </td>
+            <td style="padding:12px; vertical-align:top;">
+              <strong>Total Amount:</strong> ₹' . $total_amount . '<br>
+              <strong>Dues:</strong> N.A<br>
+              <strong>Rate Per Unit:</strong> ₹' . $rate . '
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px;">
+              <strong>Unit Consumed in Last Month:</strong> ' . htmlspecialchars($prev) . '<br>
+              <strong>Total Unit Consumed:</strong> ' . htmlspecialchars($curr) . ' - ' . htmlspecialchars($prev) . '<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;: ' . htmlspecialchars($units) . ' X ₹' . $rate . ' = ₹' . $amount . '
+            </td>
+            <td colspan="2" style="padding:16px;">
+              <div style="font-size:14px;">Notes: This bill is generated by Rent Manager.</div>
+            </td>
+          </tr>
+        </table>
+        </body>
+        </html>';
 
-    // Dompdf options
-    $options = new Options();
-    $options->set('isRemoteEnabled', false);
-    $options->set('defaultFont', 'Arial');
+        // Dompdf options
+        $options = new Options();
+        $options->set('isRemoteEnabled', false);
+        $options->set('defaultFont', 'Arial');
 
-    $dompdf = new Dompdf($options);
-    $dompdf->loadHtml($html);
-    $dompdf->setPaper('A4', 'landscape'); // choose portrait/landscape as needed
-    $dompdf->render();
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape'); // choose portrait/landscape as needed
+        $dompdf->render();
 
-    // Save PDF file
-    $output = $dompdf->output();
-    $safeName = "slip_" . $elec_id . "_" . time() . ".pdf";
-    $relPath = "uploads/bills/" . $safeName;
-    $savePath = __DIR__ . "/../" . $relPath;
+        // Save PDF file
+        $output = $dompdf->output();
+        $safeName = "slip_" . $elec_id . "_" . time() . ".pdf";
+        $relPath = "uploads/bills/" . $safeName;
+        $savePath = __DIR__ . "/../" . $relPath;
 
-    if (file_put_contents($savePath, $output) === false) {
-        return false;
+        if (file_put_contents($savePath, $output) === false) {
+            return false;
+        }
+
+        // Update electricity table\'s bill_file with PDF relative path
+        $upd = mysqli_prepare($conn, "UPDATE electricity SET bill_file = ? WHERE id = ?");
+        mysqli_stmt_bind_param($upd, "si", $relPath, $elec_id);
+        mysqli_stmt_execute($upd);
+        mysqli_stmt_close($upd);
+
+        return $relPath;
     }
-
-    // Update electricity table's bill_file with PDF relative path
-    $upd = mysqli_prepare($conn, "UPDATE electricity SET bill_file = ? WHERE id = ?");
-    mysqli_stmt_bind_param($upd, "si", $relPath, $elec_id);
-    mysqli_stmt_execute($upd);
-    mysqli_stmt_close($upd);
-
-    return $relPath;
 }
