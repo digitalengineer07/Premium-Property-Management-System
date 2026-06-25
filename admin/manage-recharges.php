@@ -93,7 +93,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
 
     <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 32px;">
         <div style="display: flex; align-items: center; gap: 18px;">
-            <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border-color: #E2E8F0;"><i class='bx bx-arrow-back' style="font-size: 20px; color: #64748B;"></i></a>
+            <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; background: #ffffff; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';"><i class='bx bx-arrow-back' style="font-size: 24px; color: #64748B;"></i></a>
             
             <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(245, 158, 11, 0.25);">
                 <i class='bx bx-receipt' style="color: white; font-size: 30px;"></i>
