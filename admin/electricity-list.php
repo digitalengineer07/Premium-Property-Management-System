@@ -347,7 +347,7 @@ $admin_user = s($_SESSION['admin']);
                                 $thumb_img = !empty($r['meter_screenshot_thumb']) ? $r['meter_screenshot_thumb'] : $main_img;
                             ?>
                                 <div style="position: relative; width: 60px; height: 40px; cursor: pointer; border-radius: 8px; overflow: hidden; border: 1px solid var(--border);" onclick="viewImage('../uploads/meter_readings/<?php echo htmlspecialchars($main_img); ?>', '../uploads/meter_readings/<?php echo htmlspecialchars($orig_img); ?>')">
-                                    <img src="../uploads/meter_readings/<?php echo htmlspecialchars($thumb_img); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <img src="../uploads/meter_readings/<?php echo htmlspecialchars($thumb_img); ?>" onerror="this.onerror=null; this.src='https://placehold.co/120x80/E2E8F0/64748B?text=Missing';" style="width: 100%; height: 100%; object-fit: cover;">
                                     <div style="position: absolute; bottom: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 8px; padding: 2px 4px;"><i class='bx bx-zoom-in'></i></div>
                                 </div>
                             <?php else: ?>
