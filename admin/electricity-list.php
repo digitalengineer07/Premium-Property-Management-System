@@ -46,7 +46,7 @@ $recharge_row = mysqli_fetch_assoc($recharge_q);
 $total_recharged = $recharge_row['total'] ?? 0;
 
 // 2. Calculate Total Billed for LAST month (from all renters)
-$billed_q = mysqli_query($conn, "SELECT SUM(amount) as total FROM electricity WHERE month = '$prev_month_db' OR month = '$prev_month_full'");
+$billed_q = mysqli_query($conn, "SELECT SUM(amount) as total FROM electricity WHERE (month = '$prev_month_db' OR month = '$prev_month_full') AND status = 'Paid'");
 $billed_row = mysqli_fetch_assoc($billed_q);
 $total_billed = $billed_row['total'] ?? 0;
 
