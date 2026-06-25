@@ -60,10 +60,15 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
         <?php include 'header.php'; ?>
         
         <div style="padding: 24px;">
-            <div class="welcome" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <h1 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">Payment History</h1>
-                    <p style="color: var(--text-gray); font-size: 14px; margin: 4px 0 0 0;">All recorded transactions for <?php echo htmlspecialchars($user['name']); ?> (Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?>)</p>
+            <div class="welcome" style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: flex-start;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);">
+                        <i class='bx bx-credit-card-front'></i>
+                    </div>
+                    <div>
+                        <h1 style="font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--primary-purple), #10B981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; display: inline-block;">Payment History</h1>
+                        <p style="color: var(--text-gray); font-size: 14px; margin: 6px 0 0 0; font-weight: 500; display: flex; align-items: center; gap: 6px;"><i class='bx bx-user-circle' style="font-size: 16px; color: #10B981;"></i> All transactions for <span style="color: var(--text-dark); font-weight: 700;"><?php echo htmlspecialchars($user['name']); ?></span> (Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?>)</p>
+                    </div>
                 </div>
                 <a href="view-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                     <i class='bx bx-arrow-back'></i> Back to Profile
