@@ -231,18 +231,20 @@ $admin_user = s($_SESSION['admin']);
     </div>
 
     <!-- Pagination -->
-    <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-bottom: 40px;">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; position: relative; z-index: 10;">
         <?php if ($page > 1): ?>
-            <a href="?page=<?php echo $page - 1; ?>" class="btn-outline" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-left-arrow-alt' style="font-size: 20px;"></i> Previous
+            <a href="?page=<?php echo $page - 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
+                <i class='bx bx-chevron-left' style="font-size: 24px;"></i>
             </a>
         <?php endif; ?>
         
-        <div style="font-weight: 600; color: #64748B; font-size: 14px;">Page <?php echo $page; ?> of <?php echo $total_pages ?: 1; ?></div>
+        <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; background: var(--primary-purple); color: #fff; font-weight: 700; font-size: 16px; box-shadow: 0 8px 20px rgba(98, 75, 255, 0.3);">
+            <?php echo $page; ?>
+        </div>
         
         <?php if ($page < $total_pages): ?>
-            <a href="?page=<?php echo $page + 1; ?>" class="btn-primary" style="padding: 10px 24px; border-radius: 12px; font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 8px;">
-                Next <i class='bx bx-right-arrow-alt' style="font-size: 20px;"></i>
+            <a href="?page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'">
+                <i class='bx bx-chevron-right' style="font-size: 24px;"></i>
             </a>
         <?php endif; ?>
     </div>
