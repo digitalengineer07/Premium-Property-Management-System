@@ -1437,8 +1437,26 @@ $admin_user = s($_SESSION['admin']);
         }
 
         function resetForm() {
-            localStorage.removeItem('billFormState');
-            window.location.reload();
+            // Clear only the specified data fields
+            document.getElementById('currentReading').value = '';
+            document.getElementById('dues').value = '';
+            document.getElementById('extraCharges').value = '';
+            document.getElementById('extraChargesDesc').value = '';
+            
+            // Clear the meter screenshot
+            document.getElementById('meterScreenshot').value = '';
+            croppedBlob = null;
+            originalFile = null;
+
+            // Optional: update the calculation immediately to show 0
+            if (typeof calculateBill === 'function') {
+                calculateBill();
+            }
+
+            // Update the form state in localStorage so the cleared values persist
+            saveFormState();
+
+            showMsg('Form reset successfully!', 'success');
         }
 
         function saveFormState() {
