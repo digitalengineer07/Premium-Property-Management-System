@@ -11,6 +11,22 @@ if (!isset($_SESSION['admin'])) {
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
+    // Check if electricity bill is paid
+    $e_q = mysqli_query($conn, "SELECT status FROM electricity WHERE id = $id");
+    if ($e_q && $row = mysqli_fetch_assoc($e_q)) {
+        if ($row['status'] == 'Paid') {
+            die("<script>alert('Error: Cannot delete a fully Paid electricity bill to protect accounting integrity.'); window.history.back();</script>");
+        }
+    }
+
+    // Check if rent bill is paid
+    $r_q = mysqli_query($conn, "SELECT status FROM rent WHERE id = $id");
+    if ($r_q && $row = mysqli_fetch_assoc($r_q)) {
+        if ($row['status'] == 'Paid') {
+            die("<script>alert('Error: Cannot delete a fully Paid rent bill to protect accounting integrity.'); window.history.back();</script>");
+        }
+    }
+
     // Delete associated payments first
     $stmt1 = mysqli_prepare($conn, "DELETE FROM payments WHERE bill_type = 'electricity' AND bill_id = ?");
     mysqli_stmt_bind_param($stmt1, "i", $id);
