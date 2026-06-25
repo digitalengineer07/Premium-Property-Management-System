@@ -122,23 +122,23 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             display: flex; 
             align-items: flex-start; 
             gap: 16px; 
-            padding: 16px 12px; 
-        }
-        .history-icon-wrapper {
+            padding-bottom: 24px; 
             position: relative;
         }
-        .history-icon-wrapper::after {
+        .history-item:last-child {
+            padding-bottom: 0;
+        }
+        .history-item::before {
             content: '';
             position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 21px; /* Center of 44px icon */
+            top: 44px; /* Start below icon */
+            bottom: 0; /* Stretch to bottom of padding */
             width: 2px;
-            height: 24px;
             background: #E2E8F0;
-            border-radius: 2px;
+            z-index: 0;
         }
-        .history-item:last-child .history-icon-wrapper::after {
+        .history-item:last-child::before {
             display: none;
         }
 
@@ -268,14 +268,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </div>
                             </div>
                             <div style="flex: 1; padding-top: 2px;">
-                                <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px;">
                                     <?php echo htmlspecialchars($h['renter_name']); ?>
-                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 700; background: #F1F5F9; padding: 4px 8px; border-radius: 8px;">
-                                        <?php echo date('M d', strtotime($h['sent_at'])); ?> • <?php echo date('g:i A', strtotime($h['sent_at'])); ?>
-                                    </span>
                                 </div>
-                                <div style="font-size: 13px; color: var(--text-gray); font-weight: 600;">
+                                <div style="font-size: 13px; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">
                                     <?php echo $h['bill_type']; ?> Reminder (<?php echo $h['month']; ?>)
+                                </div>
+                                <div style="display: inline-block; font-size: 11px; color: var(--text-gray); font-weight: 700; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 10px; border-radius: 6px;">
+                                    <i class='bx bx-time-five' style="margin-right: 2px;"></i> <?php echo date('M d', strtotime($h['sent_at'])); ?> • <?php echo date('g:i A', strtotime($h['sent_at'])); ?>
                                 </div>
                             </div>
                         </div>
