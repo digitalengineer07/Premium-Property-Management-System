@@ -233,6 +233,16 @@ if ($elec_id > 0) {
             background: var(--white);
             box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.12);
         }
+        
+        /* Hide number spinners for cleaner UI and more space */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
