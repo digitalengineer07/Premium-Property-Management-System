@@ -116,7 +116,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         </div>
     <?php endif; ?>
 
-    <div style="display: flex; flex-direction: column; gap: 32px; width: 100%;">
+    <div style="display: flex; flex-direction: column; gap: 20px; width: 100%;">
         
         <!-- TOP SECTION: Log New Recharge -->
         <div class="animate-up" style="animation-delay: 0.1s;">
@@ -176,39 +176,39 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
             <div class="panel" style="background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 32px; border: 1px solid #F1F5F9;">
                 <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 20px; margin-bottom: 24px;">
                     <h2 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 10px;">
-                        <i class='bx bx-history' style="color: #64748B; font-size: 26px;"></i> Recharge History
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(100,116,139,0.1); display: flex; align-items: center; justify-content: center; color: #64748B;"><i class='bx bx-history' style="font-size: 24px;"></i></div> Recharge History
                     </h2>
                 </div>
                 <div class="table-responsive">
-                    <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 0 12px;">
                         <thead>
                             <tr>
-                                <th style="padding: 14px 20px; font-size: 13px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Date & Time</th>
-                                <th style="padding: 14px 20px; font-size: 13px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Amount</th>
-                                <th style="padding: 14px 20px; font-size: 13px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Notes</th>
-                                <th style="padding: 14px 20px; font-size: 13px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: right;">Action</th>
+                                <th style="padding: 0 24px 12px 24px; font-size: 13px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Date & Time</th>
+                                <th style="padding: 0 24px 12px 24px; font-size: 13px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Amount</th>
+                                <th style="padding: 0 24px 12px 24px; font-size: 13px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: left;">Notes</th>
+                                <th style="padding: 0 24px 12px 24px; font-size: 13px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #F1F5F9; text-align: right;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($recharges)): ?>
                                 <tr><td colspan="4" style="text-align: center; padding: 60px; color: #94A3B8; font-size: 16px; background: #F8FAFC; border-radius: 16px; border: 1px dashed #CBD5E1;">No recharge records found. Try logging a new one!</td></tr>
                             <?php else: foreach ($recharges as $r): ?>
-                                <tr class="animate-up" style="transition: all 0.2s ease;">
-                                    <td data-label="Date & Time" style="padding: 20px; background: #fff; border-bottom: 1px solid #F1F5F9;">
+                                <tr class="animate-up" style="transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.01);" onmouseover="this.style.boxShadow='0 10px 25px rgba(0,0,0,0.05)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.01)'; this.style.transform='none';">
+                                    <td data-label="Date & Time" style="padding: 24px; background: #fff; border: 1px solid #F1F5F9; border-right: none; border-radius: 16px 0 0 16px;">
                                         <div style="font-weight: 800; color: #1E293B; font-size: 16px;"><?php echo date('M d, Y', strtotime($r['recharge_date'])); ?></div>
-                                        <div style="font-size: 14px; color: #64748B; font-weight: 500; margin-top: 4px;"><i class='bx bx-time-five' style="vertical-align: middle;"></i> <?php echo date('h:i A', strtotime($r['recharge_time'])); ?></div>
+                                        <div style="font-size: 13px; color: #64748B; font-weight: 600; margin-top: 6px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-time-five' style="font-size: 15px;"></i> <?php echo date('h:i A', strtotime($r['recharge_time'])); ?></div>
                                     </td>
-                                    <td data-label="Amount" style="padding: 20px; background: #fff; border-bottom: 1px solid #F1F5F9;">
+                                    <td data-label="Amount" style="padding: 24px; background: #fff; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">
                                         <span style="background: #FEF2F2; color: #EF4444; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 16px; border: 1px solid #FEE2E2; display: inline-block;">
                                             - ₹<?php echo number_format($r['amount'], 2); ?>
                                         </span>
                                     </td>
-                                    <td data-label="Note" style="padding: 20px; background: #fff; border-bottom: 1px solid #F1F5F9;">
-                                        <div style="font-size: 15px; color: #475569; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500;" title="<?php echo htmlspecialchars($r['notes']); ?>">
+                                    <td data-label="Note" style="padding: 24px; background: #fff; border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">
+                                        <div style="font-size: 15px; color: #475569; max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500;" title="<?php echo htmlspecialchars($r['notes']); ?>">
                                             <?php echo htmlspecialchars($r['notes']) ?: '<span style="color: #CBD5E1; font-style: italic;">No notes provided</span>'; ?>
                                         </div>
                                     </td>
-                                    <td data-label="Actions" style="padding: 20px; background: #fff; border-bottom: 1px solid #F1F5F9; text-align: right;">
+                                    <td data-label="Actions" style="padding: 24px; background: #fff; border: 1px solid #F1F5F9; border-left: none; border-radius: 0 16px 16px 0; text-align: right;">
                                         <a href="?delete=<?php echo $r['id']; ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.2); background: #FEF2F2; padding: 10px; border-radius: 12px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; margin-left: auto;" onclick="return confirm('Are you sure you want to delete this record?')" onmouseover="this.style.background='#FEE2E2'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='#FEF2F2'; this.style.transform='scale(1)';">
                                             <i class='bx bx-trash' style="font-size: 20px;"></i>
                                         </a>
