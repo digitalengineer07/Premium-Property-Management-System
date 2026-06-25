@@ -23,7 +23,7 @@ if ($filter_user !== '') {
 if ($filter_status !== '') {
     $sql .= " AND e.status = ?"; $params[] = $filter_status; $types .= "s";
 }
-$sql .= " ORDER BY STR_TO_DATE(CONCAT('01 ', e.month), '%d %M %Y') DESC, CAST(u.room_no AS UNSIGNED) ASC, e.id DESC";
+$sql .= " ORDER BY STR_TO_DATE(CONCAT('01 ', e.month), '%d %M %Y') DESC, CAST(u.room_no AS UNSIGNED) DESC, e.id DESC";
 
 $stmt = mysqli_prepare($conn, $sql);
 if ($params) mysqli_stmt_bind_param($stmt, $types, ...$params);
