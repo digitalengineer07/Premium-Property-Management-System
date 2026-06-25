@@ -180,14 +180,19 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
-        <div>
-            <h1><i class='bx bx-bolt' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Electricity Records</h1>
-            <p style="margin: 0;">Viewing all historical utility billing</p>
+    <div class="welcome animate-up" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; gap: 18px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #624BFF 0%, #8B78FF 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 24px rgba(98, 75, 255, 0.25);">
+                <i class='bx bx-bolt' style="color: white; font-size: 30px;"></i>
+            </div>
+            <div>
+                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Electricity Records</h1>
+                <p style="margin: 6px 0 0 0; color: #64748B; font-size: 15px; font-weight: 500;">Viewing all historical utility billing</p>
+            </div>
         </div>
         <div>
-            <a href="manage-recharges.php" class="btn-primary" style="background: #F59E0B; border: none; padding: 10px 20px; font-weight: 700; border-radius: 12px; font-size: 15px; display: flex; align-items: center; gap: 8px; text-decoration: none;">
-                <i class='bx bx-plus-circle' style="font-size: 20px;"></i> Log Recharge
+            <a href="manage-recharges.php" class="btn-primary" style="background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%); border: none; padding: 12px 24px; font-weight: 700; border-radius: 14px; font-size: 15px; display: flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2); transition: all 0.3s ease;">
+                <i class='bx bx-plus-circle' style="font-size: 22px;"></i> Log Recharge
             </a>
         </div>
     </div>
