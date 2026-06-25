@@ -614,5 +614,73 @@ $admin_user = s($_SESSION['admin']);
     });
 </script>
 
+    <style>
+    /* Custom Select Dropdown UI */
+    .custom-select-wrapper { position: relative; user-select: none; width: 100%; }
+    .custom-select { position: relative; display: flex; flex-direction: column; }
+    .custom-select__trigger { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+    .custom-select__trigger:hover { border-color: #624BFF; background: #ffffff; }
+    .custom-options { position: absolute; display: block; top: 100%; left: 0; right: 0; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); background: #ffffff; transition: all 0.2s ease; opacity: 0; visibility: hidden; pointer-events: none; z-index: 99; margin-top: 8px; max-height: 250px; overflow-y: auto; padding: 6px; }
+    .custom-select.open .custom-options { opacity: 1; visibility: visible; pointer-events: all; margin-top: 4px; }
+    .custom-option { position: relative; display: block; padding: 10px 14px; font-size: 14px; font-weight: 500; color: #475569; cursor: pointer; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+    .custom-option:hover, .custom-option.selected { background: #EEF2FF; color: #624BFF; }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.filter-row select').forEach(select => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'custom-select-wrapper';
+            const customSelect = document.createElement('div');
+            customSelect.className = 'custom-select';
+            const trigger = document.createElement('div');
+            trigger.className = 'custom-select__trigger';
+            
+            const selectedOption = select.options[select.selectedIndex];
+            trigger.innerHTML = `<span>${selectedOption ? selectedOption.text : ''}</span>`;
+            
+            const optionsList = document.createElement('div');
+            optionsList.className = 'custom-options';
+            
+            Array.from(select.options).forEach((option) => {
+                const customOption = document.createElement('div');
+                customOption.className = 'custom-option' + (option.selected ? ' selected' : '');
+                customOption.textContent = option.text;
+                customOption.dataset.value = option.value;
+                
+                customOption.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    optionsList.querySelectorAll('.custom-option').forEach(el => el.classList.remove('selected'));
+                    this.classList.add('selected');
+                    trigger.querySelector('span').textContent = this.textContent;
+                    select.value = this.dataset.value;
+                    customSelect.classList.remove('open');
+                });
+                optionsList.appendChild(customOption);
+            });
+            
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.custom-select').forEach(el => {
+                    if(el !== customSelect) el.classList.remove('open');
+                });
+                customSelect.classList.toggle('open');
+            });
+            
+            customSelect.appendChild(trigger);
+            customSelect.appendChild(optionsList);
+            wrapper.appendChild(customSelect);
+            
+            select.style.display = 'none';
+            select.parentNode.insertBefore(wrapper, select);
+            
+            const icons = select.parentNode.querySelectorAll('i');
+            icons.forEach(icon => { icon.style.zIndex = '2'; });
+        });
+        
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open'));
+        });
+    });
+    </script>
 </body>
 </html>
