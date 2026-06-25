@@ -330,7 +330,7 @@ $admin_user = s($_SESSION['admin']);
                                 <span style="font-size: 10px; color: var(--text-gray);">No Photo</span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo htmlspecialchars($r['units']); ?> Units</td>
+                        <td><?php echo htmlspecialchars($r['units']); ?></td>
                         <td style="font-weight: 700; color: var(--text-dark);">₹<?php echo number_format($r['amount'], 2); ?></td>
                         <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
                         <td>
