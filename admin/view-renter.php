@@ -315,7 +315,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div style="font-weight: 700; font-size: 16px; color: var(--text-gray);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                 </div>
 
-                <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
+                <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); cursor: pointer; transition: transform 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='translateY(-2px)'">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-history'></i></div>
                         <div>
