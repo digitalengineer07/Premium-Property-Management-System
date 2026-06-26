@@ -61,7 +61,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .btn-saas-primary { background: #6C4DFF; color: #fff; box-shadow: 0 4px 12px rgba(108, 77, 255, 0.2); }
         .btn-saas-primary:hover { background: #5a3df0; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(108, 77, 255, 0.3); }
         
-        .quick-filters { display: flex; gap: 4px; background: #fff; padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin-top: 24px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+        .quick-filters { display: flex; gap: 4px; background: #fff; padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
         .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748B; border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .filter-btn:hover { color: #0F172A; background: #F1F5F9; }
         .filter-btn.active { background: #6C4DFF; color: #fff; }
