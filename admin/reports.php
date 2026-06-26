@@ -72,7 +72,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         
         /* KPI Cards */
-        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .kpi-card { background: #fff; padding: 20px 16px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
         .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
         .kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
@@ -356,12 +356,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     <div class="kpi-label">Outstanding Dues</div>
                     <div class="kpi-val">${formatCur(kpi.outstanding)}</div>
                     <div><span class="kpi-trend trend-down" style="color:#10B981; background:#ECFDF5;"><i class='bx bx-trending-down'></i> ${kpi.out_growth}</span></div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;"><i class='bx bx-group'></i></div>
-                    <div class="kpi-label">Total Residents</div>
-                    <div class="kpi-val">${kpi.active_residents}</div>
-                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.res_growth}</span></div>
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class='bx bx-target-lock'></i></div>
