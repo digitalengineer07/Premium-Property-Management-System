@@ -1,157 +1,3 @@
-<?php
-// admin/payment-verifications.php
-require_once "../db.php";
-session_start();
-require_once "utils_mailer.php";
-
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit;
-}
-$admin_user = s($_SESSION['admin'] ?? 'Admin');
-
-$success = "";
-$error = "";
-
-mysqli_query($conn, "CREATE TABLE IF NOT EXISTS payment_notifications (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    bill_type ENUM('rent', 'electricity', 'total', 'advance') NOT NULL,
-    bill_id INT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    transaction_id VARCHAR(50) NOT NULL,
-    payment_method VARCHAR(50) DEFAULT 'UPI',
-    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
-    admin_note TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)");
-
-// Handle Actions
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && isset($_POST['id'])) {
-    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
-        $error = "Security validation failed.";
-    } else {
-        $id = (int)$_POST['id'];
-        $action = $_POST['action'];
-
-        // Fetch notification info
-        $stmt = mysqli_prepare($conn, "SELECT * FROM payment_notifications WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $id);
-        mysqli_stmt_execute($stmt);
-        $res = mysqli_stmt_get_result($stmt);
-        $notif = mysqli_fetch_assoc($res);
-        mysqli_stmt_close($stmt);
-
-        if ($notif && $notif['status'] === 'Pending') {
-            if ($action === 'approve') {
-                mysqli_begin_transaction($conn);
-                try {
-                    // Update the bill status
-                    if ($notif['bill_type'] === 'rent' && $notif['bill_id']) {
-                        mysqli_query($conn, "UPDATE rent SET status = 'Paid' WHERE id = " . $notif['bill_id']);
-                    } elseif ($notif['bill_type'] === 'electricity' && $notif['bill_id']) {
-                        mysqli_query($conn, "UPDATE electricity SET status = 'Paid' WHERE id = " . $notif['bill_id']);
-                    } elseif ($notif['bill_type'] === 'total') {
-                        mysqli_query($conn, "UPDATE rent SET status = 'Paid' WHERE user_id = " . $notif['user_id'] . " AND status = 'Due'");
-                        mysqli_query($conn, "UPDATE electricity SET status = 'Paid' WHERE user_id = " . $notif['user_id'] . " AND status = 'Due'");
-                    } elseif ($notif['bill_type'] === 'advance') {
-                        $pay_query = "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, payment_time) VALUES (?, 'advance', 0, 'Advance', ?, 'Online', ?, 0, NULL, CURDATE(), CURTIME())";
-                        $pay_stmt = mysqli_prepare($conn, $pay_query);
-                        mysqli_stmt_bind_param($pay_stmt, "idd", $notif['user_id'], $notif['amount'], $notif['amount']);
-                        mysqli_stmt_execute($pay_stmt);
-                        mysqli_stmt_close($pay_stmt);
-                    }
-
-                    mysqli_query($conn, "UPDATE payment_notifications SET status = 'Approved' WHERE id = $id");
-                    
-                    // Send Email Receipt
-                    $qUser = mysqli_query($conn, "SELECT name, email FROM users WHERE id = " . $notif['user_id']);
-                    if ($uRow = mysqli_fetch_assoc($qUser)) {
-                        if (!empty($uRow['email'])) {
-                            $details = ["Payment for " . ucfirst($notif['bill_type']) . " via " . ($notif['payment_method'] ?? 'UPI') . " (Ref: " . $notif['transaction_id'] . ")"];
-                            
-                            $pdf_path = null;
-                            if ($notif['bill_type'] === 'electricity' && $notif['bill_id']) {
-                                $qElec = mysqli_query($conn, "SELECT bill_file FROM electricity WHERE id = " . $notif['bill_id']);
-                                if ($eRow = mysqli_fetch_assoc($qElec)) {
-                                    $pdf_path = !empty($eRow['bill_file']) ? $eRow['bill_file'] : null;
-                                }
-                            }
-                            send_payment_receipt_email($uRow['email'], $uRow['name'], $details, $notif['amount'], $pdf_path);
-                        }
-                    }
-
-                    mysqli_commit($conn);
-                    $success = "Payment approved and bill(s) marked as Paid!";
-                } catch (Exception $e) {
-                    mysqli_rollback($conn);
-                    $error = "Failed to process approval: " . $e->getMessage();
-                }
-            } elseif ($action === 'reject') {
-                $admin_note = trim($_POST['admin_note'] ?? '');
-                $stmt = mysqli_prepare($conn, "UPDATE payment_notifications SET status = 'Rejected', admin_note = ? WHERE id = ?");
-                mysqli_stmt_bind_param($stmt, "si", $admin_note, $id);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_close($stmt);
-                $error = "Payment notification rejected.";
-            }
-        }
-    }
-}
-
-// Filter Inputs
-$f_search = mysqli_real_escape_string($conn, trim($_GET['search'] ?? ''));
-$f_status = mysqli_real_escape_string($conn, $_GET['status'] ?? 'All');
-$f_month = mysqli_real_escape_string($conn, $_GET['month'] ?? 'All');
-$f_year = mysqli_real_escape_string($conn, $_GET['year'] ?? 'All');
-$f_mode = mysqli_real_escape_string($conn, $_GET['mode'] ?? 'All');
-$f_start = mysqli_real_escape_string($conn, $_GET['start_date'] ?? '');
-$f_end = mysqli_real_escape_string($conn, $_GET['end_date'] ?? '');
-$f_sort = mysqli_real_escape_string($conn, $_GET['sort'] ?? 'latest');
-
-$where = ["1=1"];
-
-if ($f_search !== '') {
-    $where[] = "(u.name LIKE '%$f_search%' OR p.transaction_id LIKE '%$f_search%')";
-}
-if ($f_status !== 'All') {
-    $where[] = "p.status = '$f_status'";
-}
-if ($f_month !== 'All') {
-    $where[] = "MONTH(p.created_at) = '$f_month'";
-}
-if ($f_year !== 'All') {
-    $where[] = "YEAR(p.created_at) = '$f_year'";
-}
-if ($f_mode !== 'All') {
-    $where[] = "p.payment_method = '$f_mode'";
-}
-if ($f_start !== '') {
-    $where[] = "DATE(p.created_at) >= '$f_start'";
-}
-if ($f_end !== '') {
-    $where[] = "DATE(p.created_at) <= '$f_end'";
-}
-
-$where_clause = implode(" AND ", $where);
-
-$order_clause = "ORDER BY p.status = 'Pending' DESC, p.created_at DESC";
-if ($f_sort === 'oldest') {
-    $order_clause = "ORDER BY p.status = 'Pending' DESC, p.created_at ASC";
-} elseif ($f_sort === 'latest') {
-    $order_clause = "ORDER BY p.status = 'Pending' DESC, p.created_at DESC";
-}
-
-$sql = "SELECT p.*, u.name as renter_name, u.room_no 
-        FROM payment_notifications p 
-        JOIN users u ON p.user_id = u.id 
-        WHERE $where_clause 
-        $order_clause";
-        
-$res = mysqli_query($conn, $sql);
-$notifs = [];
-while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,8 +8,8 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
     <style>
-        /* New CSS for Payment Verifications */
-        .page-header-banner {
+        /* PV Specific CSS to override global conflicts */
+        .pv-page-header-banner {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -193,6 +39,7 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             font-weight: 800;
             color: #0F172A;
             margin: 0 0 6px 0;
+            line-height: 1.2;
         }
         .pv-header-text p {
             font-size: 15px;
@@ -215,12 +62,13 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             margin-bottom: 24px;
         }
         .pv-kpi-card {
-            background: var(--white);
+            background: #ffffff;
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
             gap: 16px;
             border: 1px solid #F1F5F9;
         }
@@ -232,65 +80,67 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             align-items: center;
             justify-content: center;
             font-size: 24px;
+            flex-shrink: 0;
         }
         .pv-kpi-blue { background: #EEF2FF; color: #6366F1; }
         .pv-kpi-yellow { background: #FEF9C3; color: #EAB308; }
         .pv-kpi-green { background: #DCFCE7; color: #10B981; }
         .pv-kpi-red { background: #FEE2E2; color: #EF4444; }
-        .pv-kpi-details { flex: 1; }
+        .pv-kpi-details { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
         .pv-kpi-label { font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pv-kpi-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
+        .pv-kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1; }
         .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
-        .filter-panel {
-            background: var(--white);
+        .pv-filter-panel {
+            background: #ffffff;
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             margin-bottom: 24px;
             border: 1px solid #F1F5F9;
         }
-        .filter-grid {
+        .pv-filter-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 16px;
             margin-bottom: 16px;
         }
-        .filter-grid-row2 {
+        .pv-filter-grid-row2 {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 16px;
         }
-        .filter-group label {
+        .pv-filter-group label {
             display: block;
             font-size: 12px;
             font-weight: 600;
             color: #64748B;
             margin-bottom: 8px;
         }
-        .filter-group input, .filter-group select {
+        .pv-filter-group input, .pv-filter-group select {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid #E2E8F0;
             border-radius: 10px;
-            background: var(--white);
-            color: var(--text-dark);
+            background: #ffffff;
+            color: #0F172A;
             font-size: 13px;
             outline: none;
             transition: all 0.2s;
             box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            -webkit-appearance: auto;
         }
-        .filter-group input:focus, .filter-group select:focus {
-            border-color: #6366F1;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        .pv-filter-group input:focus, .pv-filter-group select:focus {
+            border-color: #6C4DFF;
+            box-shadow: 0 0 0 3px rgba(108, 77, 255, 0.1);
         }
-        .filter-actions {
+        .pv-filter-actions {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             margin-top: 24px;
         }
-        .btn-apply {
-            background: #6366F1;
+        .pv-btn-apply {
+            background: #6C4DFF;
             color: white;
             border: none;
             padding: 14px 24px;
@@ -305,9 +155,9 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             gap: 8px;
             transition: 0.2s;
         }
-        .btn-apply:hover { background: #4F46E5; }
+        .pv-btn-apply:hover { background: #5a3df0; }
         
-        .btn-reset {
+        .pv-btn-reset {
             background: transparent;
             color: #64748B;
             border: 1px solid #E2E8F0;
@@ -324,32 +174,32 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             transition: 0.2s;
             text-decoration: none;
         }
-        .btn-reset:hover { background: #F8FAFC; color: var(--text-dark); }
+        .pv-btn-reset:hover { background: #F8FAFC; color: #0F172A; }
 
-        .table-panel {
-            background: var(--white);
+        .pv-table-panel {
+            background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             overflow: hidden;
             border: 1px solid #F1F5F9;
         }
-        .table-header-row {
+        .pv-table-header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 24px;
             border-bottom: 1px solid #E2E8F0;
         }
-        .table-title {
+        .pv-table-title {
             font-size: 16px;
             font-weight: 700;
-            color: var(--text-dark);
+            color: #0F172A;
             margin: 0;
         }
-        .btn-export {
-            background: #EEF2FF;
-            color: #6366F1;
-            border: 1px solid #E0E7FF;
+        .pv-btn-export {
+            background: #F3F0FF;
+            color: #6C4DFF;
+            border: none;
             padding: 8px 16px;
             border-radius: 8px;
             font-weight: 600;
@@ -360,11 +210,11 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn-export:hover { background: #E0E7FF; }
+        .pv-btn-export:hover { background: #E0D4FF; }
         
-        table { width: 100%; border-collapse: collapse; }
-        th {
-            background: var(--white);
+        .pv-table { width: 100%; border-collapse: collapse; }
+        .pv-table th {
+            background: #ffffff;
             padding: 16px 24px;
             text-align: left;
             font-size: 11px;
@@ -374,75 +224,79 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #E2E8F0;
         }
-        td {
+        .pv-table td {
             padding: 20px 24px;
             border-bottom: 1px solid #F1F5F9;
             vertical-align: middle;
+            background: #ffffff;
         }
-        tr:last-child td { border-bottom: none; }
-        tr:hover { background: #F8FAFC; }
+        .pv-table tr:last-child td { border-bottom: none; }
+        .pv-table tr:hover td { background: #F8FAFC; }
         
-        .user-cell { display: flex; align-items: center; gap: 12px; }
-        .avatar-circle {
+        .pv-user-cell { display: flex; align-items: center; gap: 12px; }
+        .pv-avatar-circle {
             width: 40px; height: 40px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 13px; font-weight: 700;
         }
-        .avatar-tu { background: #E0E7FF; color: #4338CA; }
-        .avatar-rs { background: #D1FAE5; color: #047857; }
-        .avatar-pk { background: #FCE7F3; color: #BE185D; }
+        .pv-avatar-tu { background: #E0E7FF; color: #4338CA; }
+        .pv-avatar-rs { background: #D1FAE5; color: #047857; }
+        .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .bill-info-type { font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; display: block; }
-        .bill-info-inv { font-size: 12px; color: #64748B; }
+        .pv-bill-info-type { font-size: 13px; font-weight: 600; color: #0F172A; margin-bottom: 4px; display: block; }
+        .pv-bill-info-inv { font-size: 12px; color: #64748B; }
         
-        .amount-text { font-size: 14px; font-weight: 800; color: #6366F1; }
+        .pv-amount-text { font-size: 14px; font-weight: 800; color: #6C4DFF; }
         
-        .utr-text { font-size: 13px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
-        .utr-text i { color: #94A3B8; cursor: pointer; font-size: 15px; }
+        .pv-utr-text { font-size: 13px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px; }
+        .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 15px; }
         
-        .date-text { font-size: 13px; font-weight: 600; color: var(--text-dark); display: block; margin-bottom: 4px; }
-        .time-text { font-size: 12px; color: #64748B; }
+        .pv-date-text { font-size: 13px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 4px; }
+        .pv-time-text { font-size: 12px; color: #64748B; }
         
-        .status-pill {
+        .pv-status-pill {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
         }
-        .status-pill i { font-size: 8px; }
-        .status-pending { background: #FEF9C3; color: #CA8A04; }
-        .status-approved { background: #DCFCE7; color: #059669; }
-        .status-rejected { background: #FEE2E2; color: #DC2626; }
+        .pv-status-pill i { font-size: 8px; }
+        .pv-status-pending { background: #FEF9C3; color: #CA8A04; }
+        .pv-status-approved { background: #DCFCE7; color: #059669; }
+        .pv-status-rejected { background: #FEE2E2; color: #DC2626; }
         
-        .mode-text { font-size: 12px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
+        .pv-mode-text { font-size: 12px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 6px; }
         
-        .action-cell { display: flex; align-items: center; gap: 8px; }
-        .btn-approve-sm { background: #10B981; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); }
-        .btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .btn-more { background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer; padding: 4px; }
+        .pv-action-cell { display: flex; align-items: center; gap: 8px; }
+        .pv-btn-approve-sm { background: #10B981; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); }
+        .pv-btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .pv-btn-more { background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer; padding: 4px; }
         
-        .pagination-footer {
+        .pv-pagination-footer {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 24px; border-top: 1px solid #E2E8F0;
         }
-        .page-info { font-size: 12px; font-weight: 500; color: #64748B; }
-        .pagination-controls { display: flex; gap: 6px; align-items: center; }
-        .page-btn { 
+        .pv-page-info { font-size: 12px; font-weight: 500; color: #64748B; }
+        .pv-pagination-controls { display: flex; gap: 6px; align-items: center; }
+        .pv-page-btn { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; border: 1px solid #E2E8F0; background: var(--white);
+            border-radius: 8px; border: 1px solid #E2E8F0; background: #ffffff;
             color: #64748B; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
         }
-        .page-btn.active { background: #6366F1; color: white; border-color: #6366F1; }
-        .page-btn:hover:not(.active) { background: #F8FAFC; }
+        .pv-page-btn.active { background: #6C4DFF; color: white; border-color: #6C4DFF; }
+        .pv-page-btn:hover:not(.active) { background: #F8FAFC; }
 
         @media(max-width: 1024px) {
-            .filter-grid, .filter-grid-row2 { grid-template-columns: 1fr 1fr; }
+            .pv-filter-grid, .pv-filter-grid-row2 { grid-template-columns: 1fr 1fr; }
             .pv-kpi-grid { grid-template-columns: 1fr 1fr; }
         }
         @media(max-width: 768px) {
-            .filter-grid, .filter-grid-row2 { grid-template-columns: 1fr; }
-            .filter-actions { flex-direction: column; }
+            .pv-filter-grid, .pv-filter-grid-row2 { grid-template-columns: 1fr; }
+            .pv-filter-actions { flex-direction: column; }
             .pv-kpi-grid { grid-template-columns: 1fr; }
             .pv-header-illustration { display: none; }
+            .pv-table th { display: none; }
+            .pv-table td { display: block; width: 100%; border: none; padding: 10px; }
+            .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
         }
     </style>
 </head>
@@ -461,8 +315,8 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
     $kpi_rejected = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM payment_notifications WHERE status='Rejected'"))['c'] ?? 0;
     ?>
 
-    <!-- New Header Banner -->
-    <div class="page-header-banner animate-up">
+    <!-- Header Banner -->
+    <div class="pv-page-header-banner animate-up">
         <div class="pv-header-content">
             <div class="pv-header-icon-box">
                 <i class='bx bx-check-shield'></i>
@@ -544,17 +398,17 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
     </div>
 
     <!-- Filter Form -->
-    <div class="filter-panel animate-up">
+    <div class="pv-filter-panel animate-up">
         <form method="GET" action="">
-            <div class="filter-grid">
-                <div class="filter-group">
+            <div class="pv-filter-grid">
+                <div class="pv-filter-group">
                     <label>Search (Name / UTR)</label>
                     <div style="position:relative;">
                         <input type="text" name="search" value="<?php echo htmlspecialchars($f_search); ?>" placeholder="Search by name or UTR..." style="padding-right: 40px;">
                         <i class='bx bx-search' style="position:absolute; right:16px; top:12px; color:#94A3B8; font-size:16px;"></i>
                     </div>
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>Status</label>
                     <select name="status">
                         <option value="All" <?php if($f_status=='All') echo 'selected';?>>All Statuses</option>
@@ -563,7 +417,7 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                         <option value="Rejected" <?php if($f_status=='Rejected') echo 'selected';?>>Rejected</option>
                     </select>
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>Month</label>
                     <select name="month">
                         <option value="All" <?php if($f_month=='All') echo 'selected';?>>All Months</option>
@@ -572,7 +426,7 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                         <?php endfor; ?>
                     </select>
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>Year</label>
                     <select name="year">
                         <option value="All" <?php if($f_year=='All') echo 'selected';?>>All Years</option>
@@ -583,8 +437,8 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                 </div>
             </div>
             
-            <div class="filter-grid-row2">
-                <div class="filter-group">
+            <div class="pv-filter-grid-row2">
+                <div class="pv-filter-group">
                     <label>Mode</label>
                     <select name="mode">
                         <option value="All" <?php if($f_mode=='All') echo 'selected';?>>All Modes</option>
@@ -593,15 +447,15 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                         <option value="Cash" <?php if($f_mode=='Cash') echo 'selected';?>>Cash</option>
                     </select>
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>Start Date</label>
                     <input type="date" name="start_date" value="<?php echo htmlspecialchars($f_start); ?>">
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>End Date</label>
                     <input type="date" name="end_date" value="<?php echo htmlspecialchars($f_end); ?>">
                 </div>
-                <div class="filter-group">
+                <div class="pv-filter-group">
                     <label>Sort By</label>
                     <select name="sort">
                         <option value="latest" <?php if($f_sort=='latest') echo 'selected';?>>Latest First</option>
@@ -610,22 +464,22 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                 </div>
             </div>
             
-            <div class="filter-actions">
-                <button type="submit" class="btn-apply"><i class='bx bx-filter-alt'></i> Apply Filters</button>
-                <a href="payment-verifications.php" class="btn-reset"><i class='bx bx-reset'></i> Reset Filters</a>
+            <div class="pv-filter-actions">
+                <button type="submit" class="pv-btn-apply"><i class='bx bx-filter-alt'></i> Apply Filters</button>
+                <a href="payment-verifications.php" class="pv-btn-reset"><i class='bx bx-reset'></i> Reset Filters</a>
             </div>
         </form>
     </div>
 
     <!-- Table Section -->
-    <div class="table-panel animate-up">
-        <div class="table-header-row">
-            <h2 class="table-title">Payment Verification List</h2>
-            <button class="btn-export"><i class='bx bx-download'></i> Export CSV</button>
+    <div class="pv-table-panel animate-up">
+        <div class="pv-table-header-row">
+            <h2 class="pv-table-title">Payment Verification List</h2>
+            <button class="pv-btn-export"><i class='bx bx-download'></i> Export CSV</button>
         </div>
         
         <div style="overflow-x: auto;">
-            <table>
+            <table class="pv-table">
                 <thead>
                     <tr>
                         <th>Resident</th>
@@ -647,50 +501,50 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                         $initials = strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
                         
                         // Seed avatar class based on user id for consistency
-                        $classes = ['avatar-tu', 'avatar-rs', 'avatar-pk'];
+                        $classes = ['pv-avatar-tu', 'pv-avatar-rs', 'pv-avatar-pk'];
                         $avatarClass = $classes[$n['user_id'] % 3];
                     ?>
                     <tr>
                         <td>
-                            <div class="user-cell">
-                                <div class="avatar-circle <?php echo $avatarClass; ?>"><?php echo $initials; ?></div>
+                            <div class="pv-user-cell">
+                                <div class="pv-avatar-circle <?php echo $avatarClass; ?>"><?php echo $initials; ?></div>
                                 <div>
-                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 13px;"><?php echo s($n['renter_name']); ?></div>
+                                    <div style="font-weight: 700; color: #0F172A; font-size: 13px;"><?php echo s($n['renter_name']); ?></div>
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="bill-info-type"><?php echo ucfirst(s($n['bill_type'])); ?> - <?php echo date('M Y', strtotime($n['created_at'])); ?></span>
+                            <span class="pv-bill-info-type"><?php echo ucfirst(s($n['bill_type'])); ?> - <?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
-                                <span class="bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
+                                <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>
-                                <span class="bill-info-inv">Advance Payment</span>
+                                <span class="pv-bill-info-inv">Advance Payment</span>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="amount-text">₹<?php echo number_format($n['amount'], 2); ?></span>
+                            <span class="pv-amount-text">₹<?php echo number_format($n['amount'], 2); ?></span>
                         </td>
                         <td>
-                            <div class="utr-text">
+                            <div class="pv-utr-text">
                                 <?php echo s($n['transaction_id']); ?> <i class='bx bx-copy' title="Copy UTR" onclick="navigator.clipboard.writeText('<?php echo s($n['transaction_id']); ?>'); alert('UTR Copied!');"></i>
                             </div>
                         </td>
                         <td>
-                            <span class="date-text"><?php echo date('M d, Y', strtotime($n['created_at'])); ?></span>
-                            <span class="time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
+                            <span class="pv-date-text"><?php echo date('M d, Y', strtotime($n['created_at'])); ?></span>
+                            <span class="pv-time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
                         </td>
                         <td>
                             <?php if($n['status'] == 'Pending'): ?>
-                                <span class="status-pill status-pending"><i class='bx bxs-circle'></i> Pending</span>
+                                <span class="pv-status-pill pv-status-pending"><i class='bx bxs-circle'></i> Pending</span>
                             <?php elseif($n['status'] == 'Approved'): ?>
-                                <span class="status-pill status-approved"><i class='bx bxs-circle'></i> Approved</span>
+                                <span class="pv-status-pill pv-status-approved"><i class='bx bxs-circle'></i> Approved</span>
                             <?php else: ?>
-                                <span class="status-pill status-rejected"><i class='bx bxs-circle'></i> Rejected</span>
+                                <span class="pv-status-pill pv-status-rejected"><i class='bx bxs-circle'></i> Rejected</span>
                             <?php endif; ?>
                         </td>
                         <td>
-                            <div class="mode-text">
+                            <div class="pv-mode-text">
                                 <?php if($n['payment_method'] == 'UPI'): ?>
                                     <span style="color: #059669; font-style: italic; font-weight: 800; font-size:10px; border:1px solid #059669; padding:2px 4px; border-radius:4px; margin-right:4px;">UPI</span> UPI
                                 <?php else: ?>
@@ -699,25 +553,25 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
                             </div>
                         </td>
                         <td>
-                            <div class="action-cell">
+                            <div class="pv-action-cell">
                                 <?php if($n['status'] == 'Pending'): ?>
                                     <form action="" method="POST" style="margin:0;">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                                         <input type="hidden" name="id" value="<?php echo $n['id']; ?>">
                                         <input type="hidden" name="action" value="approve">
-                                        <button type="submit" class="btn-approve-sm" onclick="return confirm('Confirm this payment matches your bank statement?')">Approve</button>
+                                        <button type="submit" class="pv-btn-approve-sm" onclick="return confirm('Confirm this payment matches your bank statement?')">Approve</button>
                                     </form>
                                     <form action="" method="POST" style="margin:0;" id="rejectForm_<?php echo $n['id']; ?>">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                                         <input type="hidden" name="id" value="<?php echo $n['id']; ?>">
                                         <input type="hidden" name="action" value="reject">
                                         <input type="hidden" name="admin_note" id="adminNote_<?php echo $n['id']; ?>" value="">
-                                        <button type="button" class="btn-reject-sm" onclick="openRejectModal(<?php echo $n['id']; ?>)">Reject</button>
+                                        <button type="button" class="pv-btn-reject-sm" onclick="openRejectModal(<?php echo $n['id']; ?>)">Reject</button>
                                     </form>
                                 <?php else: ?>
                                     <span style="font-size: 12px; font-weight:600; color: #94A3B8;">—</span>
                                 <?php endif; ?>
-                                <button class="btn-more"><i class='bx bx-dots-vertical-rounded'></i></button>
+                                <button class="pv-btn-more"><i class='bx bx-dots-vertical-rounded'></i></button>
                             </div>
                         </td>
                     </tr>
@@ -726,16 +580,16 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             </table>
         </div>
         
-        <div class="pagination-footer">
-            <div class="page-info">Showing 1 to <?php echo min(count($notifs), 10); ?> of <?php echo $kpi_total; ?> entries</div>
-            <div class="pagination-controls">
-                <a href="#" class="page-btn"><i class='bx bx-chevron-left'></i></a>
-                <a href="#" class="page-btn active">1</a>
-                <a href="#" class="page-btn">2</a>
-                <a href="#" class="page-btn">3</a>
-                <span class="page-btn" style="border:none; cursor:default; background:transparent;">...</span>
-                <a href="#" class="page-btn">16</a>
-                <a href="#" class="page-btn"><i class='bx bx-chevron-right'></i></a>
+        <div class="pv-pagination-footer">
+            <div class="pv-page-info">Showing 1 to <?php echo min(count($notifs), 10); ?> of <?php echo $kpi_total; ?> entries</div>
+            <div class="pv-pagination-controls">
+                <a href="#" class="pv-page-btn"><i class='bx bx-chevron-left'></i></a>
+                <a href="#" class="pv-page-btn active">1</a>
+                <a href="#" class="pv-page-btn">2</a>
+                <a href="#" class="pv-page-btn">3</a>
+                <span class="pv-page-btn" style="border:none; cursor:default; background:transparent;">...</span>
+                <a href="#" class="pv-page-btn">16</a>
+                <a href="#" class="pv-page-btn"><i class='bx bx-chevron-right'></i></a>
             </div>
         </div>
     </div>
@@ -743,18 +597,18 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
 
 <!-- Rejection Modal -->
 <div id="rejectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
-    <div class="panel animate-up" style="max-width: 420px; width: 100%; padding: 24px; position: relative; background: var(--white); border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+    <div class="pv-filter-panel animate-up" style="max-width: 420px; width: 100%; padding: 24px; position: relative;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="font-size: 18px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
-            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
+            <h2 style="font-size: 18px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
+            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: #64748B;"></i>
         </div>
-        <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
+        <p style="font-size: 13px; color: #64748B; margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
         
-        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: #F8FAFC; color: var(--text-dark); outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff; color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
         
         <div style="display: flex; gap: 12px;">
-            <button type="button" class="btn-reset" onclick="closeRejectModal()">Cancel</button>
-            <button type="button" class="btn-apply" onclick="submitRejectForm()" style="background: #EF4444;">Reject Payment</button>
+            <button type="button" class="pv-btn-reset" onclick="closeRejectModal()">Cancel</button>
+            <button type="button" class="pv-btn-apply" onclick="submitRejectForm()" style="background: #EF4444;">Reject Payment</button>
         </div>
     </div>
 </div>
