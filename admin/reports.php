@@ -164,14 +164,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
 
     <!-- Quick Filters -->
-    <div class="quick-filters fade-in" style="margin-bottom: 32px; animation-delay: 0.1s;">
-        <button class="filter-btn">Today</button>
-        <button class="filter-btn">This Week</button>
-        <button class="filter-btn active">This Month</button>
-        <button class="filter-btn">Last 3 Months</button>
-        <button class="filter-btn">Year to Date</button>
-        <button class="filter-btn">All Time</button>
-        <button class="filter-btn"><i class='bx bx-calendar'></i> Custom Range</button>
+    <div class="quick-filters fade-in" id="reportFilters" style="margin-bottom: 32px; animation-delay: 0.1s;">
+        <button class="filter-btn" data-range="today">Today</button>
+        <button class="filter-btn" data-range="this_week">This Week</button>
+        <button class="filter-btn active" data-range="this_month">This Month</button>
+        <button class="filter-btn" data-range="last_3_months">Last 3 Months</button>
+        <button class="filter-btn" data-range="ytd">Year to Date</button>
+        <button class="filter-btn" data-range="all_time">All Time</button>
+        <button class="filter-btn" data-range="custom"><i class='bx bx-calendar'></i> Custom Range</button>
     </div>
 
     <!-- KPI Overview Cards -->
@@ -344,14 +344,27 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            loadDashboard(); // Re-trigger load in real scenario
+            loadDashboard();
+
+    // Handle Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            let r = this.getAttribute('data-range');
+            if(r && r !== 'custom') {
+                loadDashboard(r);
+            }
+        });
+    });
+ // Re-trigger load in real scenario
         });
     });
 
-    async function loadDashboard() {
+    async function loadDashboard(range = 'this_month') {
         try {
             // 1. KPI
-            const kpiRes = await fetch('api_reports_saas.php?endpoint=kpi');
+            const kpiRes = await fetch('api_reports_saas.php?endpoint=kpi&range=' + range);
             const kpi = await kpiRes.json();
             const sparklineSVG = (color, pathData) => `
                 <svg class="kpi-sparkline" viewBox="0 0 100 30" preserveAspectRatio="none">
@@ -422,7 +435,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             `;
 
             // 2. Revenue Chart
-            const revRes = await fetch('api_reports_saas.php?endpoint=revenue_chart');
+            const revRes = await fetch('api_reports_saas.php?endpoint=revenue_chart&range=' + range);
             const revData = await revRes.json();
             if(charts.revenue) charts.revenue.destroy();
             charts.revenue = new Chart(document.getElementById('revenueChart'), {
@@ -446,7 +459,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             });
 
             // 3. Donut
-            const distRes = await fetch('api_reports_saas.php?endpoint=distribution_donut');
+            const distRes = await fetch('api_reports_saas.php?endpoint=distribution_donut&range=' + range);
             const distData = await distRes.json();
             if(charts.donut) charts.donut.destroy();
             charts.donut = new Chart(document.getElementById('donutChart'), {
@@ -469,7 +482,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             });
 
             // 4. Receivables Aging
-            const ageRes = await fetch('api_reports_saas.php?endpoint=receivables_aging');
+            const ageRes = await fetch('api_reports_saas.php?endpoint=receivables_aging&range=' + range);
             const ageData = await ageRes.json();
             let ageHTML = '';
             let totalOut = 0;
@@ -490,7 +503,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             document.getElementById('agingContainer').innerHTML = ageHTML;
 
             // 5. Resident Performance
-            const perfRes = await fetch('api_reports_saas.php?endpoint=resident_performance');
+            const perfRes = await fetch('api_reports_saas.php?endpoint=resident_performance&range=' + range);
             const perfData = await perfRes.json();
             document.getElementById('perfContainer').innerHTML = perfData.map(p => `
                 <div class="profile-card">
@@ -514,7 +527,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             `).join('');
 
             // 6. Elec Insights
-            const eStatsRes = await fetch('api_reports_saas.php?endpoint=electricity_insights');
+            const eStatsRes = await fetch('api_reports_saas.php?endpoint=electricity_insights&range=' + range);
             const eStats = await eStatsRes.json();
             document.getElementById('elecStatsContainer').innerHTML = `
                 <div style="background:#F8FAFC; padding:12px 20px; border-radius:12px; min-width: 140px;">
@@ -527,7 +540,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
             `;
             
-            const eBarRes = await fetch('api_reports_saas.php?endpoint=electricity_bar');
+            const eBarRes = await fetch('api_reports_saas.php?endpoint=electricity_bar&range=' + range);
             const eBar = await eBarRes.json();
             if(charts.ebar) charts.ebar.destroy();
             let barCtx = document.getElementById('elecBarChart').getContext('2d');
@@ -558,7 +571,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             });
 
             // 7. Defaulters
-            const defRes = await fetch('api_reports_saas.php?endpoint=top_defaulters');
+            const defRes = await fetch('api_reports_saas.php?endpoint=top_defaulters&range=' + range);
             const defData = await defRes.json();
             document.getElementById('defaulterContainer').innerHTML = defData.map(d => `
                 <div class="defaulter-card">
@@ -577,7 +590,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             `).join('');
 
             // 8. Anomalies
-            const anomRes = await fetch('api_reports_saas.php?endpoint=anomalies');
+            const anomRes = await fetch('api_reports_saas.php?endpoint=anomalies&range=' + range);
             const anomData = await anomRes.json();
             document.getElementById('anomalyContainer').innerHTML = anomData.map(a => `
                 <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:16px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
@@ -590,7 +603,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             `).join('');
 
             // 9. Expenses
-            const expRes = await fetch('api_reports_saas.php?endpoint=expense_donut');
+            const expRes = await fetch('api_reports_saas.php?endpoint=expense_donut&range=' + range);
             const expData = await expRes.json();
             const totalExp = expData.Total; delete expData.Total;
             if(charts.expense) charts.expense.destroy();
@@ -611,7 +624,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             });
 
             // 10. Timeline
-            const actRes = await fetch('api_reports_saas.php?endpoint=recent_activity');
+            const actRes = await fetch('api_reports_saas.php?endpoint=recent_activity&range=' + range);
             const actData = await actRes.json();
             document.getElementById('activityContainer').innerHTML = actData.map(a => `
                 <div class="tl-item">
@@ -623,7 +636,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             `).join('');
 
             // 11. Insights
-            const aiRes = await fetch('api_reports_saas.php?endpoint=ai_insights');
+            const aiRes = await fetch('api_reports_saas.php?endpoint=ai_insights&range=' + range);
             const aiData = await aiRes.json();
             document.getElementById('aiContainer').innerHTML = aiData.map(a => `<li>${a}</li>`).join('');
 
@@ -636,6 +649,19 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     // Init
     loadDashboard();
+
+    // Handle Filters
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            let r = this.getAttribute('data-range');
+            if(r && r !== 'custom') {
+                loadDashboard(r);
+            }
+        });
+    });
+
 </script>
 </body>
 </html>
