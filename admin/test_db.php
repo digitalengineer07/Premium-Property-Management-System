@@ -1,6 +1,5 @@
 <?php
-require '../db.php';
-$res = mysqli_query($conn, "DESCRIBE users");
-while($row = mysqli_fetch_assoc($res)) {
-    echo $row['Field'] . ' - ' . $row['Type'] . PHP_EOL;
-}
+session_start();
+$_SESSION['admin'] = 'a';
+$_GET['endpoint'] = 'kpi';
+require 'api_reports_saas.php';
