@@ -284,7 +284,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px;">
                         <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; white-space: nowrap;"><?php echo count($dues); ?> Unpaid Bills</span>
-                        <button style="background: none; border: none; color: var(--text-dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;"><i class='bx bx-dots-vertical-rounded'></i></button>
+                        <div style="position: relative;">
+                            <button onclick="document.getElementById('remindersMenu').style.display = document.getElementById('remindersMenu').style.display === 'block' ? 'none' : 'block'; event.stopPropagation();" style="background: none; border: none; color: var(--text-dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;"><i class='bx bx-dots-vertical-rounded'></i></button>
+                            <div id="remindersMenu" style="display: none; position: absolute; right: 0; top: 24px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #E2E8F0; width: 160px; z-index: 100; overflow: hidden;">
+                                <a href="manage-reminders.php?action=remind_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-send' style="font-size: 14px; color: var(--primary-purple);"></i> Send All</a>
+                                <a href="manage-reminders.php?action=enable_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-play-circle' style="font-size: 14px; color: #10B981;"></i> Resume All</a>
+                                <a href="manage-reminders.php?action=disable_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-pause-circle' style="font-size: 14px; color: #EF4444;"></i> Pause All</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
