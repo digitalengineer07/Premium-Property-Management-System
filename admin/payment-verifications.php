@@ -356,7 +356,6 @@ if ($res) {
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #E2E8F0;
-            white-space: nowrap;
         }
         .pv-table td {
             padding: 14px 16px;
@@ -614,7 +613,7 @@ if ($res) {
             <button class="pv-btn-export"><i class='bx bx-download'></i> Export CSV</button>
         </div>
         
-        <div style="overflow-x: auto;">
+        <div style="width: 100%;">
             <table class="pv-table">
                 <thead>
                     <tr>
@@ -708,7 +707,6 @@ if ($res) {
                                 <?php else: ?>
                                     <span style="font-size: 12px; font-weight:600; color: #94A3B8;">—</span>
                                 <?php endif; ?>
-                                <button class="pv-btn-more"><i class='bx bx-dots-vertical-rounded'></i></button>
                             </div>
                         </td>
                     </tr>
