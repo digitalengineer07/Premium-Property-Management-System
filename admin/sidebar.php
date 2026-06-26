@@ -45,7 +45,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="visitor-logs.php" class="nav-item <?php echo $current_page == 'visitor-logs.php' ? 'active' : ''; ?>">
             <i class='bx bx-timer'></i> <span>Visitor Logs</span>
         </a>
-        <a href="manage-reminders.php" class="nav-item <?php echo $current_page == 'manage-reminders.php' ? 'active' : ''; ?>">
+        <a href="manage-reminders.php" class="nav-item <?php echo in_array($current_page, ['manage-reminders.php', 'all-pending-dues.php', 'all-reminder-history.php', 'auto-reminders.php']) ? 'active' : ''; ?>">
             <i class='bx bx-bell'></i> <span>Reminders</span>
         </a>
         <a href="reports.php" class="nav-item <?php echo $current_page == 'reports.php' || $current_page == 'monthly-report.php' ? 'active' : ''; ?>">
