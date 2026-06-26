@@ -135,7 +135,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         }
 
         .scroll-list {
-            max-height: 480px;
+            max-height: 400px;
             overflow-y: auto;
             padding-right: 8px;
             margin-right: -4px;
