@@ -24,7 +24,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <style>
         /* SaaS Dashboard Core Styles */
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 0; }
-        .main { padding: 32px; padding-top: 80px; max-width: 1440px; margin: 0 auto; }
         
         /* Typography */
         .page-title { font-size: 28px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; }
