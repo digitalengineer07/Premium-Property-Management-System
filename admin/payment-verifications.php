@@ -348,17 +348,18 @@ if ($res) {
         .pv-table { width: 100%; border-collapse: collapse; }
         .pv-table th {
             background: #ffffff;
-            padding: 16px 24px;
+            padding: 12px 16px;
             text-align: left;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: #94A3B8;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid #E2E8F0;
+            white-space: nowrap;
         }
         .pv-table td {
-            padding: 20px 24px;
+            padding: 14px 16px;
             border-bottom: 1px solid #F1F5F9;
             vertical-align: middle;
             background: #ffffff;
@@ -366,43 +367,44 @@ if ($res) {
         .pv-table tr:last-child td { border-bottom: none; }
         .pv-table tr:hover td { background: #F8FAFC; }
         
-        .pv-user-cell { display: flex; align-items: center; gap: 12px; }
+        .pv-user-cell { display: flex; align-items: center; gap: 10px; }
         .pv-avatar-circle {
-            width: 40px; height: 40px;
+            width: 32px; height: 32px;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 13px; font-weight: 700;
+            font-size: 11px; font-weight: 700;
         }
         .pv-avatar-tu { background: #E0E7FF; color: #4338CA; }
         .pv-avatar-rs { background: #D1FAE5; color: #047857; }
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .pv-bill-info-type { font-size: 13px; font-weight: 600; color: #0F172A; margin-bottom: 4px; display: block; }
-        .pv-bill-info-inv { font-size: 12px; color: #64748B; }
+        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; }
+        .pv-bill-info-inv { font-size: 11px; color: #64748B; white-space: nowrap; }
         
-        .pv-amount-text { font-size: 14px; font-weight: 800; color: #6C4DFF; }
+        .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
         
-        .pv-utr-text { font-size: 13px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px; }
-        .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 15px; }
+        .pv-utr-text { font-size: 12px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 14px; }
         
-        .pv-date-text { font-size: 13px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 4px; }
-        .pv-time-text { font-size: 12px; color: #64748B; }
+        .pv-date-text { font-size: 12px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 2px; white-space: nowrap; }
+        .pv-time-text { font-size: 11px; color: #64748B; white-space: nowrap; }
         
         .pv-status-pill {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+            white-space: nowrap;
         }
-        .pv-status-pill i { font-size: 8px; }
+        .pv-status-pill i { font-size: 6px; }
         .pv-status-pending { background: #FEF9C3; color: #CA8A04; }
         .pv-status-approved { background: #DCFCE7; color: #059669; }
         .pv-status-rejected { background: #FEE2E2; color: #DC2626; }
         
-        .pv-mode-text { font-size: 12px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 6px; }
+        .pv-mode-text { font-size: 11px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         
-        .pv-action-cell { display: flex; align-items: center; gap: 8px; }
-        .pv-btn-approve-sm { background: #10B981; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); }
-        .pv-btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-        .pv-btn-more { background: transparent; border: none; color: #94A3B8; font-size: 18px; cursor: pointer; padding: 4px; }
+        .pv-action-cell { display: flex; align-items: center; gap: 6px; }
+        .pv-btn-approve-sm { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); white-space: nowrap; }
+        .pv-btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .pv-btn-more { background: transparent; border: none; color: #94A3B8; font-size: 16px; cursor: pointer; padding: 2px; }
         
         .pv-pagination-footer {
             display: flex; justify-content: space-between; align-items: center;
@@ -641,14 +643,15 @@ if ($res) {
                         <td>
                             <div class="pv-user-cell">
                                 <div class="pv-avatar-circle <?php echo $avatarClass; ?>"><?php echo $initials; ?></div>
-                                <div>
-                                    <div style="font-weight: 700; color: #0F172A; font-size: 13px;"><?php echo s($n['renter_name']); ?></div>
+                                <div style="min-width: 80px;">
+                                    <div style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;"><?php echo s($n['renter_name']); ?></div>
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="pv-bill-info-type"><?php echo ucfirst(s($n['bill_type'])); ?> - <?php echo date('M Y', strtotime($n['created_at'])); ?></span>
+                            <?php $bType = trim(ucfirst(s($n['bill_type']))); ?>
+                            <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>
