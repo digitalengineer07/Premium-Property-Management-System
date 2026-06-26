@@ -139,26 +139,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .feature-list { display: flex; flex-direction: column; gap: 16px; z-index: 2; position: relative; }
     .feature-item { display: flex; align-items: flex-start; gap: 12px; }
     .feature-icon {
-        width: 36px; height: 36px; background: var(--primary-purple); color: var(--white);
+        width: 36px; height: 36px; background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: var(--white);
         border-radius: 10px; display: flex; align-items: center; justify-content: center;
-        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);
+        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
     }
     .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
     .feature-text p { font-size: 12px; color: var(--text-gray); font-weight: 500; max-width: 300px; line-height: 1.3; }
 
     .bg-illustration {
         position: absolute;
-        bottom: -30px;
-        left: -30px;
-        width: 480px;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        max-width: 650px;
         height: auto;
-        z-index: 1;
-        opacity: 0.95;
+        z-index: 2;
         pointer-events: none;
     }
     .bg-circle {
-        position: absolute; width: 350px; height: 350px; background: rgba(98,75,255,0.12);
-        border-radius: 50%; bottom: 20px; left: 20px; z-index: 0; filter: blur(40px);
+        position: absolute; width: 480px; height: 480px;
+        border-radius: 50%; bottom: 60px; right: -60px; z-index: 0;
+        background: radial-gradient(circle, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.15) 60%, rgba(139,92,246,0.02) 100%);
+    }
+    .bg-rings {
+        position: absolute; width: 620px; height: 620px;
+        border-radius: 50%; bottom: -10px; right: -130px; z-index: 0;
+        border: 1px solid rgba(139,92,246,0.1);
+        box-shadow: inset 0 0 0 20px transparent, inset 0 0 0 21px rgba(139,92,246,0.08), inset 0 0 0 40px transparent, inset 0 0 0 41px rgba(139,92,246,0.05), inset 0 0 0 60px transparent, inset 0 0 0 61px rgba(139,92,246,0.03);
+    }
+    .dot-grid {
+        position: absolute;
+        top: 35%; left: 30px;
+        width: 120px; height: 180px;
+        background-image: radial-gradient(rgba(139,92,246,0.15) 2.5px, transparent 2.5px);
+        background-size: 16px 16px;
+        z-index: 0;
+    }
+    .birds {
+        position: absolute;
+        top: 10%; right: 60px;
+        width: 120px; height: auto;
+        opacity: 0.7;
+        z-index: 0;
     }
 
     /* Right Panel Styles (Login Card) */
@@ -312,7 +334,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
         
+        <div class="dot-grid"></div>
+        <svg class="birds" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,20 Q15,10 20,18 Q25,10 30,20" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M45,8 Q50,-2 55,6 Q60,-2 65,8" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M75,25 Q80,15 85,23 Q90,15 95,25" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
         <div class="bg-circle"></div>
+        <div class="bg-rings"></div>
         <img src="../assets/img/login_building.png" class="bg-illustration" alt="Building Illustration">
     </div>
 
