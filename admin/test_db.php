@@ -1,5 +1,5 @@
 <?php
-require 'db.php';
+require '../db.php';
 $r = mysqli_query($conn, "DESCRIBE rent");
 echo "Rent: ";
 while($row=mysqli_fetch_assoc($r)) echo $row['Field'].', ';
