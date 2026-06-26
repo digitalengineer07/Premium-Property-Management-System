@@ -145,17 +145,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .scroll-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        .history-item {
-            border-bottom: 1px solid #F1F5F9;
-            padding-bottom: 16px;
-            margin-bottom: 16px;
-        }
-        .history-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-bottom: 0;
-        }
-
         .kpi-grid-4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -281,8 +270,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
         <div class="left-col">
-            <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+            <div class="panel" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+                    <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0;">
                     <div style="display: flex; gap: 12px; align-items: center; min-width: 0;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-bell'></i>
@@ -371,15 +361,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                 <?php endforeach; endif; ?>
                 </div>
-                <div style="text-align: center; margin-top: 12px;">
+                </div>
+                <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9; flex-shrink: 0;">
                     <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All Pending Dues <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
         </div>
 
         <div class="right-col">
-            <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div class="panel" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+                    <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; flex-shrink: 0;">
                     <div style="display: flex; gap: 12px; align-items: center; min-width: 0;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-time-five'></i>
@@ -397,7 +389,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </select>
                     </div>
                 </div>
-                <div style="padding-left: 12px;">
+                <div class="scroll-list" style="padding-left: 12px;">
                     <?php 
                     $counter = 0;
                     $total = mysqli_num_rows($history);
@@ -431,7 +423,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     ?>
                         <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 16px;">
                             <?php if($counter < $total): ?>
-                                <div style="position: absolute; left: 4px; top: 16px; bottom: 0; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
+                                <div style="position: absolute; left: 4px; top: 16px; bottom: -16px; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
                             <?php endif; ?>
                             
                             <div style="position: relative; z-index: 2; flex-shrink: 0;">
@@ -442,7 +434,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </div>
                             </div>
                             
-                            <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 2px;">
+                            <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 2px; min-width: 0; padding-bottom: 24px; <?php echo $counter < $total ? 'border-bottom: 1px solid #F1F5F9; margin-bottom: 24px;' : ''; ?>">
                                 <div style="flex: 1; min-width: 0; padding-right: 12px;">
                                     <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo htmlspecialchars($h['renter_name']); ?>
@@ -465,7 +457,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </div>
                     <?php endwhile; ?>
                 </div>
-                <div style="margin-top: 12px; text-align: center;">
+                </div>
+                <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9; flex-shrink: 0;">
                     <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
