@@ -133,7 +133,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
         .reminders-custom-grid {
             display: grid;
-            grid-template-columns: 1.6fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 24px;
             align-items: start;
         }
@@ -264,9 +264,20 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
         <div class="left-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 24px;">
-                    <h2 style="font-size: 18px; font-weight: 700;">Pending Dues & Reminders</h2>
-                    <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 6px 12px; border-radius: 8px; font-size: 12px; border: none;"><?php echo count($dues); ?> Unpaid Bills</span>
+                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; gap: 12px; align-items: flex-start;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                            <i class='bx bx-bell'></i>
+                        </div>
+                        <div>
+                            <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;">Pending Dues & Reminders</h2>
+                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-weight: 600;">Residents with unpaid bills and upcoming reminders</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; padding-top: 4px;">
+                        <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 6px 12px; border-radius: 8px; font-size: 12px; border: none;"><?php echo count($dues); ?> Unpaid Bills</span>
+                        <button style="background: none; border: none; color: var(--text-dark); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class='bx bx-dots-vertical-rounded'></i></button>
+                    </div>
                 </div>
                 
                 <?php if(empty($dues)): ?>
@@ -346,16 +357,23 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
         <div class="right-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-                    <div>
-                        <h2 style="font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><i class='bx bx-time-five' style="color: var(--primary-purple); font-size: 22px;"></i> Reminders History</h2>
-                        <p style="font-size: 13px; color: var(--text-gray); margin: 4px 0 0 0;">Recent reminders sent to residents</p>
+                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; gap: 12px; align-items: flex-start;">
+                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                            <i class='bx bx-time-five'></i>
+                        </div>
+                        <div>
+                            <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;">Reminders History</h2>
+                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-weight: 600;">Recent reminders sent to residents</p>
+                        </div>
                     </div>
-                    <select style="padding: 8px 16px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 13px; font-weight: 600; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
-                        <option>All Types</option>
-                        <option>Manual</option>
-                        <option>Auto</option>
-                    </select>
+                    <div style="padding-top: 4px;">
+                        <select style="padding: 8px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 13px; font-weight: 700; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
+                            <option>All Types</option>
+                            <option>Manual</option>
+                            <option>Auto</option>
+                        </select>
+                    </div>
                 </div>
                 <div style="padding-left: 12px;">
                     <?php 
