@@ -269,7 +269,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <?php endif; ?>
 
     <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
-        <div class="left-col">
+        <div class="left-col" style="min-width: 0;">
             <div class="panel" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-shrink: 0;">
@@ -368,7 +368,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
         </div>
 
-        <div class="right-col">
+        <div class="right-col" style="min-width: 0;">
             <div class="panel" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
                     <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; flex-shrink: 0;">
