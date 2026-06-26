@@ -127,16 +127,23 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             border-top: 1px solid #F1F5F9;
         }
 
-        .history-item:last-child {
-            padding-bottom: 0;
-        }
-
         .reminders-custom-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
             align-items: start;
         }
+
+        .scroll-list {
+            max-height: 480px;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-right: -4px;
+        }
+        .scroll-list::-webkit-scrollbar { width: 6px; }
+        .scroll-list::-webkit-scrollbar-track { background: transparent; }
+        .scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .scroll-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         .kpi-grid-4 {
             display: grid;
@@ -280,6 +287,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                 </div>
                 
+                <div class="scroll-list">
                 <?php if(empty($dues)): ?>
                     <div style="text-align: center; padding: 40px; color: var(--text-gray);">
                         <i class='bx bx-smile' style="font-size: 40px; opacity: 0.3; margin-bottom: 12px;"></i>
@@ -349,6 +357,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </div>
                     </div>
                 <?php endforeach; endif; ?>
+                </div>
                 <div style="text-align: center; margin-top: 12px;">
                     <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All Pending Dues <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
@@ -375,7 +384,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </select>
                     </div>
                 </div>
-                <div style="padding-left: 12px;">
+                <div class="scroll-list" style="padding-left: 12px;">
                     <?php 
                     $counter = 0;
                     $total = mysqli_num_rows($history);
