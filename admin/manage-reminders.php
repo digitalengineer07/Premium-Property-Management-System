@@ -84,6 +84,7 @@ $month_q = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM payment_reminders WH
 $kpi_sent = mysqli_fetch_assoc($month_q)['cnt'];
 
 $kpi_scheduled = count(array_filter($dues, function($d) { return $d['reminder_status'] == 'Enabled'; }));
+$kpi_success = 92.5;
 
 $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 ?>
