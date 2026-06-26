@@ -1,5 +1,5 @@
 <?php
-// admin/login.php - Robust Admin Login with Premium Design
+// admin/login.php - Split-layout Admin Login
 require_once "../db.php";
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($username === '' || $password === '') {
         $error = "Please provide both username and password.";
     } else {
-        // Use the singular 'admin' table as confirmed by the user
         $stmt = mysqli_prepare($conn, "SELECT id, username, password FROM admin WHERE username = ?");
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "s", $username);
@@ -32,14 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $admin = mysqli_fetch_assoc($result);
                     
                     if (password_verify($password, $admin['password'])) {
-                        // SUCCESS
                         @session_regenerate_id(true);
                         
                         $_SESSION['admin'] = $admin['username'];
                         $_SESSION['admin_id'] = (int)$admin['id'];
                         $_SESSION['login_time'] = time();
 
-                        // Track Login
                         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
                         $ip_esc = mysqli_real_escape_string($conn, $ip);
                         $admin_id = (int)$admin['id'];
@@ -59,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             mysqli_stmt_close($stmt);
         } else {
-            $error = "Database preparation failed. The 'admin' table might be missing or corrupted.";
+            $error = "Database preparation failed.";
         }
     }
 }
@@ -81,84 +78,177 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         --text-gray: #64748B;
         --border: #E2E8F0;
         --white: #FFFFFF;
-        --bg: #F8FAFC;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
     body {
-        background-color: var(--bg);
-        color: var(--text-dark);
+        background: linear-gradient(135deg, #F8FAFC 0%, #EBF4FF 50%, #E0E7FF 100%);
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 100vh;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    /* Decorative Background Elements */
-    .bg-circle-1 {
-        position: absolute; width: 600px; height: 600px; background: rgba(98, 75, 255, 0.05);
-        border-radius: 50%; top: -200px; left: -150px; filter: blur(60px); z-index: 1;
-    }
-    .bg-circle-2 {
-        position: absolute; width: 500px; height: 500px; background: rgba(16, 185, 129, 0.05);
-        border-radius: 50%; bottom: -100px; right: -100px; filter: blur(60px); z-index: 1;
+        overflow-x: hidden;
     }
 
-    .login-container {
-        width: 100%; max-width: 420px; z-index: 2; padding: 20px;
+    .split-layout {
+        display: flex;
+        width: 100%;
+        max-width: 1280px;
+        min-height: 850px;
+        background: transparent;
+        margin: 0 auto;
+        padding: 40px;
+        gap: 40px;
     }
-    
+
+    /* Left Panel Styles */
+    .left-panel {
+        flex: 1.1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        position: relative;
+        padding: 40px 20px 40px 40px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 60px;
+    }
+    .brand-logo {
+        width: 48px; height: 48px; background: transparent; 
+        color: var(--primary-purple); font-size: 54px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .brand-text h2 { font-size: 20px; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
+    .brand-text p { font-size: 13px; color: var(--text-gray); font-weight: 500; }
+
+    .hero-title {
+        font-size: 46px; font-weight: 800; color: var(--text-dark);
+        line-height: 1.2; margin-bottom: 16px; letter-spacing: -1px;
+    }
+    .hero-title span { color: var(--primary-purple); }
+    .hero-subtitle {
+        font-size: 18px; color: var(--text-gray); font-weight: 500; line-height: 1.5;
+        margin-bottom: 48px; max-width: 400px;
+    }
+
+    .feature-list { display: flex; flex-direction: column; gap: 24px; z-index: 2; position: relative; }
+    .feature-item { display: flex; align-items: flex-start; gap: 16px; }
+    .feature-icon {
+        width: 42px; height: 42px; background: var(--primary-purple); color: var(--white);
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);
+    }
+    .feature-text h4 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+    .feature-text p { font-size: 13px; color: var(--text-gray); font-weight: 500; max-width: 320px; line-height: 1.4; }
+
+    .bg-illustration {
+        position: absolute;
+        bottom: -60px;
+        left: -40px;
+        width: 600px;
+        height: auto;
+        z-index: 1;
+        opacity: 0.95;
+        pointer-events: none;
+    }
+    .bg-circle {
+        position: absolute; width: 450px; height: 450px; background: rgba(98,75,255,0.12);
+        border-radius: 50%; bottom: 40px; left: 40px; z-index: 0; filter: blur(50px);
+    }
+
+    /* Right Panel Styles (Login Card) */
+    .right-panel {
+        flex: 0.9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 2;
+    }
+
     .login-card {
         background: var(--white);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        padding: 40px 32px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        width: 100%; max-width: 480px;
+        border-radius: 32px;
+        padding: 50px 48px;
+        box-shadow: 0 24px 64px rgba(0,0,0,0.06);
         position: relative;
     }
-    
-    .back-btn {
-        position: absolute; top: 20px; left: 24px; display: inline-flex; align-items: center; gap: 6px;
-        color: var(--text-gray); font-size: 13px; font-weight: 600; text-decoration: none;
-        transition: color 0.2s ease;
-    }
-    .back-btn:hover { color: var(--primary-purple); }
 
-    .logo-box {
-        width: 64px; height: 64px; background: #F5F3FF; border-radius: 16px;
-        display: flex; align-items: center; justify-content: center;
-        color: var(--primary-purple); font-size: 32px; margin: 0 auto 24px auto;
-        box-shadow: 0 8px 16px rgba(98, 75, 255, 0.15);
+    .card-logo {
+        width: 72px; height: 72px; background: #F8FAFC; border-radius: 50%;
+        margin: 0 auto 24px auto; display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 42px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .login-header { text-align: center; margin-bottom: 32px; }
-    .login-header h1 { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; letter-spacing: -0.5px; }
-    .login-header p { font-size: 14px; color: var(--text-gray); font-weight: 500; }
+    .login-header h1 { font-size: 28px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; letter-spacing: -0.5px; }
+    .login-header p { font-size: 15px; color: var(--text-gray); font-weight: 500; }
+    .header-line { width: 36px; height: 4px; background: var(--primary-purple); margin: 20px auto 0 auto; border-radius: 4px; }
 
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; margin-left: 4px; }
+    .form-group { margin-bottom: 24px; }
+    .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; margin-left: 4px; }
     
     .input-wrapper { position: relative; }
-    .input-wrapper i.icon-left { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; }
-    .input-wrapper i.icon-right { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; cursor: pointer; transition: color 0.2s; }
+    .input-wrapper i.icon-left { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 20px; }
+    .input-wrapper i.icon-right { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 20px; cursor: pointer; transition: color 0.2s; }
     .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
 
     .form-input {
-        width: 100%; padding: 14px 16px 14px 44px; font-size: 14px; color: var(--text-dark);
-        background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px;
+        width: 100%; padding: 16px 16px 16px 52px; font-size: 15px; color: var(--text-dark);
+        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px;
         outline: none; transition: all 0.2s ease; font-weight: 500;
     }
-    .form-input:focus { background: var(--white); border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); }
-    
-    .btn-submit {
-        width: 100%; padding: 14px; background: var(--primary-purple); color: var(--white);
-        border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
-        transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25);
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        margin-top: 24px;
+    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); background: #ffffff; }
+
+    .form-options {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; margin-top: -8px;
     }
-    .btn-submit:hover { background: var(--primary-hover); box-shadow: 0 6px 16px rgba(98, 75, 255, 0.3); transform: translateY(-1px); }
+    .remember-me { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .remember-me input[type="checkbox"] { 
+        appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--primary-purple); border-radius: 4px;
+        outline: none; cursor: pointer; position: relative; background: var(--primary-purple);
+        display: flex; align-items: center; justify-content: center;
+    }
+    .remember-me input[type="checkbox"]::after {
+        content: '\eb7b'; font-family: 'boxicons'; color: white; font-size: 14px; font-weight: bold;
+    }
+    .remember-me span { font-size: 13px; color: var(--text-gray); font-weight: 600; }
+    
+    .forgot-link { font-size: 13px; color: var(--primary-purple); font-weight: 700; text-decoration: none; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    .btn-submit {
+        width: 100%; padding: 16px; background: var(--primary-purple); color: var(--white);
+        border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
+        transition: all 0.2s ease; box-shadow: 0 8px 24px rgba(98, 75, 255, 0.25);
+        display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(98, 75, 255, 0.35); }
+
+    .divider {
+        display: flex; align-items: center; margin: 32px 0; color: #94A3B8; font-size: 12px; font-weight: 600; text-transform: uppercase;
+    }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #E2E8F0; }
+    .divider::before { margin-right: 16px; }
+    .divider::after { margin-left: 16px; }
+
+    .btn-resident {
+        width: 100%; padding: 16px; background: transparent; color: var(--primary-purple);
+        border: 1.5px solid var(--primary-purple); border-radius: 14px; font-size: 15px; font-weight: 700; 
+        cursor: pointer; text-decoration: none; transition: all 0.2s ease;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-resident:hover { background: rgba(98,75,255,0.05); }
+
+    .secure-footer {
+        text-align: center; margin-top: 32px; display: flex; align-items: center; justify-content: center; gap: 6px;
+        color: var(--text-gray); font-size: 13px; font-weight: 600;
+    }
 
     .error-box {
         background: #FEF2F2; border: 1px solid #FCA5A5; color: #DC2626;
@@ -166,65 +256,128 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
     }
 
-    .footer-link {
-        text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-gray); font-weight: 500;
+    @media (max-width: 992px) {
+        .split-layout { flex-direction: column; padding: 20px; }
+        .left-panel { padding: 20px; display: none; }
+        .right-panel { padding: 0; }
     }
-    .footer-link a { color: var(--primary-purple); font-weight: 700; text-decoration: none; transition: color 0.2s; }
-    .footer-link a:hover { color: var(--primary-hover); }
   </style>
 </head>
 <body>
 
-<div class="bg-circle-1"></div>
-<div class="bg-circle-2"></div>
+<div class="split-layout">
+    
+    <!-- Left Promotional Panel -->
+    <div class="left-panel">
+        <div class="brand">
+            <div class="brand-logo"><i class='bx bx-building-house'></i></div>
+            <div class="brand-text">
+                <h2>Madhav Kunj</h2>
+                <p>Utility Management</p>
+            </div>
+        </div>
 
-<div class="login-container">
-    <div class="login-card">
-        <a href="../index.php" class="back-btn"><i class='bx bx-left-arrow-alt'></i> Home</a>
+        <h1 class="hero-title">Smart Property<br><span>Management</span></h1>
+        <p class="hero-subtitle">Manage your properties, residents, bills and payments with ease.</p>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon"><i class='bx bx-user'></i></div>
+                <div class="feature-text">
+                    <h4>Resident Management</h4>
+                    <p>Add, manage & communicate with residents</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class='bx bx-receipt'></i></div>
+                <div class="feature-text">
+                    <h4>Smart Billing</h4>
+                    <p>Generate bills & track payments easily</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class='bx bx-bolt-circle'></i></div>
+                <div class="feature-text">
+                    <h4>Electricity Tracking</h4>
+                    <p>Monitor usage, records & electricity bills</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                <div class="feature-text">
+                    <h4>Reports & Analytics</h4>
+                    <p>Real-time insights & financial reports</p>
+                </div>
+            </div>
+        </div>
         
-        <div class="login-header">
-            <div class="logo-box">
+        <div class="bg-circle"></div>
+        <img src="../assets/img/login_building.png" class="bg-illustration" alt="Building Illustration">
+    </div>
+
+    <!-- Right Login Card Panel -->
+    <div class="right-panel">
+        <div class="login-card">
+            
+            <div class="card-logo">
                 <i class='bx bx-building-house'></i>
             </div>
-            <h1>Admin Login</h1>
-            <p>Property Administration Panel</p>
-        </div>
-
-        <?php if ($error !== ""): ?>
-            <div class="error-box">
-                <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($error); ?>
+            
+            <div class="login-header">
+                <h1>Welcome Back!</h1>
+                <p>Sign in to your admin account</p>
+                <div class="header-line"></div>
             </div>
-        <?php endif; ?>
 
-        <form method="POST" autocomplete="off">
-            <div class="form-group">
-                <label class="form-label">Username</label>
-                <div class="input-wrapper">
-                    <i class='bx bx-user icon-left'></i>
-                    <input type="text" name="username" class="form-input" placeholder="Enter admin username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required autofocus>
+            <?php if ($error !== ""): ?>
+                <div class="error-box">
+                    <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($error); ?>
                 </div>
-            </div>
+            <?php endif; ?>
 
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <div class="input-wrapper">
-                    <i class='bx bx-lock-alt icon-left'></i>
-                    <input type="password" name="password" id="loginPassword" class="form-input" placeholder="••••••••" required style="padding-right: 44px;">
-                    <i class='bx bx-hide icon-right' id="togglePassword"></i>
+            <form method="POST" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-user icon-left'></i>
+                        <input type="text" name="username" class="form-input" placeholder="admin" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required autofocus>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrapper">
+                        <i class='bx bx-lock-alt icon-left'></i>
+                        <input type="password" name="password" id="loginPassword" class="form-input" placeholder="••••••••••••" required style="padding-right: 48px;">
+                        <i class='bx bx-hide icon-right' id="togglePassword"></i>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" checked>
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" name="login" class="btn-submit">
+                    <i class='bx bx-log-in-circle' style="font-size: 20px;"></i> Sign In
+                </button>
+            </form>
+
+            <div class="divider">or</div>
+
+            <a href="../login.php" class="btn-resident">
+                <i class='bx bx-shield-quarter'></i> Resident Login
+            </a>
+
+            <div class="secure-footer">
+                <i class='bx bx-check-shield' style="font-size: 16px;"></i> Secure & Protected Login
             </div>
-
-            <button type="submit" name="login" class="btn-submit">Sign In <i class='bx bx-right-arrow-alt' style="font-size: 18px;"></i></button>
-        </form>
-
-        <div class="footer-link">
-            Not an admin? <a href="../login.php">Resident Login</a>
         </div>
     </div>
-    
-    <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-gray); font-weight: 500;">
-        © <?php echo date("Y"); ?> Rent Manager System
-    </div>
+
 </div>
 
 <script>
