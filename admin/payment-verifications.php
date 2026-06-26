@@ -624,13 +624,12 @@ if ($res) {
                         <th>Transaction ID (UTR)</th>
                         <th>Date Submitted</th>
                         <th>Status</th>
-                        <th>Mode</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($notifs)): ?>
-                        <tr><td colspan="8" style="text-align: center; padding: 40px; color: #94A3B8;">No payment notifications found.</td></tr>
+                        <tr><td colspan="7" style="text-align: center; padding: 40px; color: #94A3B8;">No payment notifications found.</td></tr>
                     <?php else: foreach ($notifs as $n): 
                         // Generate avatar initials and colors
                         $names = explode(' ', $n['renter_name']);
@@ -689,15 +688,6 @@ if ($res) {
                             <?php else: ?>
                                 <span class="pv-status-pill pv-status-rejected"><i class='bx bxs-circle'></i> Rejected</span>
                             <?php endif; ?>
-                        </td>
-                        <td>
-                            <div class="pv-mode-text">
-                                <?php if($n['payment_method'] == 'UPI'): ?>
-                                    <span style="color: #059669; font-style: italic; font-weight: 800; font-size:10px; border:1px solid #059669; padding:2px 4px; border-radius:4px; margin-right:4px;">UPI</span> UPI
-                                <?php else: ?>
-                                    <i class='bx bx-building-house' style="color: #64748B;"></i> <?php echo s($n['payment_method']); ?>
-                                <?php endif; ?>
-                            </div>
                         </td>
                         <td>
                             <div class="pv-action-cell">
