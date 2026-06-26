@@ -27,7 +27,7 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
             padding: 40px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             border: 1px solid #E2E8F0;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
     </style>
