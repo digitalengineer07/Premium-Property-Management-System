@@ -1,3 +1,123 @@
+<?php
+// admin/payment-verifications.php
+require_once "../db.php";
+session_start();
+require_once "utils_mailer.php";
+
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
+    exit;
+}
+$admin_user = s($_SESSION['admin'] ?? 'Admin');
+
+$success = '';
+$error = '';
+
+// Handle Approve / Reject Actions
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id'])) {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Invalid CSRF token.";
+    } else {
+        $id = (int)$_POST['id'];
+        $action = $_POST['action'];
+        $admin_note = s($_POST['admin_note'] ?? '');
+        
+        $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id");
+        $notif = mysqli_fetch_assoc($q);
+        
+        if ($notif && $notif['status'] == 'Pending') {
+            if ($action == 'approve') {
+                mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                
+                // If this payment was for a bill, update the bill status to Paid
+                if ($notif['bill_id']) {
+                    $bid = (int)$notif['bill_id'];
+                    mysqli_query($conn, "UPDATE bills SET status='Paid' WHERE id=$bid");
+                }
+                
+                $success = "Payment #{$notif['transaction_id']} approved successfully.";
+                
+                // Send email
+                if (!empty($notif['user_email'])) {
+                    $sub = "Payment Approved - " . HOUSE_NAME;
+                    $msg = "Hello {$notif['user_name']},<br><br>Your payment of Rs. {$notif['amount']} (Ref: {$notif['transaction_id']}) has been approved.<br><br>Thank you!";
+                    sendEmail($notif['user_email'], $sub, $msg);
+                }
+                
+            } elseif ($action == 'reject') {
+                mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                $success = "Payment #{$notif['transaction_id']} rejected.";
+                
+                if (!empty($notif['user_email'])) {
+                    $sub = "Payment Rejected - " . HOUSE_NAME;
+                    $msg = "Hello {$notif['user_name']},<br><br>Your payment of Rs. {$notif['amount']} (Ref: {$notif['transaction_id']}) was rejected.<br><br>Reason: $admin_note<br><br>Please contact admin.";
+                    sendEmail($notif['user_email'], $sub, $msg);
+                }
+            }
+        }
+    }
+}
+
+// Fetch Filters
+$f_search = $_GET['search'] ?? '';
+$f_status = $_GET['status'] ?? 'All';
+$f_month = $_GET['month'] ?? 'All';
+$f_year = $_GET['year'] ?? 'All';
+$f_mode = $_GET['mode'] ?? 'All';
+$f_start = $_GET['start_date'] ?? '';
+$f_end = $_GET['end_date'] ?? '';
+$f_sort = $_GET['sort'] ?? 'latest';
+
+// Build Query
+$sql = "SELECT pn.*, u.name as renter_name, u.room_no, b.bill_type 
+        FROM payment_notifications pn 
+        LEFT JOIN users u ON pn.user_id = u.id 
+        LEFT JOIN bills b ON pn.bill_id = b.id 
+        WHERE 1=1 ";
+
+if ($f_search !== '') {
+    $sq = mysqli_real_escape_string($conn, $f_search);
+    $sql .= " AND (u.name LIKE '%$sq%' OR pn.transaction_id LIKE '%$sq%') ";
+}
+if ($f_status !== 'All') {
+    $st = mysqli_real_escape_string($conn, $f_status);
+    $sql .= " AND pn.status = '$st' ";
+}
+if ($f_month !== 'All') {
+    $m = (int)$f_month;
+    $sql .= " AND MONTH(pn.created_at) = $m ";
+}
+if ($f_year !== 'All') {
+    $y = (int)$f_year;
+    $sql .= " AND YEAR(pn.created_at) = $y ";
+}
+if ($f_mode !== 'All') {
+    $md = mysqli_real_escape_string($conn, $f_mode);
+    $sql .= " AND pn.payment_method = '$md' ";
+}
+if ($f_start !== '') {
+    $sd = mysqli_real_escape_string($conn, $f_start);
+    $sql .= " AND DATE(pn.created_at) >= '$sd' ";
+}
+if ($f_end !== '') {
+    $ed = mysqli_real_escape_string($conn, $f_end);
+    $sql .= " AND DATE(pn.created_at) <= '$ed' ";
+}
+
+if ($f_sort == 'oldest') {
+    $sql .= " ORDER BY pn.created_at ASC";
+} else {
+    $sql .= " ORDER BY pn.created_at DESC";
+}
+
+$notifs = [];
+$res = mysqli_query($conn, $sql);
+if ($res) {
+    while($row = mysqli_fetch_assoc($res)){
+        $notifs[] = $row;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
