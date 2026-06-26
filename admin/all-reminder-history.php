@@ -21,26 +21,14 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-            gap: 20px;
-        }
-        .history-card {
-            background: #ffffff; 
-            border-radius: 16px; 
-            padding: 20px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02); 
+        .timeline-container {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             border: 1px solid #E2E8F0;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-        .history-card:hover {
-            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
-            transform: translateY(-2px);
-            border-color: #CBD5E1;
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -66,16 +54,19 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
         </div>
     </div>
 
-    <div class="history-grid animate-up">
+    <div class="timeline-container animate-up">
         <?php 
-        if(mysqli_num_rows($history) == 0): ?>
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: #fff; border-radius: 16px; border: 1px solid #E2E8F0;">
+        $counter = 0;
+        $total = mysqli_num_rows($history);
+        if($total == 0): ?>
+            <div style="text-align: center; padding: 40px;">
                 <i class='bx bx-ghost' style="font-size: 48px; color: var(--text-gray); opacity: 0.3; margin-bottom: 16px;"></i>
                 <h3 style="font-size: 18px; color: var(--text-dark); margin-bottom: 8px;">No History Found</h3>
                 <p style="font-size: 14px; color: var(--text-gray);">There are no logged reminders yet.</p>
             </div>
         <?php else:
         while($h = mysqli_fetch_assoc($history)): 
+            $counter++;
             $initial = strtoupper(substr($h['renter_name'], 0, 1));
             $colors = ['#624BFF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
             $color = $colors[ord($initial) % count($colors)];
@@ -101,33 +92,37 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
                 $subtext = 'Email';
             }
         ?>
-            <div class="history-card">
-                <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: #fff; background: <?php echo $color; ?>; flex-shrink: 0; box-shadow: 0 4px 10px <?php echo $color; ?>40;">
-                    <?php echo $initial; ?>
+            <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 16px;">
+                <?php if($counter < $total): ?>
+                    <div style="position: absolute; left: 4px; top: 16px; bottom: -16px; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
+                <?php endif; ?>
+                
+                <div style="position: relative; z-index: 2; flex-shrink: 0;">
+                    <div style="position: absolute; left: 1px; top: 12px; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--primary-purple); background: #fff; z-index: 3;"></div>
+                    
+                    <div style="margin-left: 20px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #fff; background: <?php echo $color; ?>;">
+                        <?php echo $initial; ?>
+                    </div>
                 </div>
                 
-                <div style="flex: 1; min-width: 0;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
-                        <div style="min-width: 0;">
-                            <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                <?php echo htmlspecialchars($h['renter_name']); ?>
-                            </div>
-                            <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                Room <?php echo htmlspecialchars($h['room_no'] ?? 'N/A'); ?> • <?php echo htmlspecialchars($h['bill_type']); ?> (<?php echo htmlspecialchars($h['month']); ?>)
-                            </div>
+                <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 2px; min-width: 0; padding-bottom: 24px; <?php echo $counter < $total ? 'border-bottom: 1px solid #F1F5F9; margin-bottom: 24px;' : ''; ?>">
+                    <div style="flex: 1; min-width: 0; padding-right: 12px;">
+                        <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <?php echo htmlspecialchars($h['renter_name']); ?>
                         </div>
-                        
-                        <div style="text-align: right; flex-shrink: 0;">
-                            <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; background: <?php echo $pill_bg; ?>; color: <?php echo $pill_text; ?>; padding: 4px 10px; border-radius: 20px; margin-bottom: 4px;">
-                                <i class='bx <?php echo $pill_icon; ?>'></i> <?php echo $status; ?>
-                            </div>
-                            <div style="font-size: 10px; color: var(--text-gray); font-weight: 600;"><?php echo $subtext; ?></div>
+                        <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            Room <?php echo htmlspecialchars($h['room_no'] ?? 'N/A'); ?> • <?php echo htmlspecialchars($h['bill_type']); ?> Reminder (<?php echo htmlspecialchars($h['month']); ?>)
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-gray); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                            <i class='bx bx-calendar'></i> <?php echo date('M d, Y', strtotime($h['sent_at'])); ?> • <?php echo date('h:i A', strtotime($h['sent_at'])); ?>
                         </div>
                     </div>
-
-                    <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--text-gray); background: #F8FAFC; padding: 6px 12px; border-radius: 8px; border: 1px solid #F1F5F9;">
-                        <i class='bx bx-calendar' style="font-size: 14px; color: var(--primary-purple);"></i>
-                        <span style="color: var(--text-dark);"><?php echo date('M d, Y', strtotime($h['sent_at'])); ?></span> at <?php echo date('h:i A', strtotime($h['sent_at'])); ?>
+                    
+                    <div style="text-align: right; flex-shrink: 0;">
+                        <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; background: <?php echo $pill_bg; ?>; color: <?php echo $pill_text; ?>; padding: 3px 8px; border-radius: 12px; margin-bottom: 4px;">
+                            <i class='bx <?php echo $pill_icon; ?>'></i> <?php echo $status; ?>
+                        </div>
+                        <div style="font-size: 9px; color: var(--text-gray); font-weight: 600;"><?php echo $subtext; ?></div>
                     </div>
                 </div>
             </div>
