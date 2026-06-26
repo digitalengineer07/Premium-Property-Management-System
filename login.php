@@ -314,10 +314,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .back-home-btn {
-        position: absolute;
-        top: 24px;
-        left: 24px;
-        display: flex;
+        display: inline-flex;
+        align-self: flex-start;
+        margin-bottom: 32px;
         align-items: center;
         gap: 6px;
         color: var(--text-gray);
@@ -356,14 +355,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<a href="index.php" class="back-home-btn">
-    <i class='bx bx-left-arrow-alt' style="font-size: 18px;"></i> Back to Home
-</a>
-
 <div class="split-layout">
     
     <!-- Left Promotional Panel -->
     <div class="left-panel">
+        <a href="index.php" class="back-home-btn">
+            <i class='bx bx-left-arrow-alt' style="font-size: 18px;"></i> Back to Home
+        </a>
+        
         <div class="brand">
             <div class="brand-logo"><i class='bx bx-building-house'></i></div>
             <div class="brand-text">
