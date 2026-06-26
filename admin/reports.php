@@ -72,12 +72,12 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         
         /* KPI Cards */
-        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 24px; }
-        .kpi-card { background: #fff; padding: 24px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: #fff; padding: 20px 16px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
         .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
-        .kpi-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
-        .kpi-label { font-size: 13px; font-weight: 600; color: #64748B; margin-bottom: 6px; }
-        .kpi-val { font-size: 28px; font-weight: 800; color: #0F172A; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
+        .kpi-label { font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .kpi-val { font-size: 24px; font-weight: 800; color: #0F172A; margin-bottom: 8px; letter-spacing: -0.5px; }
         .kpi-trend { font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; }
         .trend-up { background: #ECFDF5; color: #10B981; }
         .trend-down { background: #FEF2F2; color: #EF4444; }
