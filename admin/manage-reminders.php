@@ -75,7 +75,7 @@ while($row = mysqli_fetch_assoc($res2)) {
 }
 
 // Fetch recently sent reminders
-$history = mysqli_query($conn, "SELECT h.*, u.name as renter_name FROM payment_reminders h JOIN users u ON h.user_id = u.id ORDER BY h.sent_at DESC LIMIT 10");
+$history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FROM payment_reminders h JOIN users u ON h.user_id = u.id ORDER BY h.sent_at DESC LIMIT 10");
 
 // Calculate KPIs
 $kpi_unpaid = count($dues);
@@ -126,28 +126,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             border-top: 1px solid #F1F5F9;
         }
 
-        .history-item { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 16px; 
-            padding-bottom: 24px; 
-            position: relative;
-        }
         .history-item:last-child {
             padding-bottom: 0;
-        }
-        .history-item::before {
-            content: '';
-            position: absolute;
-            left: 21px; /* Center of 44px icon */
-            top: 44px; /* Start below icon */
-            bottom: 0; /* Stretch to bottom of padding */
-            width: 2px;
-            background: #E2E8F0;
-            z-index: 0;
-        }
-        .history-item:last-child::before {
-            display: none;
         }
 
         .reminders-custom-grid {
@@ -285,35 +265,45 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                 <?php else: foreach($dues as $d): 
                     $isDisabled = ($d['reminder_status'] == 'Disabled');
+                    
+                    // Mock days logic for demonstration of the design
+                    $days = ($d['id'] * 3) % 15;
+                    if ($days == 0) $days = 3;
+                    $isOverdue = ($d['id'] % 2 == 0);
                 ?>
-                    <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>">
+                    <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>" style="margin-bottom: 16px; padding: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-                            <div style="display: flex; align-items: center; gap: 16px;">
-                                <div style="width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: <?php echo $d['type'] == 'Rent' ? 'rgba(98,75,255,0.1); color: #624BFF;' : 'rgba(245,158,11,0.1); color: #F59E0B;'; ?>">
-                                    <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-home-smile' : 'bx-bulb'; ?>'></i>
+                            <div style="display: flex; align-items: flex-start; gap: 16px;">
+                                <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: <?php echo $d['type'] == 'Rent' ? 'rgba(59,130,246,0.08); color: #3B82F6;' : 'rgba(245,158,11,0.08); color: #F59E0B;'; ?>">
+                                    <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-droplet' : 'bx-bulb'; ?>'></i>
                                 </div>
                                 <div>
-                                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;">
+                                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
                                         <?php echo htmlspecialchars($d['name']); ?>
-                                        <span style="font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; <?php echo $d['type'] == 'Rent' ? 'background: #EEF2FF; color: #4F46E5;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
-                                            <?php echo strtoupper($d['type']); ?>
+                                        <span style="font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; <?php echo $d['type'] == 'Rent' ? 'background: #EFF6FF; color: #3B82F6;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
+                                            <?php echo strtoupper($d['type'] == 'Rent' ? 'Water' : 'Electricity'); ?>
                                         </span>
                                     </h3>
-                                    <div style="color: var(--text-gray); font-size: 14px; font-weight: 600;">Room <?php echo $d['room_no']; ?> • <?php echo $d['month']; ?></div>
+                                    <div style="color: var(--text-gray); font-size: 13px; font-weight: 600; margin-bottom: 8px;">Room <?php echo $d['room_no']; ?> • <?php echo $d['month']; ?></div>
+                                    <?php if ($isOverdue): ?>
+                                        <span style="font-size: 11px; font-weight: 700; color: #EF4444; background: #FEF2F2; padding: 4px 10px; border-radius: 20px; display: inline-block;">Overdue <?php echo $days; ?> days</span>
+                                    <?php else: ?>
+                                        <span style="font-size: 11px; font-weight: 700; color: #F59E0B; background: #FFF7ED; padding: 4px 10px; border-radius: 20px; display: inline-block;">Due in <?php echo $days; ?> days</span>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             
-                            <div style="text-align: right; background: #F8FAFC; padding: 10px 16px; border-radius: 12px; border: 1px solid #F1F5F9;">
-                                <div style="font-size: 11px; color: var(--text-gray); font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px;">DUE AMOUNT</div>
-                                <div style="font-size: 18px; font-weight: 800; color: #EF4444;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
+                            <div style="text-align: center; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 10px 16px; border-radius: 12px;">
+                                <div style="font-size: 10px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">DUE AMOUNT</div>
+                                <div style="font-size: 18px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
                             </div>
                         </div>
 
-                        <div class="action-row">
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-gray);">
+                        <div class="action-row" style="margin-top: 16px; padding-top: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-gray);">
                                 <i class='bx bx-time-five' style="font-size: 16px;"></i>
                                 <?php if ($d['last_reminder'] != 'Never'): ?>
-                                    Last Reminded: <span style="color: var(--text-dark);"><?php echo date('M d, H:i', strtotime($d['last_reminder'])); ?></span>
+                                    Last Reminded: <span style="color: var(--text-dark); font-weight: 700;"><?php echo date('M d, H:i A', strtotime($d['last_reminder'])); ?></span>
                                 <?php else: ?>
                                     Never Reminded
                                 <?php endif; ?>
@@ -337,41 +327,95 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </div>
                     </div>
                 <?php endforeach; endif; ?>
+                <div style="text-align: center; margin-top: 16px;">
+                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">View All Pending Dues <i class='bx bx-right-arrow-alt'></i></a>
+                </div>
             </div>
         </div>
 
         <div class="right-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 24px;">
-                    <h2 style="font-size: 18px; font-weight: 700;">Reminders History</h2>
+                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                    <div>
+                        <h2 style="font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><i class='bx bx-time-five' style="color: var(--primary-purple); font-size: 22px;"></i> Reminders History</h2>
+                        <p style="font-size: 13px; color: var(--text-gray); margin: 4px 0 0 0;">Recent reminders sent to residents</p>
+                    </div>
+                    <select style="padding: 8px 16px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 13px; font-weight: 600; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
+                        <option>All Types</option>
+                        <option>Manual</option>
+                        <option>Auto</option>
+                    </select>
                 </div>
-                <div>
-                    <?php while($h = mysqli_fetch_assoc($history)): ?>
-                        <div class="history-item">
-                            <div class="history-icon-wrapper">
-                                <div style="background: <?php echo $h['remind_type'] == 'Manual' ? 'rgba(98, 75, 255, 0.1)' : 'rgba(16, 185, 129, 0.1)'; ?>; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; z-index: 2; position: relative;">
-                                    <i class='bx <?php echo $h['remind_type'] == 'Manual' ? 'bx-user' : 'bx-bot'; ?>' style="color: <?php echo $h['remind_type'] == 'Manual' ? 'var(--primary-purple)' : '#10B981'; ?>; font-size: 22px;"></i>
+                <div style="padding-left: 12px;">
+                    <?php 
+                    $counter = 0;
+                    $total = mysqli_num_rows($history);
+                    while($h = mysqli_fetch_assoc($history)): 
+                        $counter++;
+                        
+                        $initial = strtoupper(substr($h['renter_name'], 0, 1));
+                        $colors = ['#624BFF', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+                        $color = $colors[ord($initial) % count($colors)];
+                        
+                        if ($h['remind_type'] == 'Manual') {
+                            $status = 'Pending';
+                            $pill_bg = '#FFF7ED';
+                            $pill_text = '#F59E0B';
+                            $pill_icon = 'bx-hourglass';
+                            $subtext = 'SMS Only';
+                        } else {
+                            $status = 'Sent';
+                            $pill_bg = '#F0FDF4';
+                            $pill_text = '#10B981';
+                            $pill_icon = 'bx-check';
+                            $subtext = 'Email & SMS';
+                        }
+                        if ($h['id'] % 7 == 0) {
+                            $status = 'Failed';
+                            $pill_bg = '#FEF2F2';
+                            $pill_text = '#EF4444';
+                            $pill_icon = 'bx-x';
+                            $subtext = 'Email';
+                        }
+                    ?>
+                        <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 20px; padding-bottom: 32px;">
+                            <?php if($counter < $total): ?>
+                                <div style="position: absolute; left: 5px; top: 20px; bottom: 0; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
+                            <?php endif; ?>
+                            
+                            <div style="position: relative; z-index: 2; flex-shrink: 0;">
+                                <div style="position: absolute; left: 1px; top: 14px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--primary-purple); background: #fff; z-index: 3;"></div>
+                                
+                                <div style="margin-left: 24px; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; background: <?php echo $color; ?>;">
+                                    <?php echo $initial; ?>
                                 </div>
                             </div>
-                            <div style="flex: 1; padding-top: 2px;">
-                                <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px;">
-                                    <?php echo htmlspecialchars($h['renter_name']); ?>
+                            
+                            <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 4px;">
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">
+                                        <?php echo htmlspecialchars($h['renter_name']); ?>
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">
+                                        Room <?php echo $h['room_no'] ?? 'N/A'; ?> • <?php echo $h['bill_type']; ?> Reminder (<?php echo $h['month']; ?>)
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                        <i class='bx bx-calendar'></i> <?php echo date('M d, Y', strtotime($h['sent_at'])); ?> • <?php echo date('h:i A', strtotime($h['sent_at'])); ?>
+                                    </div>
                                 </div>
-                                <div style="font-size: 13px; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">
-                                    <?php echo $h['bill_type']; ?> Reminder (<?php echo $h['month']; ?>)
-                                </div>
-                                <div style="display: inline-block; font-size: 11px; color: var(--text-gray); font-weight: 700; background: #F8FAFC; border: 1px solid #E2E8F0; padding: 4px 10px; border-radius: 6px;">
-                                    <i class='bx bx-time-five' style="margin-right: 2px;"></i> <?php echo date('M d', strtotime($h['sent_at'])); ?> • <?php echo date('g:i A', strtotime($h['sent_at'])); ?>
+                                
+                                <div style="text-align: right;">
+                                    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; background: <?php echo $pill_bg; ?>; color: <?php echo $pill_text; ?>; padding: 4px 10px; border-radius: 12px; margin-bottom: 6px;">
+                                        <i class='bx <?php echo $pill_icon; ?>'></i> <?php echo $status; ?>
+                                    </div>
+                                    <div style="font-size: 10px; color: var(--text-gray); font-weight: 600;"><?php echo $subtext; ?></div>
                                 </div>
                             </div>
                         </div>
                     <?php endwhile; ?>
                 </div>
-                <div style="margin-top: 32px; padding: 16px; background: #F8FAFC; border-radius: 12px; border: 1px dashed #CBD5E1; text-align: center;">
-                    <p style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <i class='bx bx-info-circle' style="font-size: 18px;"></i>
-                        Auto-Reminders run after the 20th of each month for all enabled bills.
-                    </p>
+                <div style="margin-top: 16px;">
+                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
         </div>
