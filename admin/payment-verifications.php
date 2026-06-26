@@ -401,9 +401,10 @@ if ($res) {
         
         .pv-mode-text { font-size: 11px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         
-        .pv-action-cell { display: flex; align-items: center; gap: 6px; }
-        .pv-btn-approve-sm { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); white-space: nowrap; }
-        .pv-btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+        .pv-action-cell { display: flex; align-items: center; gap: 4px; }
+        .pv-action-cell form { display: flex; margin: 0; }
+        .pv-btn-approve-sm { background: #10B981; color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); white-space: nowrap; }
+        .pv-btn-reject-sm { background: transparent; color: #EF4444; border: 1px solid #FCA5A5; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .pv-btn-more { background: transparent; border: none; color: #94A3B8; font-size: 16px; cursor: pointer; padding: 2px; }
         
         .pv-pagination-footer {
@@ -650,7 +651,10 @@ if ($res) {
                             </div>
                         </td>
                         <td>
-                            <?php $bType = trim(ucfirst(s($n['bill_type']))); ?>
+                            <?php 
+                            $bType = trim(ucfirst(s($n['bill_type']))); 
+                            if (strtolower($bType) === 'total') $bType = '';
+                            ?>
                             <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
