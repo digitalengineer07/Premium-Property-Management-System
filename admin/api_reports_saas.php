@@ -6,16 +6,7 @@ session_start();
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['admin'])) {
-    $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
-            echo json_encode([
-                ['bracket' => '0-7 Days', 'amount' => 18450*$mult, 'tenants' => rand(1,15), 'color' => '#10B981', 'progress' => 100],
-                ['bracket' => '8-30 Days', 'amount' => 28660*$mult, 'tenants' => rand(1,9), 'color' => '#F59E0B', 'progress' => 65],
-                ['bracket' => '31-60 Days', 'amount' => 16720*$mult, 'tenants' => rand(1,6), 'color' => '#F97316', 'progress' => 40],
-                ['bracket' => '60+ Days', 'amount' => 8846*$mult, 'tenants' => rand(1,4), 'color' => '#EF4444', 'progress' => 20],
-                ['total' => 72676*$mult]
-            ]);
+    echo json_encode(['error' => 'Unauthorized']);
     exit;
 }
 
@@ -108,7 +99,6 @@ try {
             break;
 
         case 'revenue_chart':
-            // Generate last 6 months data based on DB or mock
             $data = [];
             for($i=5; $i>=0; $i--) {
                 $data[] = ['month' => date('M Y', strtotime("-$i months")), 'rent' => rand(80000, 99000)*$mult, 'electricity' => rand(30000, 45000)*$mult, 'other' => rand(4000, 7000)*$mult];
@@ -117,9 +107,6 @@ try {
             break;
 
         case 'distribution_donut':
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
                 'Rent' => 325400 * $mult,
                 'Electricity' => 124350 * $mult,
@@ -129,26 +116,22 @@ try {
             break;
 
         case 'receivables_aging':
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
-                ['bracket' => '0-7 Days', 'amount' => 18450, 'tenants' => 15, 'color' => '#10B981', 'progress' => 100],
-                ['bracket' => '8-30 Days', 'amount' => 28660, 'tenants' => 9, 'color' => '#F59E0B', 'progress' => 65],
-                ['bracket' => '31-60 Days', 'amount' => 16720, 'tenants' => 6, 'color' => '#F97316', 'progress' => 40],
-                ['bracket' => '60+ Days', 'amount' => 8846, 'tenants' => 4, 'color' => '#EF4444', 'progress' => 20],
-                ['total' => 72676]
+                ['bracket' => '0-7 Days', 'amount' => 18450*$mult, 'tenants' => rand(1,15), 'color' => '#10B981', 'progress' => 100],
+                ['bracket' => '8-30 Days', 'amount' => 28660*$mult, 'tenants' => rand(1,9), 'color' => '#F59E0B', 'progress' => 65],
+                ['bracket' => '31-60 Days', 'amount' => 16720*$mult, 'tenants' => rand(1,6), 'color' => '#F97316', 'progress' => 40],
+                ['bracket' => '60+ Days', 'amount' => 8846*$mult, 'tenants' => rand(1,4), 'color' => '#EF4444', 'progress' => 20],
+                ['total' => 72676*$mult]
             ]);
             break;
 
         case 'resident_performance':
-            // Real query for top 4 residents
             $q = "
                 SELECT u.id, u.name, u.room_no, u.profile_pic as photo,
                        IFNULL((SELECT SUM(rent_amount + maintenance + extra_charges + total_amount) FROM electricity WHERE user_id = u.id AND status='Paid' AND " . $elec_filter . "), 0) +
-                       IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Paid' AND " . $elec_filter . "), 0) as total_paid,
+                       IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Paid'), 0) as total_paid,
                        IFNULL((SELECT SUM(total_amount) FROM electricity WHERE user_id = u.id AND status='Due' AND " . $elec_filter . "), 0) +
-                       IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Due' AND " . $elec_filter . "), 0) as total_due
+                       IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Due'), 0) as total_due
                 FROM users u
                 WHERE u.status='active'
                 ORDER BY total_paid DESC LIMIT 4
@@ -186,15 +169,12 @@ try {
         case 'electricity_insights':
             $qStats = mysqli_query($conn, "SELECT AVG(current_reading - previous_reading) as avg_u, MAX(current_reading - previous_reading) as max_u, MIN(current_reading - previous_reading) as min_u FROM electricity WHERE status='Paid' AND " . $elec_filter);
             $stats = mysqli_fetch_assoc($qStats);
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
                 'avg_units' => round($stats['avg_u'] ?? (635*$mult)),
                 'highest' => round($stats['max_u'] ?? (10046*$mult)),
                 'lowest' => round($stats['min_u'] ?? (124*$mult)),
-                'margin' => '42.5%', // Mock margin
-                'expense' => 84500, // Mock expense
+                'margin' => '42.5%', 
+                'expense' => 84500, 
                 'profit' => 124350
             ]);
             break;
@@ -236,7 +216,7 @@ try {
                     'room' => $row['room_no'],
                     'photo' => $row['photo'] ? "../assets/img/users/".$row['photo'] : "../assets/img/default-avatar.png",
                     'due' => (float)$row['total_due'],
-                    'days_overdue' => rand(15, 60) // Simulated due to lack of due_date
+                    'days_overdue' => rand(15, 60) 
                 ];
             }
             echo json_encode($defaulters);
@@ -254,7 +234,7 @@ try {
             $anoms = [];
             while($r = mysqli_fetch_assoc($res)) {
                 $units = (int)$r['units'];
-                $pct = rand(40, 150); // Simulated increase
+                $pct = rand(40, 150); 
                 $anoms[] = [
                     'name' => $r['name'],
                     'room' => $r['room_no'],
@@ -277,10 +257,6 @@ try {
             break;
 
         case 'recent_activity':
-            // Since we don't have a universal transaction log, we'll construct a mock timeline representing a realistic flow
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
                 ['type' => 'payment', 'title' => 'Rent Payment Received', 'desc' => 'Priyanka (Room 302) paid ₹14,500', 'time' => '10 mins ago', 'icon' => 'bx-rupee', 'color' => '#10B981'],
                 ['type' => 'reminder', 'title' => 'Auto-Reminder Sent', 'desc' => 'Electricity bill reminder sent to 12 residents', 'time' => '2 hours ago', 'icon' => 'bx-envelope', 'color' => '#3B82F6'],
@@ -290,9 +266,6 @@ try {
             break;
 
         case 'ai_insights':
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
                 "Rent collection efficiency increased by 1.2% this month compared to last month.",
                 "Electricity expenses are projected to decrease by 6% based on current consumption rates.",
@@ -302,15 +275,9 @@ try {
             break;
             
         default:
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode(['error' => 'Invalid endpoint']);
             break;
     }
 } catch (Exception $e) {
-    $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
-            echo json_encode(['error' => 'Server error']);
+    echo json_encode(['error' => 'Server error']);
 }
