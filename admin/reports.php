@@ -54,7 +54,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         }
 
         /* Buttons & Controls */
-        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .header-actions { display: flex; gap: 12px; align-items: center; margin-left: auto; justify-content: flex-end; }
         .btn-saas { padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
         .btn-saas-outline { background: #fff; border: 1px solid #E2E8F0; color: #334155; }
         .btn-saas-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
@@ -142,7 +142,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <?php include 'header.php'; ?>
 
     <!-- Header Section -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 8px; margin-top: 24px;" class="fade-in">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 8px; margin-top: 24px;" class="fade-in">
         <div>
             <h1 class="page-title">Financial & Operational Reports</h1>
             <p class="page-subtitle">Monitor performance, renter health, and billing insights in real time.</p>
