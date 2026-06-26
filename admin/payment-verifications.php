@@ -791,9 +791,35 @@ include "sidebar.php";
         
         if (currentRejectFormId !== null) {
             document.getElementById('adminNote_' + currentRejectFormId).value = reason;
+            sessionStorage.setItem("pv_scroll_pos_" + window.location.pathname, window.scrollY);
             document.getElementById('rejectForm_' + currentRejectFormId).submit();
         }
     }
+
+    // --- Scroll Position Restoration Logic ---
+    document.addEventListener("DOMContentLoaded", function() {
+        const scrollKey = "pv_scroll_pos_" + window.location.pathname;
+        const savedPos = sessionStorage.getItem(scrollKey);
+        
+        if (savedPos !== null) {
+            // Restore scroll position
+            window.scrollTo(0, parseInt(savedPos, 10));
+            // Remove the key so a fresh entry from the sidebar goes to the top
+            sessionStorage.removeItem(scrollKey);
+        }
+
+        // Save scroll position when clicking pagination links or standard action buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.pv-page-btn')) {
+                sessionStorage.setItem(scrollKey, window.scrollY);
+            }
+        });
+
+        // Save scroll position on any normal form submission (filters, approve button)
+        document.addEventListener('submit', function() {
+            sessionStorage.setItem(scrollKey, window.scrollY);
+        });
+    });
 </script>
 </body>
 </html>
