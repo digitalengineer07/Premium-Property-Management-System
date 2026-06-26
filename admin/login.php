@@ -277,6 +277,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         color: var(--text-gray); font-size: 11px; font-weight: 600;
     }
 
+    .back-home-btn {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-gray);
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        z-index: 50;
+        padding: 8px 16px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.4);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .back-home-btn:hover {
+        color: var(--primary-purple);
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        transform: translateY(-1px);
+    }
+
     .error-box {
         background: #FEF2F2; border: 1px solid #FCA5A5; color: #DC2626;
         padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
@@ -291,6 +319,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
+
+<a href="../index.php" class="back-home-btn">
+    <i class='bx bx-left-arrow-alt' style="font-size: 18px;"></i> Back to Home
+</a>
 
 <div class="split-layout">
     
