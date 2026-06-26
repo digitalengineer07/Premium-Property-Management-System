@@ -1,8 +1,7 @@
 <?php
 require '../db.php';
-$r = mysqli_query($conn, "DESCRIBE rent");
-echo "Rent: ";
-while($row=mysqli_fetch_assoc($r)) echo $row['Field'].', ';
-echo "\nElectricity: ";
-$r2 = mysqli_query($conn, "DESCRIBE electricity");
-while($row=mysqli_fetch_assoc($r2)) echo $row['Field'].', ';
+$r = mysqli_query($conn, "SHOW CREATE TABLE rent");
+echo mysqli_fetch_assoc($r)['Create Table']."\n\n";
+
+$r = mysqli_query($conn, "SHOW CREATE TABLE electricity");
+echo mysqli_fetch_assoc($r)['Create Table']."\n\n";
