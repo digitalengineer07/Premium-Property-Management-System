@@ -245,8 +245,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                 </div>
                 
-                <div style="position: relative; margin-top: 10px;">
-                    <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Top Consumers</h3>
+                <div style="position: relative; margin-top: 24px; border-top: 1px dashed #E2E8F0; padding-top: 24px;">
+                    <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px; display: flex; align-items: center; gap: 8px;"><i class='bx bxs-bar-chart-alt-2' style="color:#6C4DFF; font-size:18px;"></i> Top Consumers</h3>
                     <div style="height: 250px; position: relative;">
                         <canvas id="elecBarChart"></canvas>
                     </div>
@@ -530,16 +530,30 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const eBarRes = await fetch('api_reports_saas.php?endpoint=electricity_bar');
             const eBar = await eBarRes.json();
             if(charts.ebar) charts.ebar.destroy();
-            charts.ebar = new Chart(document.getElementById('elecBarChart'), {
+            let barCtx = document.getElementById('elecBarChart').getContext('2d');
+            let barGradient = barCtx.createLinearGradient(0, 0, 0, 250);
+            barGradient.addColorStop(0, 'rgba(108, 77, 255, 0.9)');
+            barGradient.addColorStop(1, 'rgba(108, 77, 255, 0.2)');
+            
+            charts.ebar = new Chart(barCtx, {
                 type: 'bar',
                 data: {
                     labels: eBar.map(d => d.label),
-                    datasets: [{ data: eBar.map(d => d.units), backgroundColor: '#10B981', borderRadius: 4 }]
+                    datasets: [{ 
+                        data: eBar.map(d => d.units), 
+                        backgroundColor: barGradient, 
+                        hoverBackgroundColor: '#6C4DFF',
+                        borderRadius: 8,
+                        maxBarThickness: 60
+                    }]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { grid: { display: false } }, y: { display: false } }
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0F172A', padding: 12, cornerRadius: 8, displayColors: false } },
+                    scales: { 
+                        x: { grid: { display: false }, border: { display: false }, ticks: { font: { family: 'Inter', size: 12, weight: '500' }, color: '#64748B', maxRotation: 0, minRotation: 0, callback: function(val) { let label = this.getLabelForValue(val); return label.length > 12 ? label.substring(0, 10) + '..' : label; } } }, 
+                        y: { display: false } 
+                    }
                 }
             });
 
