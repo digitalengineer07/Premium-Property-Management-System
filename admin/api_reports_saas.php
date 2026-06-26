@@ -39,7 +39,7 @@ try {
             $outstanding = (mysqli_fetch_assoc($qRentDue)['total'] ?? 0) + (mysqli_fetch_assoc($qElecDue)['total'] ?? 0);
             
             // 4. Total Active Residents
-            $qActive = mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE status='active' AND role='user'");
+            $qActive = mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE status='active'");
             $active_residents = mysqli_fetch_assoc($qActive)['c'] ?? 0;
             
             // 5. Collection Efficiency
@@ -101,7 +101,7 @@ try {
                        IFNULL((SELECT SUM(total_amount) FROM electricity WHERE user_id = u.id AND status='Due'), 0) +
                        IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Due'), 0) as total_due
                 FROM users u
-                WHERE u.role='user' AND u.status='active'
+                WHERE u.status='active'
                 ORDER BY total_paid DESC LIMIT 4
             ";
             $res = mysqli_query($conn, $q);
