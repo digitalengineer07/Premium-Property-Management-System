@@ -57,6 +57,30 @@ if (isset($_GET['action']) && $_GET['action'] == 'toggle') {
     mysqli_stmt_close($stmt);
 }
 
+// Handle Custom Reminder Form Submission
+if (isset($_POST['send_custom_reminder'])) {
+    $bill_info = explode('_', $_POST['bill_selection']); // e.g. "Rent_45"
+    if(count($bill_info) == 2) {
+        $b_type = mysqli_real_escape_string($conn, $bill_info[0]);
+        $b_id = mysqli_real_escape_string($conn, $bill_info[1]);
+        
+        $table = ($b_type == 'Rent') ? 'rent' : 'electricity';
+        $b_q = mysqli_query($conn, "SELECT user_id, month FROM $table WHERE id='$b_id'");
+        
+        if ($b_row = mysqli_fetch_assoc($b_q)) {
+            $u_id = $b_row['user_id'];
+            $b_month = mysqli_real_escape_string($conn, $b_row['month']);
+            $remark = mysqli_real_escape_string($conn, $_POST['remark']);
+            
+            mysqli_query($conn, "INSERT INTO payment_reminders (user_id, bill_id, bill_type, month, remind_type, status, admin_remark) VALUES ('$u_id', '$b_id', '$b_type', '$b_month', 'Manual', 'Sent', '$remark')");
+            
+            $_SESSION['msg'] = "Custom manual reminder dispatched successfully!";
+            header("Location: manage-reminders.php");
+            exit;
+        }
+    }
+}
+
 // Fetch all Due Bills
 $dues = [];
 $res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND u.status = 'active'");
@@ -200,7 +224,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             <a href="auto-reminders.php" class="btn-outline" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
                 <i class='bx bx-cog'></i> Reminder Settings
             </a>
-            <button class="btn-primary" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <button class="btn-primary" onclick="document.getElementById('customReminderModal').style.display='flex'" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                 <i class='bx bx-plus'></i> Create Reminder
             </button>
         </div>
@@ -472,6 +496,35 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
     </div>
 </main>
+
+<!-- Custom Reminder Modal -->
+<div class="sidebar-overlay" id="customReminderModal" style="display: none; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: var(--bg-color, #fff); width: 400px; max-width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid var(--border);">
+        <h3 style="margin-top: 0; color: var(--text-dark); margin-bottom: 20px;">Create Custom Reminder</h3>
+        <form method="POST" action="">
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px;">Select Pending Bill</label>
+                <select name="bill_selection" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; background: #fff; color: #1e293b; outline: none;">
+                    <option value="">-- Choose an unpaid bill --</option>
+                    <?php foreach($dues as $d): ?>
+                        <option value="<?php echo $d['type'].'_'.$d['id']; ?>">
+                            <?php echo $d['name'] . ' - ' . $d['type'] . ' (' . $d['month'] . ')'; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px;">Custom Note (Optional)</label>
+                <textarea name="remark" rows="3" placeholder="E.g., Please pay before Friday to avoid late fees." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; resize: none; background: #fff; color: #1e293b; outline: none;"></textarea>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="document.getElementById('customReminderModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #E2E8F0; background: transparent; color: var(--text-gray); font-weight: 700; cursor: pointer; transition: all 0.2s;">Cancel</button>
+                <button type="submit" name="send_custom_reminder" class="btn-primary" style="padding: 10px 20px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer;">Send Reminder</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <script>
     const themeToggle = document.getElementById('themeToggle');
