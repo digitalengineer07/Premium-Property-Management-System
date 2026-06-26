@@ -67,12 +67,12 @@ try {
             // 1. Total Rent Collected
             $qRent = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Paid' AND ".$rent_filter);
             $rent_old = mysqli_fetch_assoc($qRent)['total'] ?? 0;
-            $qRentNew = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM electricity WHERE status='Paid' AND " . $elec_filter AND ".$elec_filter);
+            $qRentNew = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM electricity WHERE status='Paid' AND " . $elec_filter);
             $rent_new = mysqli_fetch_assoc($qRentNew)['total'] ?? 0;
             $total_rent = $rent_old + $rent_new;
             
             // 2. Electricity Collection (Gross Profit approximation)
-            $qUnits = mysqli_query($conn, "SELECT SUM(current_reading - previous_reading) as total_units, SUM(total_amount) as rev FROM electricity WHERE status='Paid' AND " . $elec_filter AND ".$elec_filter);
+            $qUnits = mysqli_query($conn, "SELECT SUM(current_reading - previous_reading) as total_units, SUM(total_amount) as rev FROM electricity WHERE status='Paid' AND " . $elec_filter);
             $elec_stats = mysqli_fetch_assoc($qUnits);
             $est_expense = ($elec_stats['total_units'] ?? 0) * 6.5; 
             $elec_profit = ($elec_stats['rev'] ?? 0) - $est_expense;
@@ -184,7 +184,7 @@ try {
             break;
 
         case 'electricity_insights':
-            $qStats = mysqli_query($conn, "SELECT AVG(current_reading - previous_reading) as avg_u, MAX(current_reading - previous_reading) as max_u, MIN(current_reading - previous_reading) as min_u FROM electricity WHERE status='Paid' AND " . $elec_filter");
+            $qStats = mysqli_query($conn, "SELECT AVG(current_reading - previous_reading) as avg_u, MAX(current_reading - previous_reading) as max_u, MIN(current_reading - previous_reading) as min_u FROM electricity WHERE status='Paid' AND " . $elec_filter);
             $stats = mysqli_fetch_assoc($qStats);
             $total_rent = max($total_rent, 181500 * $mult);
             $elec_profit = max($elec_profit, 218762 * $mult);
@@ -203,7 +203,7 @@ try {
             $query = "
                 SELECT u.name as label, SUM(e.current_reading - e.previous_reading) as units
                 FROM electricity e
-                JOIN users u ON e.user_id = u.id WHERE " . str_replace('created_at', 'e.created_at', $elec_filter)
+                JOIN users u ON e.user_id = u.id WHERE " . str_replace('created_at', 'e.created_at', $elec_filter) . "
                 GROUP BY u.id
                 ORDER BY units DESC LIMIT 5
             ";
@@ -247,7 +247,7 @@ try {
                 SELECT e1.id, u.name, u.room_no, e1.month, (e1.current_reading - e1.previous_reading) as units
                 FROM electricity e1
                 JOIN users u ON e1.user_id = u.id
-                WHERE (e1.current_reading - e1.previous_reading) > 250 AND " . str_replace('created_at', 'e1.created_at', $elec_filter) 
+                WHERE (e1.current_reading - e1.previous_reading) > 250 AND " . str_replace('created_at', 'e1.created_at', $elec_filter) . " 
                 ORDER BY units DESC LIMIT 4
             ";
             $res = mysqli_query($conn, $query);
