@@ -1,5 +1,6 @@
 <?php
-session_start();
-$_SESSION['admin'] = 'a';
-$_GET['endpoint'] = 'resident_performance';
-require 'api_reports_saas.php';
+require '../db.php';
+$res = mysqli_query($conn, "DESCRIBE electricity");
+while($r = mysqli_fetch_assoc($res)){
+    echo $r['Field']."\n";
+}
