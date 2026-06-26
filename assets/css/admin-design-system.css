@@ -192,14 +192,21 @@ body {
     flex: 1;
     overflow-y: auto;
     padding-right: 4px;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
     /* Firefox */
     overscroll-behavior: contain;
 }
 
 .nav::-webkit-scrollbar {
-    display: none;
-    /* Safari and Chrome */
+    width: 4px;
+}
+.nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+.nav::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
 }
 
 .nav-item {
