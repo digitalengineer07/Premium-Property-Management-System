@@ -390,8 +390,8 @@ if ($res) {
         .pv-time-text { font-size: 11px; color: #64748B; white-space: nowrap; }
         
         .pv-status-pill {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 3px;
+            padding: 2px 6px; border-radius: 12px; font-size: 10.5px; font-weight: 600;
             white-space: nowrap;
         }
         .pv-status-pill i { font-size: 6px; }
