@@ -222,7 +222,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         </div>
         <div style="display: flex; gap: 12px;">
             <a href="auto-reminders.php" class="btn-outline" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-cog'></i> Reminder Settings
+                <i class='bx bx-play-circle'></i> Run Auto-Reminders
             </a>
             <button class="btn-primary" onclick="document.getElementById('customReminderModal').style.display='flex'" style="padding: 10px 18px; border-radius: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                 <i class='bx bx-plus'></i> Create Reminder
