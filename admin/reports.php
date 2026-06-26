@@ -282,9 +282,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         <div class="col-6 col-md-12">
             <div class="saas-panel" style="height: 100%;">
                 <div class="saas-panel-header">
-                    <h2 class="section-title">Expense Summary</h2>
+                    <h2 class="section-title"><i class='bx bx-pie-chart-alt-2' style="color: #6C4DFF; vertical-align: middle; margin-right: 4px;"></i> Expense Summary</h2>
                 </div>
-                <div style="position: relative; height: 200px; display: flex; justify-content: center; align-items: center;">
+                <div style="position: relative; height: 250px; display: flex; justify-content: center; align-items: center; margin-top: 10px;">
                     <canvas id="expenseChart"></canvas>
                 </div>
             </div>
@@ -607,6 +607,32 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const expData = await expRes.json();
             const totalExp = expData.Total; delete expData.Total;
             if(charts.expense) charts.expense.destroy();
+            
+            // Custom plugin to draw total text in the center
+            const centerTextPlugin = {
+                id: 'centerText',
+                beforeDraw: function(chart) {
+                    var width = chart.width, height = chart.height, ctx = chart.ctx;
+                    ctx.restore();
+                    var fontSize = (height / 120).toFixed(2);
+                    ctx.font = "bold " + fontSize + "em Inter";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#0F172A";
+                    var text = formatCur(totalExp),
+                        textX = Math.round((width - ctx.measureText(text).width) / 2) - 40, // offset slightly left for legend
+                        textY = height / 2 - 5;
+                    ctx.fillText(text, textX, textY);
+                    
+                    ctx.font = "600 " + (fontSize/2.5).toFixed(2) + "em Inter";
+                    ctx.fillStyle = "#64748B";
+                    var label = "Total Expenses",
+                        labelX = Math.round((width - ctx.measureText(label).width) / 2) - 40,
+                        labelY = height / 2 + 15;
+                    ctx.fillText(label, labelX, labelY);
+                    ctx.save();
+                }
+            };
+
             charts.expense = new Chart(document.getElementById('expenseChart'), {
                 type: 'doughnut',
                 data: {
@@ -614,13 +640,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     datasets: [{
                         data: Object.values(expData).map(v => v.value),
                         backgroundColor: Object.values(expData).map(v => v.color),
-                        borderWidth: 0, hoverOffset: 4
+                        borderWidth: 0, hoverOffset: 8
                     }]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false, cutout: '75%',
-                    plugins: { legend: { position: 'right', labels: { usePointStyle: true, padding: 16, font: { family: 'Inter', size: 11 } } } }
-                }
+                    responsive: true, maintainAspectRatio: false, cutout: '82%',
+                    plugins: { 
+                        legend: { position: 'right', labels: { usePointStyle: true, padding: 20, font: { family: 'Inter', size: 12, weight: '500' }, color: '#475569' } },
+                        tooltip: { backgroundColor: '#0F172A', padding: 12, cornerRadius: 8, displayColors: true }
+                    }
+                },
+                plugins: [centerTextPlugin]
             });
 
             // 10. Timeline
