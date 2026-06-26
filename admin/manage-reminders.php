@@ -145,6 +145,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .scroll-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .scroll-list::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+        .history-item {
+            border-bottom: 1px solid #F1F5F9;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
         .kpi-grid-4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -386,7 +397,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </select>
                     </div>
                 </div>
-                <div class="scroll-list" style="padding-left: 12px;">
+                <div style="padding-left: 12px;">
                     <?php 
                     $counter = 0;
                     $total = mysqli_num_rows($history);
@@ -418,7 +429,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             $subtext = 'Email';
                         }
                     ?>
-                        <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 16px; padding-bottom: 24px;">
+                        <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 16px;">
                             <?php if($counter < $total): ?>
                                 <div style="position: absolute; left: 4px; top: 16px; bottom: 0; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
                             <?php endif; ?>
