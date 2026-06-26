@@ -271,14 +271,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
         <div class="left-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
-                    <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+                    <div style="display: flex; gap: 12px; align-items: center; min-width: 0;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-bell'></i>
                         </div>
-                        <div>
-                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0;">Pending Dues & Reminders</h2>
-                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600;">Residents with unpaid bills and upcoming reminders</p>
+                        <div style="min-width: 0;">
+                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; white-space: nowrap;">Pending Dues & Reminders</h2>
+                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Residents with unpaid bills and upcoming reminders</p>
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px;">
@@ -330,13 +330,15 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </div>
 
                         <div class="action-row" style="margin-top: 12px; padding-top: 12px;">
-                            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--text-gray);">
-                                <i class='bx bx-time-five' style="font-size: 14px;"></i>
-                                <?php if ($d['last_reminder'] != 'Never'): ?>
-                                    Last Reminded: <span style="color: var(--text-dark); font-weight: 700;"><?php echo date('M d, H:i A', strtotime($d['last_reminder'])); ?></span>
-                                <?php else: ?>
-                                    Never Reminded
-                                <?php endif; ?>
+                            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--text-gray); min-width: 0;">
+                                <i class='bx bx-time-five' style="font-size: 14px; flex-shrink: 0;"></i>
+                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <?php if ($d['last_reminder'] != 'Never'): ?>
+                                        Last Reminded: <span style="color: var(--text-dark); font-weight: 700;"><?php echo date('M d, H:i A', strtotime($d['last_reminder'])); ?></span>
+                                    <?php else: ?>
+                                        Never Reminded
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             
                             <div style="display: flex; gap: 8px;">
@@ -366,14 +368,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
         <div class="right-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
-                    <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; gap: 12px; align-items: center; min-width: 0;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-time-five'></i>
                         </div>
-                        <div>
-                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0;">Reminders History</h2>
-                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600;">Recent reminders sent to residents</p>
+                        <div style="min-width: 0;">
+                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; white-space: nowrap;">Reminders History</h2>
+                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Recent reminders sent to residents</p>
                         </div>
                     </div>
                     <div style="padding-top: 2px;">
