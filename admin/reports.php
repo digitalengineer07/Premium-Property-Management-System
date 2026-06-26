@@ -143,7 +143,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <?php include 'header.php'; ?>
 
     <!-- Header Section -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 8px;" class="fade-in">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 8px; margin-top: 24px;" class="fade-in">
         <div>
             <h1 class="page-title">Financial & Operational Reports</h1>
             <p class="page-subtitle">Monitor performance, renter health, and billing insights in real time.</p>
