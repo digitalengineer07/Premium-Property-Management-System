@@ -95,7 +95,7 @@ try {
         case 'resident_performance':
             // Real query for top 4 residents
             $q = "
-                SELECT u.id, u.name, u.room_no, u.photo,
+                SELECT u.id, u.name, u.room_no, u.profile_pic as photo,
                        IFNULL((SELECT SUM(rent_amount + maintenance + extra_charges + total_amount) FROM electricity WHERE user_id = u.id AND status='Paid'), 0) +
                        IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status='Paid'), 0) as total_paid,
                        IFNULL((SELECT SUM(total_amount) FROM electricity WHERE user_id = u.id AND status='Due'), 0) +
@@ -168,7 +168,7 @@ try {
 
         case 'top_defaulters':
             $query = "
-                SELECT u.id, u.name, u.room_no, u.photo, u.phone,
+                SELECT u.id, u.name, u.room_no, u.profile_pic as photo, u.phone,
                        IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status = 'Due'), 0) + 
                        IFNULL((SELECT SUM(total_amount) FROM electricity WHERE user_id = u.id AND status = 'Due'), 0) as total_due
                 FROM users u
