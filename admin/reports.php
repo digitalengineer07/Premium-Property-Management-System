@@ -104,7 +104,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
 
         /* Defaulters */
-        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; }
+        .defaulter-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F1F5F9; }
+        .defaulter-card:last-child { border-bottom: none; }
+        .defaulter-card-left { display: flex; align-items: center; gap: 12px; }
+        .defaulter-card-right { display: flex; align-items: center; gap: 16px; }
+        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; text-decoration: none; }
         .defaulter-action:hover { background: #6C4DFF; color: #fff; }
 
         /* Timeline */
@@ -544,15 +548,15 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const defData = await defRes.json();
             document.getElementById('defaulterContainer').innerHTML = defData.map(d => `
                 <div class="defaulter-card">
-                    <div class="d-flex align-center" style="gap:12px;">
+                    <div class="defaulter-card-left">
                         <img src="${d.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
                         <div>
                             <div class="p-name">${d.name} <span style="color:#64748B; font-weight:500; font-size:12px;">(Rm ${d.room})</span></div>
                             <div style="font-size:11px; color:#EF4444; font-weight:600;">${d.days_overdue} days overdue</div>
                         </div>
                     </div>
-                    <div class="d-flex align-center" style="gap:16px;">
-                        <div class="r-amount" style="color:#EF4444;">${formatCur(d.due)}</div>
+                    <div class="defaulter-card-right">
+                        <div class="r-amount" style="color:#EF4444; font-size: 15px; font-weight: 700;">${formatCur(d.due)}</div>
                         <a href="manage-reminders.php" class="defaulter-action" title="Send Reminder"><i class='bx bx-bell'></i></a>
                     </div>
                 </div>
