@@ -59,7 +59,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'toggle') {
 
 // Fetch all Due Bills
 $dues = [];
-$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due'");
+$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res1)) {
     // Get last reminder date
     $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Rent' ORDER BY sent_at DESC LIMIT 1");
@@ -67,7 +67,7 @@ while($row = mysqli_fetch_assoc($res1)) {
     $dues[] = $row;
 }
 
-$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due'");
+$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res2)) {
     $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Electricity' ORDER BY sent_at DESC LIMIT 1");
     $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
@@ -75,7 +75,7 @@ while($row = mysqli_fetch_assoc($res2)) {
 }
 
 // Fetch recently sent reminders
-$history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FROM payment_reminders h JOIN users u ON h.user_id = u.id ORDER BY h.sent_at DESC LIMIT 10");
+$history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FROM payment_reminders h JOIN users u ON h.user_id = u.id WHERE u.status = 'active' ORDER BY h.sent_at DESC LIMIT 10");
 
 // Calculate KPIs
 $kpi_unpaid = count($dues);
