@@ -144,24 +144,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
     }
     .feature-text {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        padding: 6px 14px 8px 14px;
-        border-radius: 12px;
-        box-shadow: 0 4px 24px rgba(255,255,255,0.6);
-        margin-top: -4px;
+        /* Text wrapper */
     }
-    .feature-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
-    .feature-text p { font-size: 12px; color: var(--text-dark); font-weight: 600; max-width: 300px; line-height: 1.3; }
+    .feature-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; text-shadow: 0 0 15px rgba(255,255,255,1); }
+    .feature-text p { font-size: 12px; color: var(--text-gray); font-weight: 600; max-width: 300px; line-height: 1.3; text-shadow: 0 0 15px rgba(255,255,255,1); }
 
     .bg-illustration {
         position: absolute;
-        bottom: -20px;
-        right: -30px;
+        bottom: -30px;
+        right: -40px;
         left: auto;
         width: 100%;
-        max-width: 500px;
+        max-width: 420px;
         height: auto;
         z-index: 1;
         pointer-events: none;
