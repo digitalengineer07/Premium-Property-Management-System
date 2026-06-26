@@ -264,26 +264,26 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="reminders-custom-grid animate-up" style="align-items: stretch;">
         <div class="left-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                     <div style="display: flex; gap: 12px; align-items: flex-start;">
-                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-bell'></i>
                         </div>
                         <div>
-                            <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;">Pending Dues & Reminders</h2>
-                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-weight: 600;">Residents with unpaid bills and upcoming reminders</p>
+                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0;">Pending Dues & Reminders</h2>
+                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600;">Residents with unpaid bills and upcoming reminders</p>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 12px; padding-top: 4px;">
-                        <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 6px 12px; border-radius: 8px; font-size: 12px; border: none;"><?php echo count($dues); ?> Unpaid Bills</span>
-                        <button style="background: none; border: none; color: var(--text-dark); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><i class='bx bx-dots-vertical-rounded'></i></button>
+                    <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px;">
+                        <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; white-space: nowrap;"><?php echo count($dues); ?> Unpaid Bills</span>
+                        <button style="background: none; border: none; color: var(--text-dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;"><i class='bx bx-dots-vertical-rounded'></i></button>
                     </div>
                 </div>
                 
                 <?php if(empty($dues)): ?>
-                    <div style="text-align: center; padding: 60px; color: var(--text-gray);">
-                        <i class='bx bx-smile' style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
-                        <p>All clear! No pending dues found.</p>
+                    <div style="text-align: center; padding: 40px; color: var(--text-gray);">
+                        <i class='bx bx-smile' style="font-size: 40px; opacity: 0.3; margin-bottom: 12px;"></i>
+                        <p style="font-size: 13px;">All clear! No pending dues found.</p>
                     </div>
                 <?php else: foreach($dues as $d): 
                     $isDisabled = ($d['reminder_status'] == 'Disabled');
@@ -293,37 +293,37 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     if ($days == 0) $days = 3;
                     $isOverdue = ($d['id'] % 2 == 0);
                 ?>
-                    <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>" style="margin-bottom: 16px; padding: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-                            <div style="display: flex; align-items: flex-start; gap: 16px;">
-                                <div style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: <?php echo $d['type'] == 'Rent' ? 'rgba(59,130,246,0.08); color: #3B82F6;' : 'rgba(245,158,11,0.08); color: #F59E0B;'; ?>">
+                    <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>" style="margin-bottom: 12px; padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
+                                <div style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: <?php echo $d['type'] == 'Rent' ? 'rgba(59,130,246,0.08); color: #3B82F6;' : 'rgba(245,158,11,0.08); color: #F59E0B;'; ?>">
                                     <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-droplet' : 'bx-bulb'; ?>'></i>
                                 </div>
-                                <div>
-                                    <h3 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+                                <div style="flex: 1; min-width: 0;">
+                                    <h3 style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo htmlspecialchars($d['name']); ?>
-                                        <span style="font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.5px; <?php echo $d['type'] == 'Rent' ? 'background: #EFF6FF; color: #3B82F6;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
+                                        <span style="font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; flex-shrink: 0; <?php echo $d['type'] == 'Rent' ? 'background: #EFF6FF; color: #3B82F6;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
                                             <?php echo strtoupper($d['type'] == 'Rent' ? 'Water' : 'Electricity'); ?>
                                         </span>
                                     </h3>
-                                    <div style="color: var(--text-gray); font-size: 13px; font-weight: 600; margin-bottom: 8px;">Room <?php echo $d['room_no']; ?> • <?php echo $d['month']; ?></div>
+                                    <div style="color: var(--text-gray); font-size: 12px; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room <?php echo $d['room_no']; ?> • <?php echo $d['month']; ?></div>
                                     <?php if ($isOverdue): ?>
-                                        <span style="font-size: 11px; font-weight: 700; color: #EF4444; background: #FEF2F2; padding: 4px 10px; border-radius: 20px; display: inline-block;">Overdue <?php echo $days; ?> days</span>
+                                        <span style="font-size: 10px; font-weight: 700; color: #EF4444; background: #FEF2F2; padding: 3px 8px; border-radius: 20px; display: inline-block;">Overdue <?php echo $days; ?> days</span>
                                     <?php else: ?>
-                                        <span style="font-size: 11px; font-weight: 700; color: #F59E0B; background: #FFF7ED; padding: 4px 10px; border-radius: 20px; display: inline-block;">Due in <?php echo $days; ?> days</span>
+                                        <span style="font-size: 10px; font-weight: 700; color: #F59E0B; background: #FFF7ED; padding: 3px 8px; border-radius: 20px; display: inline-block;">Due in <?php echo $days; ?> days</span>
                                     <?php endif; ?>
                                 </div>
                             </div>
                             
-                            <div style="text-align: center; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 10px 16px; border-radius: 12px;">
-                                <div style="font-size: 10px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">DUE AMOUNT</div>
-                                <div style="font-size: 18px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
+                            <div style="text-align: right; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 8px 12px; border-radius: 10px; flex-shrink: 0;">
+                                <div style="font-size: 9px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">DUE AMOUNT</div>
+                                <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
                             </div>
                         </div>
 
-                        <div class="action-row" style="margin-top: 16px; padding-top: 16px;">
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--text-gray);">
-                                <i class='bx bx-time-five' style="font-size: 16px;"></i>
+                        <div class="action-row" style="margin-top: 12px; padding-top: 12px;">
+                            <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--text-gray);">
+                                <i class='bx bx-time-five' style="font-size: 14px;"></i>
                                 <?php if ($d['last_reminder'] != 'Never'): ?>
                                     Last Reminded: <span style="color: var(--text-dark); font-weight: 700;"><?php echo date('M d, H:i A', strtotime($d['last_reminder'])); ?></span>
                                 <?php else: ?>
@@ -331,26 +331,26 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <?php endif; ?>
                             </div>
                             
-                            <div style="display: flex; gap: 12px;">
+                            <div style="display: flex; gap: 8px;">
                                 <?php if ($isDisabled): ?>
-                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Enabled" class="btn-outline" style="padding: 8px 16px; font-size: 13px; border-radius: 10px; color: #10B981; border-color: #10B981; text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
-                                        <i class='bx bx-play-circle' style="font-size: 18px;"></i> Resume
+                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Enabled" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; color: #10B981; border-color: #10B981; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                                        <i class='bx bx-play-circle' style="font-size: 16px;"></i> Resume
                                     </a>
                                 <?php else: ?>
-                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Disabled" class="btn-outline" style="padding: 8px 16px; font-size: 13px; border-radius: 10px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600;">
-                                        <i class='bx bx-pause-circle' style="font-size: 18px;"></i> Pause
+                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Disabled" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                                        <i class='bx bx-pause-circle' style="font-size: 16px;"></i> Pause
                                     </a>
                                 <?php endif; ?>
                                 
-                                <a href="manage-reminders.php?action=remind&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>" class="btn-primary" style="padding: 8px 20px; font-size: 13px; border-radius: 10px; text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 600; <?php echo $isDisabled ? 'opacity: 0.5; pointer-events: none;' : ''; ?>">
-                                    <i class='bx bx-send' style="font-size: 16px;"></i> Send Now
+                                <a href="manage-reminders.php?action=remind&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>" class="btn-primary" style="padding: 6px 16px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600; <?php echo $isDisabled ? 'opacity: 0.5; pointer-events: none;' : ''; ?>">
+                                    <i class='bx bx-send' style="font-size: 14px;"></i> Send Now
                                 </a>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; endif; ?>
-                <div style="text-align: center; margin-top: 16px;">
-                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">View All Pending Dues <i class='bx bx-right-arrow-alt'></i></a>
+                <div style="text-align: center; margin-top: 12px;">
+                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All Pending Dues <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
         </div>
