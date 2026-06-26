@@ -1,4 +1,6 @@
 <?php
 require '../db.php';
-$r = mysqli_query($conn, "SELECT DISTINCT month FROM rent");
-while($row=mysqli_fetch_assoc($r)) echo $row['month'].', ';
+$r = mysqli_query($conn, "SELECT COUNT(*) as c FROM rent");
+echo "Rent count: ".mysqli_fetch_assoc($r)['c']."\n";
+$r = mysqli_query($conn, "SELECT COUNT(*) as c FROM electricity");
+echo "Electricity count: ".mysqli_fetch_assoc($r)['c']."\n";
