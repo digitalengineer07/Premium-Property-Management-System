@@ -14,82 +14,125 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics & Reports | <?php echo HOUSE_NAME; ?></title>
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
-    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Specific Report Layout Tweaks */
-        .reports-topbar {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
-        }
-        .btn-group { display: flex; gap: 8px; }
-        .filter-btn {
-            background: var(--white); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-gray);
-            transition: var(--transition);
-        }
-        .filter-btn.active, .filter-btn:hover { background: var(--primary-purple); color: var(--white); border-color: var(--primary-purple); }
+        /* SaaS Dashboard Core Styles */
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 0; }
+        .main { padding: 32px; padding-top: 80px; max-width: 1440px; margin: 0 auto; }
         
-
-
-        .charts-grid {
-            display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;
-        }
-        .tables-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
-        }
+        /* Typography */
+        .page-title { font-size: 28px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; }
+        .page-subtitle { font-size: 14px; font-weight: 500; color: #64748B; margin-bottom: 0; }
+        .section-title { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0; }
         
-        @media (max-width: 1024px) {
-            .charts-grid { grid-template-columns: 1fr; }
-            .tables-grid { grid-template-columns: 1fr; }
+        /* Grid System */
+        .saas-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 24px; }
+        .col-12 { grid-column: span 12; }
+        .col-8 { grid-column: span 8; }
+        .col-6 { grid-column: span 6; }
+        .col-4 { grid-column: span 4; }
+        .col-3 { grid-column: span 3; }
+        
+        @media (max-width: 1200px) {
+            .col-lg-12 { grid-column: span 12; }
+            .col-lg-6 { grid-column: span 6; }
+        }
+        @media (max-width: 992px) {
+            .saas-grid { gap: 16px; }
+            .col-md-12 { grid-column: span 12; }
+            .kpi-row { grid-template-columns: repeat(2, 1fr) !important; }
         }
         @media (max-width: 768px) {
-            .hide-mobile { display: none; }
-            .reports-topbar .btn-group {
-                flex-wrap: wrap;
-                justify-content: center;
-                width: 100%;
-            }
-            .reports-topbar .filter-btn {
-                flex: 1 1 calc(50% - 8px);
-                text-align: center;
-                padding: 10px 8px;
-            }
-            .reports-topbar select.filter-btn {
-                flex: 1 1 100%;
-                margin-top: 8px;
-            }
-            .divider-mobile {
-                display: none;
-            }
+            .main { padding: 20px; padding-top: 80px; }
+            .header-actions { flex-direction: column; align-items: stretch !important; gap: 12px; mt-4; }
+            .kpi-row { grid-template-columns: 1fr !important; }
         }
 
-        .spinner {
-            border: 3px solid rgba(0,0,0,0.1); width: 30px; height: 30px; border-radius: 50%; border-left-color: var(--primary-purple); animation: spin 1s linear infinite; margin: 0 auto;
-        }
+        /* Buttons & Controls */
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .btn-saas { padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+        .btn-saas-outline { background: #fff; border: 1px solid #E2E8F0; color: #334155; }
+        .btn-saas-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-saas-primary { background: #6C4DFF; color: #fff; box-shadow: 0 4px 12px rgba(108, 77, 255, 0.2); }
+        .btn-saas-primary:hover { background: #5a3df0; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(108, 77, 255, 0.3); }
+        
+        .quick-filters { display: flex; gap: 4px; background: #fff; padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin-top: 24px; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+        .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748B; border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .filter-btn:hover { color: #0F172A; background: #F1F5F9; }
+        .filter-btn.active { background: #6C4DFF; color: #fff; }
+
+        /* SaaS Panel (Card) */
+        .saas-panel { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); padding: 24px; display: flex; flex-direction: column; transition: box-shadow 0.3s; }
+        .saas-panel:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
+        .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        
+        /* KPI Cards */
+        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 24px; }
+        .kpi-card { background: #fff; padding: 24px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
+        .kpi-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
+        .kpi-label { font-size: 13px; font-weight: 600; color: #64748B; margin-bottom: 6px; }
+        .kpi-val { font-size: 28px; font-weight: 800; color: #0F172A; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .kpi-trend { font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; }
+        .trend-up { background: #ECFDF5; color: #10B981; }
+        .trend-down { background: #FEF2F2; color: #EF4444; }
+
+        /* Specific Elements */
+        .receivable-card { background: #F8FAFC; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
+        .receivable-card:hover { border-color: #E2E8F0; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .r-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: #334155; }
+        .r-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .r-amount { font-size: 16px; font-weight: 700; color: #0F172A; text-align: right; }
+        .r-sub { font-size: 11px; color: #64748B; font-weight: 500; text-align: right; margin-top: 2px; }
+
+        /* Profile Cards */
+        .profile-card { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid #F1F5F9; }
+        .profile-card:last-child { border-bottom: none; padding-bottom: 0; }
+        .p-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #E2E8F0; }
+        .p-info { flex: 1; min-width: 0; }
+        .p-name { font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-room { font-size: 12px; color: #64748B; font-weight: 500; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+
+        /* Defaulters */
+        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; }
+        .defaulter-action:hover { background: #6C4DFF; color: #fff; }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 20px; }
+        .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #E2E8F0; }
+        .tl-item { position: relative; padding-bottom: 24px; padding-left: 24px; }
+        .tl-item:last-child { padding-bottom: 0; }
+        .tl-dot { position: absolute; left: -16px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid #6C4DFF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6C4DFF; }
+        .tl-title { font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
+        .tl-desc { font-size: 12px; color: #64748B; line-height: 1.4; }
+        .tl-time { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; display: block; }
+
+        /* AI Insights */
+        .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid #E2E8F0; }
+        .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; color: #6C4DFF; font-size: 14px; }
+        .ai-list { margin: 0; padding-left: 20px; font-size: 13px; color: #334155; line-height: 1.6; }
+        .ai-list li { margin-bottom: 8px; }
+
+        .spinner { border: 3px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #6C4DFF; animation: spin 1s linear infinite; margin: 0 auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .shimmer { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; height: 16px; margin: 4px 0; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
-        /* Actions */
-        .action-link { color: var(--primary-purple); font-weight: 600; text-decoration: none; font-size: 13px; display: inline-flex; align-items: center; gap: 4px; }
-        .action-link:hover { text-decoration: underline; }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000;
-            display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-        .recon-modal { background: var(--bg-main); width: 80%; max-width: 800px; border-radius: 12px; padding: 24px; box-shadow: var(--card-shadow); max-height: 90vh; overflow-y: auto; }
-        .recon-modal h2 { margin-top: 0; margin-bottom: 8px; }
-        .recon-modal p { color: var(--text-gray); margin-bottom: 20px; font-size: 14px; }
-        .modal-close { float: right; cursor: pointer; font-size: 24px; color: var(--text-gray); }
-        .modal-close:hover { color: #EF4444; }
+        /* Utilities */
+        .text-right { text-align: right; }
+        .w-100 { width: 100%; }
+        .d-flex { display: flex; }
+        .align-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        
+        /* Animations */
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -99,479 +142,437 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up" style="margin-bottom: 20px;">
-        <h1>Financial & Operational Reports</h1>
-        <p>Monitor your performance, renter health, and billing anomalies</p>
-    </div>
-
-    <!-- Controls -->
-    <div class="reports-topbar animate-up">
-        <div class="btn-group" style="align-items: center;">
-            <button class="filter-btn" data-range="this_month">This Month</button>
-            <button class="filter-btn active" data-range="last_3_months">Last 3 Months</button>
-            <button class="filter-btn" data-range="ytd">Year to Date</button>
-            <button class="filter-btn" data-range="all">All Time</button>
-            <div class="divider-mobile" style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
-            <select id="monthSelector" class="filter-btn" style="padding-right: 32px; appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2371717A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 12px top 50%; background-size: 10px auto;">
-                <option value="all">Filter by Month...</option>
-            </select>
+    <!-- Header Section -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 8px;" class="fade-in">
+        <div>
+            <h1 class="page-title">Financial & Operational Reports</h1>
+            <p class="page-subtitle">Monitor performance, renter health, and billing insights in real time.</p>
         </div>
-        <div class="btn-group">
-            <button class="btn-outline" onclick="exportReport('csv')"><i class='bx bx-download'></i> Export CSV</button>
-            <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
-            <button class="btn-outline" onclick="document.getElementById('csvFileInput').click()"><i class='bx bx-receipt'></i> Reconcile Bank</button>
-            <button class="btn-primary" onclick="scheduleEmail()"><i class='bx bx-mail-send'></i> Schedule Email Report</button>
+        <div class="header-actions">
+            <button class="btn-saas btn-saas-outline"><i class='bx bx-export'></i> Export Report</button>
+            <button class="btn-saas btn-saas-outline"><i class='bx bx-download'></i> Download PDF</button>
+            <button class="btn-saas btn-saas-primary"><i class='bx bx-envelope'></i> Schedule Email Report</button>
         </div>
     </div>
 
-    <!-- KPI Deck -->
-    <div class="kpi-grid animate-up" id="kpiDeck">
-        <!-- Rendered via JS -->
-        <div class="kpi-card"><div class="shimmer"></div><div class="shimmer" style="height:30px;"></div></div>
-        <div class="kpi-card"><div class="shimmer"></div><div class="shimmer" style="height:30px;"></div></div>
-        <div class="kpi-card"><div class="shimmer"></div><div class="shimmer" style="height:30px;"></div></div>
+    <!-- Quick Filters -->
+    <div class="quick-filters fade-in" style="margin-bottom: 32px; animation-delay: 0.1s;">
+        <button class="filter-btn">Today</button>
+        <button class="filter-btn">This Week</button>
+        <button class="filter-btn active">This Month</button>
+        <button class="filter-btn">Last 3 Months</button>
+        <button class="filter-btn">Year to Date</button>
+        <button class="filter-btn">All Time</button>
+        <button class="filter-btn"><i class='bx bx-calendar'></i> Custom Range</button>
     </div>
 
-    <!-- Charts -->
-    <div class="charts-grid animate-up">
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Revenue vs. Expenses (Time Series)</h2>
-                <i class='bx bx-dots-horizontal-rounded' style="color:var(--text-gray); font-size:24px; cursor:pointer;"></i>
+    <!-- KPI Overview Cards -->
+    <div class="kpi-row fade-in" id="kpiContainer" style="animation-delay: 0.2s;">
+        <!-- Injected via JS -->
+        <div class="kpi-card" style="display:flex; justify-content:center; align-items:center; height:180px;"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Analytics & Charts -->
+    <div class="saas-grid fade-in" style="animation-delay: 0.3s;">
+        <div class="col-8 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Revenue Overview</h2>
+                    <select style="padding: 6px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 12px; font-weight: 600; outline:none;">
+                        <option>Monthly</option>
+                        <option>Quarterly</option>
+                    </select>
+                </div>
+                <div style="flex: 1; position: relative; min-height: 250px;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
-            <canvas id="revenueChart" style="width: 100%; height: 300px; max-height: 300px;"></canvas>
+        </div>
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Collection Distribution</h2>
+                    <i class='bx bx-dots-horizontal-rounded' style="color:#94A3B8; font-size:20px; cursor:pointer;"></i>
+                </div>
+                <div style="flex: 1; position: relative; display: flex; justify-content: center; align-items: center; min-height: 250px;">
+                    <canvas id="donutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receivables & Performance -->
+    <div class="saas-grid fade-in" style="animation-delay: 0.4s;">
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Receivables Aging</h2>
+                </div>
+                <div id="agingContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Resident Financial Performance</h2>
+                    <a href="manage-renters.php" style="font-size:12px; font-weight:600; color:#6C4DFF; text-decoration:none;">View All</a>
+                </div>
+                <div id="perfContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Electricity & Defaulters -->
+    <div class="saas-grid fade-in" style="animation-delay: 0.5s;">
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Electricity Insights</h2>
+                </div>
+                <div id="elecStatsContainer" style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:24px;">
+                    <!-- JS Injected -->
+                </div>
+                <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Top Consumers</h3>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="elecBarChart"></canvas>
+                </div>
+            </div>
         </div>
         
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Receivables Aging</h2>
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title" style="color: #EF4444;"><i class='bx bxs-error-circle' style="vertical-align:middle; margin-right:4px;"></i> Top Defaulters</h2>
+                </div>
+                <div id="defaulterContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </div>
             </div>
-            <canvas id="agingChart" style="width: 100%; height: 300px; max-height: 300px;"></canvas>
-            <div style="font-size: 12px; color: var(--text-gray); text-align: center; margin-top: 10px;">
-                Shows brackets for unpaid rent and electricity dues.
+        </div>
+
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title" style="color: #F59E0B;"><i class='bx bx-trending-up' style="vertical-align:middle; margin-right:4px;"></i> Anomaly Detection</h2>
+                </div>
+                <div id="anomalyContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Additional Charts -->
-    <div class="charts-grid animate-up" style="margin-bottom: 24px;">
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Top 5 Energy Consumers (All-Time Units)</h2>
+    <!-- Expenses, Activity & Insights -->
+    <div class="saas-grid fade-in" style="animation-delay: 0.6s;">
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Expense Summary</h2>
+                </div>
+                <div style="position: relative; height: 200px; display: flex; justify-content: center; align-items: center;">
+                    <canvas id="expenseChart"></canvas>
+                </div>
             </div>
-            <canvas id="usageChart" style="width: 100%; height: 250px; max-height: 250px;"></canvas>
         </div>
         
-        <div class="panel">
-            <div class="panel-header">
-                <h2>Revenue Breakdown</h2>
+        <div class="col-4 col-md-12">
+            <div class="saas-panel" style="height: 100%;">
+                <div class="saas-panel-header">
+                    <h2 class="section-title">Recent Financial Activity</h2>
+                </div>
+                <div class="timeline" id="activityContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </div>
             </div>
-            <div style="position: relative; height: 250px; width: 100%; display: flex; justify-content: center;">
-                <canvas id="splitChart" style="max-height: 100%;"></canvas>
+        </div>
+
+        <div class="col-4 col-md-12">
+            <div class="saas-panel ai-card" style="height: 100%;">
+                <div class="ai-header">
+                    <i class='bx bx-bot' style="font-size:20px;"></i> Quick Insights Panel
+                </div>
+                <ul class="ai-list" id="aiContainer">
+                    <div class="spinner" style="margin: 40px auto;"></div>
+                </ul>
             </div>
         </div>
     </div>
-
-    <!-- Tables -->
-    <div class="tables-grid animate-up">
-        <!-- Delinquent Renters -->
-        <div class="panel">
-            <div class="panel-header">
-                <h2 style="color: #EF4444;"><i class='bx bxs-error-circle'></i> Top Delinquent Renters</h2>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tenant</th>
-                            <th>Room</th>
-                            <th>Total Due</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="delinquentTable">
-                        <tr><td colspan="4" style="text-align:center;"><div class="spinner"></div></td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Meter Anomalies -->
-        <div class="panel">
-            <div class="panel-header">
-                <h2 style="color: #F59E0B;"><i class='bx bx-trending-up'></i> Electricity Anomalies (>250 Units)</h2>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tenant / Room</th>
-                            <th>Month</th>
-                            <th>Units Logged</th>
-                            <th>Verify</th>
-                        </tr>
-                    </thead>
-                    <tbody id="anomaliesTable">
-                        <tr><td colspan="4" style="text-align:center;"><div class="spinner"></div></td></tr>
-                    </tbody>
-                </table>
-            </div>
+    
+    <div class="fade-in" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #E2E8F0; padding-top:20px; margin-top:20px; animation-delay: 0.7s;">
+        <div style="font-size:12px; color:#64748B; font-weight:500;">Data source: Real-time Database sync active.</div>
+        <div style="font-size:12px; color:#64748B; font-weight:500; display:flex; align-items:center; gap:6px;">
+            <i class='bx bx-time'></i> Last updated: <span id="updateTime">Just now</span>
         </div>
     </div>
-
+    
 </main>
 
-<!-- Bank Reconciliation Results Modal -->
-<div class="modal-overlay" id="reconModal">
-    <div class="recon-modal">
-        <i class='bx bx-x modal-close' onclick="closeReconModal()"></i>
-        <h2>Bank Statement Reconciliation <span class="badge" style="background:var(--primary-purple); color:var(--white);">Beta</span></h2>
-        <p>We parsed your statement and found these intelligent matches against pending payments.</p>
-        
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Statement Reference</th>
-                        <th>Deposited Amount</th>
-                        <th>Matched Resident</th>
-                        <th>Record Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="reconTable">
-                    <!-- Populated by JS -->
-                </tbody>
-            </table>
-        </div>
-        <div style="text-align: right; margin-top: 20px;">
-            <button class="btn-outline" onclick="closeReconModal()" style="margin-right: 8px;">Cancel</button>
-            <button class="btn-primary" onclick="alert('Pending verification endpoints will be fired here!')">Auto-Verify Matches</button>
-        </div>
-    </div>
-</div>
-
 <script>
-    // Theme Toggle Logic
+    // Theme setup (keeps sidebar sync)
     const themeToggle = document.getElementById('themeToggle');
     if (localStorage.getItem('theme') === 'dark') {
         document.documentElement.classList.add('dark-theme');
         themeToggle?.classList.replace('bx-moon', 'bx-sun');
     }
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        if (isDark) themeToggle.classList.replace('bx-moon', 'bx-sun');
-        else themeToggle.classList.replace('bx-sun', 'bx-moon');
-        document.getElementById('themeToggleSidebar')?.click();
-    });
-
+    
+    // Formatting utils
+    const formatCur = (val) => '₹' + parseFloat(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    
     // Chart instances
-    let revChart, ageChart, usageChart, splitChart;
+    let charts = {};
 
-    // Filters
-    const monthSelector = document.getElementById('monthSelector');
-    document.querySelectorAll('.filter-btn[data-range]').forEach(btn => {
+    // Filter toggles
+    document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn[data-range]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
-            let range = e.target.getAttribute('data-range');
-            monthSelector.value = 'all'; // reset month selector
-            fetchData(range, 'all');
+            loadDashboard(); // Re-trigger load in real scenario
         });
     });
 
-    monthSelector.addEventListener('change', (e) => {
-        document.querySelectorAll('.filter-btn[data-range]').forEach(b => b.classList.remove('active'));
-        fetchData('all', e.target.value);
-    });
-
-    function formatCur(val) {
-        return '₹' + parseFloat(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-    }
-
-    async function fetchData(range = 'last_3_months', month = 'all') {
+    async function loadDashboard() {
         try {
-            // 1. Fetch Summary
-            const sumRes = await fetch(`api_reports.php?endpoint=summary&range=${range}&month=${month}`);
-            const sum = await sumRes.json();
-            
-            // Build KPI Deck
-            document.getElementById('kpiDeck').innerHTML = `
-                <div class="kpi-card hover-lift">
-                    <div class="kpi-header">
-                        <i class='bx bx-wallet kpi-icon' style="color:#624BFF; background:rgba(98, 75, 255, 0.1);"></i>
-                    </div>
-                    <div class="kpi-value">${formatCur(sum.total_rent_collected)}</div>
-                    <div class="kpi-label">Total Rent Collected</div>
+            // 1. KPI
+            const kpiRes = await fetch('api_reports_saas.php?endpoint=kpi');
+            const kpi = await kpiRes.json();
+            document.getElementById('kpiContainer').innerHTML = `
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(108, 77, 255, 0.1); color: #6C4DFF;"><i class='bx bx-wallet'></i></div>
+                    <div class="kpi-label">Total Revenue</div>
+                    <div class="kpi-val">${formatCur(kpi.total_rent)}</div>
+                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.rent_growth}</span> <span style="font-size:11px; color:#94A3B8;">vs prev</span></div>
                 </div>
-                <div class="kpi-card hover-lift">
-                    <div class="kpi-header">
-                        <i class='bx bx-bolt kpi-icon' style="color:#F59E0B; background:rgba(245, 158, 11, 0.2);"></i>
-                    </div>
-                    <div class="kpi-value">${formatCur(sum.electricity_profit)}</div>
-                    <div class="kpi-label">Electricity Gross Profit</div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-bolt'></i></div>
+                    <div class="kpi-label">Electricity Profit</div>
+                    <div class="kpi-val">${formatCur(kpi.electricity_profit)}</div>
+                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.elec_growth}</span></div>
                 </div>
-                <div class="kpi-card hover-lift">
-                    <div class="kpi-header">
-                        <i class='bx bx-error kpi-icon' style="color:#EF4444; background:rgba(239, 68, 68, 0.2);"></i>
-                    </div>
-                    <div class="kpi-value" style="color:#EF4444;">${formatCur(sum.outstanding_amount)}</div>
-                    <div class="kpi-label">Outstanding Receivables</div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-error-circle'></i></div>
+                    <div class="kpi-label">Outstanding Dues</div>
+                    <div class="kpi-val">${formatCur(kpi.outstanding)}</div>
+                    <div><span class="kpi-trend trend-down" style="color:#10B981; background:#ECFDF5;"><i class='bx bx-trending-down'></i> ${kpi.out_growth}</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;"><i class='bx bx-group'></i></div>
+                    <div class="kpi-label">Total Residents</div>
+                    <div class="kpi-val">${kpi.active_residents}</div>
+                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.res_growth}</span></div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class='bx bx-target-lock'></i></div>
+                    <div class="kpi-label">Collection Efficiency</div>
+                    <div class="kpi-val">${kpi.efficiency}%</div>
+                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.eff_growth}</span></div>
                 </div>
             `;
 
-            // 2. Fetch Time Series
-            const tsRes = await fetch(`api_reports.php?endpoint=timeseries&range=${range}&month=${month}`);
-            const tsData = await tsRes.json();
-            
-            const labels = tsData.map(d => d.month);
-            const rentData = tsData.map(d => d.rent);
-            const elecData = tsData.map(d => d.electricity);
-
-            const isDark = document.documentElement.classList.contains('dark-theme');
-            const gridColor = isDark ? '#334155' : '#F1F1F4';
-            const fontColor = isDark ? '#94A3B8' : '#71717A';
-
-            if(revChart) revChart.destroy();
-            const ctxRev = document.getElementById('revenueChart').getContext('2d');
-            revChart = new Chart(ctxRev, {
-                type: 'bar',
+            // 2. Revenue Chart
+            const revRes = await fetch('api_reports_saas.php?endpoint=revenue_chart');
+            const revData = await revRes.json();
+            if(charts.revenue) charts.revenue.destroy();
+            charts.revenue = new Chart(document.getElementById('revenueChart'), {
+                type: 'line',
                 data: {
-                    labels: labels,
+                    labels: revData.map(d => d.month),
                     datasets: [
-                        { label: 'Rent Collection', data: rentData, backgroundColor: '#624BFF', borderRadius: 6 },
-                        { label: 'Electricity Collection', data: elecData, backgroundColor: '#10B981', borderRadius: 6 }
+                        { label: 'Rent', data: revData.map(d => d.rent), borderColor: '#6C4DFF', backgroundColor: 'rgba(108, 77, 255, 0.1)', tension: 0.4, fill: true },
+                        { label: 'Electricity', data: revData.map(d => d.electricity), borderColor: '#10B981', tension: 0.4 },
+                        { label: 'Other', data: revData.map(d => d.other), borderColor: '#F59E0B', tension: 0.4 }
                     ]
                 },
                 options: {
                     responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 6, font: { family: 'Inter', size: 12 } } } },
                     scales: {
-                        x: { stacked: true, grid: { display: false } },
-                        y: { stacked: true, grid: { color: gridColor }, ticks: { color: fontColor } }
-                    },
-                    plugins: { legend: { labels: { color: fontColor } } }
+                        x: { grid: { display: false } },
+                        y: { grid: { color: '#F1F5F9', borderDash: [5, 5] }, border: { display: false } }
+                    }
                 }
             });
 
-            // 3. Fetch Aging
-            const ageRes = await fetch(`api_reports.php?endpoint=aging&range=${range}&month=${month}`);
-            const ageData = await ageRes.json();
-            if(ageChart) ageChart.destroy();
-            const ctxAge = document.getElementById('agingChart').getContext('2d');
-            ageChart = new Chart(ctxAge, {
-                type: 'bar',
-                data: {
-                    labels: ageData.map(d => d.bracket),
-                    datasets: [{
-                        label: 'Amount in Bracket',
-                        data: ageData.map(d => d.amount),
-                        backgroundColor: ['#624BFF', '#F59E0B', '#EF4444', '#991B1B', '#450A0A'],
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-                    scales: { x: { grid: { color: gridColor } }, y: { grid: { display: false } } },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // 4. Delinquent Table
-            const delRes = await fetch(`api_reports.php?endpoint=delinquent&range=${range}&month=${month}`);
-            const delinquentReq = await delRes.json();
-            const delTable = document.getElementById('delinquentTable');
-            if(delinquentReq.length === 0) {
-                delTable.innerHTML = "<tr><td colspan='4'>No delinquent renters found.</td></tr>";
-            } else {
-                delTable.innerHTML = delinquentReq.map(d => `
-                    <tr>
-                        <td style="font-weight:600;">${d.name}</td>
-                        <td>${d.room_no}</td>
-                        <td style="color:#EF4444; font-weight:700;">${formatCur(d.total_due)}</td>
-                        <td><a href="manage-reminders.php" class="action-link"><i class='bx bx-bell'></i> Remind</a></td>
-                    </tr>
-                `).join('');
-            }
-
-            // 5. Anomalies Table
-            const anomRes = await fetch(`api_reports.php?endpoint=anomalies&range=${range}&month=${month}`);
-            const anomaliesReq = await anomRes.json();
-            const anomTable = document.getElementById('anomaliesTable');
-            if(anomaliesReq.length === 0) {
-                anomTable.innerHTML = "<tr><td colspan='4' style='color:#10B981;'><i class='bx bx-check-circle'></i> No severe spikes detected.</td></tr>";
-            } else {
-                anomTable.innerHTML = anomaliesReq.map(a => `
-                    <tr>
-                        <td style="font-weight:600;">${a.name} <span class="badge" style="background:#F1F5F9; color:#475569;">Room ${a.room_no}</span></td>
-                        <td>${a.month}</td>
-                        <td style="color:#F59E0B; font-weight:700;">+${a.units}</td>
-                        <td><a href="electricity-list.php" class="action-link"><i class='bx bx-check-shield'></i> Audit Photo</a></td>
-                    </tr>
-                `).join('');
-            }
-
-            // 6. Usage Bar Chart
-            const usageRes = await fetch(`api_reports.php?endpoint=usage_bar&range=${range}&month=${month}`);
-            const usageData = await usageRes.json();
-            if(usageChart) usageChart.destroy();
-            const ctxUsage = document.getElementById('usageChart').getContext('2d');
-            usageChart = new Chart(ctxUsage, {
-                type: 'bar',
-                data: {
-                    labels: usageData.map(d => d.label),
-                    datasets: [{
-                        label: 'Total Units Consumed',
-                        data: usageData.map(d => d.units),
-                        backgroundColor: '#3B82F6',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true, maintainAspectRatio: false,
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: fontColor } },
-                        y: { grid: { color: gridColor }, ticks: { color: fontColor } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
-
-            // 7. Revenue Split Doughnut
-            const splitRes = await fetch(`api_reports.php?endpoint=revenue_split&range=${range}&month=${month}`);
-            const splitData = await splitRes.json();
-            if(splitChart) splitChart.destroy();
-            const ctxSplit = document.getElementById('splitChart').getContext('2d');
-            splitChart = new Chart(ctxSplit, {
+            // 3. Donut
+            const distRes = await fetch('api_reports_saas.php?endpoint=distribution_donut');
+            const distData = await distRes.json();
+            if(charts.donut) charts.donut.destroy();
+            charts.donut = new Chart(document.getElementById('donutChart'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Rent Collected', 'Electricity Collected'],
+                    labels: Object.keys(distData),
                     datasets: [{
-                        data: [splitData.rent, splitData.electricity],
-                        backgroundColor: ['#624BFF', '#10B981'],
+                        data: Object.values(distData),
+                        backgroundColor: ['#6C4DFF', '#10B981', '#3B82F6', '#F59E0B'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
                 },
                 options: {
-                    responsive: true, maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: { legend: { position: 'bottom', labels: { color: fontColor, padding: 20 } } }
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
+                    plugins: {
+                        legend: { position: 'right', labels: { usePointStyle: true, padding: 20, font: { family: 'Inter' } } }
+                    }
                 }
             });
+
+            // 4. Receivables Aging
+            const ageRes = await fetch('api_reports_saas.php?endpoint=receivables_aging');
+            const ageData = await ageRes.json();
+            let ageHTML = '';
+            let totalOut = 0;
+            ageData.forEach(a => {
+                if(a.total) totalOut = a.total;
+                else {
+                    ageHTML += `
+                    <div class="receivable-card">
+                        <div class="r-title"><div class="r-icon" style="background:${a.color}20; color:${a.color};"><i class='bx bx-calendar'></i></div> ${a.bracket}</div>
+                        <div>
+                            <div class="r-amount" style="color:${a.color};">${formatCur(a.amount)}</div>
+                            <div class="r-sub">${a.tenants} Residents</div>
+                        </div>
+                    </div>`;
+                }
+            });
+            ageHTML += `<div style="display:flex; justify-content:space-between; margin-top:20px; font-weight:700; font-size:15px;"><span>Total Outstanding</span> <span>${formatCur(totalOut)}</span></div>`;
+            document.getElementById('agingContainer').innerHTML = ageHTML;
+
+            // 5. Resident Performance
+            const perfRes = await fetch('api_reports_saas.php?endpoint=resident_performance');
+            const perfData = await perfRes.json();
+            document.getElementById('perfContainer').innerHTML = perfData.map(p => `
+                <div class="profile-card">
+                    <img src="${p.photo}" class="p-img">
+                    <div class="p-info">
+                        <h4 class="p-name">${p.name}</h4>
+                        <div class="p-room">Room ${p.room}</div>
+                    </div>
+                    <div class="text-right" style="margin-right:24px;">
+                        <div style="font-size:14px; font-weight:700;">${formatCur(p.paid)}</div>
+                        <div style="font-size:11px; color:#64748B;">Total Paid</div>
+                    </div>
+                    <div class="text-right" style="margin-right:24px;">
+                        <div style="font-size:14px; font-weight:700; color:#EF4444;">${formatCur(p.due)}</div>
+                        <div style="font-size:11px; color:#64748B;">Pending</div>
+                    </div>
+                    <div style="width: 80px; text-align:right;">
+                        <span class="badge" style="background:${p.statusBg}; color:${p.statusColor};">${p.status}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // 6. Elec Insights
+            const eStatsRes = await fetch('api_reports_saas.php?endpoint=electricity_insights');
+            const eStats = await eStatsRes.json();
+            document.getElementById('elecStatsContainer').innerHTML = `
+                <div style="background:#F8FAFC; padding:16px; border-radius:12px;">
+                    <div style="font-size:11px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
+                    <div style="font-size:20px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
+                </div>
+                <div style="background:#F8FAFC; padding:16px; border-radius:12px;">
+                    <div style="font-size:11px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
+                    <div style="font-size:20px; font-weight:800; color:#EF4444;">${eStats.highest}</div>
+                </div>
+            `;
+            
+            const eBarRes = await fetch('api_reports_saas.php?endpoint=electricity_bar');
+            const eBar = await eBarRes.json();
+            if(charts.ebar) charts.ebar.destroy();
+            charts.ebar = new Chart(document.getElementById('elecBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: eBar.map(d => d.label),
+                    datasets: [{ data: eBar.map(d => d.units), backgroundColor: '#10B981', borderRadius: 4 }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { grid: { display: false } }, y: { display: false } }
+                }
+            });
+
+            // 7. Defaulters
+            const defRes = await fetch('api_reports_saas.php?endpoint=top_defaulters');
+            const defData = await defRes.json();
+            document.getElementById('defaulterContainer').innerHTML = defData.map(d => `
+                <div class="defaulter-card">
+                    <div class="d-flex align-center" style="gap:12px;">
+                        <img src="${d.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                        <div>
+                            <div class="p-name">${d.name} <span style="color:#64748B; font-weight:500; font-size:12px;">(Rm ${d.room})</span></div>
+                            <div style="font-size:11px; color:#EF4444; font-weight:600;">${d.days_overdue} days overdue</div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-center" style="gap:16px;">
+                        <div class="r-amount" style="color:#EF4444;">${formatCur(d.due)}</div>
+                        <a href="manage-reminders.php" class="defaulter-action" title="Send Reminder"><i class='bx bx-bell'></i></a>
+                    </div>
+                </div>
+            `).join('');
+
+            // 8. Anomalies
+            const anomRes = await fetch('api_reports_saas.php?endpoint=anomalies');
+            const anomData = await anomRes.json();
+            document.getElementById('anomalyContainer').innerHTML = anomData.map(a => `
+                <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:16px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-size:13px; font-weight:700; color:#92400E;">${a.name} (Room ${a.room})</div>
+                        <div style="font-size:12px; color:#B45309; margin-top:4px;">Used ${a.units} units (${a.increase} vs prev)</div>
+                    </div>
+                    <a href="electricity-list.php" style="background:#FDE68A; color:#92400E; padding:6px 12px; border-radius:8px; font-size:11px; font-weight:700; text-decoration:none; transition:0.2s;">Audit</a>
+                </div>
+            `).join('');
+
+            // 9. Expenses
+            const expRes = await fetch('api_reports_saas.php?endpoint=expense_donut');
+            const expData = await expRes.json();
+            const totalExp = expData.Total; delete expData.Total;
+            if(charts.expense) charts.expense.destroy();
+            charts.expense = new Chart(document.getElementById('expenseChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(expData),
+                    datasets: [{
+                        data: Object.values(expData).map(v => v.value),
+                        backgroundColor: Object.values(expData).map(v => v.color),
+                        borderWidth: 0, hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, cutout: '75%',
+                    plugins: { legend: { position: 'right', labels: { usePointStyle: true, padding: 16, font: { family: 'Inter', size: 11 } } } }
+                }
+            });
+
+            // 10. Timeline
+            const actRes = await fetch('api_reports_saas.php?endpoint=recent_activity');
+            const actData = await actRes.json();
+            document.getElementById('activityContainer').innerHTML = actData.map(a => `
+                <div class="tl-item">
+                    <div class="tl-dot" style="border-color:${a.color}; color:${a.color};"><i class='bx ${a.icon}'></i></div>
+                    <div class="tl-title">${a.title}</div>
+                    <div class="tl-desc">${a.desc}</div>
+                    <span class="tl-time">${a.time}</span>
+                </div>
+            `).join('');
+
+            // 11. Insights
+            const aiRes = await fetch('api_reports_saas.php?endpoint=ai_insights');
+            const aiData = await aiRes.json();
+            document.getElementById('aiContainer').innerHTML = aiData.map(a => `<li>${a}</li>`).join('');
+
+            document.getElementById('updateTime').innerText = new Date().toLocaleTimeString();
 
         } catch (e) {
-            console.error(e);
-            alert("Error loading reporting data. Please try again.");
+            console.error("Dashboard Load Error", e);
         }
     }
 
-    function exportReport(type) {
-        window.location.href = `monthly-report.php?export=${type}`;
-    }
-
-    // Initial load
-    async function init() {
-        try {
-            const mRes = await fetch('api_reports.php?endpoint=months');
-            const months = await mRes.json();
-            const sel = document.getElementById('monthSelector');
-            months.forEach(m => {
-                let opt = document.createElement('option');
-                opt.value = m;
-                opt.innerText = m;
-                sel.appendChild(opt);
-            });
-        } catch(e) { console.error("Could not load months"); }
-        fetchData();
-    }
-    init();
-
-    async function generateShareLink() {
-        try {
-            const res = await fetch('api_reports.php?endpoint=share');
-            const data = await res.json();
-            if(data.success) {
-                navigator.clipboard.writeText(data.link).then(() => {
-                    alert("Secure link copied to clipboard!\n" + data.link + "\n(Link expires in 24 hours)");
-                });
-            } else {
-                alert("Error: " + data.error);
-            }
-        } catch(e) {
-            alert("Could not generate share link.");
-        }
-    }
-
-    async function scheduleEmail() {
-        let email = prompt("Enter the email address to receive weekly dashboard summaries:");
-        if(email) {
-            try {
-                const res = await fetch('api_reports.php?endpoint=schedule', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email: email, frequency: 'Weekly' })
-                });
-                const data = await res.json();
-                if(data.success) {
-                    alert(data.message);
-                } else {
-                    alert("Error: " + data.error);
-                }
-            } catch(e) {
-                alert("Could not schedule email.");
-            }
-        }
-    }
-
-    // CSV Upload & Reconcile
-    document.getElementById('csvFileInput').addEventListener('change', async function(e) {
-        if (!this.files.length) return;
-        const file = this.files[0];
-        
-        let fd = new FormData();
-        fd.append("bank_statement", file);
-
-        try {
-            const res = await fetch('api_reconcile.php', { method: 'POST', body: fd });
-            const data = await res.json();
-            
-            if (data.error) {
-                alert("Error: " + data.error);
-                return;
-            }
-
-            // Populate Modal
-            const tBody = document.getElementById('reconTable');
-            if (data.matches.length === 0) {
-                tBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No matching pending amounts found in statement.</td></tr>`;
-            } else {
-                tBody.innerHTML = data.matches.map(m => `
-                    <tr>
-                        <td style="font-size: 12px; color: var(--text-gray);">${m.csv_desc}</td>
-                        <td style="font-weight: 700; color: #10B981;">${formatCur(m.bank_amount)}</td>
-                        <td style="font-weight: 600;">${m.resident}</td>
-                        <td><span class="badge pending">Pending</span></td>
-                        <td><a href="payment-verifications.php" class="action-link"><i class='bx bx-check-shield'></i> Verify</a></td>
-                    </tr>
-                `).join('');
-            }
-
-            document.getElementById('reconModal').classList.add('active');
-
-        } catch (err) {
-            alert("Could not parse CSV.");
-        }
-        
-        // Reset file input
-        this.value = '';
-    });
-
-    function closeReconModal() {
-        document.getElementById('reconModal').classList.remove('active');
-    }
-
+    // Init
+    loadDashboard();
 </script>
-
 </body>
 </html>
