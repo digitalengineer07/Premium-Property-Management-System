@@ -32,7 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 // If this payment was for a bill, update the bill status to Paid
                 if ($notif['bill_id']) {
                     $bid = (int)$notif['bill_id'];
-                    mysqli_query($conn, "UPDATE bills SET status='Paid' WHERE id=$bid");
+                    if ($notif['bill_type'] == 'rent') {
+                        mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE id=$bid");
+                    } elseif ($notif['bill_type'] == 'electricity') {
+                        mysqli_query($conn, "UPDATE electricity SET status='Paid' WHERE id=$bid");
+                    }
                 }
                 
                 $success = "Payment #{$notif['transaction_id']} approved successfully.";
@@ -69,46 +73,55 @@ $f_end = $_GET['end_date'] ?? '';
 $f_sort = $_GET['sort'] ?? 'latest';
 
 // Build Query
-$sql = "SELECT pn.*, u.name as renter_name, u.room_no, b.bill_type 
-        FROM payment_notifications pn 
-        LEFT JOIN users u ON pn.user_id = u.id 
-        LEFT JOIN bills b ON pn.bill_id = b.id 
-        WHERE 1=1 ";
+$limit = 5;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+
+$base_query = " FROM payment_notifications pn LEFT JOIN users u ON pn.user_id = u.id WHERE 1=1 ";
 
 if ($f_search !== '') {
     $sq = mysqli_real_escape_string($conn, $f_search);
-    $sql .= " AND (u.name LIKE '%$sq%' OR pn.transaction_id LIKE '%$sq%') ";
+    $base_query .= " AND (u.name LIKE '%$sq%' OR pn.transaction_id LIKE '%$sq%') ";
 }
 if ($f_status !== 'All') {
     $st = mysqli_real_escape_string($conn, $f_status);
-    $sql .= " AND pn.status = '$st' ";
+    $base_query .= " AND pn.status = '$st' ";
 }
 if ($f_month !== 'All') {
     $m = (int)$f_month;
-    $sql .= " AND MONTH(pn.created_at) = $m ";
+    $base_query .= " AND MONTH(pn.created_at) = $m ";
 }
 if ($f_year !== 'All') {
     $y = (int)$f_year;
-    $sql .= " AND YEAR(pn.created_at) = $y ";
+    $base_query .= " AND YEAR(pn.created_at) = $y ";
 }
 if ($f_mode !== 'All') {
     $md = mysqli_real_escape_string($conn, $f_mode);
-    $sql .= " AND pn.payment_method = '$md' ";
+    $base_query .= " AND pn.payment_method = '$md' ";
 }
 if ($f_start !== '') {
     $sd = mysqli_real_escape_string($conn, $f_start);
-    $sql .= " AND DATE(pn.created_at) >= '$sd' ";
+    $base_query .= " AND DATE(pn.created_at) >= '$sd' ";
 }
 if ($f_end !== '') {
     $ed = mysqli_real_escape_string($conn, $f_end);
-    $sql .= " AND DATE(pn.created_at) <= '$ed' ";
+    $base_query .= " AND DATE(pn.created_at) <= '$ed' ";
 }
 
 if ($f_sort == 'oldest') {
-    $sql .= " ORDER BY pn.created_at ASC";
+    $order = " ORDER BY pn.created_at ASC";
 } else {
-    $sql .= " ORDER BY pn.created_at DESC";
+    $order = " ORDER BY pn.created_at DESC";
 }
+
+$count_res = mysqli_query($conn, "SELECT COUNT(pn.id) as c " . $base_query);
+$total_records = $count_res ? mysqli_fetch_assoc($count_res)['c'] : 0;
+$total_pages = ceil($total_records / $limit);
+if ($total_pages < 1) $total_pages = 1;
+if ($page > $total_pages) $page = $total_pages;
+
+$offset = ($page - 1) * $limit;
+
+$sql = "SELECT pn.*, u.name as renter_name, u.room_no " . $base_query . $order . " LIMIT $limit OFFSET $offset";
 
 $notifs = [];
 $res = mysqli_query($conn, $sql);
@@ -701,15 +714,30 @@ if ($res) {
         </div>
         
         <div class="pv-pagination-footer">
-            <div class="pv-page-info">Showing 1 to <?php echo min(count($notifs), 10); ?> of <?php echo $kpi_total; ?> entries</div>
+            <div class="pv-page-info">Showing <?php echo ($total_records > 0) ? $offset + 1 : 0; ?> to <?php echo min($offset + $limit, $total_records); ?> of <?php echo $total_records; ?> entries</div>
             <div class="pv-pagination-controls">
-                <a href="#" class="pv-page-btn"><i class='bx bx-chevron-left'></i></a>
-                <a href="#" class="pv-page-btn active">1</a>
-                <a href="#" class="pv-page-btn">2</a>
-                <a href="#" class="pv-page-btn">3</a>
-                <span class="pv-page-btn" style="border:none; cursor:default; background:transparent;">...</span>
-                <a href="#" class="pv-page-btn">16</a>
-                <a href="#" class="pv-page-btn"><i class='bx bx-chevron-right'></i></a>
+                <?php
+                // Preserve GET parameters
+                $get_params = $_GET;
+                unset($get_params['page']);
+                $qstr = http_build_query($get_params);
+                $qstr = $qstr ? '&' . $qstr : '';
+                
+                if ($page > 1): ?>
+                    <a href="?page=<?php echo $page - 1; ?><?php echo $qstr; ?>" class="pv-page-btn"><i class='bx bx-chevron-left'></i></a>
+                <?php else: ?>
+                    <span class="pv-page-btn" style="opacity:0.5;cursor:default;"><i class='bx bx-chevron-left'></i></span>
+                <?php endif; ?>
+                
+                <?php for($i=max(1, $page-2); $i<=min($total_pages, $page+2); $i++): ?>
+                    <a href="?page=<?php echo $i; ?><?php echo $qstr; ?>" class="pv-page-btn <?php echo ($i == $page) ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <?php endfor; ?>
+                
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?php echo $page + 1; ?><?php echo $qstr; ?>" class="pv-page-btn"><i class='bx bx-chevron-right'></i></a>
+                <?php else: ?>
+                    <span class="pv-page-btn" style="opacity:0.5;cursor:default;"><i class='bx bx-chevron-right'></i></span>
+                <?php endif; ?>
             </div>
         </div>
     </div>
