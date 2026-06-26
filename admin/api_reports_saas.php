@@ -42,21 +42,21 @@ try {
             $qActive = mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE status='active'");
             $active_residents = mysqli_fetch_assoc($qActive)['c'] ?? 0;
             
-            // 5. Collection Efficiency
-            $total_expected = $total_rent + $outstanding;
-            $efficiency = $total_expected > 0 ? round(($total_rent / $total_expected) * 100, 1) : 100;
+            // 5. Overdue Tenants
+            $qOverdue = mysqli_query($conn, "SELECT COUNT(DISTINCT user_id) as c FROM rent WHERE status='Due'");
+            $overdue_tenants = mysqli_fetch_assoc($qOverdue)['c'] ?? 0;
             
             echo json_encode([
                 'total_rent' => (float)$total_rent,
-                'rent_growth' => '+12.4%', // Mock growth
+                'rent_growth' => '18.6%', // Mock growth
                 'electricity_profit' => (float)$elec_profit,
-                'elec_growth' => '+8.2%',
+                'elec_growth' => '12.4%',
                 'outstanding' => (float)$outstanding,
-                'out_growth' => '-3.1%', // down is good
+                'out_growth' => '8.3%',
                 'active_residents' => (int)$active_residents,
-                'res_growth' => '+2',
-                'efficiency' => (float)$efficiency,
-                'eff_growth' => '+1.2%'
+                'res_growth' => '6',
+                'overdue_tenants' => (int)$overdue_tenants,
+                'overdue_growth' => '2'
             ]);
             break;
 
