@@ -167,48 +167,44 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--white);
-            border-radius: 20px;
-            padding: 24px 32px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 24px;
+            padding: 12px 10px 24px 10px;
+            margin-bottom: 8px;
             position: relative;
-            overflow: hidden;
         }
         .header-content {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
             z-index: 2;
         }
         .header-icon-box {
-            width: 64px;
-            height: 64px;
-            background: #EEF2FF;
+            width: 84px;
+            height: 84px;
+            background: #F5F3FF;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6366F1;
-            font-size: 32px;
+            color: #6C4DFF;
+            font-size: 42px;
         }
         .header-text h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 800;
-            color: var(--text-dark);
-            margin: 0 0 4px 0;
+            color: #0F172A;
+            margin: 0 0 6px 0;
         }
         .header-text p {
-            font-size: 14px;
-            color: var(--text-gray);
+            font-size: 15px;
+            color: #64748B;
             margin: 0;
         }
         .header-illustration {
             position: absolute;
-            right: 32px;
-            bottom: -20px;
+            right: 10px;
+            top: -10px;
             height: 140px;
-            opacity: 0.95;
+            opacity: 1;
             z-index: 1;
         }
         
@@ -478,22 +474,24 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
         </div>
         <!-- Mockup Illustration SVG (Phone & Card) -->
         <svg class="header-illustration" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g opacity="0.9">
+            <g>
                 <rect x="70" y="20" width="60" height="110" rx="12" fill="white" stroke="#E2E8F0" stroke-width="4"/>
                 <path d="M70 32C70 25.3726 75.3726 20 82 20H118C124.627 20 130 25.3726 130 32V45H70V32Z" fill="#EEF2FF"/>
-                <text x="100" y="40" font-family="Arial" font-size="10" font-weight="bold" fill="#6366F1" text-anchor="middle">UPI</text>
+                <text x="100" y="38" font-family="Arial" font-size="10" font-style="italic" font-weight="900" fill="#6C4DFF" text-anchor="middle">UPI</text>
                 <circle cx="100" cy="85" r="16" fill="#10B981"/>
                 <path d="M94 85L98 89L106 81" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                 
-                <g transform="translate(110, 80) rotate(15)">
-                    <rect width="50" height="32" rx="6" fill="#6366F1"/>
-                    <rect x="5" y="6" width="12" height="8" rx="2" fill="#E2E8F0" opacity="0.5"/>
-                    <circle cx="38" cy="22" r="4" fill="white" opacity="0.8"/>
-                    <circle cx="44" cy="22" r="4" fill="white" opacity="0.5"/>
+                <g transform="translate(105, 75) rotate(10)">
+                    <rect width="55" height="34" rx="6" fill="#6C4DFF"/>
+                    <rect x="5" y="6" width="14" height="8" rx="2" fill="#E2E8F0" opacity="0.4"/>
+                    <circle cx="42" cy="22" r="4" fill="white" opacity="0.8"/>
+                    <circle cx="48" cy="22" r="4" fill="white" opacity="0.5"/>
+                    <rect x="5" y="22" width="20" height="3" rx="1" fill="white" opacity="0.5"/>
                 </g>
-                <circle cx="40" cy="50" r="4" fill="#C7D2FE"/>
-                <circle cx="150" cy="30" r="3" fill="#FDE68A"/>
-                <circle cx="50" cy="110" r="5" fill="#A7F3D0"/>
+                <circle cx="40" cy="50" r="3" fill="#C7D2FE"/>
+                <circle cx="150" cy="30" r="2" fill="#C7D2FE"/>
+                <circle cx="160" cy="90" r="3" fill="#E0E7FF"/>
+                <circle cx="50" cy="110" r="4" fill="#A7F3D0"/>
             </g>
         </svg>
     </div>
