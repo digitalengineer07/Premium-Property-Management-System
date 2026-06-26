@@ -72,7 +72,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         
         /* KPI Cards */
-        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
         .kpi-card { background: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .kpi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
@@ -368,7 +368,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.rent_growth}</span> 
                         <span class="kpi-trend-ctx">vs previous 3 months</span>
                     </div>
-                    ${sparklineSVG('#6366F1', 'M0,25 C10,15 20,20 30,15 C40,10 50,22 60,18 C70,14 80,5 90,15 C95,20 100,22 100,22')}
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
@@ -382,7 +381,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.elec_growth}</span> 
                         <span class="kpi-trend-ctx">vs previous 3 months</span>
                     </div>
-                    ${sparklineSVG('#10B981', 'M0,22 C15,12 25,24 35,22 C45,20 50,5 60,15 C70,25 85,18 100,24')}
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
@@ -396,21 +394,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.out_growth}</span> 
                         <span class="kpi-trend-ctx">vs previous 3 months</span>
                     </div>
-                    ${sparklineSVG('#F59E0B', 'M0,28 C15,22 25,28 35,20 C45,12 55,26 65,18 C80,5 90,20 100,26')}
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-header">
-                        <div class="kpi-icon" style="background: #3B82F6;"><i class='bx bx-group'></i></div>
-                        <div class="kpi-title-block">
-                            <div class="kpi-label">Total Tenants</div>
-                            <div class="kpi-val">${kpi.active_residents}</div>
-                        </div>
-                    </div>
-                    <div class="kpi-trend-row">
-                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.res_growth}</span> 
-                        <span class="kpi-trend-ctx">New this month</span>
-                    </div>
-                    ${sparklineSVG('#3B82F6', 'M0,24 C10,24 20,16 30,22 C40,28 50,15 65,18 C75,20 85,5 100,18')}
                 </div>
                 <div class="kpi-card">
                     <div class="kpi-header">
@@ -424,7 +407,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.overdue_growth}</span> 
                         <span class="kpi-trend-ctx">more than last month</span>
                     </div>
-                    ${sparklineSVG('#F43F5E', 'M0,22 C10,12 25,25 35,22 C45,18 55,26 70,12 C80,-2 90,20 100,24')}
                 </div>
             `;
 
