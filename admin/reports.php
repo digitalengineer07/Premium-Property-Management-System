@@ -72,15 +72,19 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         
         /* KPI Cards */
-        .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: #fff; padding: 20px 16px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; }
-        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
-        .kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
-        .kpi-label { font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .kpi-val { font-size: 24px; font-weight: 800; color: #0F172A; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .kpi-trend { font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; }
-        .trend-up { background: #ECFDF5; color: #10B981; }
-        .trend-down { background: #FEF2F2; color: #EF4444; }
+        .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .kpi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; flex-shrink: 0; }
+        .kpi-title-block { display: flex; flex-direction: column; }
+        .kpi-label { font-size: 11px; font-weight: 600; color: #64748B; margin-bottom: 2px; }
+        .kpi-val { font-size: 20px; font-weight: 800; color: #0F172A; }
+        .kpi-trend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 12px; }
+        .kpi-trend { color: #10B981; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
+        .kpi-trend.down { color: #EF4444; }
+        .kpi-trend-ctx { color: #94A3B8; }
+        .kpi-sparkline { width: 100%; height: 36px; margin-top: auto; }
 
         /* Specific Elements */
         .receivable-card { background: #F8FAFC; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
@@ -338,30 +342,89 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             // 1. KPI
             const kpiRes = await fetch('api_reports_saas.php?endpoint=kpi');
             const kpi = await kpiRes.json();
+            const sparklineSVG = (color, pathData) => `
+                <svg class="kpi-sparkline" viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="grad-${color.replace('#', '')}" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0%" stop-color="${color}" stop-opacity="0.2"></stop>
+                            <stop offset="100%" stop-color="${color}" stop-opacity="0"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path d="${pathData} L100,30 L0,30 Z" fill="url(#grad-${color.replace('#', '')})"></path>
+                    <path d="${pathData}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            `;
+
             document.getElementById('kpiContainer').innerHTML = `
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(108, 77, 255, 0.1); color: #6C4DFF;"><i class='bx bx-wallet'></i></div>
-                    <div class="kpi-label">Total Revenue</div>
-                    <div class="kpi-val">${formatCur(kpi.total_rent)}</div>
-                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.rent_growth}</span> <span style="font-size:11px; color:#94A3B8;">vs prev</span></div>
+                    <div class="kpi-header">
+                        <div class="kpi-icon" style="background: #6366F1;"><i class='bx bx-wallet'></i></div>
+                        <div class="kpi-title-block">
+                            <div class="kpi-label">Total Revenue</div>
+                            <div class="kpi-val">${formatCur(kpi.total_rent)}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-trend-row">
+                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.rent_growth}</span> 
+                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                    </div>
+                    ${sparklineSVG('#6366F1', 'M0,25 C10,15 20,20 30,15 C40,10 50,22 60,18 C70,14 80,5 90,15 C95,20 100,22 100,22')}
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-bolt'></i></div>
-                    <div class="kpi-label">Electricity Profit</div>
-                    <div class="kpi-val">${formatCur(kpi.electricity_profit)}</div>
-                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.elec_growth}</span></div>
+                    <div class="kpi-header">
+                        <div class="kpi-icon" style="background: #10B981;"><i class='bx bxs-zap'></i></div>
+                        <div class="kpi-title-block">
+                            <div class="kpi-label">Electricity Profit</div>
+                            <div class="kpi-val">${formatCur(kpi.electricity_profit)}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-trend-row">
+                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.elec_growth}</span> 
+                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                    </div>
+                    ${sparklineSVG('#10B981', 'M0,22 C15,12 25,24 35,22 C45,20 50,5 60,15 C70,25 85,18 100,24')}
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-error-circle'></i></div>
-                    <div class="kpi-label">Outstanding Dues</div>
-                    <div class="kpi-val">${formatCur(kpi.outstanding)}</div>
-                    <div><span class="kpi-trend trend-down" style="color:#10B981; background:#ECFDF5;"><i class='bx bx-trending-down'></i> ${kpi.out_growth}</span></div>
+                    <div class="kpi-header">
+                        <div class="kpi-icon" style="background: #F59E0B;"><i class='bx bx-file'></i></div>
+                        <div class="kpi-title-block">
+                            <div class="kpi-label">Outstanding Dues</div>
+                            <div class="kpi-val">${formatCur(kpi.outstanding)}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-trend-row">
+                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.out_growth}</span> 
+                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                    </div>
+                    ${sparklineSVG('#F59E0B', 'M0,28 C15,22 25,28 35,20 C45,12 55,26 65,18 C80,5 90,20 100,26')}
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class='bx bx-target-lock'></i></div>
-                    <div class="kpi-label">Collection Efficiency</div>
-                    <div class="kpi-val">${kpi.efficiency}%</div>
-                    <div><span class="kpi-trend trend-up"><i class='bx bx-trending-up'></i> ${kpi.eff_growth}</span></div>
+                    <div class="kpi-header">
+                        <div class="kpi-icon" style="background: #3B82F6;"><i class='bx bx-group'></i></div>
+                        <div class="kpi-title-block">
+                            <div class="kpi-label">Total Tenants</div>
+                            <div class="kpi-val">${kpi.active_residents}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-trend-row">
+                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.res_growth}</span> 
+                        <span class="kpi-trend-ctx">New this month</span>
+                    </div>
+                    ${sparklineSVG('#3B82F6', 'M0,24 C10,24 20,16 30,22 C40,28 50,15 65,18 C75,20 85,5 100,18')}
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <div class="kpi-icon" style="background: #F43F5E;"><i class='bx bx-error-alt'></i></div>
+                        <div class="kpi-title-block">
+                            <div class="kpi-label">Overdue Tenants</div>
+                            <div class="kpi-val">${kpi.overdue_tenants}</div>
+                        </div>
+                    </div>
+                    <div class="kpi-trend-row">
+                        <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.overdue_growth}</span> 
+                        <span class="kpi-trend-ctx">more than last month</span>
+                    </div>
+                    ${sparklineSVG('#F43F5E', 'M0,22 C10,12 25,25 35,22 C45,18 55,26 70,12 C80,-2 90,20 100,24')}
                 </div>
             `;
 
