@@ -26,8 +26,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 0; }
         
         /* Typography */
-        .page-title { font-size: 28px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; }
-        .page-subtitle { font-size: 14px; font-weight: 500; color: #64748B; margin-bottom: 0; }
+        .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; white-space: nowrap; }
+        .page-subtitle { font-size: 13px; font-weight: 500; color: #64748B; margin-bottom: 0; white-space: nowrap; }
         .section-title { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0; }
         
         /* Grid System */
@@ -54,8 +54,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         }
 
         /* Buttons & Controls */
-        .header-actions { display: flex; gap: 12px; align-items: center; margin-left: auto; justify-content: flex-end; }
-        .btn-saas { padding: 10px 18px; border-radius: 12px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; }
+        .header-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; justify-content: flex-end; }
+        .btn-saas { padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; white-space: nowrap; }
         .btn-saas-outline { background: #fff; border: 1px solid #E2E8F0; color: #334155; }
         .btn-saas-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
         .btn-saas-primary { background: #6C4DFF; color: #fff; box-shadow: 0 4px 12px rgba(108, 77, 255, 0.2); }
@@ -142,7 +142,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <?php include 'header.php'; ?>
 
     <!-- Header Section -->
-    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 8px; margin-top: 24px;" class="fade-in">
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; margin-top: 24px;" class="fade-in">
         <div>
             <h1 class="page-title">Financial & Operational Reports</h1>
             <p class="page-subtitle">Monitor performance, renter health, and billing insights in real time.</p>
