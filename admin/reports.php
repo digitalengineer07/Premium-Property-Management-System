@@ -234,18 +234,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="saas-grid fade-in" style="animation-delay: 0.5s;">
         <div class="col-12">
             <div class="saas-panel">
-                <div class="saas-panel-header">
+                <div class="saas-panel-header" style="align-items: flex-start;">
                     <h2 class="section-title">Electricity Insights</h2>
-                </div>
-                <div style="display: flex; gap: 32px; align-items: center; flex-wrap: wrap;">
-                    <div id="elecStatsContainer" style="display:flex; gap:16px; min-width: 300px;">
+                    <div id="elecStatsContainer" style="display:flex; gap:16px;">
                         <!-- JS Injected -->
                     </div>
-                    <div style="flex: 1; height: 160px; position: relative; min-width: 400px; border-left: 1px solid #E2E8F0; padding-left: 32px;">
-                        <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Top Consumers</h3>
-                        <div style="height: 120px; position: relative;">
-                            <canvas id="elecBarChart"></canvas>
-                        </div>
+                </div>
+                
+                <div style="position: relative; margin-top: 10px;">
+                    <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Top Consumers</h3>
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="elecBarChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -514,13 +513,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const eStatsRes = await fetch('api_reports_saas.php?endpoint=electricity_insights');
             const eStats = await eStatsRes.json();
             document.getElementById('elecStatsContainer').innerHTML = `
-                <div style="background:#F8FAFC; padding:20px; border-radius:12px; flex: 1;">
-                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:6px; text-transform:uppercase;">Avg Units/Res</div>
-                    <div style="font-size:28px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
+                <div style="background:#F8FAFC; padding:12px 20px; border-radius:12px; min-width: 140px;">
+                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
+                    <div style="font-size:26px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
                 </div>
-                <div style="background:#F8FAFC; padding:20px; border-radius:12px; flex: 1;">
-                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:6px; text-transform:uppercase;">Highest Usage</div>
-                    <div style="font-size:28px; font-weight:800; color:#EF4444;">${eStats.highest}</div>
+                <div style="background:#F8FAFC; padding:12px 20px; border-radius:12px; min-width: 140px;">
+                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
+                    <div style="font-size:26px; font-weight:800; color:#EF4444;">${eStats.highest}</div>
                 </div>
             `;
             
