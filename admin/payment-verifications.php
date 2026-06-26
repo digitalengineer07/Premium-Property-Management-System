@@ -171,13 +171,13 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             margin-bottom: 8px;
             position: relative;
         }
-        .header-content {
+        .pv-header-content {
             display: flex;
             align-items: center;
             gap: 24px;
             z-index: 2;
         }
-        .header-icon-box {
+        .pv-header-icon-box {
             width: 84px;
             height: 84px;
             background: #F5F3FF;
@@ -188,18 +188,18 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             color: #6C4DFF;
             font-size: 42px;
         }
-        .header-text h1 {
+        .pv-header-text h1 {
             font-size: 28px;
             font-weight: 800;
             color: #0F172A;
             margin: 0 0 6px 0;
         }
-        .header-text p {
+        .pv-header-text p {
             font-size: 15px;
             color: #64748B;
             margin: 0;
         }
-        .header-illustration {
+        .pv-header-illustration {
             position: absolute;
             right: 10px;
             top: -10px;
@@ -208,13 +208,13 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             z-index: 1;
         }
         
-        .kpi-grid {
+        .pv-kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 24px;
         }
-        .kpi-card {
+        .pv-kpi-card {
             background: var(--white);
             border-radius: 16px;
             padding: 20px;
@@ -224,7 +224,7 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             gap: 16px;
             border: 1px solid #F1F5F9;
         }
-        .kpi-icon {
+        .pv-kpi-icon {
             width: 54px;
             height: 54px;
             border-radius: 50%;
@@ -233,14 +233,14 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
             justify-content: center;
             font-size: 24px;
         }
-        .kpi-blue { background: #EEF2FF; color: #6366F1; }
-        .kpi-yellow { background: #FEF9C3; color: #EAB308; }
-        .kpi-green { background: #DCFCE7; color: #10B981; }
-        .kpi-red { background: #FEE2E2; color: #EF4444; }
-        .kpi-details { flex: 1; }
-        .kpi-label { font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 4px; }
-        .kpi-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
-        .kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
+        .pv-kpi-blue { background: #EEF2FF; color: #6366F1; }
+        .pv-kpi-yellow { background: #FEF9C3; color: #EAB308; }
+        .pv-kpi-green { background: #DCFCE7; color: #10B981; }
+        .pv-kpi-red { background: #FEE2E2; color: #EF4444; }
+        .pv-kpi-details { flex: 1; }
+        .pv-kpi-label { font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pv-kpi-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
+        .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
         .filter-panel {
             background: var(--white);
@@ -436,13 +436,13 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
 
         @media(max-width: 1024px) {
             .filter-grid, .filter-grid-row2 { grid-template-columns: 1fr 1fr; }
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
+            .pv-kpi-grid { grid-template-columns: 1fr 1fr; }
         }
         @media(max-width: 768px) {
             .filter-grid, .filter-grid-row2 { grid-template-columns: 1fr; }
             .filter-actions { flex-direction: column; }
-            .kpi-grid { grid-template-columns: 1fr; }
-            .header-illustration { display: none; }
+            .pv-kpi-grid { grid-template-columns: 1fr; }
+            .pv-header-illustration { display: none; }
         }
     </style>
 </head>
@@ -463,17 +463,17 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
 
     <!-- New Header Banner -->
     <div class="page-header-banner animate-up">
-        <div class="header-content">
-            <div class="header-icon-box">
+        <div class="pv-header-content">
+            <div class="pv-header-icon-box">
                 <i class='bx bx-check-shield'></i>
             </div>
-            <div class="header-text">
+            <div class="pv-header-text">
                 <h1>Payment Verifications</h1>
                 <p>Verify payments via UPI Transaction Reference (UTR)</p>
             </div>
         </div>
         <!-- Mockup Illustration SVG (Phone & Card) -->
-        <svg class="header-illustration" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg class="pv-header-illustration" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g>
                 <rect x="70" y="20" width="60" height="110" rx="12" fill="white" stroke="#E2E8F0" stroke-width="4"/>
                 <path d="M70 32C70 25.3726 75.3726 20 82 20H118C124.627 20 130 25.3726 130 32V45H70V32Z" fill="#EEF2FF"/>
@@ -508,37 +508,37 @@ while ($row = mysqli_fetch_assoc($res)) $notifs[] = $row;
     <?php endif; ?>
 
     <!-- KPI Cards -->
-    <div class="kpi-grid animate-up">
-        <div class="kpi-card">
-            <div class="kpi-icon kpi-blue"><i class='bx bx-file'></i></div>
-            <div class="kpi-details">
-                <div class="kpi-label">Total Submissions</div>
-                <div class="kpi-value"><?php echo $kpi_total; ?></div>
-                <div class="kpi-sub">All time entries</div>
+    <div class="pv-kpi-grid animate-up">
+        <div class="pv-kpi-card">
+            <div class="pv-kpi-icon pv-kpi-blue"><i class='bx bx-file'></i></div>
+            <div class="pv-kpi-details">
+                <div class="pv-kpi-label">Total Submissions</div>
+                <div class="pv-kpi-value"><?php echo $kpi_total; ?></div>
+                <div class="pv-kpi-sub">All time entries</div>
             </div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-icon kpi-yellow"><i class='bx bx-time'></i></div>
-            <div class="kpi-details">
-                <div class="kpi-label">Pending</div>
-                <div class="kpi-value"><?php echo $kpi_pending; ?></div>
-                <div class="kpi-sub">Awaiting verification</div>
+        <div class="pv-kpi-card">
+            <div class="pv-kpi-icon pv-kpi-yellow"><i class='bx bx-time'></i></div>
+            <div class="pv-kpi-details">
+                <div class="pv-kpi-label">Pending</div>
+                <div class="pv-kpi-value"><?php echo $kpi_pending; ?></div>
+                <div class="pv-kpi-sub">Awaiting verification</div>
             </div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-icon kpi-green"><i class='bx bx-check-circle'></i></div>
-            <div class="kpi-details">
-                <div class="kpi-label">Approved</div>
-                <div class="kpi-value"><?php echo $kpi_approved; ?></div>
-                <div class="kpi-sub">Payments verified</div>
+        <div class="pv-kpi-card">
+            <div class="pv-kpi-icon pv-kpi-green"><i class='bx bx-check-circle'></i></div>
+            <div class="pv-kpi-details">
+                <div class="pv-kpi-label">Approved</div>
+                <div class="pv-kpi-value"><?php echo $kpi_approved; ?></div>
+                <div class="pv-kpi-sub">Payments verified</div>
             </div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-icon kpi-red"><i class='bx bx-x-circle'></i></div>
-            <div class="kpi-details">
-                <div class="kpi-label">Rejected</div>
-                <div class="kpi-value"><?php echo $kpi_rejected; ?></div>
-                <div class="kpi-sub">Payments rejected</div>
+        <div class="pv-kpi-card">
+            <div class="pv-kpi-icon pv-kpi-red"><i class='bx bx-x-circle'></i></div>
+            <div class="pv-kpi-details">
+                <div class="pv-kpi-label">Rejected</div>
+                <div class="pv-kpi-value"><?php echo $kpi_rejected; ?></div>
+                <div class="pv-kpi-sub">Payments rejected</div>
             </div>
         </div>
     </div>
