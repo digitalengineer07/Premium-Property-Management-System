@@ -120,8 +120,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         /* AI Insights */
         .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid #E2E8F0; }
         .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; color: #6C4DFF; font-size: 14px; }
-        .ai-list { margin: 0; padding-left: 20px; font-size: 13px; color: #334155; line-height: 1.6; }
-        .ai-list li { margin-bottom: 8px; }
+        .ai-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
+        .ai-list li { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; align-items: flex-start; gap: 10px; }
+        .ai-list li::before { content: '✨'; font-size: 16px; flex-shrink: 0; }
 
         .spinner { border: 3px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #6C4DFF; animation: spin 1s linear infinite; margin: 0 auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -271,7 +272,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     <!-- Expenses, Activity & Insights -->
     <div class="saas-grid fade-in" style="animation-delay: 0.6s;">
-        <div class="col-4 col-md-12">
+        <div class="col-6 col-md-12">
             <div class="saas-panel" style="height: 100%;">
                 <div class="saas-panel-header">
                     <h2 class="section-title">Expense Summary</h2>
@@ -282,7 +283,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
         </div>
         
-        <div class="col-4 col-md-12">
+        <div class="col-6 col-md-12">
             <div class="saas-panel" style="height: 100%;">
                 <div class="saas-panel-header">
                     <h2 class="section-title">Recent Financial Activity</h2>
@@ -292,9 +293,12 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-4 col-md-12">
-            <div class="saas-panel ai-card" style="height: 100%;">
+    <!-- Quick Insights -->
+    <div class="saas-grid fade-in" style="animation-delay: 0.7s;">
+        <div class="col-12">
+            <div class="saas-panel ai-card">
                 <div class="ai-header">
                     <i class='bx bx-bot' style="font-size:20px;"></i> Quick Insights Panel
                 </div>
