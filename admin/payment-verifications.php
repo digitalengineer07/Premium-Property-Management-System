@@ -437,7 +437,10 @@ if ($res) {
 </head>
 <body>
 
-<?php include "sidebar.php"; ?>
+<?php 
+$current_page = 'payment-verifications.php';
+include "sidebar.php"; 
+?>
 
 <main class="main">
     <?php include 'header.php'; ?>

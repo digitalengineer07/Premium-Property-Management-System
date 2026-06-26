@@ -1,6 +1,8 @@
 <?php
 // admin/sidebar.php - Unified Sidebar for Admin Panel
-$current_page = basename($_SERVER['PHP_SELF']);
+if (!isset($current_page)) {
+    $current_page = basename($_SERVER['PHP_SELF']);
+}
 ?>
 <!-- Immediate Theme Setter to prevent flashes -->
 <script>
