@@ -1,6 +1,8 @@
 <?php
-require '../db.php';
-$res = mysqli_query($conn, "DESCRIBE users");
-while($r = mysqli_fetch_assoc($res)){
-    echo $r['Field']."\n";
-}
+require 'db.php';
+$r = mysqli_query($conn, "DESCRIBE rent");
+echo "Rent: ";
+while($row=mysqli_fetch_assoc($r)) echo $row['Field'].', ';
+echo "\nElectricity: ";
+$r2 = mysqli_query($conn, "DESCRIBE electricity");
+while($row=mysqli_fetch_assoc($r2)) echo $row['Field'].', ';
