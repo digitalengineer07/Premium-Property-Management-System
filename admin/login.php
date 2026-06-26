@@ -71,57 +71,158 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Admin Login - Property Administration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/css/main.css">
+  <style>
+    :root {
+        --primary-purple: #624BFF;
+        --primary-hover: #5038E6;
+        --text-dark: #0F172A;
+        --text-gray: #64748B;
+        --border: #E2E8F0;
+        --white: #FFFFFF;
+        --bg: #F8FAFC;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body {
+        background-color: var(--bg);
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Decorative Background Elements */
+    .bg-circle-1 {
+        position: absolute; width: 600px; height: 600px; background: rgba(98, 75, 255, 0.05);
+        border-radius: 50%; top: -200px; left: -150px; filter: blur(60px); z-index: 1;
+    }
+    .bg-circle-2 {
+        position: absolute; width: 500px; height: 500px; background: rgba(16, 185, 129, 0.05);
+        border-radius: 50%; bottom: -100px; right: -100px; filter: blur(60px); z-index: 1;
+    }
+
+    .login-container {
+        width: 100%; max-width: 420px; z-index: 2; padding: 20px;
+    }
+    
+    .login-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 40px 32px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        position: relative;
+    }
+    
+    .back-btn {
+        position: absolute; top: 20px; left: 24px; display: inline-flex; align-items: center; gap: 6px;
+        color: var(--text-gray); font-size: 13px; font-weight: 600; text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .back-btn:hover { color: var(--primary-purple); }
+
+    .logo-box {
+        width: 64px; height: 64px; background: #F5F3FF; border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 32px; margin: 0 auto 24px auto;
+        box-shadow: 0 8px 16px rgba(98, 75, 255, 0.15);
+    }
+
+    .login-header { text-align: center; margin-bottom: 32px; }
+    .login-header h1 { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; letter-spacing: -0.5px; }
+    .login-header p { font-size: 14px; color: var(--text-gray); font-weight: 500; }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; margin-left: 4px; }
+    
+    .input-wrapper { position: relative; }
+    .input-wrapper i.icon-left { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; }
+    .input-wrapper i.icon-right { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; cursor: pointer; transition: color 0.2s; }
+    .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
+
+    .form-input {
+        width: 100%; padding: 14px 16px 14px 44px; font-size: 14px; color: var(--text-dark);
+        background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px;
+        outline: none; transition: all 0.2s ease; font-weight: 500;
+    }
+    .form-input:focus { background: var(--white); border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); }
+    
+    .btn-submit {
+        width: 100%; padding: 14px; background: var(--primary-purple); color: var(--white);
+        border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
+        transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25);
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        margin-top: 24px;
+    }
+    .btn-submit:hover { background: var(--primary-hover); box-shadow: 0 6px 16px rgba(98, 75, 255, 0.3); transform: translateY(-1px); }
+
+    .error-box {
+        background: #FEF2F2; border: 1px solid #FCA5A5; color: #DC2626;
+        padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
+        margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+    }
+
+    .footer-link {
+        text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-gray); font-weight: 500;
+    }
+    .footer-link a { color: var(--primary-purple); font-weight: 700; text-decoration: none; transition: color 0.2s; }
+    .footer-link a:hover { color: var(--primary-hover); }
+  </style>
 </head>
-<body class="bg-mesh-glass centered-layout">
+<body>
 
-<!-- Background Shapes -->
-<div class="bg-shape shape-1"></div>
-<div class="bg-shape shape-2"></div>
+<div class="bg-circle-1"></div>
+<div class="bg-circle-2"></div>
 
-<div style="width: 100%; max-width: 440px;">
-    <!-- Main Glass Card -->
-    <div class="glass-panel animate-fade-in" style="position: relative;">
-        <a href="../index.php" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: var(--text-muted); text-decoration: none; transition: all 0.2s ease; background: rgba(255,255,255,0.5); padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onmouseover="this.style.color='var(--text-main)'; this.style.background='rgba(255,255,255,0.8)';" onmouseout="this.style.color='var(--text-muted)'; this.style.background='rgba(255,255,255,0.5)';">
-            <i class='bx bx-home-alt' style="font-size: 16px;"></i> Home
-        </a>
-        <div style="text-align: center; margin-bottom: 32px; padding-top: 10px;">
-            <img src="../assets/img/logo.png" alt="Logo" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
-            <h1 style="font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Admin Login</h1>
-            <p style="color: var(--text-muted); font-size: 15px;">Property Administration Panel</p>
+<div class="login-container">
+    <div class="login-card">
+        <a href="../index.php" class="back-btn"><i class='bx bx-left-arrow-alt'></i> Home</a>
+        
+        <div class="login-header">
+            <div class="logo-box">
+                <i class='bx bx-building-house'></i>
+            </div>
+            <h1>Admin Login</h1>
+            <p>Property Administration Panel</p>
         </div>
 
         <?php if ($error !== ""): ?>
-            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #dc2626; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 24px; font-weight: 500;">
-                <?php echo htmlspecialchars($error); ?>
+            <div class="error-box">
+                <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
 
         <form method="POST" autocomplete="off">
-            <div class="form-group hover-lift">
-                <label class="form-label" style="margin-left: 2px;">Username</label>
-                <input name="username" class="glass-input" placeholder="admin" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required autofocus>
-            </div>
-
-            <div class="form-group hover-lift">
-                <label class="form-label" style="margin-left: 2px;">Password</label>
-                <div style="position: relative;">
-                    <input type="password" name="password" id="loginPassword" class="glass-input" placeholder="••••••••" required style="padding-right: 40px;">
-                    <i class='bx bx-hide' id="togglePassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 20px;"></i>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <div class="input-wrapper">
+                    <i class='bx bx-user icon-left'></i>
+                    <input type="text" name="username" class="form-input" placeholder="Enter admin username" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>" required autofocus>
                 </div>
             </div>
 
-            <button name="login" class="btn btn-primary hover-lift" style="width: 100%; margin-top: 12px;">Sign In</button>
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <i class='bx bx-lock-alt icon-left'></i>
+                    <input type="password" name="password" id="loginPassword" class="form-input" placeholder="••••••••" required style="padding-right: 44px;">
+                    <i class='bx bx-hide icon-right' id="togglePassword"></i>
+                </div>
+            </div>
+
+            <button type="submit" name="login" class="btn-submit">Sign In <i class='bx bx-right-arrow-alt' style="font-size: 18px;"></i></button>
         </form>
 
-        <div style="text-align:center; margin-top:24px; font-size:14px; color:#64748b;">
-            Not an admin? <a href="../login.php" style="font-weight:600;">Resident Login</a>
+        <div class="footer-link">
+            Not an admin? <a href="../login.php">Resident Login</a>
         </div>
     </div>
     
-    <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-muted); opacity: 0.8;">
+    <div style="text-align: center; margin-top: 24px; font-size: 13px; color: var(--text-gray); font-weight: 500;">
         © <?php echo date("Y"); ?> Rent Manager System
     </div>
 </div>
@@ -130,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     const togglePassword = document.querySelector('#togglePassword');
     const password = document.querySelector('#loginPassword');
 
-    togglePassword.addEventListener('click', function (e) {
+    togglePassword.addEventListener('click', function () {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
         this.classList.toggle('bx-show');
