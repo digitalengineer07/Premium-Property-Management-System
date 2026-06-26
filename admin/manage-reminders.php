@@ -466,7 +466,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
                 </div>
                 <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9; flex-shrink: 0;">
-                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
+                    <a href="all-reminder-history.php" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
         </div>
