@@ -612,23 +612,27 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const centerTextPlugin = {
                 id: 'centerText',
                 beforeDraw: function(chart) {
-                    var width = chart.width, height = chart.height, ctx = chart.ctx;
+                    if (!chart.getDatasetMeta(0).data.length) return;
+                    var ctx = chart.ctx;
                     ctx.restore();
-                    var fontSize = (height / 120).toFixed(2);
-                    ctx.font = "bold " + fontSize + "em Inter";
+                    
+                    var meta = chart.getDatasetMeta(0);
+                    var centerX = meta.data[0].x;
+                    var centerY = meta.data[0].y;
+                    
+                    var fontSize = (chart.height / 120).toFixed(2);
+                    ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
+                    
+                    ctx.font = "bold " + fontSize + "em Inter";
                     ctx.fillStyle = "#0F172A";
-                    var text = formatCur(totalExp),
-                        textX = Math.round((width - ctx.measureText(text).width) / 2) - 40, // offset slightly left for legend
-                        textY = height / 2 - 5;
-                    ctx.fillText(text, textX, textY);
+                    var text = formatCur(totalExp);
+                    ctx.fillText(text, centerX, centerY - 10);
                     
                     ctx.font = "600 " + (fontSize/2.5).toFixed(2) + "em Inter";
                     ctx.fillStyle = "#64748B";
-                    var label = "Total Expenses",
-                        labelX = Math.round((width - ctx.measureText(label).width) / 2) - 40,
-                        labelY = height / 2 + 15;
-                    ctx.fillText(label, labelX, labelY);
+                    var label = "Total Expenses";
+                    ctx.fillText(label, centerX, centerY + 15);
                     ctx.save();
                 }
             };
