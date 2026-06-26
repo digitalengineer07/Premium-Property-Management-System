@@ -357,18 +357,18 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
         <div class="right-col">
             <div class="panel" style="height: 100%;">
-                <div class="panel-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+                <div class="panel-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
                     <div style="display: flex; gap: 12px; align-items: flex-start;">
-                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                        <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                             <i class='bx bx-time-five'></i>
                         </div>
                         <div>
-                            <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;">Reminders History</h2>
-                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-weight: 600;">Recent reminders sent to residents</p>
+                            <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0;">Reminders History</h2>
+                            <p style="font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 600;">Recent reminders sent to residents</p>
                         </div>
                     </div>
-                    <div style="padding-top: 4px;">
-                        <select style="padding: 8px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 13px; font-weight: 700; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
+                    <div style="padding-top: 2px;">
+                        <select style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 11px; font-weight: 700; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
                             <option>All Types</option>
                             <option>Manual</option>
                             <option>Auto</option>
@@ -407,44 +407,44 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             $subtext = 'Email';
                         }
                     ?>
-                        <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 20px; padding-bottom: 32px;">
+                        <div class="history-item" style="position: relative; display: flex; align-items: flex-start; gap: 16px; padding-bottom: 24px;">
                             <?php if($counter < $total): ?>
-                                <div style="position: absolute; left: 5px; top: 20px; bottom: 0; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
+                                <div style="position: absolute; left: 4px; top: 16px; bottom: 0; width: 2px; background: rgba(98, 75, 255, 0.2); z-index: 1;"></div>
                             <?php endif; ?>
                             
                             <div style="position: relative; z-index: 2; flex-shrink: 0;">
-                                <div style="position: absolute; left: 1px; top: 14px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--primary-purple); background: #fff; z-index: 3;"></div>
+                                <div style="position: absolute; left: 1px; top: 12px; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--primary-purple); background: #fff; z-index: 3;"></div>
                                 
-                                <div style="margin-left: 24px; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; background: <?php echo $color; ?>;">
+                                <div style="margin-left: 20px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #fff; background: <?php echo $color; ?>;">
                                     <?php echo $initial; ?>
                                 </div>
                             </div>
                             
-                            <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 4px;">
-                                <div>
-                                    <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px;">
+                            <div style="flex: 1; display: flex; justify-content: space-between; align-items: flex-start; padding-top: 2px;">
+                                <div style="flex: 1; min-width: 0; padding-right: 12px;">
+                                    <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo htmlspecialchars($h['renter_name']); ?>
                                     </div>
-                                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 6px;">
+                                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         Room <?php echo $h['room_no'] ?? 'N/A'; ?> • <?php echo $h['bill_type']; ?> Reminder (<?php echo $h['month']; ?>)
                                     </div>
-                                    <div style="font-size: 11px; color: var(--text-gray); font-weight: 700; display: flex; align-items: center; gap: 4px;">
+                                    <div style="font-size: 10px; color: var(--text-gray); font-weight: 700; display: flex; align-items: center; gap: 4px;">
                                         <i class='bx bx-calendar'></i> <?php echo date('M d, Y', strtotime($h['sent_at'])); ?> • <?php echo date('h:i A', strtotime($h['sent_at'])); ?>
                                     </div>
                                 </div>
                                 
-                                <div style="text-align: right;">
-                                    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; background: <?php echo $pill_bg; ?>; color: <?php echo $pill_text; ?>; padding: 4px 10px; border-radius: 12px; margin-bottom: 6px;">
+                                <div style="text-align: right; flex-shrink: 0;">
+                                    <div style="display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; background: <?php echo $pill_bg; ?>; color: <?php echo $pill_text; ?>; padding: 3px 8px; border-radius: 12px; margin-bottom: 4px;">
                                         <i class='bx <?php echo $pill_icon; ?>'></i> <?php echo $status; ?>
                                     </div>
-                                    <div style="font-size: 10px; color: var(--text-gray); font-weight: 600;"><?php echo $subtext; ?></div>
+                                    <div style="font-size: 9px; color: var(--text-gray); font-weight: 600;"><?php echo $subtext; ?></div>
                                 </div>
                             </div>
                         </div>
                     <?php endwhile; ?>
                 </div>
-                <div style="margin-top: 16px;">
-                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
+                <div style="margin-top: 12px; text-align: center;">
+                    <a href="#" style="color: var(--primary-purple); font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">View All History <i class='bx bx-right-arrow-alt'></i></a>
                 </div>
             </div>
         </div>
