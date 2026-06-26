@@ -645,7 +645,14 @@ if ($res) {
                             <div class="pv-user-cell">
                                 <div class="pv-avatar-circle <?php echo $avatarClass; ?>"><?php echo $initials; ?></div>
                                 <div style="min-width: 80px;">
-                                    <div style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;"><?php echo s($n['renter_name']); ?></div>
+                                    <?php 
+                                    $raw_name = trim($n['renter_name']);
+                                    $name_parts = explode(' ', $raw_name);
+                                    $display_name = count($name_parts) > 2 ? $name_parts[0] . ' ' . $name_parts[1] . '...' : $raw_name;
+                                    ?>
+                                    <div title="<?php echo s($raw_name); ?>" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
+                                        <?php echo s($display_name); ?>
+                                    </div>
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
