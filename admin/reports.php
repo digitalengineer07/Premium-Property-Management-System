@@ -26,7 +26,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 0; }
         
         /* Typography */
-        .page-title { font-size: 24px; font-weight: 800; color: #0F172A; margin-bottom: 4px; letter-spacing: -0.5px; white-space: nowrap; }
+        .page-title { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, #0F172A 0%, #312E81 50%, #6C4DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; white-space: nowrap; display: inline-block; }
         .page-subtitle { font-size: 13px; font-weight: 500; color: #64748B; margin-bottom: 0; white-space: nowrap; }
         .section-title { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0; }
         
