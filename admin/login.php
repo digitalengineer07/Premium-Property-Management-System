@@ -148,22 +148,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .bg-illustration {
         position: absolute;
-        bottom: -5px;
+        bottom: -40px;
         left: 0;
-        width: 100%;
-        max-width: 650px;
+        width: 90%;
+        max-width: 520px;
         height: auto;
-        z-index: 2;
+        z-index: 1;
         pointer-events: none;
     }
     .bg-circle {
         position: absolute; width: 480px; height: 480px;
-        border-radius: 50%; bottom: 60px; right: -60px; z-index: 0;
+        border-radius: 50%; bottom: 20px; right: -40px; z-index: 0;
         background: radial-gradient(circle, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.15) 60%, rgba(139,92,246,0.02) 100%);
     }
     .bg-rings {
         position: absolute; width: 620px; height: 620px;
-        border-radius: 50%; bottom: -10px; right: -130px; z-index: 0;
+        border-radius: 50%; bottom: -50px; right: -110px; z-index: 0;
         border: 1px solid rgba(139,92,246,0.1);
         box-shadow: inset 0 0 0 20px transparent, inset 0 0 0 21px rgba(139,92,246,0.08), inset 0 0 0 40px transparent, inset 0 0 0 41px rgba(139,92,246,0.05), inset 0 0 0 60px transparent, inset 0 0 0 61px rgba(139,92,246,0.03);
     }
