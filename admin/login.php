@@ -87,18 +87,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow-x: hidden;
+        overflow: hidden;
     }
 
     .split-layout {
         display: flex;
         width: 100%;
-        max-width: 1280px;
-        min-height: 850px;
+        max-width: 1200px;
+        height: 100vh;
+        max-height: 800px;
         background: transparent;
         margin: 0 auto;
-        padding: 40px;
-        gap: 40px;
+        padding: 20px;
+        gap: 20px;
     }
 
     /* Left Panel Styles */
@@ -106,58 +107,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         flex: 1.1;
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: center;
         position: relative;
-        padding: 40px 20px 40px 40px;
+        padding: 20px;
     }
 
     .brand {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 60px;
+        margin-bottom: 24px;
     }
     .brand-logo {
-        width: 48px; height: 48px; background: transparent; 
-        color: var(--primary-purple); font-size: 54px;
+        width: 42px; height: 42px; background: transparent; 
+        color: var(--primary-purple); font-size: 46px;
         display: flex; align-items: center; justify-content: center;
     }
-    .brand-text h2 { font-size: 20px; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
-    .brand-text p { font-size: 13px; color: var(--text-gray); font-weight: 500; }
+    .brand-text h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); line-height: 1.2; }
+    .brand-text p { font-size: 12px; color: var(--text-gray); font-weight: 500; }
 
     .hero-title {
-        font-size: 46px; font-weight: 800; color: var(--text-dark);
-        line-height: 1.2; margin-bottom: 16px; letter-spacing: -1px;
+        font-size: 36px; font-weight: 800; color: var(--text-dark);
+        line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px;
     }
     .hero-title span { color: var(--primary-purple); }
     .hero-subtitle {
-        font-size: 18px; color: var(--text-gray); font-weight: 500; line-height: 1.5;
-        margin-bottom: 48px; max-width: 400px;
+        font-size: 15px; color: var(--text-gray); font-weight: 500; line-height: 1.4;
+        margin-bottom: 32px; max-width: 380px;
     }
 
-    .feature-list { display: flex; flex-direction: column; gap: 24px; z-index: 2; position: relative; }
-    .feature-item { display: flex; align-items: flex-start; gap: 16px; }
+    .feature-list { display: flex; flex-direction: column; gap: 16px; z-index: 2; position: relative; }
+    .feature-item { display: flex; align-items: flex-start; gap: 12px; }
     .feature-icon {
-        width: 42px; height: 42px; background: var(--primary-purple); color: var(--white);
-        border-radius: 12px; display: flex; align-items: center; justify-content: center;
-        font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);
+        width: 36px; height: 36px; background: var(--primary-purple); color: var(--white);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);
     }
-    .feature-text h4 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
-    .feature-text p { font-size: 13px; color: var(--text-gray); font-weight: 500; max-width: 320px; line-height: 1.4; }
+    .feature-text h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+    .feature-text p { font-size: 12px; color: var(--text-gray); font-weight: 500; max-width: 300px; line-height: 1.3; }
 
     .bg-illustration {
         position: absolute;
-        bottom: -60px;
-        left: -40px;
-        width: 600px;
+        bottom: -30px;
+        left: -30px;
+        width: 480px;
         height: auto;
         z-index: 1;
         opacity: 0.95;
         pointer-events: none;
     }
     .bg-circle {
-        position: absolute; width: 450px; height: 450px; background: rgba(98,75,255,0.12);
-        border-radius: 50%; bottom: 40px; left: 40px; z-index: 0; filter: blur(50px);
+        position: absolute; width: 350px; height: 350px; background: rgba(98,75,255,0.12);
+        border-radius: 50%; bottom: 20px; left: 20px; z-index: 0; filter: blur(40px);
     }
 
     /* Right Panel Styles (Login Card) */
@@ -172,82 +173,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .login-card {
         background: var(--white);
-        width: 100%; max-width: 480px;
-        border-radius: 32px;
-        padding: 50px 48px;
-        box-shadow: 0 24px 64px rgba(0,0,0,0.06);
+        width: 100%; max-width: 440px;
+        border-radius: 28px;
+        padding: 32px 36px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         position: relative;
     }
 
     .card-logo {
-        width: 72px; height: 72px; background: #F8FAFC; border-radius: 50%;
-        margin: 0 auto 24px auto; display: flex; align-items: center; justify-content: center;
-        color: var(--primary-purple); font-size: 42px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        width: 56px; height: 56px; background: #F8FAFC; border-radius: 50%;
+        margin: 0 auto 16px auto; display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 32px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
     }
 
-    .login-header { text-align: center; margin-bottom: 32px; }
-    .login-header h1 { font-size: 28px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; letter-spacing: -0.5px; }
-    .login-header p { font-size: 15px; color: var(--text-gray); font-weight: 500; }
-    .header-line { width: 36px; height: 4px; background: var(--primary-purple); margin: 20px auto 0 auto; border-radius: 4px; }
+    .login-header { text-align: center; margin-bottom: 24px; }
+    .login-header h1 { font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 6px; letter-spacing: -0.5px; }
+    .login-header p { font-size: 13px; color: var(--text-gray); font-weight: 500; }
+    .header-line { width: 32px; height: 3px; background: var(--primary-purple); margin: 16px auto 0 auto; border-radius: 4px; }
 
-    .form-group { margin-bottom: 24px; }
-    .form-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; margin-left: 4px; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; margin-left: 4px; }
     
     .input-wrapper { position: relative; }
-    .input-wrapper i.icon-left { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 20px; }
-    .input-wrapper i.icon-right { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 20px; cursor: pointer; transition: color 0.2s; }
+    .input-wrapper i.icon-left { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 18px; }
+    .input-wrapper i.icon-right { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; cursor: pointer; transition: color 0.2s; }
     .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
 
     .form-input {
-        width: 100%; padding: 16px 16px 16px 52px; font-size: 15px; color: var(--text-dark);
-        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 14px;
+        width: 100%; padding: 12px 16px 12px 46px; font-size: 14px; color: var(--text-dark);
+        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 12px;
         outline: none; transition: all 0.2s ease; font-weight: 500;
     }
-    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); background: #ffffff; }
+    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: #ffffff; }
 
     .form-options {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; margin-top: -8px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: -4px;
     }
-    .remember-me { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .remember-me input[type="checkbox"] { 
-        appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--primary-purple); border-radius: 4px;
+        appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--primary-purple); border-radius: 4px;
         outline: none; cursor: pointer; position: relative; background: var(--primary-purple);
         display: flex; align-items: center; justify-content: center;
     }
     .remember-me input[type="checkbox"]::after {
-        content: '\eb7b'; font-family: 'boxicons'; color: white; font-size: 14px; font-weight: bold;
+        content: '\eb7b'; font-family: 'boxicons'; color: white; font-size: 12px; font-weight: bold;
     }
-    .remember-me span { font-size: 13px; color: var(--text-gray); font-weight: 600; }
+    .remember-me span { font-size: 12px; color: var(--text-gray); font-weight: 600; }
     
-    .forgot-link { font-size: 13px; color: var(--primary-purple); font-weight: 700; text-decoration: none; }
+    .forgot-link { font-size: 12px; color: var(--primary-purple); font-weight: 700; text-decoration: none; }
     .forgot-link:hover { text-decoration: underline; }
 
     .btn-submit {
-        width: 100%; padding: 16px; background: var(--primary-purple); color: var(--white);
-        border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
-        transition: all 0.2s ease; box-shadow: 0 8px 24px rgba(98, 75, 255, 0.25);
-        display: flex; align-items: center; justify-content: center; gap: 10px;
+        width: 100%; padding: 14px; background: var(--primary-purple); color: var(--white);
+        border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
+        transition: all 0.2s ease; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);
+        display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(98, 75, 255, 0.35); }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
 
     .divider {
-        display: flex; align-items: center; margin: 32px 0; color: #94A3B8; font-size: 12px; font-weight: 600; text-transform: uppercase;
+        display: flex; align-items: center; margin: 20px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
     }
     .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #E2E8F0; }
-    .divider::before { margin-right: 16px; }
-    .divider::after { margin-left: 16px; }
+    .divider::before { margin-right: 12px; }
+    .divider::after { margin-left: 12px; }
 
     .btn-resident {
-        width: 100%; padding: 16px; background: transparent; color: var(--primary-purple);
-        border: 1.5px solid var(--primary-purple); border-radius: 14px; font-size: 15px; font-weight: 700; 
+        width: 100%; padding: 14px; background: transparent; color: var(--primary-purple);
+        border: 1.5px solid var(--primary-purple); border-radius: 12px; font-size: 14px; font-weight: 700; 
         cursor: pointer; text-decoration: none; transition: all 0.2s ease;
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-resident:hover { background: rgba(98,75,255,0.05); }
 
     .secure-footer {
-        text-align: center; margin-top: 32px; display: flex; align-items: center; justify-content: center; gap: 6px;
-        color: var(--text-gray); font-size: 13px; font-weight: 600;
+        text-align: center; margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 6px;
+        color: var(--text-gray); font-size: 12px; font-weight: 600;
     }
 
     .error-box {
