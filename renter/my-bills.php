@@ -926,7 +926,7 @@ $unread_count = count($unread_notifications);
 
         <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
-            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; overflow-x: auto; max-width: 100%; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
@@ -966,7 +966,7 @@ $unread_count = count($unread_notifications);
             </div>
 
             <!-- Right Column: Bill Details -->
-            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column; position: sticky; top: 24px; height: calc(100% - 48px);">
+            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
                     <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
@@ -1084,10 +1084,8 @@ $unread_count = count($unread_notifications);
                 if (bill.status === 'Unpaid') {
                     btnPay.style.display = 'flex';
                     btnPay.onclick = () => openPaymentModal(bill.amount, bill.title, bill.type, bill.id);
-                    document.getElementById('bdWarning').style.display = 'flex';
                 } else {
                     btnPay.style.display = 'none';
-                    document.getElementById('bdWarning').style.display = 'none';
                 }
             }
 
