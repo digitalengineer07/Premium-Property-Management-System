@@ -980,7 +980,6 @@ $unread_count = count($unread_notifications);
                             <th>STATUS</th>
                             <th>PAID ON</th>
                             <th>PAYMENT MODE</th>
-                            <th>RECEIPT</th>
                         </tr>
                     </thead>
                     <tbody id="paymentsTableBody">
@@ -1016,11 +1015,6 @@ $unread_count = count($unread_notifications);
                                         <?php endif; ?>
                                         <?php echo $bill['payment_mode']; ?>
                                     </div>
-                                </td>
-                                <td>
-                                    <a href="#" class="btn-view-receipt" style="padding: 6px 10px; min-width: auto; border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); border-radius: 8px;">
-                                        <i class='bx bx-download' style="margin: 0; font-size: 16px;"></i>
-                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
