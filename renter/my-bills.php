@@ -379,6 +379,14 @@ $unread_count = count($unread_notifications);
             z-index: 100;
         }
 
+        /* Split Layout */
+        .bills-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+            align-items: start;
+        }
+
         .sidebar-header {
             display: flex;
             align-items: center;
