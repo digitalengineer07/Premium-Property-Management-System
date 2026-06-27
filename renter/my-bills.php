@@ -1141,8 +1141,8 @@ $unread_count = count($unread_notifications);
                                 <div style="display:flex; align-items:center; gap:16px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:16px; font-weight:800; color:var(--text-dark); line-height: 1.2;">${bill.period.replace(' ', '<br>')}</h4>
-                                        <p style="margin:0; font-size:13px; color:var(--text-gray); font-weight:600;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
+                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
