@@ -534,7 +534,7 @@ $unread_count = 1; // Match mockup notification count
                     if(empty($queries)) {
                         echo '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No queries found.</div>';
                     }
-                    foreach($queries as $index => $q): 
+                    foreach(array_slice($queries, 0, 5) as $index => $q): 
                         // Map categories to icons and colors
                         $cat = strtolower($q['category']);
                         if (strpos($cat, 'plumbing') !== false) {
