@@ -884,42 +884,38 @@ $unread_count = count($unread_notifications);
         <!-- 4-Col KPI Grid -->
         <div class="kpi-grid-4 animate-up">
             <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;"><i class='bx bx-credit-card'></i></div>
+                <div class="kpi-min-icon" style="background: rgba(98, 75, 255, 0.1); color: #624BFF;"><i class='bx bx-credit-card-alt'></i></div>
                 <div class="kpi-min-info">
-                    <h4>Total Outstanding</h4>
-                    <h2 style="<?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></h2>
-                    <?php if ($total_due > 0): ?>
-                        <div class="kpi-min-tag" style="background: rgba(255, 75, 107, 0.08); color: #FF4B6B;">Payment Due</div>
-                    <?php else: ?>
-                        <div class="kpi-min-tag" style="background: rgba(16, 185, 129, 0.08); color: #10B981;">All Clear</div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            
-            <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-bulb'></i></div>
-                <div class="kpi-min-info">
-                    <h4>Electricity Due</h4>
-                    <h2><?php echo money($elec_due); ?></h2>
-                    <div class="kpi-min-tag" style="background: rgba(245, 158, 11, 0.08); color: #F59E0B;">Due on 10 <?php echo date('M Y', strtotime('+1 month')); ?></div>
-                </div>
-            </div>
-
-            <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;"><i class='bx bx-home'></i></div>
-                <div class="kpi-min-info">
-                    <h4>Rent Due</h4>
-                    <h2><?php echo money($rent_due); ?></h2>
-                    <div class="kpi-min-tag" style="background: rgba(139, 92, 246, 0.08); color: #8B5CF6;">Due on 07 <?php echo date('M Y'); ?></div>
+                    <h4>Total Payments</h4>
+                    <h2><?php echo money($total_all_amount); ?></h2>
+                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;">All time payments</div>
                 </div>
             </div>
             
             <div class="kpi-card-minimal">
                 <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-check-circle'></i></div>
                 <div class="kpi-min-info">
-                    <h4>Last Payment</h4>
-                    <h2><?php echo $last_payment ? money($last_payment['total_amount']) : '₹0.00'; ?></h2>
-                    <div class="kpi-min-tag" style="background: rgba(16, 185, 129, 0.08); color: #10B981;">Paid on <?php echo $last_payment ? date('d M Y', strtotime($last_payment['payment_date'])) : '-'; ?></div>
+                    <h4>Successful Payments</h4>
+                    <h2><?php echo money($total_successful_amount); ?></h2>
+                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo $total_successful_count; ?> Transactions</div>
+                </div>
+            </div>
+
+            <div class="kpi-card-minimal">
+                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-time'></i></div>
+                <div class="kpi-min-info">
+                    <h4>Pending Payments</h4>
+                    <h2><?php echo money($total_pending_amount); ?></h2>
+                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo $total_pending_count; ?> Transactions</div>
+                </div>
+            </div>
+            
+            <div class="kpi-card-minimal">
+                <div class="kpi-min-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;"><i class='bx bx-receipt'></i></div>
+                <div class="kpi-min-info">
+                    <h4>Avg. Payment</h4>
+                    <h2><?php echo money($avg_payment); ?></h2>
+                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;">Per Transaction</div>
                 </div>
             </div>
         </div>
