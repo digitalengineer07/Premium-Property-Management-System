@@ -1087,17 +1087,17 @@ $unread_count = count($unread_notifications);
                     
                     let iconHtml = '';
                     if (bill.type === 'rent') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(255, 75, 107, 0.1);color:#FF4B6B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
-                    else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bolt'></i></div>`;
+                    else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bulb'></i></div>`;
                     else iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-wrench'></i></div>`;
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})" style="cursor:pointer; transition:0.2s; border-bottom: 1px solid var(--border);">
-                            <td style="padding: 16px 24px;">
+                            <td style="padding: 16px 20px; white-space: nowrap;">
                                 <div style="display:flex; align-items:center; gap:12px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
-                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark); white-space: nowrap;">${bill.period}</h4>
+                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500; white-space: nowrap;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
