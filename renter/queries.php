@@ -588,7 +588,7 @@ $unread_count = 1; // Match mockup notification count
                 </div>
 
                 <!-- Footer Pagination -->
-                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
+                <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                     <span>Showing 1 to <?php echo min(5, $total_queries); ?> of <?php echo $total_queries; ?> queries</span>
                     <div style="display: flex; gap: 8px;">
                         <button class="icon-btn" style="width: 32px; height: 32px;"><i class='bx bx-chevron-left'></i></button>
