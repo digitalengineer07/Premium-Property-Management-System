@@ -924,9 +924,9 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: stretch;">
+        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
-            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); overflow: hidden;">
+            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
@@ -944,7 +944,7 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
                 
-                <div style="padding: 12px 16px;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                <div style="padding: 12px 24px;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
@@ -1138,11 +1138,11 @@ $unread_count = count($unread_notifications);
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
                             <td>
-                                <div style="display:flex; align-items:center; gap:12px;">
+                                <div style="display:flex; align-items:center; gap:16px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:12px; font-weight:700; color:var(--text-dark); white-space:nowrap;">${bill.period}</h4>
-                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500; white-space:nowrap;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
+                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
