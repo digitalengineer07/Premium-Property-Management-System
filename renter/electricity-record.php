@@ -477,9 +477,6 @@ if($ann_q){
                             <td>
                                 <div style="display: flex; align-items: center;">
                                     <?php echo htmlspecialchars($rec['month']); ?>
-                                    <?php if($is_current): ?>
-                                        <span class="badge-current">Current Month</span>
-                                    <?php endif; ?>
                                 </div>
                             </td>
                             <td style="text-align: right;"><?php echo number_format($rec['previous_reading']); ?></td>
