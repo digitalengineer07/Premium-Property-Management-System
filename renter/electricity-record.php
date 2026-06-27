@@ -148,7 +148,7 @@ if($ann_q){
         .btn-tips:hover { border-color: var(--primary-purple); }
 
         /* Main Content */
-        .main-content { margin-left: 230px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 230px); box-sizing: border-box; }
+        .main-content { flex: 1; margin-left: 230px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 230px); box-sizing: border-box; }
         
         /* Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
