@@ -759,13 +759,24 @@ $unread_count = count($unread_notifications);
                 <a href="queries.php" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
-                <div class="user-profile-pill" onclick="window.location.href='profile.php'">
-                    <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
-                    <div class="user-info">
-                        <h4><?php echo htmlspecialchars(explode(' ', trim($display_name))[0]); ?></h4>
-                        <p>Room <?php echo htmlspecialchars($room_no); ?></p>
+                                <div style="position: relative;">
+                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                        <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
+                        <div class="user-info">
+                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name))[0]); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no); ?></p>
+                        </div>
+                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
-                    <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                    
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                        </a>
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -1383,5 +1394,14 @@ $unread_count = count($unread_notifications);
     </script>
     <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 
+<script>
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            let profileDropdown = document.getElementById('profileDropdown');
+            if (profileDropdown && profileDropdown.style.display === 'block') {
+                profileDropdown.style.display = 'none';
+            }
+        });
+</script>
 </body>
 </html>
