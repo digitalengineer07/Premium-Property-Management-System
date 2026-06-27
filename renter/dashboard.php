@@ -796,8 +796,19 @@ $unread_count = count($unread_notifications);
                         <div class="kpi-tag success"><i class='bx bx-check-circle'></i> All Clear</div>
                     <?php endif; ?>
                 </div>
-                <svg class="kpi-sparkline <?php echo $total_due > 0 ? 'red' : 'green'; ?>" viewBox="0 0 100 30" preserveAspectRatio="none">
-                    <path d="M0,30 L10,25 L20,28 L30,20 L40,25 L50,15 L60,18 L70,10 L80,12 L90,5 L100,0" />
+                <svg class="kpi-sparkline <?php echo $total_due > 0 ? 'red' : 'green'; ?>" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradRed" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF4B6B;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#FF4B6B;stop-opacity:0" />
+                        </linearGradient>
+                        <linearGradient id="gradGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5 L100,40 L0,40 Z" fill="url(#<?php echo $total_due > 0 ? 'gradRed' : 'gradGreen'; ?>)" />
+                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5" fill="none" stroke="<?php echo $total_due > 0 ? '#FF4B6B' : '#10B981'; ?>" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
 
@@ -811,8 +822,15 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-bottom">
                     <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: <?php echo date('t M Y'); ?></div>
                 </div>
-                <svg class="kpi-sparkline yellow" viewBox="0 0 100 30" preserveAspectRatio="none">
-                    <path d="M0,30 L15,28 L30,22 L45,25 L60,15 L75,18 L90,8 L100,0" />
+                <svg class="kpi-sparkline yellow" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradYellow" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#F59E0B;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L15,33 L30,27 L45,30 L60,20 L75,23 L90,13 L100,5 L100,40 L0,40 Z" fill="url(#gradYellow)" />
+                    <path d="M0,35 L15,33 L30,27 L45,30 L60,20 L75,23 L90,13 L100,5" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
 
@@ -826,8 +844,15 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-bottom">
                     <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
                 </div>
-                <svg class="kpi-sparkline purple" viewBox="0 0 100 30" preserveAspectRatio="none">
-                    <path d="M0,30 L20,25 L40,28 L60,15 L80,18 L100,0" />
+                <svg class="kpi-sparkline purple" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5 L100,40 L0,40 Z" fill="url(#gradPurple)" />
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
         </div>
