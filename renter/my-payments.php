@@ -903,7 +903,6 @@ $unread_count = count($unread_notifications);
                         <tr>
                             <th>BILL TYPE</th>
                             <th>FOR PERIOD</th>
-                            <th>BILL DATE</th>
                             <th>DUE DATE</th>
                             <th>AMOUNT</th>
                             <th>STATUS</th>
@@ -924,7 +923,6 @@ $unread_count = count($unread_notifications);
                                     </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
-                                <td><?php echo $bill['bill_date']; ?></td>
                                 <td><?php echo $bill['due_date']; ?></td>
                                 <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
