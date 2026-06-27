@@ -1138,11 +1138,11 @@ $unread_count = count($unread_notifications);
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
                             <td>
-                                <div style="display:flex; align-items:center; gap:16px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
-                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 4px 0; font-size:12px; font-weight:700; color:var(--text-dark); white-space:nowrap;">${bill.period}</h4>
+                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500; white-space:nowrap;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
