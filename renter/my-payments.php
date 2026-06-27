@@ -832,8 +832,15 @@ $unread_count = count($unread_notifications);
             ];
         }
 
-        // Sort by Bill Date Descending
-        usort($all_bills, function($a, $b) { return strtotime($b['bill_date']) - strtotime($a['bill_date']); });
+        // Sort by Period Descending, then by Bill Date Descending
+        usort($all_bills, function($a, $b) { 
+            $t1 = strtotime($b['period']);
+            $t2 = strtotime($a['period']);
+            if ($t1 == $t2) {
+                return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+            }
+            return $t1 - $t2;
+        });
         ?>
 
         <!-- 4-Col KPI Grid -->
