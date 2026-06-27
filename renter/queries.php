@@ -254,6 +254,7 @@ $unread_count = 1; // Match mockup notification count
         .form-card {
             background: var(--white); border: 1px solid var(--border);
             border-radius: 20px; padding: 20px 24px; box-shadow: var(--card-shadow);
+            display: flex; flex-direction: column;
         }
         .form-title { margin: 0 0 16px 0; font-size: 16px; font-weight: 800; color: var(--text-dark); }
         .form-group { margin-bottom: 12px; }
