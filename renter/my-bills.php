@@ -924,7 +924,7 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start;">
+        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; overflow-x: auto; max-width: 100%; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: transparent; border-bottom: 1px solid var(--border);">
@@ -966,7 +966,7 @@ $unread_count = count($unread_notifications);
             </div>
 
             <!-- Right Column: Bill Details -->
-            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; position: sticky; top: 24px;">
+            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column; position: sticky; top: 24px; height: calc(100% - 48px);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
                     <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
@@ -1007,9 +1007,9 @@ $unread_count = count($unread_notifications);
                     <h4 id="bdTotalAmount2" style="margin: 0; font-size: 15px; font-weight: 800; color: #FF4B6B;">₹8,000.00</h4>
                 </div>
 
-                <div id="bdWarning" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: flex-start;">
+                <div id="bdWarning" style="background: #FFF7ED; border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: center; margin-top: auto;">
                     <i class='bx bx-error-circle' style="color: #F59E0B; font-size: 20px;"></i>
-                    <p style="margin: 0; font-size: 12px; color: #B45309; line-height: 1.5; font-weight: 500;">Please clear your dues before the due date to avoid late fees.</p>
+                    <p style="margin: 0; font-size: 13px; color: #B45309; line-height: 1.6; font-weight: 600;">Please clear your dues before the due date<br>to avoid late fees.</p>
                 </div>
             </div>
         </div>
