@@ -735,18 +735,18 @@ $unread_count = count($unread_notifications);
         <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 20px;">
                 <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
-                    <i class='bx bx-wallet-alt' style="font-size: 28px; color: var(--primary-purple);"></i>
+                    <i class='bx bx-history' style="font-size: 28px; color: var(--primary-purple);"></i>
                 </div>
                 <div>
                     <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-dark); margin: 0 0 6px 0; display: flex; align-items: center; gap: 12px;">
-                        My Payments
+                        Payment History
                         <?php if ($total_due == 0): ?>
                             <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 20px; letter-spacing: 0.5px;">ALL CLEAR</span>
                         <?php else: ?>
                             <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B; border-radius: 20px; letter-spacing: 0.5px;">DUES PENDING</span>
                         <?php endif; ?>
                     </h1>
-                    <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">View and manage all your bills and payments in one place.</p>
+                    <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">Review your past transactions and download receipts.</p>
                 </div>
             </div>
             <div class="header-actions">
