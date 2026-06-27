@@ -452,9 +452,9 @@ if($ann_q){
                         <tr>
                             <th style="width: 40px; text-align: center;">#</th>
                             <th>Month / Year</th>
-                            <th style="text-align: right;">Previous Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
-                            <th style="text-align: right;">Current Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
-                            <th style="text-align: right;">Units Consumed<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Prev. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Curr. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Consumed<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
                             <th style="text-align: right;">Rate / Unit<br><span style="text-transform:none; font-weight: 500;">(₹)</span></th>
                             <th style="text-align: right;">Amount<br><span style="text-transform:none; font-weight: 500;">(₹)</span></th>
                             <th style="text-align: center;">Status</th>
