@@ -420,11 +420,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="right-panel">
         <div class="login-card">
             
-            <div class="card-logo">
-                <i class='bx bx-building-house'></i>
+            <div class="card-logo" style="color: var(--primary-purple);">
+                <i class='bx bx-user-circle'></i>
             </div>
             
             <div class="login-header">
+                <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border: 1px solid rgba(98, 75, 255, 0.2);">
+                    <i class='bx bxs-user-detail' style="font-size: 14px;"></i> Resident Portal
+                </div>
                 <h1>Welcome Back!</h1>
                 <p>Sign in to your resident account</p>
                 <div class="header-line"></div>
