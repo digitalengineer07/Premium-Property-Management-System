@@ -478,7 +478,7 @@ $unread_count = 1; // Match mockup notification count
             <!-- Left: Form -->
             <div class="form-card">
                 <h3 class="form-title">Submit a New Query</h3>
-                <form method="POST">
+                <form method="POST" style="flex: 1; display: flex; flex-direction: column;">
                     <div class="form-group">
                         <label class="form-label">Query Category</label>
                         <select name="category" class="form-control" required style="appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>'); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px;">
@@ -510,7 +510,7 @@ $unread_count = 1; // Match mockup notification count
                         <input type="file" id="fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
                     </div>
 
-                    <button type="submit" name="submit_query" class="btn-primary">
+                    <button type="submit" name="submit_query" class="btn-primary" style="margin-top: auto;">
                         <i class='bx bx-send'></i> Submit Query
                     </button>
                 </form>
