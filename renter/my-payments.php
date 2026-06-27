@@ -771,7 +771,7 @@ $unread_count = count($unread_notifications);
         while($r = mysqli_fetch_assoc($rent_q)) {
             $all_bills[] = [
                 'id' => $r['id'], 'type' => 'rent', 'filter_type' => 'rent',
-                'title' => 'Rent Payment', 'subtitle' => 'Room ' . $room_no,
+                'title' => 'Rent', 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
                 'bill_date' => date('01 M Y', strtotime($r['month'])),
                 'due_date' => date('05 M Y', strtotime('+1 month', strtotime($r['month']))),
@@ -788,7 +788,7 @@ $unread_count = count($unread_notifications);
         while($e = mysqli_fetch_assoc($elec_q)) {
             $all_bills[] = [
                 'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
-                'title' => 'Electricity Payment', 'subtitle' => 'Units: ' . $e['units_consumed'],
+                'title' => 'Electricity', 'subtitle' => 'Units: ' . $e['units_consumed'],
                 'period' => $e['month'],
                 'bill_date' => date('01 M Y', strtotime($e['month'])),
                 'due_date' => date('03 M Y', strtotime('+1 month', strtotime($e['month']))),
@@ -805,7 +805,7 @@ $unread_count = count($unread_notifications);
         while($m = mysqli_fetch_assoc($maint_q)) {
             $all_bills[] = [
                 'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other', // type=electricity so Pay Now pays the composite bill
-                'title' => 'Maintenance Charge', 'subtitle' => $m['month'],
+                'title' => 'Maintenance', 'subtitle' => $m['month'],
                 'period' => $m['month'],
                 'bill_date' => date('28 M Y', strtotime($m['month'])),
                 'due_date' => date('28 M Y', strtotime($m['month'])),
@@ -822,7 +822,7 @@ $unread_count = count($unread_notifications);
         while($a = mysqli_fetch_assoc($adv_q)) {
             $all_bills[] = [
                 'id' => $a['id'], 'type' => 'advance', 'filter_type' => 'other',
-                'title' => 'Advance Payment', 'subtitle' => $a['month'],
+                'title' => 'Advance', 'subtitle' => $a['month'],
                 'period' => $a['month'],
                 'bill_date' => date('d M Y', strtotime($a['payment_date'])),
                 'due_date' => date('d M Y', strtotime($a['payment_date'])),
