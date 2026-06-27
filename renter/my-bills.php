@@ -926,7 +926,7 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start;">
+        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: 1.2fr 420px; gap: 24px; align-items: start;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0;">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 16px;">
