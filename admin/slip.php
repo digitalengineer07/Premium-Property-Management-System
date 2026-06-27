@@ -270,6 +270,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         </button>
     </div>
 
+    <div class="invoice-wrapper">
         <div class="header">
             <div class="brand-info">
                 <h2><i class='bx bx-bolt-circle'></i> <?php echo HOUSE_NAME; ?></h2>
@@ -280,7 +281,8 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 <span><?php echo $month_period; ?></span>
             </div>
         </div>
-            <div class="info-group">
+
+        <div class="info-grid">
                 <h4>Billing Date</h4>
                 <p><?php echo $date; ?></p>
             </div>
