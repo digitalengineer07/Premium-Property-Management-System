@@ -779,7 +779,7 @@ $unread_count = count($unread_notifications);
                 'title' => 'Rent', 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
                 'bill_date' => date('01 M Y', strtotime($r['month'])),
-                'due_date' => date('05 M Y', strtotime('+1 month', strtotime($r['month']))),
+                'due_date' => date('07 M Y', strtotime($r['month'])),
                 'amount' => $r['amount'], 'status' => $r['status'],
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple'
@@ -796,7 +796,7 @@ $unread_count = count($unread_notifications);
                 'title' => 'Electricity', 'subtitle' => 'Units: ' . $e['units_consumed'],
                 'period' => $e['month'],
                 'bill_date' => date('01 M Y', strtotime($e['month'])),
-                'due_date' => date('03 M Y', strtotime('+1 month', strtotime($e['month']))),
+                'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
                 'amount' => $e['amount'], 'status' => $e['status'],
                 'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
                 'icon' => 'bx-bolt', 'color' => 'yellow'
@@ -812,8 +812,8 @@ $unread_count = count($unread_notifications);
                 'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other', // type=electricity so Pay Now pays the composite bill
                 'title' => 'Maintenance', 'subtitle' => $m['month'],
                 'period' => $m['month'],
-                'bill_date' => date('28 M Y', strtotime($m['month'])),
-                'due_date' => date('28 M Y', strtotime($m['month'])),
+                'bill_date' => date('01 M Y', strtotime($m['month'])),
+                'due_date' => date('07 M Y', strtotime($m['month'])),
                 'amount' => $m['maintenance'], 'status' => $m['status'],
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
                 'icon' => 'bx-wrench', 'color' => 'red'
@@ -889,7 +889,7 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-min-info">
                     <h4>Electricity Due</h4>
                     <h2><?php echo money($elec_due); ?></h2>
-                    <div class="kpi-min-tag" style="background: rgba(245, 158, 11, 0.08); color: #F59E0B;">Due on <?php echo date('t M Y'); ?></div>
+                    <div class="kpi-min-tag" style="background: rgba(245, 158, 11, 0.08); color: #F59E0B;">Due on 10 <?php echo date('M Y', strtotime('+1 month')); ?></div>
                 </div>
             </div>
 
@@ -898,7 +898,7 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-min-info">
                     <h4>Rent Due</h4>
                     <h2><?php echo money($rent_due); ?></h2>
-                    <div class="kpi-min-tag" style="background: rgba(139, 92, 246, 0.08); color: #8B5CF6;">Due on 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
+                    <div class="kpi-min-tag" style="background: rgba(139, 92, 246, 0.08); color: #8B5CF6;">Due on 07 <?php echo date('M Y'); ?></div>
                 </div>
             </div>
             
