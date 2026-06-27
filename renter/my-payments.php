@@ -815,20 +815,20 @@ $unread_count = count($unread_notifications);
             ];
         }
 
-        // 3. Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.maintenance, e.status, p.payment_date 
+        // 3. Rent & Maintenance (From Electricity)
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as combined_amount, e.status, p.payment_date 
                                        FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.maintenance > 0");
+                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
         while($m = mysqli_fetch_assoc($maint_q)) {
             $all_bills[] = [
-                'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other', // type=electricity so Pay Now pays the composite bill
-                'title' => 'Maintenance', 'subtitle' => $m['month'],
+                'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'rent',
+                'title' => 'Rent & Maintenance', 'subtitle' => $m['month'],
                 'period' => $m['month'],
                 'bill_date' => date('01 M Y', strtotime($m['month'])),
                 'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $m['maintenance'], 'status' => $m['status'],
+                'amount' => $m['combined_amount'], 'status' => $m['status'],
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-                'icon' => 'bx-wrench', 'color' => 'red'
+                'icon' => 'bx-home', 'color' => 'purple'
             ];
         }
 
