@@ -665,15 +665,13 @@ $unread_count = count($unread_notifications);
     </style>
 
         <style>
-            .bill-row td { padding: 16px 20px; transition: 0.2s; border: none !important; }
+            .bill-row td { padding: 16px 20px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
-            .bill-row { background: white; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-            .bill-row:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
-            .bill-row.active { background: #F4F0FF; box-shadow: none; }
-            .bill-row.active td { border: 1px solid rgba(98, 75, 255, 0.05); border-left: none; border-right: none; }
-            .bill-row.active td:first-child { border-left: 1px solid rgba(98, 75, 255, 0.05); }
-            .bill-row.active td:last-child { border-right: 1px solid rgba(98, 75, 255, 0.05); }
+            .bill-row { background: transparent; cursor: pointer; }
+            .bill-row:hover td { background: #FAFBFC; }
+            .bill-row.active td { background: #F4F0FF; border-bottom: 1px solid transparent; }
             .pagination-purple { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; border: 1px solid var(--border); background: white; color: var(--text-gray); }
             .pagination-purple.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
             .pagination-purple:hover:not(.active) { background: #FAFBFC; }
@@ -928,8 +926,8 @@ $unread_count = count($unread_notifications);
 
         <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start;">
             <!-- Left Column: Bills List -->
-            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; overflow-x: auto; max-width: 100%;">
-                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 16px;">
+            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; overflow-x: auto; max-width: 100%; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
                         <button type="button" class="tab-btn" data-filter="unpaid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Unpaid</button>
@@ -946,7 +944,7 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
                 
-                <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
+                <div style="padding: 12px 24px;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 16px 24px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
@@ -961,7 +959,7 @@ $unread_count = count($unread_notifications);
                         <!-- Rendered by JS -->
                     </tbody>
                 </table>
-                <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
+                </div><div style="padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
                     <span id="showingText">Showing 1 to 6 of 14 bills</span>
                     <div id="paginationControls" style="display: flex; gap: 4px;"></div>
                 </div>
