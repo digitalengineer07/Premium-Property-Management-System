@@ -647,6 +647,11 @@ $unread_count = count($unread_notifications);
         .info-text i { font-size: 18px; color: var(--primary-purple); }
         .btn-pay-pending { background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn-pay-pending:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        
+        .pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 24px; border-top: 1px solid var(--border); }
+        .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
+        .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
+        .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
 
     </style>
 </head>
@@ -841,6 +846,27 @@ $unread_count = count($unread_notifications);
             }
             return $t1 - $t2;
         });
+        
+        // Pagination logic: group by period (3 months per page)
+        $unique_periods = [];
+        foreach($all_bills as $b) {
+            if (!in_array($b['period'], $unique_periods)) {
+                $unique_periods[] = $b['period'];
+            }
+        }
+        
+        $months_per_page = 3;
+        $total_pages = ceil(count($unique_periods) / $months_per_page);
+        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        if ($current_page < 1) $current_page = 1;
+        if ($current_page > $total_pages && $total_pages > 0) $current_page = $total_pages;
+        
+        $offset = ($current_page - 1) * $months_per_page;
+        $periods_to_show = array_slice($unique_periods, $offset, $months_per_page);
+        
+        $paginated_bills = array_filter($all_bills, function($b) use ($periods_to_show) {
+            return in_array($b['period'], $periods_to_show);
+        });
         ?>
 
         <!-- 4-Col KPI Grid -->
@@ -920,7 +946,7 @@ $unread_count = count($unread_notifications);
                     <tbody id="paymentsTableBody">
                         <?php 
                         $current_month = '';
-                        foreach($all_bills as $bill): 
+                        foreach($paginated_bills as $bill): 
                             if ($bill['period'] != $current_month) {
                                 $current_month = $bill['period'];
                                 echo "<tr class='month-divider' data-filter-type='divider' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
@@ -955,6 +981,26 @@ $unread_count = count($unread_notifications);
                     </tbody>
                 </table>
             </div>
+            
+            <?php if ($total_pages > 1): ?>
+            <div class="pagination">
+                <?php if ($current_page > 1): ?>
+                    <a href="?page=<?php echo $current_page - 1; ?>" class="page-btn"><i class='bx bx-chevron-left'></i></a>
+                <?php else: ?>
+                    <span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>
+                <?php endif; ?>
+                
+                <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?php echo $i; ?>" class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>"><?php echo $i; ?></a>
+                <?php endfor; ?>
+                
+                <?php if ($current_page < $total_pages): ?>
+                    <a href="?page=<?php echo $current_page + 1; ?>" class="page-btn"><i class='bx bx-chevron-right'></i></a>
+                <?php else: ?>
+                    <span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>
+                <?php endif; ?>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="bottom-info-bar animate-up" style="animation-delay: 0.2s;">
