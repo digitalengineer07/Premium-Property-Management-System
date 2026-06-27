@@ -799,7 +799,7 @@ $unread_count = count($unread_notifications);
                 'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
                 'amount' => $e['amount'], 'status' => $e['status'],
                 'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
-                'icon' => 'bx-bolt', 'color' => 'yellow'
+                'icon' => 'bx-bulb', 'color' => 'yellow'
             ];
         }
 
