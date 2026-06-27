@@ -679,7 +679,7 @@ $unread_count = count($unread_notifications);
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="payment-history.php" class="nav-item">
                 <i class='bx bx-history'></i>
                 <span>Payment History</span>
             </a>
