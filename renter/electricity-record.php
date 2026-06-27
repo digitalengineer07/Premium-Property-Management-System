@@ -494,7 +494,7 @@ if($ann_q){
                                 <?php if($rec['status'] != 'Paid'): ?>
                                     <a href="pay.php?id=<?php echo $rec['id']; ?>" class="btn-table-action pay"><i class='bx bx-wallet'></i> Pay Now</a>
                                 <?php else: ?>
-                                    <a href="#" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
+                                    <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
                                 <?php endif; ?>
                             </td>
                         </tr>
