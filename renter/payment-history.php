@@ -782,72 +782,93 @@ $unread_count = count($unread_notifications);
         $all_bills = [];
 
         // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, p.payment_date 
-                                       FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
-                                       WHERE r.user_id=$user_id");
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, p.payment_date, p.payment_mode 
+                                       FROM rent r INNER JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
+                                       WHERE r.user_id=$user_id AND r.status='Paid'");
         while($r = mysqli_fetch_assoc($rent_q)) {
             $all_bills[] = [
                 'id' => $r['id'], 'type' => 'rent', 'filter_type' => 'rent',
-                'title' => 'Rent', 'subtitle' => 'Room ' . $room_no,
+                'title' => 'Rent Payment', 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
                 'bill_date' => date('01 M Y', strtotime($r['month'])),
                 'due_date' => date('07 M Y', strtotime($r['month'])),
-                'amount' => $r['amount'], 'status' => $r['status'],
-                'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
+                'amount' => $r['amount'], 'status' => 'Paid',
+                'paid_on' => date('d M Y', strtotime($r['payment_date'])),
+                'payment_mode' => $r['payment_mode'] ? $r['payment_mode'] : 'UPI',
                 'icon' => 'bx-home', 'color' => 'purple'
             ];
         }
 
         // 2. Electricity (Usage)
-        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, e.status, p.payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.amount > 0");
+        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, e.status, p.payment_date, p.payment_mode 
+                                       FROM electricity e INNER JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND e.status='Paid' AND e.amount > 0");
         while($e = mysqli_fetch_assoc($elec_q)) {
             $all_bills[] = [
                 'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
-                'title' => 'Electricity', 'subtitle' => 'Units: ' . $e['units_consumed'],
+                'title' => 'Electricity Payment', 'subtitle' => 'Units: ' . $e['units_consumed'],
                 'period' => $e['month'],
                 'bill_date' => date('01 M Y', strtotime($e['month'])),
                 'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
-                'amount' => $e['amount'], 'status' => $e['status'],
-                'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
+                'amount' => $e['amount'], 'status' => 'Paid',
+                'paid_on' => date('d M Y', strtotime($e['payment_date'])),
+                'payment_mode' => $e['payment_mode'] ? $e['payment_mode'] : 'UPI',
                 'icon' => 'bx-bulb', 'color' => 'yellow'
             ];
         }
 
         // 3. Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.maintenance, e.status, p.payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.maintenance > 0");
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.maintenance, e.status, p.payment_date, p.payment_mode 
+                                       FROM electricity e INNER JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND e.status='Paid' AND e.maintenance > 0");
         while($m = mysqli_fetch_assoc($maint_q)) {
             $all_bills[] = [
-                'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other', // type=electricity so Pay Now pays the composite bill
-                'title' => 'Maintenance', 'subtitle' => $m['month'],
+                'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other',
+                'title' => 'Maintenance Charge', 'subtitle' => $m['month'],
                 'period' => $m['month'],
                 'bill_date' => date('01 M Y', strtotime($m['month'])),
                 'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $m['maintenance'], 'status' => $m['status'],
-                'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
+                'amount' => $m['maintenance'], 'status' => 'Paid',
+                'paid_on' => date('d M Y', strtotime($m['payment_date'])),
+                'payment_mode' => $m['payment_mode'] ? $m['payment_mode'] : 'UPI',
                 'icon' => 'bx-wrench', 'color' => 'red'
             ];
         }
 
         // 4. Advance Payments
-        $adv_q = mysqli_query($conn, "SELECT p.id, p.month, p.paid_amount as amount, p.payment_date 
+        $adv_q = mysqli_query($conn, "SELECT p.id, p.month, p.paid_amount as amount, p.payment_date, p.payment_mode 
                                       FROM payments p 
                                       WHERE p.user_id=$user_id AND p.bill_type='advance'");
         while($a = mysqli_fetch_assoc($adv_q)) {
             $all_bills[] = [
                 'id' => $a['id'], 'type' => 'advance', 'filter_type' => 'other',
-                'title' => 'Advance', 'subtitle' => $a['month'],
+                'title' => 'Advance Payment', 'subtitle' => $a['month'],
                 'period' => $a['month'],
                 'bill_date' => date('d M Y', strtotime($a['payment_date'])),
                 'due_date' => date('d M Y', strtotime($a['payment_date'])),
                 'amount' => $a['amount'], 'status' => 'Paid',
                 'paid_on' => date('d M Y', strtotime($a['payment_date'])),
+                'payment_mode' => $a['payment_mode'] ? $a['payment_mode'] : 'Net Banking',
                 'icon' => 'bx-file', 'color' => 'blue'
             ];
         }
+        
+        $total_successful_amount = array_sum(array_column($all_bills, 'amount'));
+        $total_successful_count = count($all_bills);
+        $avg_payment = $total_successful_count > 0 ? $total_successful_amount / $total_successful_count : 0;
+        
+        $pending_q = mysqli_query($conn, "
+            SELECT 
+                (SELECT COALESCE(SUM(rent_amount),0) FROM rent WHERE user_id=$user_id AND status='Pending') +
+                (SELECT COALESCE(SUM(amount + maintenance),0) FROM electricity WHERE user_id=$user_id AND status='Pending') as total_pending,
+                (SELECT COUNT(id) FROM rent WHERE user_id=$user_id AND status='Pending') +
+                (SELECT COUNT(id) FROM electricity WHERE user_id=$user_id AND status='Pending') as count_pending
+        ");
+        $pending_row = mysqli_fetch_assoc($pending_q);
+        $total_pending_amount = $pending_row['total_pending'];
+        $total_pending_count = $pending_row['count_pending'];
+        
+        $total_all_amount = $total_successful_amount + $total_pending_amount;
 
         // Sort by Period Descending, then by Bill Date Descending
         usort($all_bills, function($a, $b) { 
