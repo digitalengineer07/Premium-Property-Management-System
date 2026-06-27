@@ -1038,59 +1038,44 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="bottom-info-bar animate-up" style="animation-delay: 0.2s;">
-            <div class="info-text">
-                <i class='bx bx-info-circle'></i>
-                Note: Please make sure to clear your pending payments before the due date to avoid any service interruptions.
-            </div>
-            <?php if ($total_due > 0): ?>
-                <button class="btn-pay-pending" onclick="openPaymentModal(<?php echo $total_due; ?>, 'Total Outstanding Balance', 'total', 0)">
-                    <i class='bx bx-wallet'></i> Pay Pending Amount
-                </button>
-            <?php endif; ?>
-        </div>
-
         <script>
             let currentTab = 'all';
             let currentPage = 1;
-            const monthsPerPage = 3;
+            const recordsPerPage = 5;
 
             function renderTable() {
                 const allDataRows = Array.from(document.querySelectorAll('#paymentsTableBody tr.data-row'));
-                const allDividers = Array.from(document.querySelectorAll('#paymentsTableBody tr.month-divider'));
                 
                 // 1. Filter rows by tab
                 const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
                 
-                // 2. Extract unique periods from filtered rows
-                const uniquePeriods = [...new Set(filteredRows.map(row => row.getAttribute('data-period')))];
+                // 2. Paginate rows
+                const totalRecords = filteredRows.length;
+                const totalPages = Math.ceil(totalRecords / recordsPerPage) || 1;
                 
-                // 3. Paginate periods
-                const totalPages = Math.ceil(uniquePeriods.length / monthsPerPage) || 1;
                 if (currentPage > totalPages) currentPage = totalPages;
                 if (currentPage < 1) currentPage = 1;
                 
-                const offset = (currentPage - 1) * monthsPerPage;
-                const periodsToShow = uniquePeriods.slice(offset, offset + monthsPerPage);
+                const startIndex = (currentPage - 1) * recordsPerPage;
+                const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
                 
-                // 4. Show/Hide data rows based on pagination and filter
+                // 3. Show/Hide data rows based on pagination
                 allDataRows.forEach(row => {
-                    if (filteredRows.includes(row) && periodsToShow.includes(row.getAttribute('data-period'))) {
-                        row.style.display = 'table-row';
-                    } else {
-                        row.style.display = 'none';
-                    }
+                    row.style.display = 'none';
                 });
                 
-                // 5. Show/Hide dividers
-                allDividers.forEach(divider => {
-                    const period = divider.getAttribute('data-period');
-                    // Check if there are any visible data rows for this period
-                    const hasVisibleRow = allDataRows.some(row => row.getAttribute('data-period') === period && row.style.display === 'table-row');
-                    divider.style.display = hasVisibleRow ? 'table-row' : 'none';
-                });
+                for(let i = startIndex; i < endIndex; i++) {
+                    filteredRows[i].style.display = 'table-row';
+                    // Update counter dynamically for the filtered set
+                    filteredRows[i].querySelector('td:first-child').textContent = i + 1;
+                }
                 
-                // 6. Render Pagination controls
+                // 4. Update showing text
+                document.getElementById('showingStart').textContent = totalRecords === 0 ? 0 : startIndex + 1;
+                document.getElementById('showingEnd').textContent = endIndex;
+                document.getElementById('totalRecords').textContent = totalRecords;
+                
+                // 5. Render Pagination controls
                 renderPaginationControls(totalPages);
             }
             
@@ -1136,79 +1121,11 @@ $unread_count = count($unread_notifications);
                 });
             }
 
-            // Tab Filtering Logic
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    currentTab = this.getAttribute('data-filter');
-                    currentPage = 1; // Reset to page 1 on tab change
-                    renderTable();
-                });
-            });
-            
             // Initial render
             document.addEventListener('DOMContentLoaded', () => {
                 renderTable();
             });
         </script>
-
-<!-- Payment Modal -->
-    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 10px;">
-        <div class="panel animate-up" style="max-width: 400px; width: 100%; text-align: center; padding: 20px; max-height: 85vh; overflow-y: auto; border-radius: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark);">Make Payment</h2>
-                <i class='bx bx-x' onclick="closePaymentModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
-            </div>
-            
-            <div id="paymentDetails" style="margin-bottom: 16px;">
-                <div id="paymentTitle" style="font-weight: 700; font-size: 14px; margin-bottom: 4px; color: var(--text-gray);">Total Outstanding Balance</div>
-                <div style="font-size: 26px; font-weight: 800; color: var(--primary-purple); letter-spacing: -0.5px;">₹<span id="paymentAmountDisplay">0</span></div>
-            </div>
-
-            <div style="background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px; border: 1px solid var(--border);">
-                <div style="background: #fff; padding: 8px; border-radius: 12px; display: inline-block; margin-bottom: 10px; border: 1px solid #f0f0f0;">
-                    <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 150px; height: 150px; display: block;">
-                </div>
-                <p style="font-size: 11px; color: #64748b; font-weight: 600;">Scan with any UPI App</p>
-                <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-top: 4px; margin-bottom: 12px;">nikhil119124-1@oksbi</div>
-                
-                <a id="upiDeepLinkBtn" href="#" class="btn-primary" style="display: none; background: linear-gradient(135deg, #10B981, #059669); border: none; font-size: 13px; padding: 12px; justify-content: center; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-                    <i class='bx bx-mobile-alt' style="font-size: 16px;"></i> Pay directly on your phone
-                </a>
-            </div>
-
-            <div style="background: rgba(98, 75, 255, 0.04); padding: 10px; border-radius: 12px; border: 1px solid rgba(98, 75, 255, 0.1); margin-bottom: 16px;">
-                <p style="font-size: 10px; color: var(--primary-purple); font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">
-                    <i class='bx bx-timer'></i> Session Expires in <span id="paymentTimer">05:00</span>
-                </p>
-                <p style="font-size: 9px; color: var(--text-gray); line-height: 1.4;">Transfer within this time to ensure amount accuracy.</p>
-            </div>
-
-            <form method="POST" id="paymentNotifyForm" style="text-align: left; border-top: 1px solid var(--border); padding-top: 16px;">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                <input type="hidden" name="bill_type" id="hiddenBillType">
-                <input type="hidden" name="bill_id" id="hiddenBillId">
-                <input type="hidden" name="amount" id="hiddenAmount">
-                
-                <label style="font-size: 11px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 6px;">Enter Transaction ID / UTR</label>
-                <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: var(--bg-main); color: var(--text-dark); outline: none; font-size: 13px;">
-                
-                <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 13px;">
-                    <i class='bx bx-bell'></i> Notify Admin
-                </button>
-            </form>
-
-            <script>
-            document.getElementById('paymentNotifyForm').addEventListener('submit', function(e) {
-                let btn = document.getElementById('submitPaymentBtn');
-                if (btn.disabled) {
-                    e.preventDefault();
-                    return;
-                }
-                // Don't prevent default, we want the form to submit
                 setTimeout(() => {
                     btn.disabled = true;
                     btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Submitting...";
