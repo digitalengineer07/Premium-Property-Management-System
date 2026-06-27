@@ -290,12 +290,12 @@ $unread_count = 1; // Match mockup notification count
             display: flex; flex-direction: column;
         }
         .list-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
         }
         .list-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); }
         
         .query-item {
-            display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 16px;
+            display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 16px;
         }
         .query-item:last-child { border-bottom: none; }
         
