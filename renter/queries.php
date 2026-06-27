@@ -546,6 +546,8 @@ $unread_count = 1; // Match mockup notification count
                             $icon = 'bx-brush'; $bg = 'rgba(16, 185, 129, 0.1)'; $col = '#10B981';
                         } elseif (strpos($cat, 'maintain') !== false || strpos($cat, 'maintenance') !== false) {
                             $icon = 'bx-wrench'; $bg = 'rgba(98, 75, 255, 0.1)'; $col = 'var(--primary-purple)';
+                        } elseif (strpos($cat, 'general') !== false || strpos($cat, 'parking') !== false) {
+                            $icon = 'bx-parking'; $bg = 'rgba(239, 68, 68, 0.1)'; $col = '#EF4444';
                         } else {
                             $icon = 'bx-info-circle'; $bg = 'rgba(239, 68, 68, 0.1)'; $col = '#EF4444';
                         }
