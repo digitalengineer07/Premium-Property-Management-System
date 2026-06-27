@@ -846,27 +846,6 @@ $unread_count = count($unread_notifications);
             }
             return $t1 - $t2;
         });
-        
-        // Pagination logic: group by period (3 months per page)
-        $unique_periods = [];
-        foreach($all_bills as $b) {
-            if (!in_array($b['period'], $unique_periods)) {
-                $unique_periods[] = $b['period'];
-            }
-        }
-        
-        $months_per_page = 3;
-        $total_pages = ceil(count($unique_periods) / $months_per_page);
-        $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        if ($current_page < 1) $current_page = 1;
-        if ($current_page > $total_pages && $total_pages > 0) $current_page = $total_pages;
-        
-        $offset = ($current_page - 1) * $months_per_page;
-        $periods_to_show = array_slice($unique_periods, $offset, $months_per_page);
-        
-        $paginated_bills = array_filter($all_bills, function($b) use ($periods_to_show) {
-            return in_array($b['period'], $periods_to_show);
-        });
         ?>
 
         <!-- 4-Col KPI Grid -->
@@ -946,13 +925,13 @@ $unread_count = count($unread_notifications);
                     <tbody id="paymentsTableBody">
                         <?php 
                         $current_month = '';
-                        foreach($paginated_bills as $bill): 
+                        foreach($all_bills as $bill): 
                             if ($bill['period'] != $current_month) {
                                 $current_month = $bill['period'];
-                                echo "<tr class='month-divider' data-filter-type='divider' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
+                                echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
                             }
                         ?>
-                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>" class="data-row">
+                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>" data-period="<?php echo htmlspecialchars($bill['period']); ?>" class="data-row">
                                 <td>
                                     <div class="td-bill-type">
                                         <div class="td-icon <?php echo $bill['color']; ?>"><i class='bx <?php echo $bill['icon']; ?>'></i></div>
@@ -982,25 +961,9 @@ $unread_count = count($unread_notifications);
                 </table>
             </div>
             
-            <?php if ($total_pages > 1): ?>
-            <div class="pagination">
-                <?php if ($current_page > 1): ?>
-                    <a href="?page=<?php echo $current_page - 1; ?>" class="page-btn"><i class='bx bx-chevron-left'></i></a>
-                <?php else: ?>
-                    <span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>
-                <?php endif; ?>
-                
-                <?php for($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="?page=<?php echo $i; ?>" class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>"><?php echo $i; ?></a>
-                <?php endfor; ?>
-                
-                <?php if ($current_page < $total_pages): ?>
-                    <a href="?page=<?php echo $current_page + 1; ?>" class="page-btn"><i class='bx bx-chevron-right'></i></a>
-                <?php else: ?>
-                    <span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>
-                <?php endif; ?>
+            <div class="pagination" id="paginationControls">
+                <!-- JS will inject pagination buttons here -->
             </div>
-            <?php endif; ?>
         </div>
 
         <div class="bottom-info-bar animate-up" style="animation-delay: 0.2s;">
@@ -1016,6 +979,91 @@ $unread_count = count($unread_notifications);
         </div>
 
         <script>
+            let currentTab = 'all';
+            let currentPage = 1;
+            const monthsPerPage = 3;
+
+            function renderTable() {
+                const allDataRows = Array.from(document.querySelectorAll('#paymentsTableBody tr.data-row'));
+                const allDividers = Array.from(document.querySelectorAll('#paymentsTableBody tr.month-divider'));
+                
+                // 1. Filter rows by tab
+                const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                
+                // 2. Extract unique periods from filtered rows
+                const uniquePeriods = [...new Set(filteredRows.map(row => row.getAttribute('data-period')))];
+                
+                // 3. Paginate periods
+                const totalPages = Math.ceil(uniquePeriods.length / monthsPerPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+                
+                const offset = (currentPage - 1) * monthsPerPage;
+                const periodsToShow = uniquePeriods.slice(offset, offset + monthsPerPage);
+                
+                // 4. Show/Hide data rows based on pagination and filter
+                allDataRows.forEach(row => {
+                    if (filteredRows.includes(row) && periodsToShow.includes(row.getAttribute('data-period'))) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // 5. Show/Hide dividers
+                allDividers.forEach(divider => {
+                    const period = divider.getAttribute('data-period');
+                    // Check if there are any visible data rows for this period
+                    const hasVisibleRow = allDataRows.some(row => row.getAttribute('data-period') === period && row.style.display === 'table-row');
+                    divider.style.display = hasVisibleRow ? 'table-row' : 'none';
+                });
+                
+                // 6. Render Pagination controls
+                renderPaginationControls(totalPages);
+            }
+            
+            function renderPaginationControls(totalPages) {
+                const container = document.getElementById('paginationControls');
+                if (totalPages <= 1) {
+                    container.innerHTML = '';
+                    container.style.display = 'none';
+                    return;
+                }
+                
+                container.style.display = 'flex';
+                let html = '';
+                
+                // Prev btn
+                if (currentPage > 1) {
+                    html += `<a href="#" class="page-btn prev-btn" data-page="${currentPage - 1}"><i class='bx bx-chevron-left'></i></a>`;
+                } else {
+                    html += `<span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>`;
+                }
+                
+                // Pages
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<a href="#" class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</a>`;
+                }
+                
+                // Next btn
+                if (currentPage < totalPages) {
+                    html += `<a href="#" class="page-btn next-btn" data-page="${currentPage + 1}"><i class='bx bx-chevron-right'></i></a>`;
+                } else {
+                    html += `<span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>`;
+                }
+                
+                container.innerHTML = html;
+                
+                // Attach events to dynamically created buttons
+                container.querySelectorAll('a.page-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentPage = parseInt(this.getAttribute('data-page'));
+                        renderTable();
+                    });
+                });
+            }
+
             // Tab Filtering Logic
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
@@ -1023,39 +1071,15 @@ $unread_count = count($unread_notifications);
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
-                    const filter = this.getAttribute('data-filter');
-                    const rows = document.querySelectorAll('#paymentsTableBody tr.data-row');
-                    
-                    // Show/Hide data rows
-                    rows.forEach(row => {
-                        if (filter === 'all' || row.getAttribute('data-filter-type') === filter) {
-                            row.style.display = 'table-row';
-                        } else {
-                            row.style.display = 'none';
-                        }
-                    });
-                    
-                    // Show/Hide dividers based on whether they have visible rows under them
-                    const allRows = document.querySelectorAll('#paymentsTableBody tr');
-                    let currentDivider = null;
-                    let hasVisibleRow = false;
-                    
-                    for (let i = 0; i < allRows.length; i++) {
-                        const row = allRows[i];
-                        if (row.classList.contains('month-divider')) {
-                            if (currentDivider) {
-                                currentDivider.style.display = hasVisibleRow ? 'table-row' : 'none';
-                            }
-                            currentDivider = row;
-                            hasVisibleRow = false;
-                        } else if (row.style.display !== 'none') {
-                            hasVisibleRow = true;
-                        }
-                    }
-                    if (currentDivider) {
-                        currentDivider.style.display = hasVisibleRow ? 'table-row' : 'none';
-                    }
+                    currentTab = this.getAttribute('data-filter');
+                    currentPage = 1; // Reset to page 1 on tab change
+                    renderTable();
                 });
+            });
+            
+            // Initial render
+            document.addEventListener('DOMContentLoaded', () => {
+                renderTable();
             });
         </script>
 
