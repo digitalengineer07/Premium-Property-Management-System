@@ -683,7 +683,7 @@ $unread_count = count($unread_notifications);
                 <i class='bx bx-history'></i>
                 <span>Payment History</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
             </a>
