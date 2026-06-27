@@ -1017,6 +1017,8 @@ $unread_count = count($unread_notifications);
         <script>
             const allBills = <?php echo json_encode($all_bills); ?>;
             let currentFilter = 'all';
+            let currentPage = 1;
+            const itemsPerPage = 6;
             let activeBillId = null;
 
             function formatMoney(amount) {
@@ -1089,14 +1091,32 @@ $unread_count = count($unread_notifications);
                 }
             }
 
+            function goToPage(page, e) {
+                if(e) e.preventDefault();
+                currentPage = page;
+                renderTable();
+            }
+
             function renderTable() {
                 const tbody = document.getElementById('billsTableBody');
                 tbody.innerHTML = '';
                 
-                let count = 0;
-                allBills.forEach((bill, idx) => {
-                    if (currentFilter !== 'all' && bill.filter_type !== currentFilter) return;
-                    count++;
+                // Filter bills
+                const filteredBills = allBills.filter(bill => currentFilter === 'all' || bill.filter_type === currentFilter);
+                const totalItems = filteredBills.length;
+                const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+                
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+                
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+                const currentBills = filteredBills.slice(startIndex, endIndex);
+                
+                let count = totalItems;
+                
+                currentBills.forEach((bill) => {
+                    const idx = allBills.indexOf(bill);
                     
                     const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
                     const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
@@ -1149,21 +1169,22 @@ $unread_count = count($unread_notifications);
                     tbody.innerHTML += rowHtml;
                 });
                 
-                document.getElementById('showingText').textContent = `Showing 1 to 6 of 14 bills`;
-                document.getElementById('paginationControls').innerHTML = `
-                    <a href="#" class="pagination-purple"><i class='bx bx-chevron-left'></i></a>
-                    <a href="#" class="pagination-purple active">1</a>
-                    <a href="#" class="pagination-purple">2</a>
-                    <a href="#" class="pagination-purple">3</a>
-                    <a href="#" class="pagination-purple"><i class='bx bx-chevron-right'></i></a>
-                `;
+                document.getElementById('showingText').textContent = totalItems > 0 ? `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} bills` : `Showing 0 bills`;
                 
-                if (count > 0 && activeBillId === null) {
-                    // Find first visible bill
-                    const firstVis = allBills.findIndex(b => currentFilter === 'all' || b.filter_type === currentFilter);
-                    if (firstVis !== -1) selectBill(firstVis);
-                } else if (count > 0) {
-                     selectBill(activeBillId); // re-highlight
+                let pagHtml = '';
+                if (totalPages > 1) {
+                    pagHtml += `<a href="#" onclick="goToPage(${currentPage > 1 ? currentPage - 1 : 1}, event)" class="pagination-purple"><i class='bx bx-chevron-left'></i></a>`;
+                    for (let i = 1; i <= totalPages; i++) {
+                        pagHtml += `<a href="#" onclick="goToPage(${i}, event)" class="pagination-purple ${i === currentPage ? 'active' : ''}">${i}</a>`;
+                    }
+                    pagHtml += `<a href="#" onclick="goToPage(${currentPage < totalPages ? currentPage + 1 : totalPages}, event)" class="pagination-purple"><i class='bx bx-chevron-right'></i></a>`;
+                }
+                document.getElementById('paginationControls').innerHTML = pagHtml;
+                
+                if (totalItems > 0 && activeBillId === null) {
+                    selectBill(allBills.indexOf(currentBills[0]));
+                } else if (totalItems > 0) {
+                     selectBill(activeBillId); 
                 }
             }
 
@@ -1176,7 +1197,8 @@ $unread_count = count($unread_notifications);
                     e.target.style.borderBottom = '2px solid var(--primary-purple)';
                     e.target.style.color = 'var(--primary-purple)';
                     currentFilter = e.target.getAttribute('data-filter');
-                    activeBillId = null; // reset selection on filter change
+                    activeBillId = null; 
+                    currentPage = 1;
                     renderTable();
                 };
             });
