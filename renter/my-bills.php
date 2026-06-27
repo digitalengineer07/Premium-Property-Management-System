@@ -450,12 +450,10 @@ $unread_count = count($unread_notifications);
         .btn-outline-support {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
             padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            white-space: nowrap;
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
         }
         .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
@@ -757,9 +755,6 @@ $unread_count = count($unread_notifications);
                 <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
                     <i class='bx bx-moon'></i>
                 </div>
-                <a href="payment-history.php" class="btn-outline-support" style="color: #10B981; border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.05);">
-                    <i class='bx bx-history'></i> Payment History
-                </a>
                 <a href="queries.php" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
