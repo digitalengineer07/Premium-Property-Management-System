@@ -423,42 +423,58 @@ $unread_count = 1; // Match mockup notification count
         <!-- KPI Grid -->
         <div class="kpi-grid-4">
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">
-                    <i class='bx bx-message-rounded-dots'></i>
+                <div class="kpi-card-top">
+                    <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">
+                        <i class='bx bx-message-rounded-dots'></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h4>Total Queries</h4>
+                        <h2><?php echo $total_queries; ?></h2>
+                    </div>
                 </div>
-                <div class="kpi-info">
-                    <h4>Total Queries</h4>
-                    <h2><?php echo $total_queries; ?></h2>
+                <div class="kpi-badge-wrap">
                     <span class="kpi-badge" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">All time</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
-                    <i class='bx bx-time'></i>
+                <div class="kpi-card-top">
+                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                        <i class='bx bx-time'></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h4>Open Queries</h4>
+                        <h2><?php echo $open_queries; ?></h2>
+                    </div>
                 </div>
-                <div class="kpi-info">
-                    <h4>Open Queries</h4>
-                    <h2><?php echo $open_queries; ?></h2>
+                <div class="kpi-badge-wrap">
                     <span class="kpi-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Awaiting response</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                    <i class='bx bx-check-circle'></i>
+                <div class="kpi-card-top">
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                        <i class='bx bx-check-circle'></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h4>Resolved Queries</h4>
+                        <h2><?php echo $resolved_queries; ?></h2>
+                    </div>
                 </div>
-                <div class="kpi-info">
-                    <h4>Resolved Queries</h4>
-                    <h2><?php echo $resolved_queries; ?></h2>
+                <div class="kpi-badge-wrap">
                     <span class="kpi-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Successfully resolved</span>
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
-                    <i class='bx bx-x-circle'></i>
+                <div class="kpi-card-top">
+                    <div class="kpi-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
+                        <i class='bx bx-x-circle'></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h4>Closed Queries</h4>
+                        <h2><?php echo $closed_queries; ?></h2>
+                    </div>
                 </div>
-                <div class="kpi-info">
-                    <h4>Closed Queries</h4>
-                    <h2><?php echo $closed_queries; ?></h2>
+                <div class="kpi-badge-wrap">
                     <span class="kpi-badge" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">Closed by you</span>
                 </div>
             </div>
