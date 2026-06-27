@@ -200,7 +200,7 @@ $unread_count = 1; // Match mockup notification count
         .main-content {
             flex: 1;
             margin-left: 230px;
-            padding: 32px 40px;
+            padding: 24px 32px;
             max-width: calc(100% - 230px);
             box-sizing: border-box;
             overflow-y: auto;
@@ -208,94 +208,94 @@ $unread_count = 1; // Match mockup notification count
         }
         .top-header {
             display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
+            margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
         }
-        .header-actions { display: flex; align-items: center; gap: 20px; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
         .icon-btn {
-            width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border);
+            width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; color: var(--text-gray); cursor: pointer;
+            font-size: 18px; color: var(--text-gray); cursor: pointer;
             background: var(--white); transition: all 0.2s; position: relative;
         }
         .icon-btn:hover { color: var(--primary-purple); border-color: rgba(98, 75, 255, 0.2); }
         .user-profile {
-            display: flex; align-items: center; gap: 12px;
-            padding: 8px 16px 8px 8px; border-radius: 24px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 6px 14px 6px 6px; border-radius: 24px;
             border: 1px solid var(--border); background: var(--white); cursor: pointer;
         }
         
         /* KPI Grid */
         .kpi-grid-4 {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
         }
         .kpi-card {
             background: var(--white); border: 1px solid var(--border);
-            border-radius: 20px; padding: 24px; box-shadow: var(--card-shadow);
-            display: flex; align-items: flex-start; gap: 16px;
+            border-radius: 16px; padding: 16px 20px; box-shadow: var(--card-shadow);
+            display: flex; align-items: flex-start; gap: 12px;
         }
         .kpi-icon {
-            width: 48px; height: 48px; border-radius: 12px;
+            width: 40px; height: 40px; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 24px; flex-shrink: 0;
+            font-size: 20px; flex-shrink: 0;
         }
-        .kpi-info h4 { margin: 0 0 8px 0; font-size: 13px; color: var(--text-gray); font-weight: 600; }
-        .kpi-info h2 { margin: 0 0 12px 0; font-size: 28px; color: var(--text-dark); font-weight: 800; }
+        .kpi-info h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-gray); font-weight: 600; }
+        .kpi-info h2 { margin: 0 0 8px 0; font-size: 22px; color: var(--text-dark); font-weight: 800; }
         .kpi-badge {
-            display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; font-weight: 700; white-space: nowrap;
+            display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px;
+            font-size: 10px; font-weight: 700; white-space: nowrap;
         }
 
         /* 2-Column Layout */
         .query-layout {
-            display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 32px; align-items: start;
+            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: start;
         }
 
         /* Form Card */
         .form-card {
             background: var(--white); border: 1px solid var(--border);
-            border-radius: 24px; padding: 24px 32px; box-shadow: var(--card-shadow);
+            border-radius: 20px; padding: 20px 24px; box-shadow: var(--card-shadow);
         }
-        .form-title { margin: 0 0 20px 0; font-size: 18px; font-weight: 800; color: var(--text-dark); }
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text-gray); font-size: 13px; }
+        .form-title { margin: 0 0 16px 0; font-size: 16px; font-weight: 800; color: var(--text-dark); }
+        .form-group { margin-bottom: 12px; }
+        .form-label { display: block; margin-bottom: 4px; font-weight: 600; color: var(--text-gray); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
         .form-control {
-            width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border);
-            background: var(--bg-main); color: var(--text-dark); font-family: inherit; font-size: 14px;
+            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1.5px solid var(--border);
+            background: var(--bg-main); color: var(--text-dark); font-family: inherit; font-size: 13px;
             transition: all 0.2s; box-sizing: border-box;
         }
         .form-control:focus { outline: none; border-color: var(--primary-purple); background: var(--white); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); }
         
         .upload-box {
-            border: 2px dashed rgba(98, 75, 255, 0.3); border-radius: 16px; padding: 20px;
+            border: 2px dashed rgba(98, 75, 255, 0.3); border-radius: 12px; padding: 16px;
             text-align: center; background: rgba(98, 75, 255, 0.03); cursor: pointer;
-            transition: all 0.2s; margin-bottom: 16px;
+            transition: all 0.2s; margin-bottom: 12px;
         }
         .upload-box:hover { background: rgba(98, 75, 255, 0.08); border-color: var(--primary-purple); }
-        .upload-box i { font-size: 20px; color: var(--primary-purple); margin-bottom: 8px; }
-        .upload-box h5 { margin: 0 0 4px 0; font-size: 14px; color: var(--primary-purple); font-weight: 600; }
-        .upload-box p { margin: 0; font-size: 12px; color: var(--text-gray); }
+        .upload-box i { font-size: 18px; color: var(--primary-purple); margin-bottom: 4px; }
+        .upload-box h5 { margin: 0 0 2px 0; font-size: 13px; color: var(--primary-purple); font-weight: 600; }
+        .upload-box p { margin: 0; font-size: 11px; color: var(--text-gray); }
 
         .btn-primary {
             width: 100%; background: var(--primary-purple); color: white; border: none;
-            padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px;
+            padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px;
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-            transition: all 0.2s; box-shadow: 0 8px 20px rgba(98, 75, 255, 0.2);
+            transition: all 0.2s; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); margin-top: 16px;
         }
         .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
         /* List Card */
         .list-card {
             background: var(--white); border: 1px solid var(--border);
-            border-radius: 24px; padding: 32px; box-shadow: var(--card-shadow);
+            border-radius: 20px; padding: 20px 24px; box-shadow: var(--card-shadow);
             display: flex; flex-direction: column;
         }
         .list-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
         }
-        .list-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .list-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); }
         
         .query-item {
-            display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); gap: 20px;
+            display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); gap: 16px;
         }
         .query-item:last-child { border-bottom: none; }
         
@@ -587,7 +587,7 @@ $unread_count = 1; // Match mockup notification count
                 </div>
 
                 <!-- Footer Pagination -->
-                <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
+                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                     <span>Showing 1 to <?php echo min(5, $total_queries); ?> of <?php echo $total_queries; ?> queries</span>
                     <div style="display: flex; gap: 8px;">
                         <button class="icon-btn" style="width: 32px; height: 32px;"><i class='bx bx-chevron-left'></i></button>
