@@ -1018,7 +1018,8 @@ $unread_count = count($unread_notifications);
         <script>
             // Tab Filtering Logic
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
