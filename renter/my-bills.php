@@ -979,8 +979,8 @@ $unread_count = count($unread_notifications);
                         <i class='bx bx-home'></i>
                     </div>
                     <div>
-                        <h4 id="bdTitle" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark);">Rent for February 2026</h4>
-                        <p id="bdSubtitle" style="margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Room 201</p>
+                        <h4 id="bdTitle" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">Rent for February 2026</h4>
+                        <p id="bdSubtitle" style="margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500; white-space: nowrap;">Room 201</p>
                     </div>
                     <div style="margin-left: auto; text-align: right;">
                         <p style="margin: 0 0 4px 0; font-size: 11px; color: var(--text-gray);">Due Date</p>
