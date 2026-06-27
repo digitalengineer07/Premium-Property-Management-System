@@ -165,19 +165,19 @@ if($ann_q){
         .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; font-weight: 500; }
         
         /* KPI Cards */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
-        .kpi-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px; transition: all 0.3s ease; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+        .kpi-card { background: white; border-radius: 20px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
         
-        .kpi-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .kpi-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .kpi-icon.purple { background: rgba(139, 92, 246, 0.08); color: #8B5CF6; }
         .kpi-icon.green { background: rgba(16, 185, 129, 0.08); color: #10B981; }
         .kpi-icon.orange { background: rgba(245, 158, 11, 0.08); color: #F59E0B; }
         .kpi-icon.blue { background: rgba(59, 130, 246, 0.08); color: #3B82F6; }
         
-        .kpi-info h4 { font-size: 13px; font-weight: 600; color: var(--text-gray); margin: 0 0 4px 0; }
-        .kpi-info h2 { font-size: 32px; font-weight: 800; color: var(--text-dark); letter-spacing: -1px; margin: 0 0 4px 0; }
-        .kpi-info p { font-size: 12px; font-weight: 600; color: var(--text-gray); margin: 0; }
+        .kpi-info h4 { font-size: 12px; font-weight: 600; color: var(--text-gray); margin: 0 0 4px 0; }
+        .kpi-info h2 { font-size: 24px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; margin: 0 0 4px 0; }
+        .kpi-info p { font-size: 11px; font-weight: 600; color: var(--text-gray); margin: 0; }
         .kpi-info p.green { color: #10B981; }
 
         /* Two Column Layout */
