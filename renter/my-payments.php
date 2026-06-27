@@ -915,10 +915,10 @@ $unread_count = count($unread_notifications);
         <!-- Payments Table Section -->
         <div class="payments-container animate-up" style="animation-delay: 0.1s;">
             <div class="tabs-header">
-                <button class="tab-btn active" data-filter="all">All Payments</button>
-                <button class="tab-btn" data-filter="rent">Rent Payments</button>
-                <button class="tab-btn" data-filter="electricity">Electricity Payments</button>
-                <button class="tab-btn" data-filter="other">Other Charges</button>
+                <button type="button" class="tab-btn active" data-filter="all">All Payments</button>
+                <button type="button" class="tab-btn" data-filter="rent">Rent Payments</button>
+                <button type="button" class="tab-btn" data-filter="electricity">Electricity Payments</button>
+                <button type="button" class="tab-btn" data-filter="other">Other Charges</button>
                 
                 <div class="tab-actions">
                     <select class="filter-select">
