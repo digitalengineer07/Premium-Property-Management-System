@@ -314,6 +314,7 @@ $unread_count = count($unread_notifications);
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link rel="manifest" href="../manifest.json">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <script>
       if ('serviceWorker' in navigator) {
@@ -329,266 +330,245 @@ $unread_count = count($unread_notifications);
     <script src="../assets/js/pwa.js" defer></script>
     
     <style>
-        /* Overriding some sidebar styles since renter doesn't use the sidebar component directly */
-        .dashboard-grid-70 {
-            display: grid;
-            grid-template-columns: 1.6fr 1fr;
-            gap: 24px;
-            align-items: stretch !important; /* Forces panels to equal height */
+        /* Modern Glassmorphic Renter Dashboard - Completely Independent from Admin */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --neon-blue: #3B82F6;
+            --neon-purple: #8B5CF6;
+            --neon-pink: #EC4899;
+            --neon-emerald: #10B981;
+            --neon-orange: #F59E0B;
         }
 
-        .dashboard-grid-70 > div {
-            display: flex;
+        /* Beautiful Dynamic Mesh Gradient Background */
+        body {
+            display: block !important;
+            font-family: 'Outfit', sans-serif !important;
+            background-color: #f0f4f8;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,90%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,90%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,90%,1) 0, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(160,49%,90%,1) 0, transparent 50%);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        /* Dark Theme Support for Background */
+        body.dark-theme {
+            background-color: #0F172A;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,50%,15%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,50%,15%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,50%,15%,1) 0, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(160,50%,15%,1) 0, transparent 50%);
+        }
+        body.dark-theme {
+            --glass-bg: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        .dashboard-grid-70 .panel {
-            width: 100%;
-            height: 100%;
-            margin-bottom: 0;
-        }
-
-        /* Upgraded KPI Layout for Renter Dashboard */
-        .renter-kpi-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            align-items: stretch;
-            margin-bottom: 32px;
-        }
-        
-        .renter-kpi-grid .kpi-card {
-            flex: 1 1 calc(33.333% - 20px);
-            min-width: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            margin-bottom: 0; /* Clear default */
-            background: var(--white);
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .renter-kpi-grid .kpi-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.06);
-            border-color: var(--primary-purple);
-        }
-        
-        /* Typography explicit overrides to match large box sizes */
-        .renter-kpi-grid .kpi-value {
-            font-size: 28px;
-            font-weight: 800;
-            margin-top: 14px;
+        /* Override base typography for Renter */
+        h1, h2, h3, h4, h5, h6, .brand-renter span, .welcome h1 {
+            font-family: 'Outfit', sans-serif !important;
             letter-spacing: -0.5px;
         }
-        
-        .renter-kpi-grid .kpi-label {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-gray);
-            margin-top: 4px;
+
+        .main-renter {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
         }
 
-        /* Highlighting explicit icon styling is done via the kpi-icon class directly below */
-
-        @media (max-width: 768px) {
-            .header-renter {
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-                margin-bottom: 24px;
-                position: relative !important;
-                top: auto !important;
-                text-align: center;
-            }
-            .brand-renter {
-                margin-bottom: 5px;
-            }
-            .user-profile {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                gap: 10px !important;
-                width: 100% !important;
-                margin-top: 10px !important;
-            }
-            #themeToggle {
-                width: 48px !important;
-                height: 48px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                border: 1px solid var(--border) !important;
-                border-radius: 12px !important;
-                background: var(--white) !important;
-                box-shadow: var(--card-shadow) !important;
-                font-size: 20px !important;
-                flex-shrink: 0;
-            }
-            .user-profile > a {
-                 flex: 1 1 calc(50% - 15px);
-                 height: 48px !important;
-                 display: flex !important;
-                 align-items: center !important;
-                 justify-content: center !important;
-                 border-radius: 12px !important;
-                 padding: 0 16px !important;
-                 margin: 0 !important;
-                 font-size: 13px !important;
-                 font-weight: 700 !important;
-            }
-            .user-profile > a:nth-of-type(1) { flex: 1 1 calc(100% - 60px); }
-            .user-profile > a:nth-of-type(4) { flex: 1 1 100%; }
-
-            .dashboard-grid-70 { grid-template-columns: 1fr !important; gap: 20px !important; }
-            .dashboard-grid-70 > div { display: block; }
-            .dashboard-grid-70 .panel { margin-bottom: 0px !important; padding: 20px !important; border-radius: 20px !important; width: 100% !important; border: none !important; }
-            
-            /* Enhanced Card View for Tables */
-            .table-responsive { overflow: visible !important; margin: 0 !important; padding: 0 !important; width: 100% !important; border: none !important; }
-            
-            table, thead, tbody, th, td, tr { display: block !important; width: 100% !important; border: none !important; }
-            thead { display: none !important; }
-            
-            tbody tr {
-                background: var(--white) !important;
-                border: 1px solid var(--border) !important;
-                border-radius: 16px !important;
-                padding: 16px !important;
-                margin-bottom: 16px !important;
-                box-shadow: var(--card-shadow) !important;
-            }
-
-            tbody td {
-                padding: 0 !important;
-                border: none !important;
-                margin-bottom: 12px !important;
-                display: flex !important;
-                justify-content: space-between !important;
-                align-items: center !important;
-                font-size: 14px !important;
-                text-align: right !important;
-                font-weight: 500 !important;
-            }
-
-            tbody td::before {
-                font-weight: 700;
-                color: var(--text-gray);
-                text-transform: uppercase;
-                font-size: 11px;
-                letter-spacing: 0.5px;
-                text-align: left;
-            }
-
-            .left-col tbody td:nth-child(1)::before { content: "Month"; }
-            .left-col tbody td:nth-child(2)::before { content: "Usage"; }
-            .left-col tbody td:nth-child(3)::before { content: "Elec. Bill"; }
-            .left-col tbody td:nth-child(4)::before { content: "Status"; }
-
-            .right-col tbody td:nth-child(1)::before { content: "Month"; }
-            .right-col tbody td:nth-child(2)::before { content: "Amount"; }
-            .right-col tbody td:nth-child(3)::before { content: "Status"; }
-
-            tbody td:first-child { 
-                margin-bottom: 16px !important;
-                padding-bottom: 12px !important;
-                border-bottom: 1px dashed var(--border) !important;
-            }
-
-            tbody td:last-child {
-                display: block !important;
-                margin-bottom: 0 !important;
-                margin-top: 10px !important;
-                padding-top: 15px !important;
-                border-top: 1px solid var(--border) !important;
-            }
-            tbody td:last-child::before { display: none !important; }
-            
-            tbody td:last-child > div {
-                justify-content: center !important; 
-                display: flex !important; 
-                gap: 12px !important; 
-                width: 100% !important;
-            }
-
-            tbody td:last-child button, tbody td:last-child a {
-                flex: 1 !important;
-                justify-content: center !important;
-                padding: 12px !important;
-                font-size: 15px !important;
-                border-radius: 12px !important;
-                height: 44px !important;
-            }
-
-            .kpi-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
-            .kpi-card { padding: 24px !important; }
-            .kpi-value { font-size: 28px !important; }
-            .kpi-icon { padding: 8px !important; font-size: 24px !important; }
-            
-            .renter-kpi-grid { flex-direction: row !important; flex-wrap: wrap !important; gap: 12px !important; }
-            .renter-kpi-grid .kpi-card { flex: 1 1 calc(50% - 12px) !important; min-width: 130px !important; padding: 16px !important; }
-            .renter-kpi-grid .kpi-value { font-size: 22px !important; margin-top: 8px !important; }
-            .renter-kpi-grid .kpi-label { font-size: 11px !important; margin-top: 2px !important; }
-            .renter-kpi-grid .kpi-icon { padding: 6px !important; font-size: 18px !important; }
-            .renter-kpi-grid .trend { font-size: 10px !important; padding: 2px 4px !important; }
-            .renter-kpi-grid .btn-primary { font-size: 11px !important; padding: 8px 4px !important; }
-            
-            .right-col td:nth-child(2) { align-items: flex-end; }
-        }
-        
+        /* Glass Header */
         .header-renter {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 48px;
+            margin-bottom: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 16px 24px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
         }
 
-        .brand-renter {
+        .brand-renter { display: flex; align-items: center; gap: 12px; }
+        .brand-renter span { font-weight: 800; font-size: 24px; color: var(--text-dark); }
+        
+        .user-profile { display: flex; gap: 12px; align-items: center; }
+        .user-profile .btn-outline {
+            background: rgba(255,255,255,0.6);
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        body.dark-theme .user-profile .btn-outline { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.1); }
+        .user-profile .btn-outline:hover { background: var(--white); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .user-profile .btn-primary { border-radius: 20px; font-weight: 600; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+
+        /* Welcome Section */
+        .welcome {
+            background: transparent;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+        .welcome h1 { font-size: 36px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .welcome p { font-size: 16px; color: var(--text-gray); }
+
+        /* Modern KPI Grid */
+        .renter-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
             display: flex;
-            align-items: center;
-            gap: 12px;
+            flex-direction: column;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+            border-color: rgba(255,255,255,0.8);
         }
 
-        .brand-renter i {
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--primary-purple);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .kpi-card:hover::before { opacity: 1; }
+        
+        .kpi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .kpi-icon {
+            width: 52px; height: 52px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; color: white !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-value { font-size: 36px; font-weight: 800; color: var(--text-dark); letter-spacing: -1px; margin-bottom: 4px; line-height: 1.1; }
+        .kpi-label { font-size: 14px; font-weight: 600; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Tables & Panels */
+        .dashboard-grid-70 {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 24px;
+        }
+        .dashboard-grid-70 .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            padding: 24px;
+            margin-bottom: 0;
+            transition: all 0.3s ease;
+        }
+        .dashboard-grid-70 .panel:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+        }
+        
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; }
+        thead th { color: var(--text-gray); font-size: 13px; font-weight: 700; text-transform: uppercase; padding: 0 16px 8px 16px; border: none; text-align: left; }
+        tbody tr { background: rgba(255,255,255,0.6); transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        body.dark-theme tbody tr { background: rgba(0,0,0,0.2); }
+        tbody tr:hover { background: var(--white); transform: scale(1.01); box-shadow: 0 8px 20px rgba(0,0,0,0.06); z-index: 2; position: relative; }
+        tbody td { padding: 16px; border: none; color: var(--text-dark); vertical-align: middle; }
+        tbody td:first-child { border-radius: 16px 0 0 16px; }
+        tbody td:last-child { border-radius: 0 16px 16px 0; }
+
+        /* Badges */
+        .badge { padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-paid { background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.2); }
+        body.dark-theme .badge-paid { color: #34D399; }
+        .badge-due { background: rgba(239, 68, 68, 0.15); color: #DC2626; border: 1px solid rgba(239, 68, 68, 0.2); }
+        body.dark-theme .badge-due { color: #F87171; }
+
+        /* Action Buttons in Table */
+        tbody td .btn-outline {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.2s ease;
+        }
+        tbody td .btn-outline:hover {
             background: var(--primary-purple);
             color: white;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 24px;
+            border-color: var(--primary-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);
         }
 
-        .brand-renter span {
-            font-weight: 800;
-            font-size: 22px;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
+        /* Mobile specific overrides */
+        @media (max-width: 992px) {
+            .dashboard-grid-70 { grid-template-columns: 1fr; }
         }
-
+        @media (max-width: 768px) {
+            .main-renter { padding: 12px; }
+            .header-renter { flex-direction: column; padding: 16px; gap: 16px; top: 0; border-radius: 0 0 24px 24px; position: relative !important; margin-bottom: 24px; }
+            .user-profile { flex-wrap: wrap; justify-content: center; width: 100%; }
+            .user-profile a { flex: 1 1 40%; text-align: center; justify-content: center; padding: 12px !important; }
+            #themeToggle { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.5); border-radius: 12px; }
+            
+            .renter-kpi-grid { grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+            .kpi-card { padding: 16px; }
+            .kpi-icon { width: 40px; height: 40px; font-size: 20px; }
+            .kpi-value { font-size: 24px; }
+            
+            .dashboard-grid-70 { gap: 16px; }
+            .dashboard-grid-70 .panel { padding: 16px; }
+            
+            /* Responsive tables similar to previous but glassmorphic */
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
+            thead { display: none; }
+            tbody tr { display: flex; flex-direction: column; margin-bottom: 16px; border-radius: 16px; padding: 16px; box-shadow: var(--glass-shadow); }
+            tbody td { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; text-align: right; }
+            tbody td::before { content: attr(data-label); font-weight: 700; color: var(--text-gray); font-size: 11px; text-transform: uppercase; }
+            tbody td:last-child { border-top: 1px dashed rgba(0,0,0,0.1); margin-top: 8px; padding-top: 12px; justify-content: center; flex-direction: row; gap: 12px; }
+            tbody td:last-child::before { display: none; }
+            tbody td:last-child button, tbody td:last-child a { flex: 1; padding: 12px !important; justify-content: center; height: 44px !important; }
+        }
+        
         @keyframes pulse {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
+        .notification-wrapper { position: relative; }
         
-        .notification-wrapper {
-            position: relative;
-        }
         @media (max-width: 768px) {
-            .notification-wrapper {
-                position: absolute !important;
-                right: 0 !important;
-                top: 0 !important;
-                z-index: 50;
-            }
-            #notifDropdown {
-                position: fixed !important;
-                top: 70px !important;
-                right: 16px !important;
-                width: calc(100% - 32px) !important;
-                max-width: 360px !important;
-            }
+            .notification-wrapper { position: absolute !important; right: 16px !important; top: 16px !important; z-index: 50; }
+            #notifDropdown { position: fixed !important; top: 70px !important; right: 16px !important; width: calc(100% - 32px) !important; max-width: 360px !important; }
         }
     </style>
 </head>
