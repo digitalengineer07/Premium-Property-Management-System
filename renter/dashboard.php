@@ -665,25 +665,27 @@ $unread_count = count($unread_notifications);
     </div>
 
     <?php if ($show_welcome_card): ?>
-        <div class="animate-up" style="background: linear-gradient(135deg, #10B981, #059669); color: white; padding: 24px; border-radius: 20px; margin-bottom: 24px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2); position: relative; overflow: hidden;">
-            <div style="display: flex; align-items: flex-start; gap: 20px; z-index: 2; position: relative;">
-                <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i class='bx bx-party' style="font-size: 32px;"></i>
+        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(16, 185, 129, 0.4); color: var(--text-dark); padding: 24px; border-radius: 24px; margin-bottom: 24px; box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15); position: relative; overflow: hidden;">
+            <div style="display: flex; align-items: flex-start; gap: 24px; z-index: 2; position: relative;">
+                <div style="background: linear-gradient(135deg, #10B981, #34D399); color: white; width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
+                    <i class='bx bx-party' style="font-size: 36px;"></i>
                 </div>
                 <div style="flex: 1;">
-                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">Welcome to <?php echo htmlspecialchars(HOUSE_NAME); ?>!</h3>
-                    <p style="font-size: 14px; opacity: 0.95; margin: 0 0 12px 0;">We are thrilled to have you here. Your resident dashboard is your one-stop place to manage your tenancy digitally.</p>
-                    <div style="font-size: 13px; opacity: 0.9;">
-                        <strong>Quick Tips:</strong><br>
-                        • Check your outstanding rent & electricity bills in the panels below.<br>
-                        • You can click the "Pay Now Amount" to settle any pending dues.<br>
-                        • After making a payment via UPI, enter the Transaction ID/UTR to notify the admin.<br>
-                        • Need help? Use the "Help & Support" link in the top menu.
+                    <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #059669;">Welcome to <?php echo htmlspecialchars(HOUSE_NAME); ?>!</h3>
+                    <p style="font-size: 15px; font-weight: 500; opacity: 0.9; margin: 0 0 16px 0;">We are thrilled to have you here. Your resident dashboard is your one-stop place to manage your tenancy digitally.</p>
+                    <div style="font-size: 14px; background: rgba(255,255,255,0.6); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.8);">
+                        <strong style="color: var(--primary-purple); font-size: 15px; display: block; margin-bottom: 8px;">Quick Tips:</strong>
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                            <li>Check your outstanding rent & electricity bills in the panels below.</li>
+                            <li>You can click the "Pay Now Amount" to settle any pending dues.</li>
+                            <li>After making a payment via UPI, enter the Transaction ID/UTR to notify the admin.</li>
+                            <li>Need help? Use the "Help & Support" link in the top menu.</li>
+                        </ul>
                     </div>
                 </div>
-                <i class='bx bx-x' style="cursor: pointer; font-size: 24px; opacity: 0.7;" onclick="this.parentElement.parentElement.style.display='none'" title="Dismiss"></i>
+                <i class='bx bx-x' style="cursor: pointer; font-size: 28px; opacity: 0.4;" onmouseover="this.style.opacity='1'; this.style.color='#EF4444';" onmouseout="this.style.opacity='0.4'; this.style.color='var(--text-dark)';" onclick="this.parentElement.parentElement.style.display='none'" title="Dismiss"></i>
             </div>
-            <i class='bx bxs-heart' style="position: absolute; right: -10px; bottom: -10px; font-size: 100px; opacity: 0.1;"></i>
+            <i class='bx bxs-heart' style="position: absolute; right: -20px; bottom: -20px; font-size: 160px; color: #10B981; opacity: 0.05; z-index: 1;"></i>
         </div>
     <?php endif; ?>
 
@@ -707,26 +709,29 @@ $unread_count = count($unread_notifications);
     if ($rej_q && mysqli_num_rows($rej_q) > 0):
         while ($rej = mysqli_fetch_assoc($rej_q)):
     ?>
-        <div class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2; position: relative;">
-            <div style="position: absolute; top: 12px; right: 12px;">
-                <form method="POST" style="margin: 0; padding: 0;">
-                    <input type="hidden" name="dismiss_id" value="<?php echo $rej['id']; ?>">
-                    <button type="submit" name="dismiss_rejection" style="background: none; border: none; cursor: pointer; color: #EF4444; opacity: 0.6; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239, 68, 68, 0.1)'" onmouseout="this.style.opacity='0.6'; this.style.background='none'">
-                        <i class='bx bx-x' style="font-size: 22px;" title="Dismiss Message"></i>
-                    </button>
-                </form>
+        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(239, 68, 68, 0.4); color: var(--text-dark); padding: 16px 20px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.1); position: relative; display: flex; gap: 16px; align-items: flex-start;">
+            <div style="background: rgba(239, 68, 68, 0.15); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #DC2626; flex-shrink: 0;">
+                <i class='bx bx-x-circle' style="font-size: 24px;"></i>
             </div>
-
-            <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; padding-right: 30px;">
-                <i class='bx bx-x-circle' style="font-size: 18px;"></i> 
-                Payment Rejected (₹<?php echo number_format($rej['amount'], 2); ?> on <?php echo $rej['d_date']; ?>)
+            <div style="flex: 1;">
+                <div style="position: absolute; top: 12px; right: 12px;">
+                    <form method="POST" style="margin: 0; padding: 0;">
+                        <input type="hidden" name="dismiss_id" value="<?php echo $rej['id']; ?>">
+                        <button type="submit" name="dismiss_rejection" style="background: none; border: none; cursor: pointer; color: #EF4444; opacity: 0.6; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239, 68, 68, 0.1)'" onmouseout="this.style.opacity='0.6'; this.style.background='none'">
+                            <i class='bx bx-x' style="font-size: 22px;" title="Dismiss Message"></i>
+                        </button>
+                    </form>
+                </div>
+                <div style="font-weight: 800; font-size: 16px; margin-bottom: 4px; color: #DC2626; padding-right: 30px;">
+                    Payment Rejected (₹<?php echo number_format($rej['amount'], 2); ?> on <?php echo $rej['d_date']; ?>)
+                </div>
+                <div style="font-size: 14px; font-weight: 500; opacity: 0.9;"><strong>UTR:</strong> <?php echo htmlspecialchars($rej['transaction_id']); ?></div>
+                <?php if (!empty($rej['admin_note'])): ?>
+                <div style="font-size: 14px; margin-top: 6px; color: #B91C1C; background: rgba(239, 68, 68, 0.05); padding: 8px 12px; border-radius: 8px; border: 1px dashed rgba(239, 68, 68, 0.3);">
+                    <strong>Reason:</strong> <?php echo htmlspecialchars($rej['admin_note']); ?>
+                </div>
+                <?php endif; ?>
             </div>
-            <div style="font-size: 13px; margin-left: 24px;"><strong>UTR:</strong> <?php echo htmlspecialchars($rej['transaction_id']); ?></div>
-            <?php if (!empty($rej['admin_note'])): ?>
-            <div style="font-size: 13px; margin-top: 4px; margin-left: 24px; color: #B91C1C;">
-                <strong>Reason:</strong> <?php echo htmlspecialchars($rej['admin_note']); ?>
-            </div>
-            <?php endif; ?>
         </div>
     <?php 
         endwhile;
@@ -734,18 +739,18 @@ $unread_count = count($unread_notifications);
     ?>
 
     <?php if ($show_banner): ?>
-        <div class="animate-up" style="background: linear-gradient(135deg, #FF4B2B, #FF416C); color: white; padding: 24px; border-radius: 20px; margin-bottom: 32px; box-shadow: 0 10px 20px rgba(255, 75, 43, 0.2); display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden;">
-            <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(239, 68, 68, 0.4); color: var(--text-dark); padding: 24px; border-radius: 24px; margin-bottom: 32px; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.15); display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #EF4444, #F87171); width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3); color: white;">
                 <i class='bx bxs-bell-ring bx-tada' style="font-size: 32px;"></i>
             </div>
-            <div style="flex: 1;">
-                <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Payment Reminder!</h3>
-                <p style="font-size: 14px; opacity: 0.9; margin: 0;">It's the <?php echo date('jS'); ?> of the month. Your bills for <strong><?php echo implode(', ', array_unique($overdue_list)); ?></strong> are still pending. Please clear them to avoid service interruptions.</p>
+            <div style="flex: 1; z-index: 2;">
+                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px; color: #DC2626;">Payment Reminder!</h3>
+                <p style="font-size: 15px; font-weight: 500; opacity: 0.9; margin: 0;">It's the <?php echo date('jS'); ?> of the month. Your bills for <strong><?php echo implode(', ', array_unique($overdue_list)); ?></strong> are still pending. Please clear them to avoid service interruptions.</p>
             </div>
-            <button onclick="document.querySelector('.kpi-card .btn-primary').click()" class="btn-primary" style="background: white; color: #FF4B2B; border: none; padding: 12px 20px; white-space: nowrap;">
+            <button onclick="document.querySelector('.kpi-card .btn-primary').click()" class="btn-primary" style="background: #EF4444; color: white; border: none; border-radius: 16px; padding: 14px 24px; font-weight: 700; font-size: 15px; white-space: nowrap; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); z-index: 2; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                 Pay Now
             </button>
-            <i class='bx bxs-quote-right' style="position: absolute; right: -10px; bottom: -10px; font-size: 80px; opacity: 0.1;"></i>
+            <i class='bx bxs-error-circle' style="position: absolute; right: -20px; bottom: -20px; font-size: 140px; color: #EF4444; opacity: 0.05; z-index: 1;"></i>
         </div>
     <?php endif; ?>
 
@@ -876,9 +881,9 @@ $unread_count = count($unread_notifications);
                                 <tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-gray);">No bills found.</td></tr>
                             <?php else: foreach ($elecs as $e): ?>
                             <tr>
-                                <td style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($e['month']); ?></td>
-                                <td><?php echo (int)$e['units_consumed']; ?> Units</td>
-                                <td style="font-weight: 700;">
+                                <td data-label="Month" style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($e['month']); ?></td>
+                                <td data-label="Usage"><?php echo (int)$e['units_consumed']; ?> Units</td>
+                                <td data-label="Elec. Bill" style="font-weight: 700;">
                                     ₹<?php echo number_format($e['amount'], 2); ?>
                                     <?php if (!empty($e['adjustment_type'])): ?>
                                         <div style="font-size: 10px; font-weight: 600; color: <?php echo $e['adjustment_type'] == 'extra' ? '#10B981' : '#EF4444'; ?>;">
@@ -886,8 +891,8 @@ $unread_count = count($unread_notifications);
                                         </div>
                                     <?php endif; ?>
                                 </td>
-                                <td><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $e['status']; ?></span></td>
-                                <td>
+                                <td data-label="Status"><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $e['status']; ?></span></td>
+                                <td data-label="Actions">
                                     <div style="display: flex; gap: 8px; flex-wrap: nowrap; min-width: max-content;">
                                         <a href="../admin/slip.php?elec_id=<?php echo $e['id']; ?>" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" target="_blank" title="Receipt"><i class='bx bx-receipt'></i></a>
                                         <?php if($e['status'] != 'Paid'): ?>
@@ -923,8 +928,8 @@ $unread_count = count($unread_notifications);
                                 <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-gray);">No records.</td></tr>
                             <?php else: foreach ($merged_rents as $r): ?>
                             <tr>
-                                <td style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($r['month']); ?></td>
-                                <td style="font-weight: 700;">
+                                <td data-label="Month" style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($r['month']); ?></td>
+                                <td data-label="Amount" style="font-weight: 700;">
                                     ₹<?php echo number_format($r['amount'], 2); ?>
                                     <?php if (!empty($r['adjustment_type'])): ?>
                                         <div style="font-size: 10px; font-weight: 600; color: <?php echo $r['adjustment_type'] == 'extra' ? '#10B981' : '#EF4444'; ?>;">
@@ -932,8 +937,8 @@ $unread_count = count($unread_notifications);
                                         </div>
                                     <?php endif; ?>
                                 </td>
-                                <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
-                                <td>
+                                <td data-label="Status"><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
+                                <td data-label="Actions">
                                     <div style="display: flex; gap: 8px; flex-wrap: nowrap; min-width: max-content;">
                                         <?php if($r['source'] == 'elec_table'): ?>
                                             <a href="../admin/slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" target="_blank" title="Receipt"><i class='bx bx-receipt'></i></a>
