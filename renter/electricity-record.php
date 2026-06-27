@@ -254,10 +254,6 @@ if($ann_q){
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
-            <a href="payment-history.php" class="nav-item">
-                <i class='bx bx-history'></i>
-                <span>Payment History</span>
-            </a>
             <a href="electricity-record.php" class="nav-item active">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
