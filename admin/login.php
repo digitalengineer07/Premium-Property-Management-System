@@ -199,9 +199,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .login-card {
         background: var(--white);
-        width: 100%; max-width: 380px;
+        width: 100%; max-width: 440px;
         border-radius: 24px;
-        padding: 24px 28px;
+        padding: 24px 32px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         position: relative;
     }
