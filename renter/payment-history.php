@@ -366,7 +366,7 @@ $unread_count = count($unread_notifications);
 
         /* Sidebar Styles */
         .sidebar {
-            width: 260px;
+            width: 230px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
@@ -426,9 +426,9 @@ $unread_count = count($unread_notifications);
         /* Main Content Area */
         .main-content {
             flex: 1;
-            margin-left: 260px;
+            margin-left: 230px;
             padding: 32px 40px;
-            max-width: calc(100% - 260px);
+            max-width: calc(100% - 230px);
             box-sizing: border-box;
         }
 
