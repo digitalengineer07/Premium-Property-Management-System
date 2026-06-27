@@ -1018,7 +1018,7 @@ $unread_count = count($unread_notifications);
             const allBills = <?php echo json_encode($all_bills); ?>;
             let currentFilter = 'all';
             let currentPage = 1;
-            const itemsPerPage = 6;
+            const itemsPerPage = 5;
             let activeBillId = null;
 
             function formatMoney(amount) {
