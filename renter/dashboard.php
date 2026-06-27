@@ -531,7 +531,8 @@ $unread_count = count($unread_notifications);
         .action-card p { font-size: 11px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
         /* Recent Transactions */
-        .transaction-list { display: flex; flex-direction: column; gap: 16px; }
+        .transaction-list { display: flex; flex-direction: column; gap: 16px; -ms-overflow-style: none; scrollbar-width: none; }
+        .transaction-list::-webkit-scrollbar { display: none; }
         .transaction-item { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
         .transaction-item:last-child { border-bottom: none; padding-bottom: 0; }
         .tx-left { display: flex; align-items: center; gap: 14px; }
@@ -945,7 +946,7 @@ $unread_count = count($unread_notifications);
                     <h3 class="panel-title"><i class='bx bx-receipt'></i> Recent Transactions</h3>
                     <a href="#" class="panel-link">View All</a>
                 </div>
-                <div class="transaction-list" style="overflow-y: auto; max-height: 250px; padding-right: 8px;">
+                <div class="transaction-list" style="overflow-y: auto; max-height: 250px;">
                     <?php if (empty($merged_rents) && empty($elecs)): ?>
                         <div style="text-align: center; padding: 30px; color: var(--text-gray); font-size: 13px; margin: auto;">No recent transactions found.</div>
                     <?php else: ?>
