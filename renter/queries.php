@@ -135,6 +135,7 @@ $unread_count = 1; // Match mockup notification count
         /* Sidebar Styles */
         .sidebar {
             width: 280px;
+            flex-shrink: 0;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
@@ -171,18 +172,7 @@ $unread_count = 1; // Match mockup notification count
         .nav-item:hover { background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); }
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
         
-        .help-box {
-            margin: 24px 16px; padding: 24px;
-            background: #F8F7FF; border-radius: 20px;
-            text-align: center; border: 1px solid rgba(98,75,255,0.1);
-        }
-        .dark-theme .help-box { background: rgba(98,75,255,0.05); }
-        .help-box h4 { margin: 0 0 8px 0; color: var(--text-dark); font-size: 16px; font-weight: 800; }
-        .help-box p { margin: 0 0 16px 0; color: var(--text-gray); font-size: 13px; line-height: 1.5; }
-        .help-box .headphone-icon {
-            font-size: 48px; color: var(--primary-purple);
-            margin-bottom: 16px; display: inline-block;
-        }
+
         .btn-outline {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             width: 100%; padding: 12px; border-radius: 12px;
@@ -337,12 +327,6 @@ $unread_count = 1; // Match mockup notification count
             <a href="profile.php" class="nav-item"><i class='bx bx-user'></i> Profile Settings</a>
         </nav>
         
-        <div class="help-box">
-            <i class='bx bx-headphone headphone-icon'></i>
-            <h4>Need Help?</h4>
-            <p>Can't find what you're looking for?<br><br>Our support team is ready to assist you.</p>
-            <a href="queries.php" class="btn-outline"><i class='bx bx-message-square-dots'></i> Contact Support</a>
-        </div>
     </aside>
 
     <!-- Main Content -->
