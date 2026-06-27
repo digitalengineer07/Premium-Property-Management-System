@@ -253,31 +253,31 @@ $unread_count = 1; // Match mockup notification count
         /* Form Card */
         .form-card {
             background: var(--white); border: 1px solid var(--border);
-            border-radius: 24px; padding: 32px; box-shadow: var(--card-shadow);
+            border-radius: 24px; padding: 24px 32px; box-shadow: var(--card-shadow);
         }
-        .form-title { margin: 0 0 24px 0; font-size: 18px; font-weight: 800; color: var(--text-dark); }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-gray); font-size: 13px; }
+        .form-title { margin: 0 0 20px 0; font-size: 18px; font-weight: 800; color: var(--text-dark); }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--text-gray); font-size: 13px; }
         .form-control {
-            width: 100%; padding: 14px 16px; border-radius: 12px; border: 1.5px solid var(--border);
+            width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border);
             background: var(--bg-main); color: var(--text-dark); font-family: inherit; font-size: 14px;
             transition: all 0.2s; box-sizing: border-box;
         }
         .form-control:focus { outline: none; border-color: var(--primary-purple); background: var(--white); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); }
         
         .upload-box {
-            border: 2px dashed rgba(98, 75, 255, 0.3); border-radius: 16px; padding: 32px 20px;
+            border: 2px dashed rgba(98, 75, 255, 0.3); border-radius: 16px; padding: 20px;
             text-align: center; background: rgba(98, 75, 255, 0.03); cursor: pointer;
-            transition: all 0.2s; margin-bottom: 24px;
+            transition: all 0.2s; margin-bottom: 16px;
         }
         .upload-box:hover { background: rgba(98, 75, 255, 0.08); border-color: var(--primary-purple); }
-        .upload-box i { font-size: 24px; color: var(--primary-purple); margin-bottom: 12px; }
+        .upload-box i { font-size: 20px; color: var(--primary-purple); margin-bottom: 8px; }
         .upload-box h5 { margin: 0 0 4px 0; font-size: 14px; color: var(--primary-purple); font-weight: 600; }
         .upload-box p { margin: 0; font-size: 12px; color: var(--text-gray); }
 
         .btn-primary {
             width: 100%; background: var(--primary-purple); color: white; border: none;
-            padding: 16px; border-radius: 12px; font-weight: 700; font-size: 15px;
+            padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px;
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
             transition: all 0.2s; box-shadow: 0 8px 20px rgba(98, 75, 255, 0.2);
         }
@@ -495,7 +495,7 @@ $unread_count = 1; // Match mockup notification count
                     </div>
                     <div class="form-group">
                         <label class="form-label">Description</label>
-                        <textarea name="message" class="form-control" rows="5" placeholder="Describe your issue or request in detail..." required style="resize: none;"></textarea>
+                        <textarea name="message" class="form-control" rows="3" placeholder="Describe your issue or request in detail..." required style="resize: none;"></textarea>
                         <div style="text-align: right; margin-top: 8px; font-size: 11px; color: var(--text-gray); font-weight: 500;">0/500</div>
                     </div>
                     
