@@ -663,6 +663,21 @@ $unread_count = count($unread_notifications);
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
 
     </style>
+
+        <style>
+            .bill-row td { padding: 16px 20px; transition: 0.2s; border: none !important; }
+            .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
+            .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+            .bill-row { background: white; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+            .bill-row:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+            .bill-row.active { background: #F4F0FF; box-shadow: none; }
+            .bill-row.active td { border: 1px solid rgba(98, 75, 255, 0.05); border-left: none; border-right: none; }
+            .bill-row.active td:first-child { border-left: 1px solid rgba(98, 75, 255, 0.05); }
+            .bill-row.active td:last-child { border-right: 1px solid rgba(98, 75, 255, 0.05); }
+            .pagination-purple { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; border: 1px solid var(--border); background: white; color: var(--text-gray); }
+            .pagination-purple.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
+            .pagination-purple:hover:not(.active) { background: #FAFBFC; }
+        </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
 
@@ -913,8 +928,8 @@ $unread_count = count($unread_notifications);
 
         <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start;">
             <!-- Left Column: Bills List -->
-            <div class="bills-list-panel" style="background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden;">
-                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid var(--border);">
+            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0;">
+                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02); margin-bottom: 16px;">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
                         <button type="button" class="tab-btn" data-filter="unpaid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Unpaid</button>
@@ -931,7 +946,7 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
                 
-                <table style="width: 100%; border-collapse: collapse;">
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 16px 24px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
@@ -946,17 +961,17 @@ $unread_count = count($unread_notifications);
                         <!-- Rendered by JS -->
                     </tbody>
                 </table>
-                <div style="padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
+                <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
                     <span id="showingText">Showing 1 to 6 of 14 bills</span>
                     <div id="paginationControls" style="display: flex; gap: 4px;"></div>
                 </div>
             </div>
 
             <!-- Right Column: Bill Details -->
-            <div class="bill-details-panel" style="background: white; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); padding: 24px; position: sticky; top: 24px;">
+            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; position: sticky; top: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
-                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
+                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
@@ -973,7 +988,7 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
 
-                <div style="background: var(--bg-main); border-radius: 12px; padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="background: #F8F9FA; border-radius: 16px; padding: 24px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(0,0,0,0.03);">
                     <div>
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Total Amount</p>
                         <h2 id="bdAmount" style="margin: 0; font-size: 28px; font-weight: 800; color: #FF4B6B;">₹8,000.00</h2>
@@ -1017,13 +1032,11 @@ $unread_count = count($unread_notifications);
 
                 // Update UI rows
                 document.querySelectorAll('.bill-row').forEach(row => {
-                    row.style.background = 'white';
-                    row.style.boxShadow = 'none';
+                    row.classList.remove('active');
                 });
                 const activeRow = document.getElementById('bill-row-' + index);
                 if (activeRow) {
-                    activeRow.style.background = '#FAFBFC';
-                    activeRow.style.boxShadow = 'inset 4px 0 0 var(--primary-purple)';
+                    activeRow.classList.add('active');
                 }
 
                 // Update Bill Details Panel
@@ -1098,10 +1111,18 @@ $unread_count = count($unread_notifications);
                     else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bulb'></i></div>`;
                     else iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-wrench'></i></div>`;
 
+                    
+                    let actionBtn = '';
+                    if (bill.status === 'Unpaid') {
+                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 16px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
+                    } else {
+                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:15px; width: 32px; height: 32px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
+                    }
+
                     const rowHtml = `
-                        <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})" style="cursor:pointer; transition:0.2s; border-bottom: 1px solid var(--border);">
-                            <td style="padding: 16px 20px; white-space: nowrap;">
-                                <div style="display:flex; align-items:center; gap:12px;">
+                        <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
+                            <td style="white-space: nowrap;">
+                                <div style="display:flex; align-items:center; gap:16px;">
                                     ${iconHtml}
                                     <div>
                                         <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark); white-space: nowrap;">${bill.period}</h4>
@@ -1109,21 +1130,21 @@ $unread_count = count($unread_notifications);
                                     </div>
                                 </div>
                             </td>
-                            <td style="padding: 16px 12px;">
-                                <span style="font-size:11px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:4px 8px; border-radius:8px; text-transform:capitalize;">${bill.type}</span>
+                            <td>
+                                <span style="font-size:11px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:6px 10px; border-radius:20px; text-transform:capitalize;">${bill.type}</span>
                             </td>
-                            <td style="padding: 16px 12px;">
+                            <td>
                                 <p style="margin:0; font-size:12px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:10px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
+                                ${bill.status === 'Unpaid' ? `<p style="margin:4px 0 0 0; font-size:10px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
                             </td>
-                            <td style="padding: 16px 12px; text-align:right;">
+                            <td style="text-align:right;">
                                 <span style="font-size:13px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
                             </td>
-                            <td style="padding: 16px 12px; text-align:center;">
-                                <span style="font-size:11px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:4px 10px; border-radius:8px;">${bill.status}</span>
+                            <td style="text-align:center;">
+                                <span style="font-size:11px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:6px 12px; border-radius:20px; display:inline-block; min-width: 60px;">${bill.status}</span>
                             </td>
-                            <td style="padding: 16px 24px; text-align:center;">
-                                <button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>
+                            <td style="text-align:center;">
+                                ${actionBtn}
                             </td>
                         </tr>
                     `;
