@@ -384,14 +384,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="right-panel">
         <div class="login-card">
             
-            <div class="card-logo">
-                <i class='bx bx-building-house'></i>
+            <div class="card-logo" style="color: #DC2626; background: #FEF2F2; box-shadow: inset 0 2px 10px rgba(220,38,38,0.05);">
+                <i class='bx bx-shield-quarter'></i>
             </div>
             
             <div class="login-header">
+                <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(220, 38, 38, 0.1); color: #DC2626; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border: 1px solid rgba(220, 38, 38, 0.2);">
+                    <i class='bx bxs-shield-alt-2' style="font-size: 14px;"></i> Admin Portal
+                </div>
                 <h1>Welcome Back!</h1>
                 <p>Sign in to your admin account</p>
-                <div class="header-line"></div>
+                <div class="header-line" style="background: #DC2626;"></div>
             </div>
 
             <?php if ($error !== ""): ?>
