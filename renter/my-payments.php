@@ -918,8 +918,15 @@ $unread_count = count($unread_notifications);
                         </tr>
                     </thead>
                     <tbody id="paymentsTableBody">
-                        <?php foreach($all_bills as $bill): ?>
-                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>">
+                        <?php 
+                        $current_month = '';
+                        foreach($all_bills as $bill): 
+                            if ($bill['period'] != $current_month) {
+                                $current_month = $bill['period'];
+                                echo "<tr class='month-divider' data-filter-type='divider' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
+                            }
+                        ?>
+                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>" class="data-row">
                                 <td>
                                     <div class="td-bill-type">
                                         <div class="td-icon <?php echo $bill['color']; ?>"><i class='bx <?php echo $bill['icon']; ?>'></i></div>
@@ -970,8 +977,9 @@ $unread_count = count($unread_notifications);
                     this.classList.add('active');
                     
                     const filter = this.getAttribute('data-filter');
-                    const rows = document.querySelectorAll('#paymentsTableBody tr');
+                    const rows = document.querySelectorAll('#paymentsTableBody tr.data-row');
                     
+                    // Show/Hide data rows
                     rows.forEach(row => {
                         if (filter === 'all' || row.getAttribute('data-filter-type') === filter) {
                             row.style.display = 'table-row';
@@ -979,6 +987,27 @@ $unread_count = count($unread_notifications);
                             row.style.display = 'none';
                         }
                     });
+                    
+                    // Show/Hide dividers based on whether they have visible rows under them
+                    const allRows = document.querySelectorAll('#paymentsTableBody tr');
+                    let currentDivider = null;
+                    let hasVisibleRow = false;
+                    
+                    for (let i = 0; i < allRows.length; i++) {
+                        const row = allRows[i];
+                        if (row.classList.contains('month-divider')) {
+                            if (currentDivider) {
+                                currentDivider.style.display = hasVisibleRow ? 'table-row' : 'none';
+                            }
+                            currentDivider = row;
+                            hasVisibleRow = false;
+                        } else if (row.style.display !== 'none') {
+                            hasVisibleRow = true;
+                        }
+                    }
+                    if (currentDivider) {
+                        currentDivider.style.display = hasVisibleRow ? 'table-row' : 'none';
+                    }
                 });
             });
         </script>
