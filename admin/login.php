@@ -201,39 +201,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         background: var(--white);
         width: 100%; max-width: 440px;
         border-radius: 24px;
-        padding: 24px 32px;
+        padding: 20px 32px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         position: relative;
     }
 
     .card-logo {
-        width: 48px; height: 48px; background: #F8FAFC; border-radius: 50%;
-        margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center;
-        color: var(--primary-purple); font-size: 24px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        width: 42px; height: 42px; background: #F8FAFC; border-radius: 50%;
+        margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
     }
 
-    .login-header { text-align: center; margin-bottom: 16px; }
+    .login-header { text-align: center; margin-bottom: 12px; }
     .login-header h1 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; letter-spacing: -0.5px; }
     .login-header p { font-size: 12px; color: var(--text-gray); font-weight: 500; }
-    .header-line { width: 32px; height: 3px; background: var(--primary-purple); margin: 12px auto 0 auto; border-radius: 4px; }
+    .header-line { width: 32px; height: 3px; background: var(--primary-purple); margin: 8px auto 0 auto; border-radius: 4px; }
 
-    .form-group { margin-bottom: 12px; }
-    .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; margin-left: 4px; }
+    .form-group { margin-bottom: 10px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; margin-left: 4px; }
     
     .input-wrapper { position: relative; }
-    .input-wrapper i.icon-left { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 18px; }
-    .input-wrapper i.icon-right { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px; cursor: pointer; transition: color 0.2s; }
+    .input-wrapper i.icon-left { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 16px; }
+    .input-wrapper i.icon-right { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 16px; cursor: pointer; transition: color 0.2s; }
     .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
 
     .form-input {
-        width: 100%; padding: 10px 14px 10px 42px; font-size: 14px; color: var(--text-dark);
+        width: 100%; padding: 8px 14px 8px 36px; font-size: 13px; color: var(--text-dark);
         background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 10px;
         outline: none; transition: all 0.2s ease; font-weight: 500;
     }
     .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: #ffffff; }
 
     .form-options {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; margin-top: -2px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: -2px;
     }
     .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .remember-me input[type="checkbox"] { 
@@ -250,30 +250,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .forgot-link:hover { text-decoration: underline; }
 
     .btn-submit {
-        width: 100%; padding: 12px; background: var(--primary-purple); color: var(--white);
-        border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+        width: 100%; padding: 10px; background: var(--primary-purple); color: var(--white);
+        border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer;
         transition: all 0.2s ease; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
 
     .divider {
-        display: flex; align-items: center; margin: 16px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
+        display: flex; align-items: center; margin: 12px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
     }
     .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #E2E8F0; }
     .divider::before { margin-right: 12px; }
     .divider::after { margin-left: 12px; }
 
     .btn-resident {
-        width: 100%; padding: 12px; background: transparent; color: var(--primary-purple);
-        border: 1.5px solid var(--primary-purple); border-radius: 10px; font-size: 14px; font-weight: 700; 
+        width: 100%; padding: 10px; background: transparent; color: var(--primary-purple);
+        border: 1.5px solid var(--primary-purple); border-radius: 10px; font-size: 13.5px; font-weight: 700; 
         cursor: pointer; text-decoration: none; transition: all 0.2s ease;
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-resident:hover { background: rgba(98,75,255,0.05); }
 
     .secure-footer {
-        text-align: center; margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 6px;
+        text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
         color: var(--text-gray); font-size: 11px; font-weight: 600;
     }
 
@@ -306,8 +306,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .error-box {
         background: #FEF2F2; border: 1px solid #FCA5A5; color: #DC2626;
-        padding: 12px 16px; border-radius: 12px; font-size: 13px; font-weight: 600;
-        margin-bottom: 24px; display: flex; align-items: center; gap: 8px;
+        padding: 10px 16px; border-radius: 12px; font-size: 12.5px; font-weight: 600;
+        margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
     }
 
     @media (max-width: 992px) {
