@@ -491,11 +491,7 @@ if($ann_q){
                                 <?php echo ($rec['status'] == 'Paid' && !empty($rec['payment_date'])) ? date("d M Y", strtotime($rec['payment_date'])) : '&mdash;'; ?>
                             </td>
                             <td style="text-align: center;">
-                                <?php if($rec['status'] != 'Paid'): ?>
-                                    <a href="pay.php?id=<?php echo $rec['id']; ?>" class="btn-table-action pay"><i class='bx bx-wallet'></i> Pay Now</a>
-                                <?php else: ?>
-                                    <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
-                                <?php endif; ?>
+                                <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
                             </td>
                         </tr>
                         <?php endforeach; ?>
