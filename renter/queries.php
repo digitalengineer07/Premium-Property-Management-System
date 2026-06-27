@@ -122,34 +122,25 @@ $unread_count = 1; // Match mockup notification count
         }
 
         body {
-            font-family: 'Outfit', sans-serif !important;
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg-main);
+            color: var(--text-dark);
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            color: var(--text-dark);
-            display: block !important;
-        }
-
-        .app-container {
             display: flex;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* Sidebar Styles */
         .sidebar {
-            width: 230px;
+            width: 280px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
             transition: all 0.3s ease;
             z-index: 100;
-            box-sizing: border-box;
         }
         .brand {
             padding: 24px;
@@ -180,7 +171,18 @@ $unread_count = 1; // Match mockup notification count
         .nav-item:hover { background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); }
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
         
-
+        .help-box {
+            margin: 24px 16px; padding: 24px;
+            background: #F8F7FF; border-radius: 20px;
+            text-align: center; border: 1px solid rgba(98,75,255,0.1);
+        }
+        .dark-theme .help-box { background: rgba(98,75,255,0.05); }
+        .help-box h4 { margin: 0 0 8px 0; color: var(--text-dark); font-size: 16px; font-weight: 800; }
+        .help-box p { margin: 0 0 16px 0; color: var(--text-gray); font-size: 13px; line-height: 1.5; }
+        .help-box .headphone-icon {
+            font-size: 48px; color: var(--primary-purple);
+            margin-bottom: 16px; display: inline-block;
+        }
         .btn-outline {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             width: 100%; padding: 12px; border-radius: 12px;
@@ -192,7 +194,7 @@ $unread_count = 1; // Match mockup notification count
 
         /* Main Content */
         .main-content {
-            flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box;
+            flex: 1; padding: 32px 40px; overflow-y: auto;
         }
         .top-header {
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -235,7 +237,7 @@ $unread_count = 1; // Match mockup notification count
 
         /* 2-Column Layout */
         .query-layout {
-            display: grid; grid-template-columns: 350px minmax(0, 1fr); gap: 32px; align-items: start;
+            display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 32px; align-items: start;
         }
 
         /* Form Card */
@@ -314,7 +316,6 @@ $unread_count = 1; // Match mockup notification count
 </head>
 <body>
     
-<div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="brand">
@@ -336,7 +337,12 @@ $unread_count = 1; // Match mockup notification count
             <a href="profile.php" class="nav-item"><i class='bx bx-user'></i> Profile Settings</a>
         </nav>
         
-
+        <div class="help-box">
+            <i class='bx bx-headphone headphone-icon'></i>
+            <h4>Need Help?</h4>
+            <p>Can't find what you're looking for?<br><br>Our support team is ready to assist you.</p>
+            <a href="queries.php" class="btn-outline"><i class='bx bx-message-square-dots'></i> Contact Support</a>
+        </div>
     </aside>
 
     <!-- Main Content -->
@@ -555,6 +561,5 @@ $unread_count = 1; // Match mockup notification count
             </div>
         </div>
     </main>
-</div>
 </body>
 </html>
