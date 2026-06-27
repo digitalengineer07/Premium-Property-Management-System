@@ -922,45 +922,74 @@ $unread_count = count($unread_notifications);
 
         <!-- Payments Table Section -->
         <div class="payments-container animate-up" style="animation-delay: 0.1s;">
-            <div class="tabs-header">
-                <button type="button" class="tab-btn active" data-filter="all">All Payments</button>
-                <button type="button" class="tab-btn" data-filter="rent">Rent Payments</button>
-                <button type="button" class="tab-btn" data-filter="electricity">Electricity Payments</button>
-                <button type="button" class="tab-btn" data-filter="other">Other Charges</button>
-                
-                <div class="tab-actions">
-                    <select class="filter-select">
-                        <option>All Years</option>
-                        <option>2025</option>
-                        <option>2026</option>
+            <div class="tabs-header" style="flex-wrap: wrap; gap: 16px;">
+                <div class="filter-group">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Date Range</label>
+                    <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; background: white; min-width: 200px;">
+                        <i class='bx bx-calendar' style="color: var(--text-gray); margin-right: 8px;"></i>
+                        <span style="font-size: 13px; font-weight: 500;">01 Jan 2025 - 31 Dec 2025</span>
+                        <i class='bx bx-chevron-down' style="margin-left: auto; color: var(--text-gray);"></i>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Bill Type</label>
+                    <select class="filter-select" style="width: 150px;" onchange="currentTab = this.value; currentPage = 1; renderTable();">
+                        <option value="all">All Types</option>
+                        <option value="rent">Rent</option>
+                        <option value="electricity">Electricity</option>
+                        <option value="other">Other</option>
                     </select>
-                    <button class="btn-filter"><i class='bx bx-filter'></i> Filter</button>
+                </div>
+
+                <div class="filter-group">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Payment Status</label>
+                    <select class="filter-select" style="width: 150px;">
+                        <option>All Status</option>
+                        <option>Paid</option>
+                    </select>
+                </div>
+
+                <div class="filter-group" style="flex: 1;">
+                    <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Search</label>
+                    <div style="position: relative;">
+                        <i class='bx bx-search' style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray);"></i>
+                        <input type="text" placeholder="Search by bill type or month..." style="width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px 8px 32px; font-size: 13px; font-family: inherit; outline: none;">
+                    </div>
+                </div>
+
+                <div class="filter-group" style="display: flex; align-items: flex-end;">
+                    <button class="btn-outline-support" style="height: 38px; color: var(--primary-purple); border-color: rgba(98, 75, 255, 0.2);">
+                        <i class='bx bx-reset'></i> Reset Filters
+                    </button>
                 </div>
             </div>
+            
+            <h4 style="margin-top: 24px; margin-bottom: 16px; font-size: 15px; color: var(--text-dark);">Transaction History</h4>
             
             <div style="overflow-x: auto;">
                 <table class="payments-table">
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">#</th>
                             <th>BILL TYPE</th>
                             <th>FOR PERIOD</th>
+                            <th>BILL DATE</th>
                             <th>DUE DATE</th>
                             <th>AMOUNT</th>
                             <th>STATUS</th>
                             <th>PAID ON</th>
-                            <th>ACTION</th>
+                            <th>PAYMENT MODE</th>
+                            <th>RECEIPT</th>
                         </tr>
                     </thead>
                     <tbody id="paymentsTableBody">
                         <?php 
-                        $current_month = '';
+                        $counter = 1;
                         foreach($all_bills as $bill): 
-                            if ($bill['period'] != $current_month) {
-                                $current_month = $bill['period'];
-                                echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
-                            }
                         ?>
-                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>" data-period="<?php echo htmlspecialchars($bill['period']); ?>" class="data-row">
+                            <tr data-filter-type="<?php echo $bill['filter_type']; ?>" class="data-row">
+                                <td style="text-align: center; color: var(--text-gray); font-weight: 500;"><?php echo $counter++; ?></td>
                                 <td>
                                     <div class="td-bill-type">
                                         <div class="td-icon <?php echo $bill['color']; ?>"><i class='bx <?php echo $bill['icon']; ?>'></i></div>
@@ -971,18 +1000,27 @@ $unread_count = count($unread_notifications);
                                     </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
+                                <td><?php echo $bill['bill_date']; ?></td>
                                 <td><?php echo $bill['due_date']; ?></td>
                                 <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>
-                                    <?php if ($bill['status'] == 'Paid'): ?>
-                                        <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
-                                    <?php else: ?>
-                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
-                                            <i class='bx bx-credit-card-alt'></i> Pay Now
-                                        </button>
-                                    <?php endif; ?>
+                                    <div style="display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 13px; color: var(--text-dark);">
+                                        <?php if(strpos(strtolower($bill['payment_mode']), 'upi') !== false): ?>
+                                            <i class='bx bx-mobile-landscape' style="color: #00B963; font-size: 16px;"></i> 
+                                        <?php elseif(strpos(strtolower($bill['payment_mode']), 'net banking') !== false): ?>
+                                            <i class='bx bxs-bank' style="color: #624BFF; font-size: 16px;"></i>
+                                        <?php else: ?>
+                                            <i class='bx bx-wallet' style="color: #F59E0B; font-size: 16px;"></i>
+                                        <?php endif; ?>
+                                        <?php echo $bill['payment_mode']; ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn-view-receipt" style="padding: 6px 10px; min-width: auto; border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); border-radius: 8px;">
+                                        <i class='bx bx-download' style="margin: 0; font-size: 16px;"></i>
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -990,8 +1028,13 @@ $unread_count = count($unread_notifications);
                 </table>
             </div>
             
-            <div class="pagination" id="paginationControls">
-                <!-- JS will inject pagination buttons here -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding: 0 12px;">
+                <div style="font-size: 13px; color: var(--text-gray); font-weight: 500;">
+                    Showing <span id="showingStart">1</span> to <span id="showingEnd">5</span> of <span id="totalRecords">14</span> transactions
+                </div>
+                <div class="pagination" id="paginationControls" style="margin-top: 0; padding: 0; border: none;">
+                    <!-- JS will inject pagination buttons here -->
+                </div>
             </div>
         </div>
 
