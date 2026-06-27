@@ -449,7 +449,8 @@ $unread_count = count($unread_notifications);
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         .btn-outline-support {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
-            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 8px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            white-space: nowrap;
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         .user-profile-pill {
