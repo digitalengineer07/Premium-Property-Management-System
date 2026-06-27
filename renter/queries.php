@@ -231,18 +231,20 @@ $unread_count = 1; // Match mockup notification count
         .kpi-card {
             background: var(--white); border: 1px solid var(--border);
             border-radius: 16px; padding: 16px 20px; box-shadow: var(--card-shadow);
-            display: flex; align-items: flex-start; gap: 12px;
+            display: flex; flex-direction: column; gap: 16px; min-height: 120px;
         }
+        .kpi-card-top { display: flex; align-items: center; gap: 16px; }
         .kpi-icon {
-            width: 40px; height: 40px; border-radius: 10px;
+            width: 48px; height: 48px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; flex-shrink: 0;
+            font-size: 24px; flex-shrink: 0;
         }
-        .kpi-info h4 { margin: 0 0 6px 0; font-size: 12px; color: var(--text-gray); font-weight: 600; }
-        .kpi-info h2 { margin: 0 0 8px 0; font-size: 22px; color: var(--text-dark); font-weight: 800; }
+        .kpi-info h4 { margin: 0 0 4px 0; font-size: 13px; color: #64748b; font-weight: 700; }
+        .kpi-info h2 { margin: 0; font-size: 24px; color: var(--text-dark); font-weight: 800; line-height: 1; }
+        .kpi-badge-wrap { display: flex; justify-content: center; width: 100%; margin-top: auto; }
         .kpi-badge {
-            display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px;
-            font-size: 10px; font-weight: 700; white-space: nowrap;
+            display: inline-flex; align-items: center; justify-content: center; padding: 6px 20px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; white-space: nowrap; 
         }
 
         /* 2-Column Layout */
