@@ -125,9 +125,9 @@ if($ann_q){
         /* Sidebar Overrides & Additions */
         .sidebar { width: 260px; background: white; padding: 24px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; position: fixed; left: 0; top: 0; z-index: 100; -ms-overflow-style: none; scrollbar-width: none; }
         .sidebar::-webkit-scrollbar { display: none; }
-        .sidebar-header { margin-bottom: 32px; display: flex; align-items: center; gap: 14px; }
-        .sidebar-logo { width: 44px; height: 44px; background: var(--primary-purple); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; flex-shrink: 0; box-shadow: 0 8px 16px rgba(98, 75, 255, 0.2); }
-        .sidebar-brand h2 { font-size: 16px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; }
+        .sidebar-header { margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
+        .sidebar-logo { width: 40px; height: 40px; background: #1E293B; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 800; }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
         
         .nav-menu { display: flex; flex-direction: column; gap: 6px; flex: 1; }
@@ -148,36 +148,36 @@ if($ann_q){
         .main-content { margin-left: 260px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 260px); }
         
         /* Top Header */
-        .top-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
-        .header-title h1 { font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; letter-spacing: -0.5px; }
-        .header-title p { font-size: 13px; color: var(--text-gray); margin: 0; font-weight: 500; }
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .header-title h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
+        .header-title p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         
         /* Icons and buttons */
-        .icon-btn { width: 44px; height: 44px; border-radius: 12px; background: white; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-gray); cursor: pointer; transition: 0.2s; position: relative; }
-        .icon-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
-        .btn-support { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid rgba(139, 92, 246, 0.2); color: var(--primary-purple); padding: 0 16px; height: 44px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; text-decoration: none;}
-        .btn-support:hover { background: rgba(139, 92, 246, 0.05); }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; transition: 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.02); text-decoration: none; }
+        .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+        .btn-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 16px; height: auto; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .btn-support:hover { background: rgba(98, 75, 255, 0.02); }
         
-        .user-profile { display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px; background: white; border: 1px solid var(--border); border-radius: 24px; cursor: pointer; transition: 0.2s; }
-        .user-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 13px; }
-        .user-info h4 { margin: 0 0 2px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); }
-        .user-info p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px; transition: 0.2s; }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; font-weight: 500; }
         
         /* KPI Cards */
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
-        .kpi-card { background: white; border-radius: 16px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px; transition: 0.2s; }
-        .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .kpi-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px; transition: all 0.3s ease; }
+        .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
         
-        .kpi-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-        .kpi-icon.purple { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
-        .kpi-icon.green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
-        .kpi-icon.orange { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
-        .kpi-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+        .kpi-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .kpi-icon.purple { background: rgba(139, 92, 246, 0.08); color: #8B5CF6; }
+        .kpi-icon.green { background: rgba(16, 185, 129, 0.08); color: #10B981; }
+        .kpi-icon.orange { background: rgba(245, 158, 11, 0.08); color: #F59E0B; }
+        .kpi-icon.blue { background: rgba(59, 130, 246, 0.08); color: #3B82F6; }
         
-        .kpi-info h4 { font-size: 12px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0; }
-        .kpi-info h2 { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0; letter-spacing: -0.5px; }
-        .kpi-info p { font-size: 11px; color: var(--text-gray); font-weight: 500; margin: 0; }
+        .kpi-info h4 { font-size: 13px; font-weight: 600; color: var(--text-gray); margin: 0 0 4px 0; }
+        .kpi-info h2 { font-size: 32px; font-weight: 800; color: var(--text-dark); letter-spacing: -1px; margin: 0 0 4px 0; }
+        .kpi-info p { font-size: 12px; font-weight: 600; color: var(--text-gray); margin: 0; }
         .kpi-info p.green { color: #10B981; }
 
         /* Two Column Layout */
@@ -296,10 +296,15 @@ if($ann_q){
     <!-- Main Content -->
     <main class="main-content">
         <!-- Top Header -->
-        <header class="top-header">
-            <div class="header-title">
-                <h1>Electricity Record</h1>
-                <p>Track your monthly electricity usage and billing details.</p>
+        <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
+            <div class="header-title" style="display: flex; align-items: center; gap: 20px;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
+                    <i class='bx bx-bolt-circle' style="font-size: 28px; color: var(--primary-purple);"></i>
+                </div>
+                <div>
+                    <h1 style="margin: 0 0 6px 0;">Electricity Record</h1>
+                    <p>Track your monthly electricity usage and billing details.</p>
+                </div>
             </div>
             <div class="header-actions">
                 <div class="icon-btn bell-icon">
