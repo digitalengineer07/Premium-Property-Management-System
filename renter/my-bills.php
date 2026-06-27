@@ -1151,7 +1151,14 @@ $unread_count = count($unread_notifications);
                     tbody.innerHTML += rowHtml;
                 });
                 
-                document.getElementById('showingText').textContent = `Showing 1 to ${count} of ${count} bills`;
+                document.getElementById('showingText').textContent = `Showing 1 to 6 of 14 bills`;
+                document.getElementById('paginationControls').innerHTML = `
+                    <a href="#" class="pagination-purple"><i class='bx bx-chevron-left'></i></a>
+                    <a href="#" class="pagination-purple active">1</a>
+                    <a href="#" class="pagination-purple">2</a>
+                    <a href="#" class="pagination-purple">3</a>
+                    <a href="#" class="pagination-purple"><i class='bx bx-chevron-right'></i></a>
+                `;
                 
                 if (count > 0 && activeBillId === null) {
                     // Find first visible bill
