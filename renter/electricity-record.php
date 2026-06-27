@@ -88,9 +88,40 @@ if($ann_q){
     <title>Electricity Record - <?php echo HOUSE_NAME; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../assets/css/design-system.css">
+    <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --bg-main: #FAFBFC;
+            --sidebar-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-gray: #64748B;
+            --primary-purple: #624BFF;
+            --primary-hover: #5039E6;
+            --border: #F1F5F9;
+            --white: #FFFFFF;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif !important;
+            background-color: var(--bg-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text-dark);
+            display: block !important;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
         /* Sidebar Overrides & Additions */
         .sidebar { width: 280px; background: white; padding: 24px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; position: fixed; left: 0; top: 0; z-index: 100; -ms-overflow-style: none; scrollbar-width: none; }
         .sidebar::-webkit-scrollbar { display: none; }
