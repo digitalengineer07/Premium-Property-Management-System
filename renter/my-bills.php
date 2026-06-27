@@ -994,8 +994,8 @@ $unread_count = count($unread_notifications);
                         <h2 id="bdAmount" style="margin: 0; font-size: 28px; font-weight: 800; color: #FF4B6B;">₹8,000.00</h2>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);"><i class='bx bx-credit-card'></i> Pay Now</button>
-                        <button id="bdBtnDownload" style="background: white; color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class='bx bx-download'></i> Download Bill</button>
+                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
+                        <button id="bdBtnDownload" style="background: white; color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
 
