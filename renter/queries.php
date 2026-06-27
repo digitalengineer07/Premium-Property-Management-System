@@ -122,79 +122,88 @@ $unread_count = 1; // Match mockup notification count
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Outfit', sans-serif !important;
             background-color: var(--bg-main);
-            color: var(--text-dark);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            color: var(--text-dark);
+            display: block !important;
+        }
+
+        .app-container {
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
         /* Sidebar Styles */
         .sidebar {
-            width: 280px;
+            width: 230px;
             background: var(--sidebar-bg);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
+            padding: 24px 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
             z-index: 100;
         }
-        .brand {
-            padding: 24px;
+        
+        .sidebar-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
         }
-        .brand-icon {
+        .sidebar-logo {
             width: 40px; height: 40px;
-            background: var(--text-dark);
-            color: var(--bg-main);
-            border-radius: 12px;
+            background: #1E293B; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: 800;
+            color: white; font-size: 20px; font-weight: 800;
         }
-        .brand-text h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark); }
-        .brand-text p { margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500; }
-        
-        .nav-menu { padding: 24px 16px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
+        .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
+
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: hidden; }
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 14px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none;
-            font-weight: 600; font-size: 15px; transition: all 0.2s;
+            padding: 12px 16px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.2s ease;
         }
-        .nav-item i { font-size: 20px; }
-        .nav-item:hover { background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); }
-        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
-        
-        .help-box {
-            margin: 24px 16px; padding: 24px;
-            background: #F8F7FF; border-radius: 20px;
-            text-align: center; border: 1px solid rgba(98,75,255,0.1);
+        .nav-item i { font-size: 18px; opacity: 0.8; }
+        .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
+        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
+        .nav-item.active i { opacity: 1; }
+
+        .go-mobile-widget {
+            background: rgba(98, 75, 255, 0.03); border: 1px solid rgba(98, 75, 255, 0.05);
+            border-radius: 16px; padding: 16px; text-align: left;
+            margin-top: auto;
         }
-        .dark-theme .help-box { background: rgba(98,75,255,0.05); }
-        .help-box h4 { margin: 0 0 8px 0; color: var(--text-dark); font-size: 16px; font-weight: 800; }
-        .help-box p { margin: 0 0 16px 0; color: var(--text-gray); font-size: 13px; line-height: 1.5; }
-        .help-box .headphone-icon {
-            font-size: 48px; color: var(--primary-purple);
-            margin-bottom: 16px; display: inline-block;
+        .go-mobile-widget h4 { font-size: 15px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
+        .go-mobile-widget p { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; line-height: 1.4; }
+        .go-mobile-imgs { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
+        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .btn-download {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--primary-purple); color: white; border: none; padding: 10px;
+            border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
-        .btn-outline {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            width: 100%; padding: 12px; border-radius: 12px;
-            border: 1px solid rgba(98, 75, 255, 0.2);
-            color: var(--primary-purple); font-weight: 700; font-size: 14px;
-            text-decoration: none; transition: all 0.2s; background: white; cursor: pointer;
-        }
-        .btn-outline:hover { background: var(--primary-purple); color: white; }
+        .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
         /* Main Content */
         .main-content {
-            flex: 1; padding: 32px 40px; overflow-y: auto;
+            flex: 1;
+            margin-left: 230px;
+            padding: 32px 40px;
+            max-width: calc(100% - 230px);
+            box-sizing: border-box;
+            overflow-y: auto;
+            min-height: 100vh;
         }
         .top-header {
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -314,34 +323,72 @@ $unread_count = 1; // Match mockup notification count
 
     </style>
 </head>
-<body>
+<body style="display: block;">
+<div class="app-container">
     
     <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon"><i class='bx bx-building-house'></i></div>
-            <div class="brand-text">
-                <h2><?php echo HOUSE_NAME; ?></h2>
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class='bx bx-home-heart'></i>
+            </div>
+            <div class="sidebar-brand">
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
                 <p>Resident Dashboard</p>
             </div>
         </div>
+        
         <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-item"><i class='bx bx-grid-alt'></i> Dashboard</a>
-            <a href="my-payments.php" class="nav-item"><i class='bx bx-wallet'></i> My Payments</a>
-            <a href="payment-history.php" class="nav-item"><i class='bx bx-history'></i> Payment History</a>
-            <a href="electricity-record.php" class="nav-item"><i class='bx bx-bolt-circle'></i> Electricity Record</a>
-            <a href="my-bills.php" class="nav-item"><i class='bx bx-receipt'></i> My Bills</a>
-            <a href="queries.php" class="nav-item active" style="background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);"><i class='bx bx-message-square-dots'></i> Raise Query</a>
-            <a href="notices.php" class="nav-item"><i class='bx bx-bell'></i> Notices</a>
-            <a href="documents.php" class="nav-item"><i class='bx bx-folder'></i> Documents</a>
-            <a href="profile.php" class="nav-item"><i class='bx bx-user'></i> Profile Settings</a>
+            <a href="dashboard.php" class="nav-item">
+                <i class='bx bx-grid-alt'></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="my-payments.php" class="nav-item">
+                <i class='bx bx-wallet'></i>
+                <span>My Payments</span>
+            </a>
+            <a href="electricity-record.php" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
+            </a>
+            <a href="my-bills.php" class="nav-item">
+                <i class='bx bx-receipt'></i>
+                <span>My Bills</span>
+            </a>
+            <a href="queries.php" class="nav-item active">
+                <i class='bx bx-message-square-dots'></i>
+                <span>Raise Query</span>
+            </a>
+            <a href="notices.php" class="nav-item">
+                <i class='bx bx-bell'></i>
+                <span>Notices</span>
+            </a>
+            <a href="documents.php" class="nav-item">
+                <i class='bx bx-folder'></i>
+                <span>Documents</span>
+            </a>
+            <a href="profile.php" class="nav-item">
+                <i class='bx bx-user-circle'></i>
+                <span>Profile Settings</span>
+            </a>
+            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
         </nav>
         
-        <div class="help-box">
-            <i class='bx bx-headphone headphone-icon'></i>
-            <h4>Need Help?</h4>
-            <p>Can't find what you're looking for?<br><br>Our support team is ready to assist you.</p>
-            <a href="queries.php" class="btn-outline"><i class='bx bx-message-square-dots'></i> Contact Support</a>
+        <div class="go-mobile-widget">
+            <h4>Go Mobile!</h4>
+            <p>Manage your payments on the go.</p>
+            <div class="go-mobile-imgs">
+                <div class="mock-phone">
+                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
+                </div>
+                <div class="mock-qr">
+                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
+                </div>
+            </div>
+            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
         </div>
     </aside>
 
@@ -561,5 +608,6 @@ $unread_count = 1; // Match mockup notification count
             </div>
         </div>
     </main>
+</div>
 </body>
 </html>
