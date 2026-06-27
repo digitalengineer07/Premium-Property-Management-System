@@ -377,19 +377,7 @@ $unread_count = 1; // Match mockup notification count
             </a>
         </nav>
         
-        <div class="go-mobile-widget">
-            <h4>Go Mobile!</h4>
-            <p>Manage your payments on the go.</p>
-            <div class="go-mobile-imgs">
-                <div class="mock-phone">
-                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
-                </div>
-                <div class="mock-qr">
-                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
-                </div>
-            </div>
-            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
-        </div>
+
     </aside>
 
     <!-- Main Content -->
