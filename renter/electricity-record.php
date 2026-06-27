@@ -29,12 +29,12 @@ $res_total_units = mysqli_query($conn, $q_total_units);
 $total_units = mysqli_fetch_assoc($res_total_units)['total'] ?? 0;
 
 // Query 2: Amount Paid (This Year)
-$q_amount_paid = "SELECT SUM(total_amount) as total FROM electricity WHERE user_id = $user_id AND status = 'Paid' AND month LIKE '%$current_year'";
+$q_amount_paid = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status = 'Paid' AND month LIKE '%$current_year'";
 $res_amount_paid = mysqli_query($conn, $q_amount_paid);
 $amount_paid = mysqli_fetch_assoc($res_amount_paid)['total'] ?? 0;
 
 // Query 3: Pending Amount
-$q_pending = "SELECT SUM(total_amount) as total FROM electricity WHERE user_id = $user_id AND status != 'Paid'";
+$q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status != 'Paid'";
 $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
@@ -422,7 +422,7 @@ if($ann_q){
                 </div>
                 <div class="cmd-total">
                     <span class="cmd-label">Amount Payable</span>
-                    <span class="cmd-value"><?php echo money($latest_record['total_amount']); ?></span>
+                    <span class="cmd-value"><?php echo money($latest_record['amount']); ?></span>
                 </div>
                 <?php else: ?>
                 <div style="text-align: center; color: var(--text-gray); padding: 40px 0;">
@@ -483,7 +483,7 @@ if($ann_q){
                             <td style="text-align: right;"><?php echo number_format($rec['previous_reading']); ?></td>
                             <td style="text-align: right;"><?php echo number_format($rec['current_reading']); ?></td>
                             <td style="text-align: right;"><?php echo number_format($rec['units_consumed']); ?></td>
-                            <td style="text-align: right; font-weight: 800;"><?php echo money($rec['total_amount']); ?></td>
+                            <td style="text-align: right; font-weight: 800;"><?php echo money($rec['amount']); ?></td>
                             <td style="text-align: center;">
                                 <span class="status-badge <?php echo $status_class; ?>"><?php echo $status_text; ?></span>
                             </td>
