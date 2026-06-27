@@ -864,7 +864,7 @@ $unread_count = count($unread_notifications);
             </div>
             
             <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-bolt'></i></div>
+                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-bulb'></i></div>
                 <div class="kpi-min-info">
                     <h4>Electricity Due</h4>
                     <h2><?php echo money($elec_due); ?></h2>
