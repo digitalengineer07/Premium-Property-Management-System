@@ -457,7 +457,6 @@ if($ann_q){
                             <th style="text-align: right;">Prev. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
                             <th style="text-align: right;">Curr. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
                             <th style="text-align: right;">Consumed<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
-                            <th style="text-align: right;">Rate / Unit<br><span style="text-transform:none; font-weight: 500;">(₹)</span></th>
                             <th style="text-align: right;">Amount<br><span style="text-transform:none; font-weight: 500;">(₹)</span></th>
                             <th style="text-align: center;">Status</th>
                             <th style="text-align: center;">Paid On</th>
@@ -484,7 +483,6 @@ if($ann_q){
                             <td style="text-align: right;"><?php echo number_format($rec['previous_reading']); ?></td>
                             <td style="text-align: right;"><?php echo number_format($rec['current_reading']); ?></td>
                             <td style="text-align: right;"><?php echo number_format($rec['units_consumed']); ?></td>
-                            <td style="text-align: right;"><?php echo number_format((float)$rec['rate_per_unit'], 2); ?></td>
                             <td style="text-align: right; font-weight: 800;"><?php echo money($rec['total_amount']); ?></td>
                             <td style="text-align: center;">
                                 <span class="status-badge <?php echo $status_class; ?>"><?php echo $status_text; ?></span>
