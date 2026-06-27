@@ -763,6 +763,9 @@ $unread_count = count($unread_notifications);
                 <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
                     <i class='bx bx-moon'></i>
                 </div>
+                <a href="payment-history.php" class="btn-outline-support" style="border-color: rgba(16, 185, 129, 0.2); color: #10B981; background: rgba(16, 185, 129, 0.05);">
+                    <i class='bx bx-history'></i> Payment History
+                </a>
                 <a href="queries.php" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
