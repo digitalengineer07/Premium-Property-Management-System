@@ -895,7 +895,7 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Total Outstanding</h4>
                     <h2 style="font-size: 24px; color: #FF4B6B; margin: 0 0 6px 0; font-weight: 800;"><?php echo money($total_due); ?></h2>
-                    <div style="font-size: 11px; font-weight: 700; color: #FF4B6B; background: rgba(255,75,107,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">Payment Due</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #FF4B6B; background: rgba(255,75,107,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block; white-space: nowrap;">Payment Due</div>
                 </div>
             </div>
             
@@ -904,7 +904,7 @@ $unread_count = count($unread_notifications);
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Due This Month</h4>
                     <h2 style="font-size: 24px; color: var(--text-dark); margin: 0 0 6px 0; font-weight: 800;"><?php echo money($due_this_month); ?></h2>
-                    <div style="font-size: 11px; font-weight: 700; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">Due on 05 <?php echo date('M Y'); ?></div>
+                    <div style="font-size: 11px; font-weight: 700; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block; white-space: nowrap;">Due on 05 <?php echo date('M Y'); ?></div>
                 </div>
             </div>
 
