@@ -89,12 +89,12 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f4f9; color: var(--text-dark); -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
         .invoice-wrapper {
-            max-width: 800px;
-            margin: 20px auto;
+            max-width: 950px;
+            margin: 40px auto;
             background: white;
-            padding: 40px;
+            padding: 50px 60px;
             border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
             position: relative;
             overflow: hidden;
         }
@@ -271,7 +271,16 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
     </div>
 
     <div class="invoice-wrapper">
-        <?php include 'header.php'; ?>
+        <div class="header">
+            <div class="brand-info">
+                <h2><i class='bx bxs-building-house'></i> <?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Premium Property'; ?></h2>
+                <p>Official Billing Receipt</p>
+            </div>
+            <div class="bill-title">
+                <h1>BILL INVOICE</h1>
+                <span><?php echo htmlspecialchars($month_period); ?></span>
+            </div>
+        </div>
 
         <div class="info-grid">
             <div class="info-group">
