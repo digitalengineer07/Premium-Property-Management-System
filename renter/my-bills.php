@@ -665,7 +665,7 @@ $unread_count = count($unread_notifications);
     </style>
 
         <style>
-            .bill-row td { padding: 16px 20px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .bill-row td { padding: 12px 10px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
             .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
@@ -1119,12 +1119,12 @@ $unread_count = count($unread_notifications);
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
-                            <td style="white-space: nowrap;">
+                            <td>
                                 <div style="display:flex; align-items:center; gap:16px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark); white-space: nowrap;">${bill.period}</h4>
-                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500; white-space: nowrap;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
+                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
