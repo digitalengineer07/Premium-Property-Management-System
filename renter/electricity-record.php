@@ -116,6 +116,7 @@ if($ann_q){
 
         .app-container {
             display: flex;
+            width: 100%;
             min-height: 100vh;
         }
 
