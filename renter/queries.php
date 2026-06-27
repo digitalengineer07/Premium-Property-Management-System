@@ -389,10 +389,18 @@ $unread_count = 1; // Match mockup notification count
         <!-- Top Header -->
         <header class="top-header">
             <div>
-                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); margin: 0 0 8px 0;">
-                    Raise Query
-                </h1>
-                <p style="font-size: 15px; color: var(--text-gray); font-weight: 500; margin: 0;">Report an issue or request assistance. We're here to help!</p>
+                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
+                    <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.15), rgba(98, 75, 255, 0.05)); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.2);">
+                        <i class='bx bx-support'></i>
+                    </div>
+                    <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0; background: linear-gradient(135deg, #1E293B, var(--primary-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        Raise Query
+                    </h1>
+                </div>
+                <p style="font-size: 15px; color: var(--text-gray); font-weight: 500; margin: 0; display: flex; align-items: center; gap: 6px;">
+                    <i class='bx bx-info-circle' style="color: var(--primary-purple); font-size: 18px;"></i>
+                    Report an issue or request assistance. We're here to help!
+                </p>
             </div>
             
             <div class="header-actions">
