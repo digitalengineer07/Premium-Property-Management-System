@@ -618,9 +618,9 @@ $unread_count = count($unread_notifications);
         .filter-select { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text-dark); outline: none; background: #FAFBFC; font-family: 'Outfit', sans-serif; cursor: pointer; }
         .btn-filter { background: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 6px; }
         
-        .payments-table { width: 100%; border-collapse: collapse; }
-        .payments-table th { text-align: left; padding: 16px 24px; font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
-        .payments-table td { padding: 16px 24px; font-size: 13px; font-weight: 600; color: var(--text-dark); border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .payments-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        .payments-table th { text-align: left; padding: 16px 24px; font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        .payments-table td { padding: 16px 24px; font-size: 13px; font-weight: 600; color: var(--text-dark); border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
         .payments-table tr:last-child td { border-bottom: none; }
         .payments-table tr:hover td { background: #FAFBFC; }
         
@@ -630,8 +630,8 @@ $unread_count = count($unread_notifications);
         .td-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .td-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
         .td-icon.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
-        .td-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; }
-        .td-info p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; }
+        .td-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; white-space: nowrap; }
+        .td-info p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap; }
         
         .td-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
         .td-status.paid { background: rgba(16, 185, 129, 0.1); color: #10B981; }
