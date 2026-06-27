@@ -389,11 +389,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <div class="login-header">
-                <div style="display: inline-flex; align-items: center; gap: 4px; background: rgba(220, 38, 38, 0.1); color: #DC2626; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; border: 1px solid rgba(220, 38, 38, 0.2);">
-                    <i class='bx bxs-shield-alt-2' style="font-size: 14px;"></i> Admin Portal
-                </div>
-                <h1>Welcome Back!</h1>
-                <p>Sign in to your admin account</p>
+                <h1>Admin Portal</h1>
+                <p>Welcome back! Please sign in to continue.</p>
                 <div class="header-line" style="background: #DC2626;"></div>
             </div>
 
