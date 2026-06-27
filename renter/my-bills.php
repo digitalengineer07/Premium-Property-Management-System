@@ -947,12 +947,12 @@ $unread_count = count($unread_notifications);
                 <div style="padding: 12px 24px;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 16px 24px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
-                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">DUE DATE</th>
-                            <th style="text-align: right; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">AMOUNT</th>
-                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">STATUS</th>
-                            <th style="text-align: center; padding: 16px 24px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">ACTION</th>
+                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
+                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">DUE DATE</th>
+                            <th style="text-align: right; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">AMOUNT</th>
+                            <th style="text-align: center; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">STATUS</th>
+                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
