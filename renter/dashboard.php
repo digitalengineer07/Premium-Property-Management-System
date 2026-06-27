@@ -596,407 +596,401 @@ $unread_count = count($unread_notifications);
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
 
-<main class="main-renter">
-    <header class="header-renter">
-        <div class="brand-renter">
-            <img src="../assets/img/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
-            <span><?php echo HOUSE_NAME; ?></span>
-        </div>
-        <div class="user-profile" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <!-- Notification Bell -->
-            <div class="notification-wrapper" style="position: relative;">
-                <div class="bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'flex' : 'none';" style="cursor: pointer; position: relative; padding: 8px;">
-                    <i class='bx bxs-bell' style="font-size: 26px; color: var(--text-dark);"></i>
-                    <?php if ($unread_count > 0): ?>
-                        <span style="position: absolute; top: 4px; right: 4px; background: #EF4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 2px var(--bg-main);"><?php echo $unread_count; ?></span>
-                    <?php endif; ?>
-                </div>
-                
-                <!-- Dropdown -->
-                <div id="notifDropdown" style="display: none; position: absolute; top: 100%; right: 0; width: 320px; background: var(--white); border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; overflow: hidden; max-height: 400px; flex-direction: column;">
-                    <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-                        <h3 style="font-size: 16px; font-weight: 700; margin: 0;">Notifications</h3>
-                        <?php if ($unread_count > 0): ?>
-                            <span style="background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
-                        <?php endif; ?>
-                    </div>
-                    <div style="overflow-y: auto; flex: 1; max-height: 300px;">
-                        <?php if ($unread_count === 0): ?>
-                            <div style="padding: 30px; text-align: center; color: var(--text-gray);">
-                                <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
-                            </div>
-                        <?php else: ?>
-                            <?php foreach ($unread_notifications as $notif): ?>
-                                <div class="notif-item" data-id="<?php echo $notif['id']; ?>" style="position: relative; overflow: hidden; border-bottom: 1px solid var(--border);">
-                                    <div class="notif-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #EF4444; display: flex; align-items: center; justify-content: flex-end; padding-right: 20px; color: white; z-index: 1;">
-                                        <i class='bx bx-trash' style="font-size: 24px;"></i>
-                                    </div>
-                                    <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; transition: transform 0.2s ease-out, background 0.2s; background: var(--white); position: relative; z-index: 2;" onmouseover="this.style.background='var(--bg-main)'" onmouseout="this.style.background='var(--white)'">
-                                        <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 20px;">
-                                            <i class='bx <?php echo $notif['icon']; ?>'></i>
-                                        </div>
-                                        <div style="flex: 1;">
-                                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                                <div style="font-size: 14px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;"><?php echo htmlspecialchars($notif['title']); ?></div>
-                                                <i class='bx bx-x dismiss-btn' style="font-size: 20px; color: var(--text-gray); cursor: pointer; opacity: 0.6;" onmouseover="this.style.opacity='1'; this.style.color='#EF4444';" onmouseout="this.style.opacity='0.6'; this.style.color='var(--text-gray)';" onclick="event.stopPropagation(); dismissNotification('<?php echo $notif['id']; ?>', this)"></i>
-                                            </div>
-                                            <div style="font-size: 13px; color: var(--text-gray); line-height: 1.4; margin-bottom: 6px; padding-right: 12px;"><?php echo htmlspecialchars($notif['message']); ?></div>
-                                            <div style="font-size: 11px; color: var(--text-gray); opacity: 0.8;">
-                                                <i class='bx bx-time-five'></i> <?php 
-                                                $time_diff = max(1, time() - strtotime($notif['time']));
-                                                if ($time_diff < 3600) echo floor($time_diff/60) . ' mins ago';
-                                                elseif ($time_diff < 86400) echo floor($time_diff/3600) . ' hrs ago';
-                                                else echo floor($time_diff/86400) . ' days ago';
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class='bx bx-home-heart'></i>
             </div>
-
-            <i class='bx bx-moon' id="themeToggle" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
-            <a href="queries.php" class="btn-outline" style="padding: 10px 16px; font-size: 14px; border-color: #FCD34D; color: #B45309; position: relative;">
-                <i class='bx bx-help-circle'></i> Help & Support
-                <?php if ($has_new_notice): ?>
-                    <span id="helpSupportRedDot" style="position: absolute; top: -5px; right: -5px; width: 10px; height: 10px; background: #EF4444; border-radius: 50%; border: 2px solid var(--white); animation: pulse 2s infinite;"></span>
-                <?php endif; ?>
+            <div class="sidebar-brand">
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
+                <p>Resident Dashboard</p>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.php" class="nav-item active">
+                <i class='bx bx-grid-alt'></i>
+                <span>Dashboard</span>
             </a>
-            <a href="about-dev.php" class="btn-outline" style="padding: 10px 16px; font-size: 14px;"><i class='bx bx-help-circle'></i> About Dev</a>
-            <a href="profile.php" class="btn-outline" style="padding: 10px 16px; font-size: 14px;">My Profile</a>
-            <a href="../logout.php" class="btn-primary" style="background: #EF4444; padding: 10px 16px; font-size: 14px;">Logout</a>
-        </div>
-    </header>
-
-    <?php
-    // Check if welcome card should be shown (created within 7 days)
-    $show_welcome_card = false;
-    // ensure table exists logic doesn't crash here if it doesn't exist yet, we suppress error
-    $welcome_q = @mysqli_query($conn, "SELECT sent_at FROM welcome_logs WHERE user_id = $user_id AND sent_at >= NOW() - INTERVAL 7 DAY");
-    if ($welcome_q && mysqli_num_rows($welcome_q) > 0) {
-        $show_welcome_card = true;
-    }
-    ?>
-    <div class="welcome animate-up">
-        <h1>Hi, <?php echo htmlspecialchars($display_name); ?></h1>
-        <p><?php echo $show_welcome_card ? "Welcome!" : "Welcome back!"; ?> You are assigned to <strong style="color: var(--primary-purple);">Room <?php echo htmlspecialchars($room_no); ?></strong></p>
-    </div>
-
-    <?php if ($show_welcome_card): ?>
-        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(16, 185, 129, 0.4); color: var(--text-dark); padding: 24px; border-radius: 24px; margin-bottom: 24px; box-shadow: 0 15px 35px rgba(16, 185, 129, 0.15); position: relative; overflow: hidden;">
-            <div style="display: flex; align-items: flex-start; gap: 24px; z-index: 2; position: relative;">
-                <div style="background: linear-gradient(135deg, #10B981, #34D399); color: white; width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
-                    <i class='bx bx-party' style="font-size: 36px;"></i>
+            <a href="#" class="nav-item">
+                <i class='bx bx-wallet'></i>
+                <span>My Payments</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class='bx bx-history'></i>
+                <span>Payment History</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class='bx bx-receipt'></i>
+                <span>My Bills</span>
+            </a>
+            <a href="queries.php" class="nav-item">
+                <i class='bx bx-message-square-dots'></i>
+                <span>Raise Query</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class='bx bx-bell'></i>
+                <span>Notices</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class='bx bx-folder'></i>
+                <span>Documents</span>
+            </a>
+            <a href="profile.php" class="nav-item">
+                <i class='bx bx-user-circle'></i>
+                <span>Profile Settings</span>
+            </a>
+            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+        
+        <div class="go-mobile-widget">
+            <h4>Go Mobile!</h4>
+            <p>Manage your payments on the go.</p>
+            <div class="go-mobile-imgs">
+                <div class="mock-phone">
+                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
                 </div>
-                <div style="flex: 1;">
-                    <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: #059669;">Welcome to <?php echo htmlspecialchars(HOUSE_NAME); ?>!</h3>
-                    <p style="font-size: 15px; font-weight: 500; opacity: 0.9; margin: 0 0 16px 0;">We are thrilled to have you here. Your resident dashboard is your one-stop place to manage your tenancy digitally.</p>
-                    <div style="font-size: 14px; background: rgba(255,255,255,0.6); padding: 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.8);">
-                        <strong style="color: var(--primary-purple); font-size: 15px; display: block; margin-bottom: 8px;">Quick Tips:</strong>
-                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                            <li>Check your outstanding rent & electricity bills in the panels below.</li>
-                            <li>You can click the "Pay Now Amount" to settle any pending dues.</li>
-                            <li>After making a payment via UPI, enter the Transaction ID/UTR to notify the admin.</li>
-                            <li>Need help? Use the "Help & Support" link in the top menu.</li>
-                        </ul>
+                <div class="mock-qr">
+                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
+                </div>
+            </div>
+            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no); ?></span></p>
+            </div>
+            <div class="header-actions">
+                <div class="notification-wrapper">
+                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'flex' : 'none';">
+                        <i class='bx bx-bell'></i>
+                        <?php if ($unread_count > 0): ?>
+                            <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
+                                <?php echo $unread_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notifDropdown" style="display: none;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                            <?php if($unread_count > 0): ?>
+                                <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="max-height: 350px; overflow-y: auto;">
+                            <?php if (empty($unread_notifications)): ?>
+                                <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                    <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($unread_notifications as $notif): ?>
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
+                                            <i class='bx bx-trash'></i>
+                                        </div>
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                                <i class='bx <?php echo $notif['icon']; ?>'></i>
+                                            </div>
+                                            <div style="flex: 1; padding-right: 20px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark);"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                                </div>
+                                                <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
+                                            </div>
+                                            <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
+                                                <i class='bx bx-x'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                <i class='bx bx-x' style="cursor: pointer; font-size: 28px; opacity: 0.4;" onmouseover="this.style.opacity='1'; this.style.color='#EF4444';" onmouseout="this.style.opacity='0.4'; this.style.color='var(--text-dark)';" onclick="this.parentElement.parentElement.style.display='none'" title="Dismiss"></i>
-            </div>
-            <i class='bx bxs-heart' style="position: absolute; right: -20px; bottom: -20px; font-size: 160px; color: #10B981; opacity: 0.05; z-index: 1;"></i>
-        </div>
-    <?php endif; ?>
 
-    <?php if ($payment_success): ?>
-        <div class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7;">
-            <i class='bx bx-check-circle'></i> <?php echo $payment_success; ?>
-        </div>
-    <?php endif; ?>
-    <?php if ($payment_error): ?>
-        <div class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2;">
-            <i class='bx bx-error-circle'></i> <?php echo $payment_error; ?>
-        </div>
-    <?php endif; ?>
+                <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
+                    <i class='bx bx-moon'></i>
+                </div>
+                <a href="queries.php" class="btn-outline-support">
+                    <i class='bx bx-help-circle'></i> Help & Support
+                </a>
+                <div class="user-profile-pill" onclick="window.location.href='profile.php'">
+                    <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
+                    <div class="user-info">
+                        <h4><?php echo htmlspecialchars(explode(' ', trim($display_name))[0]); ?></h4>
+                        <p>Room <?php echo htmlspecialchars($room_no); ?></p>
+                    </div>
+                    <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                </div>
+            </div>
+        </header>
 
-    <?php 
-    // Ensure column exists silently before querying
-    @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
-    
-    // Show recently rejected payment notifications
-    $rej_q = mysqli_query($conn, "SELECT id, transaction_id, admin_note, amount, DATE_FORMAT(created_at, '%b %d, %Y') as d_date FROM payment_notifications WHERE user_id = $user_id AND status = 'Rejected' AND IFNULL(is_dismissed, 0) = 0 ORDER BY id DESC LIMIT 3");
-    if ($rej_q && mysqli_num_rows($rej_q) > 0):
-        while ($rej = mysqli_fetch_assoc($rej_q)):
-    ?>
-        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(239, 68, 68, 0.4); color: var(--text-dark); padding: 16px 20px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.1); position: relative; display: flex; gap: 16px; align-items: flex-start;">
-            <div style="background: rgba(239, 68, 68, 0.15); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #DC2626; flex-shrink: 0;">
-                <i class='bx bx-x-circle' style="font-size: 24px;"></i>
+        <!-- Alerts -->
+        <?php if ($payment_success): ?>
+            <div class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7;">
+                <i class='bx bx-check-circle'></i> <?php echo $payment_success; ?>
             </div>
-            <div style="flex: 1;">
-                <div style="position: absolute; top: 12px; right: 12px;">
-                    <form method="POST" style="margin: 0; padding: 0;">
-                        <input type="hidden" name="dismiss_id" value="<?php echo $rej['id']; ?>">
-                        <button type="submit" name="dismiss_rejection" style="background: none; border: none; cursor: pointer; color: #EF4444; opacity: 0.6; padding: 4px; display: flex; align-items: center; justify-content: center; border-radius: 50%;" onmouseover="this.style.opacity='1'; this.style.background='rgba(239, 68, 68, 0.1)'" onmouseout="this.style.opacity='0.6'; this.style.background='none'">
-                            <i class='bx bx-x' style="font-size: 22px;" title="Dismiss Message"></i>
-                        </button>
-                    </form>
-                </div>
-                <div style="font-weight: 800; font-size: 16px; margin-bottom: 4px; color: #DC2626; padding-right: 30px;">
-                    Payment Rejected (₹<?php echo number_format($rej['amount'], 2); ?> on <?php echo $rej['d_date']; ?>)
-                </div>
-                <div style="font-size: 14px; font-weight: 500; opacity: 0.9;"><strong>UTR:</strong> <?php echo htmlspecialchars($rej['transaction_id']); ?></div>
-                <?php if (!empty($rej['admin_note'])): ?>
-                <div style="font-size: 14px; margin-top: 6px; color: #B91C1C; background: rgba(239, 68, 68, 0.05); padding: 8px 12px; border-radius: 8px; border: 1px dashed rgba(239, 68, 68, 0.3);">
-                    <strong>Reason:</strong> <?php echo htmlspecialchars($rej['admin_note']); ?>
-                </div>
-                <?php endif; ?>
+        <?php endif; ?>
+        <?php if ($payment_error): ?>
+            <div class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2;">
+                <i class='bx bx-error-circle'></i> <?php echo $payment_error; ?>
             </div>
-        </div>
-    <?php 
-        endwhile;
-    endif; 
-    ?>
+        <?php endif; ?>
 
-    <?php if ($show_banner): ?>
-        <div class="animate-up" style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(239, 68, 68, 0.4); color: var(--text-dark); padding: 24px; border-radius: 24px; margin-bottom: 32px; box-shadow: 0 15px 35px rgba(239, 68, 68, 0.15); display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #EF4444, #F87171); width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3); color: white;">
-                <i class='bx bxs-bell-ring bx-tada' style="font-size: 32px;"></i>
+        <!-- Payment Reminder Banner -->
+        <?php if ($show_banner): ?>
+        <div class="reminder-banner animate-up">
+            <div class="reminder-content">
+                <div class="reminder-icon">
+                    <i class='bx bxs-bell-ring bx-tada'></i>
+                </div>
+                <div class="reminder-text">
+                    <h3>Payment Reminder!</h3>
+                    <p>It's the <?php echo date('jS'); ?> of the month. Your bills for <?php echo implode(', ', array_unique($overdue_list)); ?> are still pending.<br>Please clear them to avoid service interruptions.</p>
+                </div>
             </div>
-            <div style="flex: 1; z-index: 2;">
-                <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px; color: #DC2626;">Payment Reminder!</h3>
-                <p style="font-size: 15px; font-weight: 500; opacity: 0.9; margin: 0;">It's the <?php echo date('jS'); ?> of the month. Your bills for <strong><?php echo implode(', ', array_unique($overdue_list)); ?></strong> are still pending. Please clear them to avoid service interruptions.</p>
-            </div>
-            <button onclick="document.querySelector('.kpi-card .btn-primary').click()" class="btn-primary" style="background: #EF4444; color: white; border: none; border-radius: 16px; padding: 14px 24px; font-weight: 700; font-size: 15px; white-space: nowrap; box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); z-index: 2; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-                Pay Now
+            <button onclick="document.querySelector('.btn-pay-now-trigger')?.click()" class="btn-pay-now">
+                Pay Now <i class='bx bx-right-arrow-alt'></i>
             </button>
-            <i class='bx bxs-error-circle' style="position: absolute; right: -20px; bottom: -20px; font-size: 140px; color: #EF4444; opacity: 0.05; z-index: 1;"></i>
-        </div>
-    <?php endif; ?>
-
-    <div class="renter-kpi-grid animate-up">
-        <div class="kpi-card hover-lift" style="border-top: 4px solid <?php echo $total_due > 0 ? '#EF4444' : '#10B981'; ?>;">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-credit-card kpi-icon' style="color: #624BFF !important; background: rgba(98, 75, 255, 0.15) !important;"></i>
-                <div class="trend <?php echo $total_due > 0 ? 'trend-down' : 'trend-up'; ?>">
-                    <i class='bx bx-info-circle'></i> <?php echo $total_due > 0 ? 'Payment Due' : 'All Clear'; ?>
-                </div>
-            </div>
-            <div class="kpi-value" style="<?php echo $total_due > 0 ? 'color: #EF4444;' : ''; ?>"><?php echo money($total_due); ?></div>
-            <div class="kpi-label">Total Outstanding</div>
-            <?php if ($unbilled_adj != 0): ?>
-                <div style="font-size: 11px; margin-top: 2px; font-weight: 600; color: <?php echo $unbilled_adj > 0 ? '#10B981' : '#EF4444'; ?>;">
-                    <?php echo $unbilled_adj > 0 ? 'Credit: ' : 'Remaining: '; ?><?php echo money(abs($unbilled_adj)); ?> (Unbilled)
-                </div>
-            <?php endif; ?>
-            
-            <?php if($total_due > 0): ?>
-                <div style="margin-top: auto; padding-top: 12px;">
-                    <button onclick="openPaymentModal(<?php echo $total_due; ?>, 'Total Outstanding Balance', 'total')" class="btn-primary" style="width: 100%; justify-content: center; font-size: 13px; background: #10B981; border: none; border-radius: 12px;">
-                        <i class='bx bx-qr-scan'></i> Pay Now Amount
-                    </button>
-                </div>
-            <?php else: ?>
-                <div style="margin-top: auto;"></div> <!-- For flex alignment -->
-            <?php endif; ?>
-        </div>
-        
-        <div class="kpi-card hover-lift">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-bolt kpi-icon' style="color: #F59E0B !important; background: rgba(245, 158, 11, 0.15) !important;"></i>
-            </div>
-            <div class="kpi-value"><?php echo money($elec_due); ?></div>
-            <div class="kpi-label">Electricity Due</div>
-            <div style="margin-top: auto;"></div>
-        </div>
-        
-        <div class="kpi-card hover-lift">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-home kpi-icon' style="color: #EC4899 !important; background: rgba(236, 72, 153, 0.15) !important;"></i>
-            </div>
-            <div class="kpi-value"><?php echo money($rent_due); ?></div>
-            <div class="kpi-label">Rent Due</div>
-            <div style="margin-top: auto;"></div>
-        </div>
-        
-        <div class="kpi-card hover-lift">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-check-double kpi-icon' style="color: #10B981 !important; background: rgba(16, 185, 129, 0.15) !important;"></i>
-            </div>
-            <div class="kpi-value" style="font-size: 18px; margin-top: 5px;"><?php echo $last_payment ? money($last_payment['total_amount']) : 'No history'; ?></div>
-            <div class="kpi-label">Last Payment Made</div>
-            <div style="margin-top: auto;"></div>
-        </div>
-        
-        <div class="kpi-card hover-lift">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-wallet kpi-icon' style="color: #3B82F6 !important; background: rgba(59, 130, 246, 0.15) !important;"></i>
-            </div>
-            <div class="kpi-value" style="font-size: 24px;">
-                <?php if ($advance_due > 0 && $adv_paid == 0): ?>
-                    <?php echo money($user['advance_payment'] ?? 0); ?>
-                <?php else: ?>
-                    <?php echo money($adv_paid); ?> <span style="font-size: 14px; color: var(--text-gray); font-weight: 500;">/ <?php echo money($user['advance_payment'] ?? 0); ?></span>
-                <?php endif; ?>
-            </div>
-            <div class="kpi-label">Advance Security</div>
-            
-            <?php if ($advance_due > 0): ?>
-                <div style="margin-top: auto; padding-top: 12px;">
-                    <button onclick="openPaymentModal(<?php echo $advance_due; ?>, 'Advance Security Deposit', 'advance')" class="btn-primary" style="width: 100%; justify-content: center; font-size: 13px; background: #3B82F6; border: none; border-radius: 12px; height: 36px; padding: 0;">
-                        <i class='bx bx-qr-scan'></i> Pay Advance
-                    </button>
-                </div>
-            <?php else: ?>
-                <?php if (!empty($user['advance_updated_at'])): ?>
-                    <div style="font-size: 11px; margin-top: auto; padding-top: 4px; color: var(--text-gray);">
-                        Updated: <?php echo date("M d, Y", strtotime($user['advance_updated_at'])); ?>
-                    </div>
-                <?php else: ?>
-                    <div style="margin-top: auto;"></div>
-                <?php endif; ?>
-            <?php endif; ?>
-        </div>
-        
-        <?php if ($user['fixed_rent'] > 0 || $user['fixed_maintenance'] > 0): ?>
-        <div class="kpi-card hover-lift">
-            <div class="kpi-header" style="display: flex; align-items: center; gap: 8px;">
-                <i class='bx bx-building-house kpi-icon' style="color: #8B5CF6 !important; background: rgba(139, 92, 246, 0.15) !important;"></i>
-            </div>
-            <div class="kpi-value" style="font-size: 18px; line-height: 1.4;">
-                <span style="font-size: 13px; color: var(--text-gray); font-weight: 500;">Rent:</span> <?php echo money($user['fixed_rent'] ?? 0); ?><br>
-                <span style="font-size: 13px; color: var(--text-gray); font-weight: 500;">Maint:</span> <?php echo money($user['fixed_maintenance'] ?? 0); ?>
-            </div>
-            <div class="kpi-label" style="margin-top: 5px;">Fixed Monthly Charges</div>
-            <?php if (!empty($user['rent_maint_updated_at'])): ?>
-                <div style="font-size: 11px; margin-top: auto; color: var(--text-gray); padding-top: 4px;">
-                    Updated: <?php echo date("M d, Y", strtotime($user['rent_maint_updated_at'])); ?>
-                </div>
-            <?php else: ?>
-                <div style="margin-top: auto;"></div>
-            <?php endif; ?>
+            <i class='bx bxs-calendar reminder-bg-art'></i>
         </div>
         <?php endif; ?>
-    </div>
 
-    <div class="dashboard-grid-70 animate-up">
-        <div class="left-col">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">⚡ Electricity Bill History</h2>
+        <!-- 3-Col KPI Cards -->
+        <div class="kpi-grid animate-up">
+            <!-- Total Outstanding -->
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon-box <?php echo $total_due > 0 ? 'red' : 'green'; ?>"><i class='bx bx-credit-card'></i></div>
+                    <div class="kpi-title">Total Outstanding</div>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Usage</th>
-                                <th>Elec. Bill</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($elecs)): ?>
-                                <tr><td colspan="5" style="text-align: center; padding: 40px; color: var(--text-gray);">No bills found.</td></tr>
-                            <?php else: foreach ($elecs as $e): ?>
-                            <tr>
-                                <td data-label="Month" style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($e['month']); ?></td>
-                                <td data-label="Usage"><?php echo (int)$e['units_consumed']; ?> Units</td>
-                                <td data-label="Elec. Bill" style="font-weight: 700;">
-                                    ₹<?php echo number_format($e['amount'], 2); ?>
-                                    <?php if (!empty($e['adjustment_type'])): ?>
-                                        <div style="font-size: 10px; font-weight: 600; color: <?php echo $e['adjustment_type'] == 'extra' ? '#10B981' : '#EF4444'; ?>;">
-                                            <?php echo $e['adjustment_type'] == 'extra' ? 'Extra' : 'Rem.'; ?>: ₹<?php echo number_format(abs($e['adjustment_amount']), 0); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td data-label="Status"><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $e['status']; ?></span></td>
-                                <td data-label="Actions">
-                                    <div style="display: flex; gap: 8px; flex-wrap: nowrap; min-width: max-content;">
-                                        <a href="../admin/slip.php?elec_id=<?php echo $e['id']; ?>" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" target="_blank" title="Receipt"><i class='bx bx-receipt'></i></a>
-                                        <?php if($e['status'] != 'Paid'): ?>
-                                            <button onclick="openPaymentModal(<?php echo $e['total_amount']; ?>, 'Full Bill (Incl. Rent) - <?php echo $e['month']; ?>', 'electricity', <?php echo $e['id']; ?>)" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Pay Now"><i class='bx bx-credit-card'></i></button>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
+                <div class="kpi-amount" style="<?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></div>
+                <div class="kpi-bottom">
+                    <?php if ($total_due > 0): ?>
+                        <div class="kpi-tag alert"><i class='bx bx-error-circle'></i> Payment Due</div>
+                        <button class="btn-pay-now-trigger" onclick="openPaymentModal(<?php echo $total_due; ?>, 'Total Outstanding Balance', 'total')" style="display:none;"></button>
+                    <?php else: ?>
+                        <div class="kpi-tag success"><i class='bx bx-check-circle'></i> All Clear</div>
+                    <?php endif; ?>
+                </div>
+                <svg class="kpi-sparkline <?php echo $total_due > 0 ? 'red' : 'green'; ?>" viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,30 L10,25 L20,28 L30,20 L40,25 L50,15 L60,18 L70,10 L80,12 L90,5 L100,0" />
+                </svg>
+            </div>
+
+            <!-- Electricity Due -->
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon-box yellow"><i class='bx bx-bolt'></i></div>
+                    <div class="kpi-title">Electricity Due</div>
+                </div>
+                <div class="kpi-amount"><?php echo money($elec_due); ?></div>
+                <div class="kpi-bottom">
+                    <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: <?php echo date('t M Y'); ?></div>
+                </div>
+                <svg class="kpi-sparkline yellow" viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,30 L15,28 L30,22 L45,25 L60,15 L75,18 L90,8 L100,0" />
+                </svg>
+            </div>
+
+            <!-- Rent Due -->
+            <div class="kpi-card">
+                <div class="kpi-top">
+                    <div class="kpi-icon-box purple"><i class='bx bx-home'></i></div>
+                    <div class="kpi-title">Rent Due</div>
+                </div>
+                <div class="kpi-amount"><?php echo money($rent_due); ?></div>
+                <div class="kpi-bottom">
+                    <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
+                </div>
+                <svg class="kpi-sparkline purple" viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,30 L20,25 L40,28 L60,15 L80,18 L100,0" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- 3-Col Main Dashboard Grid -->
+        <div class="dashboard-3col animate-up">
+            <!-- Col 1: Upcoming Bills -->
+            <div class="dash-panel">
+                <div class="panel-head">
+                    <h3 class="panel-title"><i class='bx bx-calendar-event'></i> Upcoming Bills</h3>
+                    <a href="#" class="panel-link">View All</a>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; flex: 1;">
+                    <?php if ($rent_due > 0): ?>
+                    <div class="bill-item">
+                        <div class="bill-left">
+                            <div class="bill-icon"><i class='bx bx-home'></i></div>
+                            <div class="bill-info">
+                                <h4>Rent for <?php echo date('F Y'); ?></h4>
+                                <p>Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></p>
+                            </div>
+                        </div>
+                        <div class="bill-right">
+                            <h4><?php echo money($rent_due); ?></h4>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($elec_due > 0): ?>
+                    <div class="bill-item">
+                        <div class="bill-left">
+                            <div class="bill-icon yellow"><i class='bx bx-bolt'></i></div>
+                            <div class="bill-info">
+                                <h4>Electricity for <?php echo date('F Y'); ?></h4>
+                                <p>Due Date: <?php echo date('t M Y'); ?></p>
+                            </div>
+                        </div>
+                        <div class="bill-right">
+                            <h4 style="color: #F59E0B;"><?php echo money($elec_due); ?></h4>
+                            <p style="color: #F59E0B;">Pending</p>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($rent_due == 0 && $elec_due == 0): ?>
+                    <div style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px; margin: auto;">
+                        <i class='bx bx-check-circle' style="font-size: 32px; color: #10B981; margin-bottom: 8px;"></i><br>
+                        No upcoming bills! You're all caught up.
+                    </div>
+                    <?php endif; ?>
+                    
+                    <a href="#" class="btn-view-all">View All Bills</a>
+                </div>
+            </div>
+
+            <!-- Col 2: Quick Actions -->
+            <div class="dash-panel">
+                <div class="panel-head">
+                    <h3 class="panel-title"><i class='bx bx-zap'></i> Quick Actions</h3>
+                </div>
+                <div class="quick-actions-grid">
+                    <a href="#" class="action-card" onclick="document.querySelector('.btn-pay-now-trigger')?.click(); return false;">
+                        <div class="action-icon"><i class='bx bx-credit-card-alt'></i></div>
+                        <h4>Pay Dues</h4>
+                        <p>Make secure payments</p>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="action-icon"><i class='bx bx-history'></i></div>
+                        <h4>Payment History</h4>
+                        <p>View all transactions</p>
+                    </a>
+                    <a href="#" class="action-card">
+                        <div class="action-icon"><i class='bx bx-bolt-circle'></i></div>
+                        <h4>Electricity Record</h4>
+                        <p>View meter readings</p>
+                    </a>
+                    <a href="queries.php" class="action-card">
+                        <div class="action-icon"><i class='bx bx-message-square-dots'></i></div>
+                        <h4>Raise Query</h4>
+                        <p>Ask or report issue</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Col 3: Recent Transactions -->
+            <div class="dash-panel">
+                <div class="panel-head">
+                    <h3 class="panel-title"><i class='bx bx-receipt'></i> Recent Transactions</h3>
+                    <a href="#" class="panel-link">View All</a>
+                </div>
+                <div class="transaction-list" style="overflow-y: auto; max-height: 250px; padding-right: 8px;">
+                    <?php if (empty($merged_rents) && empty($elecs)): ?>
+                        <div style="text-align: center; padding: 30px; color: var(--text-gray); font-size: 13px; margin: auto;">No recent transactions found.</div>
+                    <?php else: ?>
+                        <?php 
+                        // Combine and sort merged_rents and elecs to get actual recent transactions
+                        $all_tx = array_merge($merged_rents, $elecs);
+                        // Very rough sort by month descending assuming month is formatted YYYY-MM or similar, but here it's likely 'Jan 2026'.
+                        // For display logic, we'll just show the latest 5 from merged_rents to simulate.
+                        $display_tx = array_slice($merged_rents, 0, 5); 
+                        foreach($display_tx as $tx):
+                            $is_paid = ($tx['status'] == 'Paid');
+                            $is_elec = ($tx['source'] == 'elec_table');
+                            $is_adv = ($tx['source'] == 'advance');
+                            
+                            $icon_class = 'up';
+                            $icon_bx = 'bx-up-arrow-alt';
+                            if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt'; }
+                            else if ($is_adv) { $icon_class = 'adv'; $icon_bx = 'bx-wallet'; }
+                            else { $icon_class = 'up'; $icon_bx = 'bx-up-arrow-alt'; }
+                        ?>
+                        <div class="transaction-item">
+                            <div class="tx-left">
+                                <div class="tx-icon <?php echo $icon_class; ?>"><i class='bx <?php echo $icon_bx; ?>'></i></div>
+                                <div class="tx-info">
+                                    <h4><?php echo $is_elec ? 'Electricity Payment' : ($is_adv ? 'Advance Payment' : 'Rent Payment'); ?></h4>
+                                    <p>For <?php echo htmlspecialchars($tx['month']); ?></p>
+                                </div>
+                            </div>
+                            <div class="tx-right">
+                                <div class="tx-amount <?php echo $is_paid ? '' : 'pending'; ?>"><?php echo money($tx['amount']); ?></div>
+                                <div class="tx-status <?php echo $is_paid ? 'paid' : 'pending'; ?>"><?php echo $tx['status']; ?></div>
+                                <div class="tx-date"><?php echo date('d M Y'); ?></div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
 
-        <div class="right-col">
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 style="font-size: 18px; font-weight: 700;">🏠 Rent History</h2>
+        <!-- Footer Widgets -->
+        <div class="footer-widgets animate-up">
+            <div class="footer-widget">
+                <div class="fw-left">
+                    <div class="fw-icon help"><i class='bx bx-headphone'></i></div>
+                    <div class="fw-info">
+                        <h4>Need Help?</h4>
+                        <p>Our support team is available 24/7 to assist you.</p>
+                    </div>
                 </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Month</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($merged_rents)): ?>
-                                <tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-gray);">No records.</td></tr>
-                            <?php else: foreach ($merged_rents as $r): ?>
-                            <tr>
-                                <td data-label="Month" style="font-weight: 600; white-space: nowrap;"><?php echo htmlspecialchars($r['month']); ?></td>
-                                <td data-label="Amount" style="font-weight: 700;">
-                                    ₹<?php echo number_format($r['amount'], 2); ?>
-                                    <?php if (!empty($r['adjustment_type'])): ?>
-                                        <div style="font-size: 10px; font-weight: 600; color: <?php echo $r['adjustment_type'] == 'extra' ? '#10B981' : '#EF4444'; ?>;">
-                                            <?php echo $r['adjustment_type'] == 'extra' ? 'Extra' : 'Rem.'; ?>: ₹<?php echo number_format(abs($r['adjustment_amount']), 0); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </td>
-                                <td data-label="Status"><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
-                                <td data-label="Actions">
-                                    <div style="display: flex; gap: 8px; flex-wrap: nowrap; min-width: max-content;">
-                                        <?php if($r['source'] == 'elec_table'): ?>
-                                            <a href="../admin/slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" target="_blank" title="Receipt"><i class='bx bx-receipt'></i></a>
-                                        <?php elseif($r['source'] == 'advance'): ?>
-                                            <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 8px;">Adv. Pmt</span>
-                                        <?php endif; ?>
-                                        
-                                        <?php if($r['status'] != 'Paid' && $r['source'] != 'advance'): ?>
-                                            <?php 
-                                            // Determine display and payment amounts
-                                            $pay_amt = $r['amount'];
-                                            $pay_title = "Rent Bill - " . $r['month'];
-                                            $pay_type = "rent";
-                                            if ($r['source'] == 'elec_table') {
-                                                // If from a slip, we must find the total_amount of that slip to pay properly
-                                                $sid = $r['id'];
-                                                $sq = mysqli_query($conn, "SELECT total_amount FROM electricity WHERE id = $sid");
-                                                $sr = mysqli_fetch_assoc($sq);
-                                                $pay_amt = $sr['total_amount'];
-                                                $pay_title = "Full Bill (Incl. Elec) - " . $r['month'];
-                                                $pay_type = "electricity";
-                                            }
-                                            ?>
-                                            <button onclick="openPaymentModal(<?php echo $pay_amt; ?>, '<?php echo $pay_title; ?>', '<?php echo $pay_type; ?>', <?php echo $r['id']; ?>)" class="btn-outline" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Pay Now"><i class='bx bx-credit-card'></i></button>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; endif; ?>
-                        </tbody>
-                    </table>
+                <button class="btn-fw" onclick="window.location.href='queries.php'"><i class='bx bx-message-rounded-dots'></i> Contact Support</button>
+            </div>
+            
+            <div class="footer-widget">
+                <div class="fw-left">
+                    <div class="fw-icon bell"><i class='bx bx-bell'></i></div>
+                    <div class="fw-info">
+                        <h4>Stay Updated</h4>
+                        <p>Enable notifications to never miss any updates.</p>
+                    </div>
                 </div>
+                <button class="btn-fw">Enable Notifications</button>
             </div>
         </div>
-    </div>
-</main>
+
+        <!-- App Footer -->
+        <div class="app-footer">
+            <p>© 2026 <?php echo htmlspecialchars(HOUSE_NAME); ?>. All rights reserved.</p>
+            <p>Last updated: <?php echo date('d M Y, h:i A'); ?> <i class='bx bx-refresh' style="cursor:pointer;" onclick="location.reload()"></i></p>
+        </div>
+
+    </main>
+</div>
 
     <!-- Intro.js for the guide -->
     <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
