@@ -44,7 +44,6 @@ $resolved_queries = 0;
 $closed_queries = 0;
 
 while ($row = mysqli_fetch_assoc($res)) {
-    $queries[] = $row;
     $total_queries++;
     
     // Normalize status for UI
@@ -62,6 +61,8 @@ while ($row = mysqli_fetch_assoc($res)) {
         $open_queries++;
         $row['ui_status'] = 'Open';
     }
+
+    $queries[] = $row;
 }
 mysqli_stmt_close($stmt);
 
