@@ -974,7 +974,7 @@ $unread_count = count($unread_notifications);
                             <th>AMOUNT</th>
                             <th>STATUS</th>
                             <th>PAID ON</th>
-                            <th>PAYMENT MODE</th>
+                            <th style="text-align: center;">PAYMENT MODE</th>
                         </tr>
                     </thead>
                     <tbody id="paymentsTableBody">
@@ -1000,15 +1000,17 @@ $unread_count = count($unread_notifications);
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>
-                                    <div style="display: flex; align-items: center; gap: 6px; font-weight: 500; font-size: 13px; color: var(--text-dark);">
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 13px; color: var(--text-dark);">
                                         <?php if(strpos(strtolower($bill['payment_mode']), 'upi') !== false): ?>
-                                            <i class='bx bx-mobile-landscape' style="color: #00B963; font-size: 16px;"></i> 
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;">
+                                            UPI
                                         <?php elseif(strpos(strtolower($bill['payment_mode']), 'net banking') !== false): ?>
                                             <i class='bx bxs-bank' style="color: #624BFF; font-size: 16px;"></i>
+                                            <?php echo $bill['payment_mode']; ?>
                                         <?php else: ?>
                                             <i class='bx bx-wallet' style="color: #F59E0B; font-size: 16px;"></i>
+                                            <?php echo $bill['payment_mode']; ?>
                                         <?php endif; ?>
-                                        <?php echo $bill['payment_mode']; ?>
                                     </div>
                                 </td>
                             </tr>
