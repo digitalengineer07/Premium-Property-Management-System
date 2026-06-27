@@ -103,9 +103,6 @@ if($ann_q){
             --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
         }
 
-        * {
-            box-sizing: border-box;
-        }
 
         body {
             font-family: 'Outfit', sans-serif !important;
@@ -130,12 +127,17 @@ if($ann_q){
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
         
-        .nav-menu { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-        .nav-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-radius: 12px; color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; }
-        .nav-item i { font-size: 20px; transition: 0.2s; }
-        .nav-item:hover { background: #FAFBFC; color: var(--text-dark); }
-        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
-        .nav-item.active i { color: white; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .nav-item i { font-size: 18px; opacity: 0.8; }
+        .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
+        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
+        .nav-item.active i { opacity: 1; }
         
         .save-more-card { background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 20px; text-align: center; margin-top: 24px; }
         .save-more-card h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; }
@@ -145,7 +147,7 @@ if($ann_q){
         .btn-tips:hover { border-color: var(--primary-purple); }
 
         /* Main Content */
-        .main-content { margin-left: 260px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 260px); }
+        .main-content { margin-left: 260px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 260px); box-sizing: border-box; }
         
         /* Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
