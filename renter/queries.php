@@ -184,7 +184,7 @@ $unread_count = 1; // Match mockup notification count
 
         /* Main Content */
         .main-content {
-            flex: 1; padding: 32px 40px; overflow-y: auto;
+            flex: 1; min-width: 0; padding: 32px 40px; overflow-y: auto; overflow-x: hidden;
         }
         .top-header {
             display: flex; justify-content: space-between; align-items: flex-end;
