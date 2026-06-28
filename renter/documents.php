@@ -134,7 +134,7 @@ $documents = [
 
         /* Documents Layout */
         .docs-layout {
-            display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 24px; align-items: start;
+            display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;
         }
 
         .list-card {
