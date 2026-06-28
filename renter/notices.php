@@ -483,7 +483,8 @@ if (isset($_GET['ajax_id'])) {
                 </div>
 
                 <div style="flex: 1;" id="notice-list-container">
-                    <?php foreach($paginated_notices as $i => $n): ?>
+                    <?php if (count($paginated_notices) > 0): ?>
+                        <?php foreach($paginated_notices as $i => $n): ?>
                     <div class="notice-item <?php echo $i===0 ? 'active' : ''; ?> <?php echo $n['is_new'] ? 'unread' : ''; ?>" data-id="<?php echo $n['id']; ?>">
                         <div class="ni-dot"></div>
                         <div class="ni-icon" style="background: <?php echo $n['icon_bg']; ?>; color: <?php echo $n['icon_color']; ?>;">
@@ -510,10 +511,20 @@ if (isset($_GET['ajax_id'])) {
                             <?php endif; ?>
                         </div>
                     </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 400px; color: var(--text-gray); text-align: center;">
+                            <div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(98, 75, 255, 0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
+                                <i class='bx bx-ghost' style="font-size: 64px; color: rgba(98, 75, 255, 0.3);"></i>
+                            </div>
+                            <h3 style="margin: 0 0 8px 0; font-size: 18px; color: var(--text-dark); font-weight: 700;">No Notices Available</h3>
+                            <p style="margin: 0; font-size: 14px; max-width: 250px; line-height: 1.5;">You're all caught up! There are currently no active announcements from the management.</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Footer Pagination -->
+                <?php if ($total_items > 0): ?>
                 <div style="margin-top: auto; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                     <span>Showing <?php echo $start_item; ?> to <?php echo $end_item; ?> of <?php echo $total_items; ?> notices</span>
                     <div style="display: flex; gap: 8px;">
@@ -524,6 +535,7 @@ if (isset($_GET['ajax_id'])) {
                         <a href="?page=<?php echo min($total_pages, $page + 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
                     </div>
                 </div>
+                <?php endif; ?>
             </div>
         </div>
     </main>
