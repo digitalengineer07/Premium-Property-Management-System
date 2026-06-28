@@ -752,7 +752,7 @@ $unread_count = count($unread_notifications);
     
         <main class="main-content">
         <!-- Top Header -->
-        <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
+        <header class="top-header">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 20px;">
                 <div>
                     <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); margin: 0 0 8px 0; display: flex; align-items: center; gap: 16px;">
