@@ -580,30 +580,6 @@ $unread_count = 1; // Match mockup notification count
                     $offset = ($page - 1) * $limit;
                     
                     if(empty($queries)) {
-                        echo '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No queries found.</div>';
-                    }
-                    $paginated_queries = array_slice($queries, $offset, $limit);
-                    foreach($paginated_queries as $index => $q): 
-                        // Map categories to icons and colors
-                        $cat = strtolower($q['category']);
-                        if (strpos($cat, 'plumbing') !== false) {
-                            $icon = 'bx-water'; $bg = 'rgba(245, 158, 11, 0.1)'; $col = '#F59E0B';
-                        } elseif (strpos($cat, 'elect') !== false) {
-                            $icon = 'bx-bolt-circle'; $bg = 'rgba(59, 130, 246, 0.1)'; $col = '#3B82F6';
-                        } elseif (strpos($cat, 'housekeep') !== false || strpos($cat, 'clean') !== false) {
-                            $icon = 'bx-brush'; $bg = 'rgba(16, 185, 129, 0.1)'; $col = '#10B981';
-                        } elseif (strpos($cat, 'maintain') !== false || strpos($cat, 'maintenance') !== false) {
-                            $icon = 'bx-wrench'; $bg = 'rgba(98, 75, 255, 0.1)'; $col = 'var(--primary-purple)';
-                        } elseif (strpos($cat, 'general') !== false || strpos($cat, 'parking') !== false) {
-                            $icon = 'bx-parking'; $bg = 'rgba(239, 68, 68, 0.1)'; $col = '#EF4444';
-                        } else {
-                            $icon = 'bx-info-circle'; $bg = 'rgba(239, 68, 68, 0.1)'; $col = '#EF4444';
-                        }
-
-                        // Map Status
-                        $st = strtolower($q['ui_status']);
-                        if ($st == 'open') {
-                            $s_bg = 'rgba(245, 158, 11, 0.1)'; $s_col = '#F59E0B';
                         } elseif ($st == 'resolved') {
                             $s_bg = 'rgba(16, 185, 129, 0.1)'; $s_col = '#10B981';
                         } else {
