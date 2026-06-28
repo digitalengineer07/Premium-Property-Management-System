@@ -567,21 +567,6 @@ $unread_count = 1; // Match mockup notification count
                             <option>Resolved</option>
                             <option>Closed</option>
                         </select>
-                        <button class="btn-outline" style="width: auto; padding: 8px 16px;"><i class='bx bx-filter'></i> Filter</button>
-                    </div>
-                </div>
-
-                <div style="flex: 1;">
-                    <?php 
-                    $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-                        $date_formatted = date('d M Y', strtotime($q['created_at']));
-                        $qid_formatted = '#QRY-' . str_pad($q['id'], 4, '0', STR_PAD_LEFT);
-                    ?>
-                    <div class="query-item">
-                        <div class="qi-icon" style="background: <?php echo $bg; ?>; color: <?php echo $col; ?>;">
-                            <i class='bx <?php echo $icon; ?>'></i>
-                        </div>
-                        <div class="qi-details">
                             <h4><?php echo htmlspecialchars($q['subject']); ?></h4>
                             <span class="category"><?php echo htmlspecialchars($q['category']); ?></span>
                             <p><?php echo htmlspecialchars($q['message']); ?></p>
