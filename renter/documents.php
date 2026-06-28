@@ -30,30 +30,6 @@ $documents = [
     [
         'name' => 'Agreement Copy', 'desc' => 'Rental Agreement', 'category' => 'Agreement', 'cat_color' => '#8B5CF6', 'cat_bg' => 'rgba(139, 92, 246, 0.1)',
         'date' => '05 May 2026', 'time' => '04:15 PM', 'status' => 'Verified', 'size' => '2.4 MB', 'icon' => 'bx-file'
-    ],
-    [
-        'name' => 'Bank Passbook', 'desc' => 'Bank Details', 'category' => 'Bank', 'cat_color' => '#F59E0B', 'cat_bg' => 'rgba(245, 158, 11, 0.1)',
-        'date' => '28 Apr 2026', 'time' => '11:20 AM', 'status' => 'Verified', 'size' => '1.8 MB', 'icon' => 'bx-building-house'
-    ],
-    [
-        'name' => 'Rent Receipt - Apr 2026', 'desc' => 'Payment Receipt', 'category' => 'Receipt', 'cat_color' => '#EF4444', 'cat_bg' => 'rgba(239, 68, 68, 0.1)',
-        'date' => '05 Apr 2026', 'time' => '09:45 AM', 'status' => 'Verified', 'size' => '987 KB', 'icon' => 'bx-receipt'
-    ],
-    [
-        'name' => 'Electricity Bill - Apr 2026', 'desc' => 'Utility Bill', 'category' => 'Utility', 'cat_color' => '#0EA5E9', 'cat_bg' => 'rgba(14, 165, 233, 0.1)',
-        'date' => '03 Apr 2026', 'time' => '02:30 PM', 'status' => 'Pending', 'size' => '1.1 MB', 'icon' => 'bx-bolt-circle'
-    ],
-    [
-        'name' => 'Police Verification', 'desc' => 'Verification Document', 'category' => 'Verification', 'cat_color' => '#624BFF', 'cat_bg' => 'rgba(98, 75, 255, 0.1)',
-        'date' => '15 Mar 2026', 'time' => '10:00 AM', 'status' => 'Verified', 'size' => '1.6 MB', 'icon' => 'bx-shield-quarter'
-    ],
-    [
-        'name' => 'Medical Certificate', 'desc' => 'Health Document', 'category' => 'Medical', 'cat_color' => '#EC4899', 'cat_bg' => 'rgba(236, 72, 153, 0.1)',
-        'date' => '10 Mar 2026', 'time' => '03:50 PM', 'status' => 'Rejected', 'size' => '1.3 MB', 'icon' => 'bx-plus-medical'
-    ],
-    [
-        'name' => 'Other Document', 'desc' => 'Miscellaneous', 'category' => 'Other', 'cat_color' => '#64748B', 'cat_bg' => 'rgba(100, 116, 139, 0.1)',
-        'date' => '01 Mar 2026', 'time' => '09:15 AM', 'status' => 'Verified', 'size' => '756 KB', 'icon' => 'bx-dots-horizontal-rounded'
     ]
 ];
 ?>
