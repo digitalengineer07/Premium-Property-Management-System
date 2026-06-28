@@ -21,132 +21,48 @@ mysqli_stmt_close($stmt);
 
 $unread_count = 2;
 
-// Mock Data for Design Purposes
-$notices = [
-    [
-        'id' => 1,
-        'title' => 'Maintenance Work in Building',
-        'category' => 'Important',
-        'icon' => 'bxs-megaphone',
-        'icon_bg' => 'rgba(98, 75, 255, 0.1)',
-        'icon_color' => 'var(--primary-purple)',
-        'badge_bg' => 'rgba(239, 68, 68, 0.1)',
-        'badge_color' => '#EF4444',
-        'desc' => 'Scheduled maintenance work will be carried out in the building.',
-        'full_desc' => "Dear Residents,\n\nPlease be informed that scheduled maintenance work will be carried out in the building from 25th May 2026 to 27th May 2026.\n\nDuring this time, you may experience minor inconveniences. We apologize for any trouble caused.\n\nThank you for your cooperation.\n\n- Madhav Kunj Management",
-        'date' => '24 May 2026',
-        'time' => '10:30 AM',
-        'is_new' => true
-    ],
-    [
-        'id' => 2,
-        'title' => 'Power Backup Maintenance',
-        'category' => 'Maintenance',
-        'icon' => 'bx-bolt-circle',
-        'icon_bg' => 'rgba(245, 158, 11, 0.1)',
-        'icon_color' => '#F59E0B',
-        'badge_bg' => 'rgba(245, 158, 11, 0.1)',
-        'badge_color' => '#F59E0B',
-        'desc' => 'Power backup system maintenance on 26th May.',
-        'full_desc' => 'There will be a brief disruption to the power backup system...',
-        'date' => '23 May 2026',
-        'time' => '05:45 PM',
-        'is_new' => true
-    ],
-    [
-        'id' => 3,
-        'title' => 'Society Meeting Notice',
-        'category' => 'General',
-        'icon' => 'bx-group',
-        'icon_bg' => 'rgba(16, 185, 129, 0.1)',
-        'icon_color' => '#10B981',
-        'badge_bg' => 'rgba(16, 185, 129, 0.1)',
-        'badge_color' => '#10B981',
-        'desc' => 'Monthly society meeting will be held on 28th May.',
-        'full_desc' => 'Join us for the monthly meeting in the clubhouse...',
-        'date' => '22 May 2026',
-        'time' => '11:00 AM',
-        'is_new' => false
-    ],
-    [
-        'id' => 4,
-        'title' => 'Water Supply Interruption',
-        'category' => 'Maintenance',
-        'icon' => 'bx-water',
-        'icon_bg' => 'rgba(139, 92, 246, 0.1)',
-        'icon_color' => '#8B5CF6',
-        'badge_bg' => 'rgba(245, 158, 11, 0.1)',
-        'badge_color' => '#F59E0B',
-        'desc' => 'Water supply will be interrupted on 25th May.',
-        'full_desc' => 'Water supply will be off between 2 PM and 4 PM...',
-        'date' => '21 May 2026',
-        'time' => '09:15 AM',
-        'is_new' => false
-    ],
-    [
-        'id' => 5,
-        'title' => 'Community Event - Summer Fiesta',
-        'category' => 'Events',
-        'icon' => 'bx-gift',
-        'icon_bg' => 'rgba(59, 130, 246, 0.1)',
-        'icon_color' => '#3B82F6',
-        'badge_bg' => 'rgba(59, 130, 246, 0.1)',
-        'badge_color' => '#3B82F6',
-        'desc' => 'Join us for the Summer Fiesta on 30th May!',
-        'full_desc' => 'Fun for the whole family...',
-        'date' => '20 May 2026',
-        'time' => '04:30 PM',
-        'is_new' => false
-    ],
-    [
-        'id' => 6,
-        'title' => 'Garbage Collection Schedule Change',
-        'category' => 'General',
-        'icon' => 'bx-trash',
-        'icon_bg' => 'rgba(245, 158, 11, 0.1)',
-        'icon_color' => '#F59E0B',
-        'badge_bg' => 'rgba(16, 185, 129, 0.1)',
-        'badge_color' => '#10B981',
-        'desc' => 'Garbage collection timing has been changed.',
-        'full_desc' => 'New timings are 8 AM daily...',
-        'date' => '19 May 2026',
-        'time' => '08:00 AM',
-        'is_new' => false
-    ],
-    [
-        'id' => 7,
-        'title' => 'Parking Rules Reminder',
-        'category' => 'Important',
-        'icon' => 'bx-car',
-        'icon_bg' => 'rgba(239, 68, 68, 0.1)',
-        'icon_color' => '#EF4444',
-        'badge_bg' => 'rgba(239, 68, 68, 0.1)',
-        'badge_color' => '#EF4444',
-        'desc' => 'Please follow the parking rules for everyone\'s convenience.',
-        'full_desc' => 'Do not park in visitor slots...',
-        'date' => '18 May 2026',
-        'time' => '02:20 PM',
-        'is_new' => false
-    ]
-];
+// Fetch Announcements from DB
+$notices = [];
+$res = mysqli_query($conn, "SELECT * FROM announcements ORDER BY created_at DESC");
+if ($res) {
+    while ($row = mysqli_fetch_assoc($res)) {
+        $priority = $row['priority'] ?? 'Normal';
+        $category = $priority === 'High' ? 'Important' : 'General';
+        
+        if ($category === 'Important') {
+            $icon = 'bxs-megaphone';
+            $icon_bg = 'rgba(239, 68, 68, 0.1)';
+            $icon_color = '#EF4444';
+            $badge_bg = 'rgba(239, 68, 68, 0.1)';
+            $badge_color = '#EF4444';
+        } else {
+            $icon = 'bx-info-circle';
+            $icon_bg = 'rgba(98, 75, 255, 0.1)';
+            $icon_color = 'var(--primary-purple)';
+            $badge_bg = 'rgba(98, 75, 255, 0.1)';
+            $badge_color = 'var(--primary-purple)';
+        }
 
-// Generate additional mock notices up to 24
-for($i = 8; $i <= 24; $i++) {
-    $notices[] = [
-        'id' => $i,
-        'title' => 'System Update ' . $i,
-        'category' => 'General',
-        'icon' => 'bx-info-circle',
-        'icon_bg' => 'rgba(98, 75, 255, 0.1)',
-        'icon_color' => 'var(--primary-purple)',
-        'badge_bg' => 'rgba(98, 75, 255, 0.1)',
-        'badge_color' => 'var(--primary-purple)',
-        'desc' => 'This is an older notice for reference purposes.',
-        'full_desc' => 'Detailed description for Notice ' . $i,
-        'date' => date('d M Y', strtotime("- $i days")),
-        'time' => '10:00 AM',
-        'is_new' => false
-    ];
+        $ts = strtotime($row['created_at']);
+        $full_desc = $row['message'];
+        $desc = mb_strlen($full_desc) > 80 ? mb_substr($full_desc, 0, 80) . '...' : $full_desc;
+
+        $notices[] = [
+            'id' => (int)$row['id'],
+            'title' => $row['title'],
+            'category' => $category,
+            'icon' => $icon,
+            'icon_bg' => $icon_bg,
+            'icon_color' => $icon_color,
+            'badge_bg' => $badge_bg,
+            'badge_color' => $badge_color,
+            'desc' => $desc,
+            'full_desc' => $full_desc,
+            'date' => date('d M Y', $ts),
+            'time' => date('h:i A', $ts),
+            'is_new' => true
+        ];
+    }
 }
 
 // Pagination logic
