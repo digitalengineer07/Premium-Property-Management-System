@@ -386,7 +386,8 @@ if (isset($_GET['ajax_id'])) {
         
         .ni-new-badge {
             background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);
-            padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 800;
+            padding: 4px 16px; border-radius: 12px; font-size: 11px; font-weight: 800;
+            min-width: 48px; text-align: center; display: inline-block;
         }
 
     </style>
