@@ -964,7 +964,7 @@ $unread_count = count($unread_notifications);
                         <!-- Rendered by JS -->
                     </tbody>
                 </table>
-                </div><div style="padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
+                </div><div style="margin-top: auto; padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
                     <span id="showingText">Showing 1 to 6 of 14 bills</span>
                     <div id="paginationControls" style="display: flex; gap: 4px;"></div>
                 </div>
