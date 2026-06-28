@@ -287,7 +287,7 @@ if($ann_q){
     <!-- Main Content -->
     <main class="main-content">
         <!-- Top Header -->
-        <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
+        <header class="top-header">
             <div class="header-title" style="display: flex; align-items: center; gap: 20px;">
                 <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
                     <i class='bx bx-bolt-circle' style="font-size: 28px; color: var(--primary-purple);"></i>
