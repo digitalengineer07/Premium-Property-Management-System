@@ -160,11 +160,12 @@ if($ann_q){
         /* Icons and buttons */
         .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; transition: 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.02); text-decoration: none; }
         .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
-        .btn-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 16px; height: auto; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .btn-support:hover { background: rgba(98, 75, 255, 0.02); }
+        .btn-outline-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); white-space: nowrap; }
+        .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         
-        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px; transition: 0.2s; }
+        .user-profile-pill { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px; white-space: nowrap; }
         .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info { display: flex; flex-direction: column; }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; font-weight: 500; }
         
