@@ -382,62 +382,24 @@ $documents = [
             <div>
                 <!-- Upload Widget -->
                 <div class="side-widget">
-                    <h3 style="margin: 0 0 20px 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Upload New Document</h3>
+                    <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Upload Identity Proof</h3>
+                    <p style="margin: 0 0 20px 0; font-size: 12px; font-weight: 500; color: var(--text-gray); line-height: 1.5;">
+                        You can only upload your <b>Aadhar Card</b>. <br>
+                        The <b>Rental Agreement</b> is managed by the Admin.
+                    </p>
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Document Type</label>
+                        <select style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 13px; font-family: inherit; color: var(--text-dark); appearance: none; background: #F8FAFC url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>') no-repeat right 12px center; background-size: 14px;">
+                            <option value="aadhar">Aadhar Card</option>
+                        </select>
+                    </div>
                     <div class="upload-area">
                         <div class="upload-icon">
                             <i class='bx bx-cloud-upload'></i>
                         </div>
-                        <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: var(--text-dark);">Drag and drop your file here<br>or click to browse</h4>
+                        <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here<br>or click to browse</h4>
                         <p style="margin: 0 0 24px 0; font-size: 11px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
                         <button class="btn-primary">Choose File</button>
-                    </div>
-                </div>
-
-                <!-- Categories Widget -->
-                <div class="side-widget">
-                    <h3 style="margin: 0 0 20px 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Document Categories</h3>
-                    
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-id-card'></i></div>
-                            Identity Proof
-                        </div>
-                        <div class="cat-right">4 <i class='bx bx-chevron-right'></i></div>
-                    </div>
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;"><i class='bx bx-file'></i></div>
-                            Agreement
-                        </div>
-                        <div class="cat-right">2 <i class='bx bx-chevron-right'></i></div>
-                    </div>
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-building-house'></i></div>
-                            Bank Documents
-                        </div>
-                        <div class="cat-right">3 <i class='bx bx-chevron-right'></i></div>
-                    </div>
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class='bx bx-receipt'></i></div>
-                            Receipts
-                        </div>
-                        <div class="cat-right">4 <i class='bx bx-chevron-right'></i></div>
-                    </div>
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(14, 165, 233, 0.1); color: #0EA5E9;"><i class='bx bx-bolt-circle'></i></div>
-                            Utility Bills
-                        </div>
-                        <div class="cat-right">3 <i class='bx bx-chevron-right'></i></div>
-                    </div>
-                    <div class="cat-list-item">
-                        <div class="cat-left">
-                            <div class="cat-icon" style="background: rgba(100, 116, 139, 0.1); color: #64748B;"><i class='bx bx-dots-horizontal-rounded'></i></div>
-                            Other Documents
-                        </div>
-                        <div class="cat-right">2 <i class='bx bx-chevron-right'></i></div>
                     </div>
                 </div>
 
