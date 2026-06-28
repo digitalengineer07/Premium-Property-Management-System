@@ -257,7 +257,7 @@ if (isset($_GET['ajax_id'])) {
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
         
         .main-content {
-            flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
+            flex: 1; margin-left: 250px; padding: 32px 40px 32px 50px; max-width: calc(100% - 250px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
         }
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
@@ -549,11 +549,13 @@ if (isset($_GET['ajax_id'])) {
                             </div>
                             <p class="ni-desc"><?php echo htmlspecialchars($n['desc']); ?></p>
                         </div>
-                        <div class="ni-meta">
-                            <p class="date"><?php echo htmlspecialchars($n['date']); ?></p>
-                            <p class="time"><?php echo htmlspecialchars($n['time']); ?></p>
+                        <div class="ni-meta" style="flex-direction: row; align-items: center; justify-content: flex-end; gap: 16px; min-width: 150px;">
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <p class="date"><?php echo htmlspecialchars($n['date']); ?></p>
+                                <p class="time"><?php echo htmlspecialchars($n['time']); ?></p>
+                            </div>
                             <?php if($n['is_new']): ?>
-                            <div style="margin-top: auto;">
+                            <div>
                                 <span class="ni-new-badge">New</span>
                             </div>
                             <?php endif; ?>
