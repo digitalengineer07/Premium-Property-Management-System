@@ -181,18 +181,34 @@ if (isset($_GET['ajax_id'])) {
 
         .app-container { display: flex; min-height: 100vh; }
 
-        /* Sidebar Styles (Matching queries.php) */
+        /* Sidebar Styles (Matching dashboard.php) */
         .sidebar {
-            width: 230px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 24px 20px; position: fixed; height: 100vh; left: 0; top: 0; z-index: 100;
+            width: 230px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
         }
-        .sidebar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; padding: 0 10px; }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
         .sidebar-logo {
-            width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6);
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 12px rgba(98,75,255,0.3);
+            width: 40px; height: 40px;
+            background: #1E293B; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px; font-weight: 800;
         }
-        .sidebar-brand h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
-        .sidebar-brand p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
+        .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
         .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         .nav-item {
             display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
