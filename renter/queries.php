@@ -566,16 +566,23 @@ $unread_count = 1; // Match mockup notification count
 
                 <div style="flex: 1;">
                     <?php 
+                    $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+                    $limit = 5;
+                    $total_pages = $total_queries > 0 ? ceil($total_queries / $limit) : 1;
+                    if ($page > $total_pages) $page = $total_pages;
+                    $offset = ($page - 1) * $limit;
+                    
                     if(empty($queries)) {
                         echo '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No queries found.</div>';
                     }
-                    foreach(array_slice($queries, 0, 5) as $index => $q): 
+                    $paginated_queries = array_slice($queries, $offset, $limit);
+                    foreach($paginated_queries as $index => $q): 
                         // Map categories to icons and colors
                         $cat = strtolower($q['category']);
                         if (strpos($cat, 'plumbing') !== false) {
                             $icon = 'bx-water'; $bg = 'rgba(245, 158, 11, 0.1)'; $col = '#F59E0B';
                         } elseif (strpos($cat, 'elect') !== false) {
-                            $icon = 'bx-bolt'; $bg = 'rgba(59, 130, 246, 0.1)'; $col = '#3B82F6';
+                            $icon = 'bx-bolt-circle'; $bg = 'rgba(59, 130, 246, 0.1)'; $col = '#3B82F6';
                         } elseif (strpos($cat, 'housekeep') !== false || strpos($cat, 'clean') !== false) {
                             $icon = 'bx-brush'; $bg = 'rgba(16, 185, 129, 0.1)'; $col = '#10B981';
                         } elseif (strpos($cat, 'maintain') !== false || strpos($cat, 'maintenance') !== false) {
@@ -622,12 +629,31 @@ $unread_count = 1; // Match mockup notification count
 
                 <!-- Footer Pagination -->
                 <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
-                    <span>Showing 1 to <?php echo min(5, $total_queries); ?> of <?php echo $total_queries; ?> queries</span>
+                    <?php 
+                    $start_idx = $total_queries > 0 ? $offset + 1 : 0;
+                    $end_idx = min($offset + $limit, $total_queries);
+                    ?>
+                    <span>Showing <?php echo $start_idx; ?> to <?php echo $end_idx; ?> of <?php echo $total_queries; ?> queries</span>
                     <div style="display: flex; gap: 8px;">
-                        <button class="icon-btn" style="width: 32px; height: 32px;"><i class='bx bx-chevron-left'></i></button>
-                        <button class="icon-btn" style="width: 32px; height: 32px; background: var(--primary-purple); color: white; border-color: var(--primary-purple);">1</button>
-                        <button class="icon-btn" style="width: 32px; height: 32px;">2</button>
-                        <button class="icon-btn" style="width: 32px; height: 32px;"><i class='bx bx-chevron-right'></i></button>
+                        <?php if($page > 1): ?>
+                            <a href="?page=<?php echo $page - 1; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><i class='bx bx-chevron-left'></i></a>
+                        <?php else: ?>
+                            <button class="icon-btn" style="width: 32px; height: 32px; opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-left'></i></button>
+                        <?php endif; ?>
+                        
+                        <?php for($i = 1; $i <= $total_pages; $i++): ?>
+                            <?php if($i == $page): ?>
+                                <button class="icon-btn" style="width: 32px; height: 32px; background: var(--primary-purple); color: white; border-color: var(--primary-purple);"><?php echo $i; ?></button>
+                            <?php else: ?>
+                                <a href="?page=<?php echo $i; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><?php echo $i; ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        
+                        <?php if($page < $total_pages): ?>
+                            <a href="?page=<?php echo $page + 1; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
+                        <?php else: ?>
+                            <button class="icon-btn" style="width: 32px; height: 32px; opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-right'></i></button>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
