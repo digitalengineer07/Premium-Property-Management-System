@@ -249,30 +249,36 @@ $documents = [
         <!-- KPI Grid -->
         <div class="kpi-grid-4" style="grid-template-columns: repeat(3, 1fr);">
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);"><i class='bx bx-folder'></i></div>
-                <div class="kpi-info">
-                    <h4>Total Documents</h4>
-                    <h2>2</h2>
-                    <p>All documents</p>
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); margin: 0;"><i class='bx bx-folder'></i></div>
+                    <div class="kpi-info" style="text-align: left;">
+                        <h4>Total Documents</h4>
+                        <h2>2</h2>
+                    </div>
                 </div>
+                <p class="kpi-subtext">All documents</p>
             </div>
             
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-check-shield'></i></div>
-                <div class="kpi-info">
-                    <h4>Verified Documents</h4>
-                    <h2>2</h2>
-                    <p>Approved & verified</p>
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981; margin: 0;"><i class='bx bx-check-shield'></i></div>
+                    <div class="kpi-info" style="text-align: left;">
+                        <h4>Verified Documents</h4>
+                        <h2>2</h2>
+                    </div>
                 </div>
+                <p class="kpi-subtext">Approved & verified</p>
             </div>
 
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-time-five'></i></div>
-                <div class="kpi-info">
-                    <h4>Pending Documents</h4>
-                    <h2>0</h2>
-                    <p>Awaiting verification</p>
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; margin: 0;"><i class='bx bx-time-five'></i></div>
+                    <div class="kpi-info" style="text-align: left;">
+                        <h4>Pending Documents</h4>
+                        <h2>0</h2>
+                    </div>
                 </div>
+                <p class="kpi-subtext">Awaiting verification</p>
             </div>
         </div>
 
