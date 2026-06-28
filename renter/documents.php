@@ -321,61 +321,63 @@ $documents = [
                 </div>
 
                 <!-- Table -->
-                <table class="docs-table">
-                    <thead>
-                        <tr>
-                            <th>Document Name</th>
-                            <th>Category</th>
-                            <th>Uploaded On</th>
-                            <th>Status</th>
-                            <th>Size</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($documents as $doc): ?>
-                        <tr>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 16px;">
-                                    <div style="width: 44px; height: 44px; border-radius: 12px; background: <?php echo $doc['cat_bg']; ?>; color: <?php echo $doc['cat_color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 22px;">
-                                        <i class='bx <?php echo $doc['icon']; ?>'></i>
+                <div style="width: 100%; overflow-x: auto;">
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Document Name</th>
+                                <th>Category</th>
+                                <th>Uploaded On</th>
+                                <th>Status</th>
+                                <th>Size</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($documents as $doc): ?>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 16px;">
+                                        <div style="width: 44px; height: 44px; border-radius: 12px; background: <?php echo $doc['cat_bg']; ?>; color: <?php echo $doc['cat_color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                                            <i class='bx <?php echo $doc['icon']; ?>'></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; white-space: nowrap;"><?php echo $doc['name']; ?></div>
+                                            <div style="font-size: 11px; font-weight: 500; color: var(--text-gray); white-space: nowrap;"><?php echo $doc['desc']; ?></div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;"><?php echo $doc['name']; ?></div>
-                                        <div style="font-size: 11px; font-weight: 500; color: var(--text-gray);"><?php echo $doc['desc']; ?></div>
+                                </td>
+                                <td>
+                                    <span style="font-size: 11px; font-weight: 700; color: <?php echo $doc['cat_color']; ?>; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap;">
+                                        <?php echo $doc['category']; ?>
+                                    </span>
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <div style="font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px;"><?php echo $doc['date']; ?></div>
+                                    <div style="font-size: 11px; font-weight: 500; color: var(--text-gray);"><?php echo $doc['time']; ?></div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-<?php echo $doc['status']; ?>">
+                                        <?php if($doc['status'] == 'Verified'): ?> <i class='bx bx-check-circle'></i> 
+                                        <?php elseif($doc['status'] == 'Pending'): ?> <i class='bx bx-time'></i>
+                                        <?php else: ?> <i class='bx bx-x-circle'></i> <?php endif; ?>
+                                        <?php echo $doc['status']; ?>
+                                    </span>
+                                </td>
+                                <td style="white-space: nowrap;">
+                                    <span style="font-size: 12px; font-weight: 600; color: var(--text-dark);"><?php echo $doc['size']; ?></span>
+                                </td>
+                                <td>
+                                    <div style="display: flex;">
+                                        <button class="action-btn"><i class='bx bx-show'></i></button>
+                                        <button class="action-btn"><i class='bx bx-download'></i></button>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span style="font-size: 11px; font-weight: 700; color: <?php echo $doc['cat_color']; ?>; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap;">
-                                    <?php echo $doc['category']; ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div style="font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px;"><?php echo $doc['date']; ?></div>
-                                <div style="font-size: 11px; font-weight: 500; color: var(--text-gray);"><?php echo $doc['time']; ?></div>
-                            </td>
-                            <td>
-                                <span class="status-badge status-<?php echo $doc['status']; ?>">
-                                    <?php if($doc['status'] == 'Verified'): ?> <i class='bx bx-check-circle'></i> 
-                                    <?php elseif($doc['status'] == 'Pending'): ?> <i class='bx bx-time'></i>
-                                    <?php else: ?> <i class='bx bx-x-circle'></i> <?php endif; ?>
-                                    <?php echo $doc['status']; ?>
-                                </span>
-                            </td>
-                            <td>
-                                <span style="font-size: 12px; font-weight: 600; color: var(--text-dark);"><?php echo $doc['size']; ?></span>
-                            </td>
-                            <td>
-                                <div style="display: flex;">
-                                    <button class="action-btn"><i class='bx bx-show'></i></button>
-                                    <button class="action-btn"><i class='bx bx-download'></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Right: Widgets -->
