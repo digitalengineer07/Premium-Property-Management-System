@@ -275,7 +275,7 @@ $pending_count = 2 - $verified_count;
         .tips-list li i { color: #10B981; font-size: 16px; margin-top: 2px; }
     </style>
 </head>
-<body>
+<body style="display: block;">
 
 <div class="app-container" style="width: 100%;">
     <!-- Sidebar -->

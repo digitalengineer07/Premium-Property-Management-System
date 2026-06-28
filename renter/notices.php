@@ -357,7 +357,7 @@ if (isset($_GET['ajax_id'])) {
 
     </style>
 </head>
-<body>
+<body style="display: block;">
 <div class="app-container">
     
     <!-- Sidebar -->
