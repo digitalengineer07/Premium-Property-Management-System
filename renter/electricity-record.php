@@ -145,7 +145,7 @@ if($ann_q){
             display: flex; align-items: center; justify-content: center;
             color: white; font-size: 20px; font-weight: 800;
         }
-        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
         .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
