@@ -130,6 +130,37 @@ $notices = [
     ]
 ];
 
+// Generate additional mock notices up to 24
+for($i = 8; $i <= 24; $i++) {
+    $notices[] = [
+        'id' => $i,
+        'title' => 'System Update ' . $i,
+        'category' => 'General',
+        'icon' => 'bx-info-circle',
+        'icon_bg' => 'rgba(98, 75, 255, 0.1)',
+        'icon_color' => 'var(--primary-purple)',
+        'badge_bg' => 'rgba(98, 75, 255, 0.1)',
+        'badge_color' => 'var(--primary-purple)',
+        'desc' => 'This is an older notice for reference purposes.',
+        'full_desc' => 'Detailed description for Notice ' . $i,
+        'date' => date('d M Y', strtotime("- $i days")),
+        'time' => '10:00 AM',
+        'is_new' => false
+    ];
+}
+
+// Pagination logic
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$items_per_page = 7;
+$total_items = count($notices);
+$total_pages = ceil($total_items / $items_per_page);
+if ($page > $total_pages && $total_pages > 0) $page = $total_pages;
+$offset = ($page - 1) * $items_per_page;
+$paginated_notices = array_slice($notices, $offset, $items_per_page);
+
+$start_item = $offset + 1;
+$end_item = min($offset + $items_per_page, $total_items);
+
 // Handle AJAX Request for details
 if (isset($_GET['ajax_id'])) {
     $id = (int)$_GET['ajax_id'];
@@ -536,7 +567,7 @@ if (isset($_GET['ajax_id'])) {
                 </div>
 
                 <div style="flex: 1;" id="notice-list-container">
-                    <?php foreach($notices as $i => $n): ?>
+                    <?php foreach($paginated_notices as $i => $n): ?>
                     <div class="notice-item <?php echo $i===0 ? 'active' : ''; ?> <?php echo $n['is_new'] ? 'unread' : ''; ?>" data-id="<?php echo $n['id']; ?>">
                         <div class="ni-dot"></div>
                         <div class="ni-icon" style="background: <?php echo $n['icon_bg']; ?>; color: <?php echo $n['icon_color']; ?>;">
@@ -568,13 +599,13 @@ if (isset($_GET['ajax_id'])) {
 
                 <!-- Footer Pagination -->
                 <div style="margin-top: auto; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
-                    <span>Showing 1 to 7 of 24 notices</span>
+                    <span>Showing <?php echo $start_item; ?> to <?php echo $end_item; ?> of <?php echo $total_items; ?> notices</span>
                     <div style="display: flex; gap: 8px;">
-                        <button class="page-btn"><i class='bx bx-chevron-left'></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn"><i class='bx bx-chevron-right'></i></button>
+                        <a href="?page=<?php echo max(1, $page - 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-left'></i></a>
+                        <?php for ($p = 1; $p <= $total_pages; $p++): ?>
+                            <a href="?page=<?php echo $p; ?>" class="page-btn <?php echo $p === $page ? 'active' : ''; ?>" style="text-decoration: none;"><?php echo $p; ?></a>
+                        <?php endfor; ?>
+                        <a href="?page=<?php echo min($total_pages, $page + 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
                     </div>
                 </div>
             </div>
