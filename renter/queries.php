@@ -556,20 +556,6 @@ $unread_count = 1; // Match mockup notification count
                 </form>
             </div>
 
-            <!-- Right: List -->
-            <div class="list-card">
-                <div class="list-header">
-                    <h3>My Queries</h3>
-                    <div style="display: flex; gap: 12px;">
-                        </div>
-                        <div class="qi-meta">
-                            <span class="date"><?php echo $date_formatted; ?></span>
-                            <span class="qid"><?php echo $qid_formatted; ?></span>
-                        </div>
-                        <button class="qi-action"><i class='bx bx-chevron-right'></i></button>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
 
                 <!-- Footer Pagination -->
                 <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
