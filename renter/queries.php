@@ -561,18 +561,6 @@ $unread_count = 1; // Match mockup notification count
                 <div class="list-header">
                     <h3>My Queries</h3>
                     <div style="display: flex; gap: 12px;">
-                        <select class="form-control" style="padding: 8px 36px 8px 16px; width: auto; font-weight: 600; font-size: 13px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;">
-                            <option>All Status</option>
-                            <option>Open</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
-                        </select>
-                            <h4><?php echo htmlspecialchars($q['subject']); ?></h4>
-                            <span class="category"><?php echo htmlspecialchars($q['category']); ?></span>
-                            <p><?php echo htmlspecialchars($q['message']); ?></p>
-                        </div>
-                        <div class="qi-status" style="background: <?php echo $s_bg; ?>; color: <?php echo $s_col; ?>;">
-                            <?php echo htmlspecialchars($q['ui_status']); ?>
                         </div>
                         <div class="qi-meta">
                             <span class="date"><?php echo $date_formatted; ?></span>
