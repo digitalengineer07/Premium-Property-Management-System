@@ -177,6 +177,7 @@ if (isset($_GET['ajax_id'])) {
             padding: 0;
             min-height: 100vh;
             color: var(--text-dark);
+            display: block !important;
         }
 
         .app-container { display: flex; min-height: 100vh; }

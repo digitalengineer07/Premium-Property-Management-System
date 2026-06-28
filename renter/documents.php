@@ -155,6 +155,7 @@ $pending_count = 2 - $verified_count;
             padding: 0;
             min-height: 100vh;
             color: var(--text-dark);
+            display: block !important;
         }
 
         .app-container { display: flex; min-height: 100vh; }
