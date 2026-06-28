@@ -289,13 +289,42 @@ if (isset($_GET['ajax_id'])) {
 
         /* Notices Layout */
         .notice-layout {
-            display: grid; grid-template-columns: minmax(0, 1.5fr) 420px; gap: 24px; align-items: stretch;
+            display: block;
         }
-        .list-card, .detail-card {
+        .list-card {
             background: var(--white); border: 1px solid var(--border);
             border-radius: 20px; padding: 24px; box-shadow: var(--card-shadow);
-            display: flex; flex-direction: column; min-height: 600px;
+            display: flex; flex-direction: column; min-height: 600px; width: 100%;
         }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.3s;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            opacity: 1; pointer-events: auto;
+        }
+        .detail-card {
+            background: var(--white); border: 1px solid var(--border);
+            border-radius: 20px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto;
+            transform: translateY(20px); transition: 0.3s; position: relative;
+            display: flex; flex-direction: column;
+        }
+        .modal-overlay.active .detail-card {
+            transform: translateY(0);
+        }
+        .modal-close {
+            position: absolute; top: 20px; right: 20px;
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; background: white; color: var(--text-gray); transition: 0.2s;
+        }
+        .modal-close:hover { background: #f8fafc; color: #ef4444; border-color: #ef4444; }
 
         .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; flex: 1; }
         .tab {
