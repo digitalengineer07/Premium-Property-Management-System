@@ -246,55 +246,31 @@ $documents = [
         </header>
 
         <!-- KPI Grid -->
-        <div class="kpi-grid-4">
+        <div class="kpi-grid-4" style="grid-template-columns: repeat(3, 1fr);">
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">
-                    <i class='bx bx-folder'></i>
-                </div>
+                <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);"><i class='bx bx-folder'></i></div>
                 <div class="kpi-info">
                     <h4>Total Documents</h4>
-                    <h2>18</h2>
+                    <h2>2</h2>
                     <p>All documents</p>
                 </div>
             </div>
             
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                    <i class='bx bx-check-shield'></i>
-                </div>
+                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-check-shield'></i></div>
                 <div class="kpi-info">
                     <h4>Verified Documents</h4>
-                    <h2>12</h2>
+                    <h2>2</h2>
                     <p>Approved & verified</p>
                 </div>
             </div>
 
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
-                    <i class='bx bx-time'></i>
-                </div>
+                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-time-five'></i></div>
                 <div class="kpi-info">
                     <h4>Pending Documents</h4>
-                    <h2>3</h2>
+                    <h2>0</h2>
                     <p>Awaiting verification</p>
-                </div>
-            </div>
-
-            <div class="kpi-card" style="align-items: start;">
-                <div class="kpi-icon" style="background: rgba(14, 165, 233, 0.1); color: #0EA5E9;">
-                    <i class='bx bx-cloud-upload'></i>
-                </div>
-                <div class="kpi-info" style="flex: 1; width: 100%;">
-                    <h4>Storage Used</h4>
-                    <h2>245 MB</h2>
-                    <p style="margin-bottom: 12px;">of 1 GB used</p>
-                    
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="flex: 1; height: 6px; background: rgba(98, 75, 255, 0.1); border-radius: 4px; overflow: hidden;">
-                            <div style="height: 100%; width: 24%; background: var(--primary-purple); border-radius: 4px;"></div>
-                        </div>
-                        <span style="font-size: 11px; font-weight: 700; color: var(--text-dark);">24%</span>
-                    </div>
                 </div>
             </div>
         </div>
