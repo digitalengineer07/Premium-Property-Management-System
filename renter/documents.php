@@ -447,8 +447,8 @@ $pending_count = 2 - $verified_count;
                             <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here or click to browse</h4>
                             <p style="margin: 0 0 32px 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
                             
-                            <input type="file" id="aadhar-upload" name="aadhar_file" accept=".pdf, .jpg, .jpeg, .png" style="display: none;" onchange="this.form.submit()">
-                            <button type="button" class="btn-primary" style="width: auto; min-width: 200px; padding: 14px 32px; font-size: 15px; text-align: center; display: inline-flex; justify-content: center; align-items: center;" onclick="document.getElementById('aadhar-upload').click();">Choose File</button>
+                            <input type="file" id="aadhar-upload" name="aadhar_file" accept=".pdf, .jpg, .jpeg, .png" style="display: none;" onchange="this.form.submit()" onclick="event.stopPropagation()">
+                            <button type="button" class="btn-primary" style="width: auto; min-width: 200px; padding: 14px 32px; font-size: 15px; text-align: center; display: inline-flex; justify-content: center; align-items: center;">Choose File</button>
                         </div>
                     </form>
                 </div>
