@@ -287,12 +287,20 @@ $pending_count = 2 - $verified_count;
         <!-- Top Header -->
         <header class="top-header">
             <div>
-                <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -1px; margin: 0 0 4px 0; color: var(--text-dark);">
-                    Documents
-                </h1>
-                <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">
-                    Manage and access all your important documents in one place.
-                </p>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, var(--primary-purple) 0%, #8B5CF6 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(98, 75, 255, 0.2);">
+                        <i class='bx bx-folder-open' style="font-size: 26px; color: #ffffff;"></i>
+                    </div>
+                    <div>
+                        <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; color: var(--text-dark); display: flex; align-items: center; gap: 10px;">
+                            My Documents
+                            <span style="font-size: 11px; font-weight: 700; background: rgba(16, 185, 129, 0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; letter-spacing: 0;">Secured</span>
+                        </h1>
+                        <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">
+                            View, download, and manage your important rental documents.
+                        </p>
+                    </div>
+                </div>
             </div>
             
             <div class="header-actions">
