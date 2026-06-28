@@ -200,15 +200,14 @@ $unread_count = 1; // Match mockup notification count
         .main-content {
             flex: 1;
             margin-left: 230px;
-            padding: 24px 32px;
+            padding: 32px 40px;
             max-width: calc(100% - 230px);
             box-sizing: border-box;
             overflow-y: auto;
             min-height: 100vh;
         }
         .top-header {
-            display: flex; justify-content: space-between; align-items: flex-end;
-            margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
         }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
