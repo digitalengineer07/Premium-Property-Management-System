@@ -111,7 +111,7 @@ $documents = [
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
 
         .main-content {
-            flex: 1; margin-left: 230px; padding: 32px 24px; max-width: calc(100% - 230px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
+            flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
         }
         
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
