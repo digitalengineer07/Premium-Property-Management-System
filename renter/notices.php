@@ -27,7 +27,7 @@ $notices = [
         'id' => 1,
         'title' => 'Maintenance Work in Building',
         'category' => 'Important',
-        'icon' => 'bx-megaphone',
+        'icon' => 'bxs-megaphone',
         'icon_bg' => 'rgba(98, 75, 255, 0.1)',
         'icon_color' => 'var(--primary-purple)',
         'badge_bg' => 'rgba(239, 68, 68, 0.1)',
@@ -42,7 +42,7 @@ $notices = [
         'id' => 2,
         'title' => 'Power Backup Maintenance',
         'category' => 'Maintenance',
-        'icon' => 'bx-bolt',
+        'icon' => 'bx-bolt-circle',
         'icon_bg' => 'rgba(245, 158, 11, 0.1)',
         'icon_color' => '#F59E0B',
         'badge_bg' => 'rgba(245, 158, 11, 0.1)',
@@ -454,7 +454,7 @@ if (isset($_GET['ajax_id'])) {
             <div class="kpi-card">
                 <div class="kpi-card-top">
                     <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">
-                        <i class='bx bx-megaphone'></i>
+                        <i class='bx bxs-megaphone'></i>
                     </div>
                     <div class="kpi-info">
                         <h4>Total Notices</h4>
