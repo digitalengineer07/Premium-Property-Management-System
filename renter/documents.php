@@ -117,6 +117,22 @@ $documents = [
             width: 230px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 24px 20px; position: fixed; height: 100vh; left: 0; top: 0; z-index: 100;
         }
+        .sidebar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; padding: 0 10px; }
+        .sidebar-logo {
+            width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6);
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 12px rgba(98,75,255,0.3);
+        }
+        .sidebar-brand h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
+        .sidebar-brand p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s;
+        }
+        .nav-item i { font-size: 20px; transition: all 0.2s; }
+        .nav-item:hover { background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); }
+        .nav-item:hover i { transform: scale(1.1); }
+        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
 
         .main-content {
             flex: 1; margin-left: 250px; padding: 32px 40px 32px 50px; max-width: calc(100% - 250px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
