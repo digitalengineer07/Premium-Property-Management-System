@@ -158,7 +158,7 @@ if($ann_q){
         .nav-item i { font-size: 18px; opacity: 0.8; }
         .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
-        .nav-item.active i { opacity: 1; } }
+        .nav-item.active i { opacity: 1; }
         
         .save-more-card { background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 20px; text-align: center; margin-top: 24px; }
         .save-more-card h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; }
