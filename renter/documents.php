@@ -90,13 +90,13 @@ $documents = [
 
         /* Sidebar Styles */
         .sidebar {
-            width: 260px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 24px 20px; position: fixed; height: 100vh; left: 0; top: 0; z-index: 100; box-sizing: border-box;
+            width: 230px; background: var(--sidebar-bg); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 24px 20px; position: fixed; height: 100vh; left: 0; top: 0; z-index: 100;
         }
         .sidebar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; padding: 0 10px; }
         .sidebar-logo {
             width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6);
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 12px rgba(98,75,255,0.3); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: 0 4px 12px rgba(98,75,255,0.3);
         }
         .sidebar-brand h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
         .sidebar-brand p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -111,7 +111,7 @@ $documents = [
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
 
         .main-content {
-            margin-left: 260px; padding: 32px 40px; width: calc(100% - 260px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
+            flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box; overflow-y: auto; min-height: 100vh;
         }
         
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
