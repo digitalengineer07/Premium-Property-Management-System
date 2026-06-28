@@ -21,17 +21,74 @@ mysqli_stmt_close($stmt);
 
 $unread_count = 2;
 
-// Mock Data for Design
-$documents = [
-    [
+// Handle Aadhar Upload
+$upload_msg = "";
+$upload_err = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
+    $file = $_FILES['aadhar_file'];
+    if ($file['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'pdf'];
+        if (in_array($ext, $allowed)) {
+            $upload_dir = '../uploads/documents/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+            
+            $new_name = 'aadhar_' . $user_id . '_' . time() . '.' . $ext;
+            $db_path = 'uploads/documents/' . $new_name;
+            
+            if (move_uploaded_file($file['tmp_name'], $upload_dir . $new_name)) {
+                $stmt = mysqli_prepare($conn, "UPDATE users SET aadhaar_file = ? WHERE id = ?");
+                mysqli_stmt_bind_param($stmt, "si", $db_path, $user_id);
+                mysqli_stmt_execute($stmt);
+                mysqli_stmt_close($stmt);
+                $upload_msg = "Identity Proof uploaded successfully!";
+            } else {
+                $upload_err = "Failed to save the file.";
+            }
+        } else {
+            $upload_err = "Invalid file type. Only JPG, PNG, and PDF are allowed.";
+        }
+    } else {
+        $upload_err = "An error occurred during upload.";
+    }
+}
+
+// Fetch User Documents
+$stmt = mysqli_prepare($conn, "SELECT aadhaar_file, agreement_document, agreement_upload_date FROM users WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$user_docs = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+mysqli_stmt_close($stmt);
+
+$documents = [];
+
+if (!empty($user_docs['aadhaar_file'])) {
+    $documents[] = [
         'name' => 'Aadhar Card', 'desc' => 'Identity Proof', 'category' => 'Identity', 'cat_color' => '#3B82F6', 'cat_bg' => 'rgba(59, 130, 246, 0.1)',
-        'date' => '12 May 2026', 'time' => '10:30 AM', 'status' => 'Verified', 'size' => '1.2 MB', 'icon' => 'bx-id-card'
-    ],
-    [
+        'date' => 'Uploaded', 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-id-card', 'url' => '../' . $user_docs['aadhaar_file']
+    ];
+} else {
+    $documents[] = [
+        'name' => 'Aadhar Card', 'desc' => 'Identity Proof', 'category' => 'Identity', 'cat_color' => '#3B82F6', 'cat_bg' => 'rgba(59, 130, 246, 0.1)',
+        'date' => '-', 'time' => '-', 'status' => 'Pending', 'size' => '-', 'icon' => 'bx-id-card', 'url' => ''
+    ];
+}
+
+if (!empty($user_docs['agreement_document'])) {
+    $date_str = date('d M Y', strtotime($user_docs['agreement_upload_date'] ?? 'now'));
+    $documents[] = [
         'name' => 'Agreement Copy', 'desc' => 'Rental Agreement', 'category' => 'Agreement', 'cat_color' => '#8B5CF6', 'cat_bg' => 'rgba(139, 92, 246, 0.1)',
-        'date' => '05 May 2026', 'time' => '04:15 PM', 'status' => 'Verified', 'size' => '2.4 MB', 'icon' => 'bx-file'
-    ]
-];
+        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-file', 'url' => '../' . $user_docs['agreement_document']
+    ];
+} else {
+    $documents[] = [
+        'name' => 'Agreement Copy', 'desc' => 'Rental Agreement', 'category' => 'Agreement', 'cat_color' => '#8B5CF6', 'cat_bg' => 'rgba(139, 92, 246, 0.1)',
+        'date' => '-', 'time' => '-', 'status' => 'Pending', 'size' => '-', 'icon' => 'bx-file', 'url' => ''
+    ];
+}
+
+$verified_count = (!empty($user_docs['aadhaar_file']) ? 1 : 0) + (!empty($user_docs['agreement_document']) ? 1 : 0);
+$pending_count = 2 - $verified_count;
 ?>
 <!doctype html>
 <html lang="en">
