@@ -383,21 +383,16 @@ $documents = [
             <!-- Right: Widgets -->
             <div>
                 <!-- Upload Widget -->
-                <div class="side-widget">
-                    <h3 style="margin: 0 0 16px 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Upload Identity Proof</h3>
-                    <div style="margin-bottom: 16px;">
-                        <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">Document Type</label>
-                        <select style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 13px; font-family: inherit; color: var(--text-dark); appearance: none; box-sizing: border-box; background: #F8FAFC url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>') no-repeat right 12px center; background-size: 14px;">
-                            <option value="aadhar">Aadhar Card</option>
-                        </select>
-                    </div>
-                    <div class="upload-area">
-                        <div class="upload-icon">
+                <div class="side-widget" style="text-align: center; padding: 40px 24px;">
+                    <h3 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 800; color: var(--text-dark);">Upload Identity Proof (Aadhar Card)</h3>
+                    
+                    <div class="upload-area" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; border-width: 2px; border-style: dashed;">
+                        <div class="upload-icon" style="width: 80px; height: 80px; font-size: 40px;">
                             <i class='bx bx-cloud-upload'></i>
                         </div>
-                        <h4 style="margin: 0 0 8px 0; font-size: 13px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here<br>or click to browse</h4>
-                        <p style="margin: 0 0 24px 0; font-size: 11px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
-                        <button class="btn-primary">Choose File</button>
+                        <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here or click to browse</h4>
+                        <p style="margin: 0 0 32px 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
+                        <button class="btn-primary" style="width: auto; min-width: 200px; padding: 14px 32px; font-size: 15px;">Choose File</button>
                     </div>
                 </div>
 
