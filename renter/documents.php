@@ -465,19 +465,21 @@ $documents = [
                     </div>
                 </div>
 
-                <!-- Tips Widget -->
-                <div class="side-widget" style="background: #FAFBFC;">
-                    <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
-                        <i class='bx bx-bulb' style="color: #F59E0B; font-size: 18px;"></i> Important Tips
-                    </h3>
-                    <ul class="tips-list">
-                        <li><i class='bx bx-check'></i> Upload clear and valid documents for quick verification.</li>
-                        <li><i class='bx bx-check'></i> Supported formats: PDF, JPG, PNG</li>
-                        <li><i class='bx bx-check'></i> Max file size: 10MB per document</li>
-                        <li><i class='bx bx-check'></i> Keep your documents up to date</li>
-                    </ul>
-                </div>
+                <!-- Tips Widget (Moved outside docs-layout) -->
             </div>
+        </div>
+
+        <!-- Full Width Tips Widget -->
+        <div class="side-widget" style="background: #FAFBFC; margin-top: 24px;">
+            <h3 style="margin: 0 0 16px 0; font-size: 15px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
+                <i class='bx bx-bulb' style="color: #F59E0B; font-size: 20px;"></i> Important Tips
+            </h3>
+            <ul class="tips-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                <li><i class='bx bx-check'></i> Upload clear and valid documents for quick verification.</li>
+                <li><i class='bx bx-check'></i> Supported formats: PDF, JPG, PNG</li>
+                <li><i class='bx bx-check'></i> Max file size: 10MB per document</li>
+                <li><i class='bx bx-check'></i> Keep your documents up to date</li>
+            </ul>
         </div>
     </main>
 </div>
