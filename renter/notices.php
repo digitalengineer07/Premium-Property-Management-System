@@ -344,7 +344,8 @@ if (isset($_GET['ajax_id'])) {
         }
         .modal-close:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; transform: rotate(90deg); }
 
-        .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; flex: 1; }
+        .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; overflow-y: hidden; flex: 1; scrollbar-width: none; -ms-overflow-style: none; }
+        .tabs::-webkit-scrollbar { display: none; }
         .tab {
             padding: 0 4px 12px 4px; font-size: 14px; font-weight: 700; color: var(--text-gray);
             cursor: pointer; position: relative; white-space: nowrap; transition: 0.2s;
@@ -609,8 +610,20 @@ if (isset($_GET['ajax_id'])) {
             });
     }
     
+    // Handle read state from localStorage
+    const readNotices = JSON.parse(localStorage.getItem('readNotices') || '[]');
+
     // Add click listeners to items
     document.querySelectorAll('.notice-item').forEach(item => {
+        const noticeId = item.dataset.id;
+        
+        // Hide badge on page load if already read
+        if (readNotices.includes(noticeId)) {
+            item.classList.remove('unread');
+            const newBadge = item.querySelector('.ni-new-badge');
+            if (newBadge) newBadge.style.display = 'none';
+        }
+        
         item.addEventListener('click', function() {
             document.querySelectorAll('.notice-item').forEach(i => i.classList.remove('active'));
             this.classList.add('active');
@@ -620,7 +633,13 @@ if (isset($_GET['ajax_id'])) {
             const newBadge = this.querySelector('.ni-new-badge');
             if (newBadge) newBadge.style.display = 'none';
             
-            loadDetails(this.dataset.id);
+            // Persist to localStorage
+            if (!readNotices.includes(noticeId)) {
+                readNotices.push(noticeId);
+                localStorage.setItem('readNotices', JSON.stringify(readNotices));
+            }
+            
+            loadDetails(noticeId);
         });
     });
 </script>
