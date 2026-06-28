@@ -310,21 +310,39 @@ if (isset($_GET['ajax_id'])) {
         }
         .detail-card {
             background: var(--white); border: 1px solid var(--border);
-            border-radius: 20px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto;
-            transform: translateY(20px); transition: 0.3s; position: relative;
+            border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            width: 700px; max-width: 92%; max-height: 85vh; overflow-y: auto;
+            transform: translateY(20px) scale(0.95); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
             display: flex; flex-direction: column;
         }
         .modal-overlay.active .detail-card {
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
+        
+        /* Modern Scrollbar for Modal */
+        .detail-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .detail-card::-webkit-scrollbar-track {
+            background: transparent;
+            margin: 10px 0;
+        }
+        .detail-card::-webkit-scrollbar-thumb {
+            background: rgba(100, 116, 139, 0.2);
+            border-radius: 10px;
+        }
+        .detail-card::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.4);
+        }
+
         .modal-close {
-            position: absolute; top: 20px; right: 20px;
-            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+            position: absolute; top: 24px; right: 24px;
+            width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; background: white; color: var(--text-gray); transition: 0.2s;
+            cursor: pointer; background: var(--bg-main); color: var(--text-gray); transition: 0.2s;
+            z-index: 10;
         }
-        .modal-close:hover { background: #f8fafc; color: #ef4444; border-color: #ef4444; }
+        .modal-close:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; transform: rotate(90deg); }
 
         .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; flex: 1; }
         .tab {
