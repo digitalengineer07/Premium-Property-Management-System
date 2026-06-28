@@ -574,18 +574,6 @@ $unread_count = 1; // Match mockup notification count
                 <div style="flex: 1;">
                     <?php 
                     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
-                    $limit = 5;
-                    $total_pages = $total_queries > 0 ? ceil($total_queries / $limit) : 1;
-                    if ($page > $total_pages) $page = $total_pages;
-                    $offset = ($page - 1) * $limit;
-                    
-                    if(empty($queries)) {
-                        } elseif ($st == 'resolved') {
-                            $s_bg = 'rgba(16, 185, 129, 0.1)'; $s_col = '#10B981';
-                        } else {
-                            $s_bg = 'rgba(239, 68, 68, 0.1)'; $s_col = '#EF4444'; // Closed
-                        }
-
                         $date_formatted = date('d M Y', strtotime($q['created_at']));
                         $qid_formatted = '#QRY-' . str_pad($q['id'], 4, '0', STR_PAD_LEFT);
                     ?>
