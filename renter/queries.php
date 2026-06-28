@@ -167,7 +167,7 @@ $unread_count = 1; // Match mockup notification count
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; overflow-y: hidden; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         .nav-item {
             display: flex; align-items: center; gap: 12px;
             padding: 12px 16px; border-radius: 12px;
@@ -203,8 +203,6 @@ $unread_count = 1; // Match mockup notification count
             padding: 32px 40px;
             max-width: calc(100% - 230px);
             box-sizing: border-box;
-            overflow-y: auto;
-            min-height: 100vh;
         }
         .top-header {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
