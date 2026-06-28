@@ -561,11 +561,12 @@ $unread_count = 1; // Match mockup notification count
                 <div class="list-header">
                     <h3>My Queries</h3>
                     <div style="display: flex; gap: 12px;">
-                        <select class="form-control" style="padding: 8px 36px 8px 16px; width: auto; font-weight: 600; font-size: 13px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;">
-                            <option>All Status</option>
-                            <option>Open</option>
-                            <option>Resolved</option>
-                            <option>Closed</option>
+                        <?php $current_filter = $_GET['status'] ?? 'All Status'; ?>
+                        <select class="form-control" onchange="window.location.href='?status=' + this.value;" style="padding: 8px 36px 8px 16px; width: auto; font-weight: 600; font-size: 13px; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;">
+                            <option value="All Status" <?php echo $current_filter === 'All Status' ? 'selected' : ''; ?>>All Status</option>
+                            <option value="Open" <?php echo $current_filter === 'Open' ? 'selected' : ''; ?>>Open</option>
+                            <option value="Resolved" <?php echo $current_filter === 'Resolved' ? 'selected' : ''; ?>>Resolved</option>
+                            <option value="Closed" <?php echo $current_filter === 'Closed' ? 'selected' : ''; ?>>Closed</option>
                         </select>
                         <button class="btn-outline" style="width: auto; padding: 8px 16px;"><i class='bx bx-filter'></i> Filter</button>
                     </div>
@@ -575,14 +576,25 @@ $unread_count = 1; // Match mockup notification count
                     <?php 
                     $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
                     $limit = 5;
-                    $total_pages = $total_queries > 0 ? ceil($total_queries / $limit) : 1;
+                    
+                    // Filter logic
+                    $filter_status = $_GET['status'] ?? 'All Status';
+                    $filtered_queries = [];
+                    foreach ($queries as $q) {
+                        if ($filter_status === 'All Status' || $q['ui_status'] === $filter_status) {
+                            $filtered_queries[] = $q;
+                        }
+                    }
+                    
+                    $total_filtered = count($filtered_queries);
+                    $total_pages = $total_filtered > 0 ? ceil($total_filtered / $limit) : 1;
                     if ($page > $total_pages) $page = $total_pages;
                     $offset = ($page - 1) * $limit;
                     
-                    if(empty($queries)) {
-                        echo '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No queries found.</div>';
+                    if(empty($filtered_queries)) {
+                        echo '<div style="padding: 40px; text-align: center; color: var(--text-gray);">No queries found for this status.</div>';
                     }
-                    $paginated_queries = array_slice($queries, $offset, $limit);
+                    $paginated_queries = array_slice($filtered_queries, $offset, $limit);
                     foreach($paginated_queries as $index => $q): 
                         // Map categories to icons and colors
                         $cat = strtolower($q['category']);
@@ -639,10 +651,10 @@ $unread_count = 1; // Match mockup notification count
                 <!-- Footer Pagination -->
                 <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                     <?php 
-                    $start_idx = $total_queries > 0 ? $offset + 1 : 0;
-                    $end_idx = min($offset + $limit, $total_queries);
+                    $start_idx = $total_filtered > 0 ? $offset + 1 : 0;
+                    $end_idx = min($offset + $limit, $total_filtered);
                     ?>
-                    <span>Showing <?php echo $start_idx; ?> to <?php echo $end_idx; ?> of <?php echo $total_queries; ?> queries</span>
+                    <span>Showing <?php echo $start_idx; ?> to <?php echo $end_idx; ?> of <?php echo $total_filtered; ?> queries</span>
                     <div style="display: flex; gap: 8px;">
                         <?php if($page > 1): ?>
                             <a href="?page=<?php echo $page - 1; ?>" class="page-btn"><i class='bx bx-chevron-left'></i></a>
