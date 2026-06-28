@@ -26,6 +26,8 @@ $upload_msg = "";
 $upload_err = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
     $file = $_FILES['aadhar_file'];
+    $is_ajax = isset($_POST['ajax_upload']);
+    
     if ($file['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg', 'jpeg', 'png', 'pdf'];
@@ -42,6 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
                 mysqli_stmt_execute($stmt);
                 mysqli_stmt_close($stmt);
                 $upload_msg = "Identity Proof uploaded successfully!";
+                
+                if ($is_ajax) {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'msg' => $upload_msg, 'url' => '../' . $db_path]);
+                    exit;
+                }
             } else {
                 $upload_err = "Failed to save the file.";
             }
@@ -50,6 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
         }
     } else {
         $upload_err = "An error occurred during upload.";
+    }
+    
+    if ($is_ajax) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'msg' => $upload_err]);
+        exit;
     }
 }
 
@@ -428,37 +442,39 @@ $pending_count = 2 - $verified_count;
             <!-- Right: Widgets -->
             <div>
                 <!-- Upload Widget -->
-                <?php if (empty($user_docs['aadhaar_file'])): ?>
-                <div class="side-widget" style="text-align: center; padding: 40px 24px;">
-                    <h3 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 800; color: var(--text-dark);">Upload Identity Proof (Aadhar Card)</h3>
-                    
-                    <?php if ($upload_msg): ?>
-                        <div style="padding: 12px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-size: 13px; font-weight: 600; margin-bottom: 20px;"><?php echo htmlspecialchars($upload_msg); ?></div>
-                    <?php endif; ?>
-                    <?php if ($upload_err): ?>
-                        <div style="padding: 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; font-size: 13px; font-weight: 600; margin-bottom: 20px;"><?php echo htmlspecialchars($upload_err); ?></div>
-                    <?php endif; ?>
+                <div id="upload-widget-container">
+                    <?php if (empty($user_docs['aadhaar_file'])): ?>
+                    <div class="side-widget" style="text-align: center; padding: 40px 24px;">
+                        <h3 style="margin: 0 0 24px 0; font-size: 18px; font-weight: 800; color: var(--text-dark);">Upload Identity Proof (Aadhar Card)</h3>
+                        
+                        <?php if ($upload_msg): ?>
+                            <div style="padding: 12px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-size: 13px; font-weight: 600; margin-bottom: 20px;"><?php echo htmlspecialchars($upload_msg); ?></div>
+                        <?php endif; ?>
+                        <?php if ($upload_err): ?>
+                            <div style="padding: 12px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; font-size: 13px; font-weight: 600; margin-bottom: 20px;"><?php echo htmlspecialchars($upload_err); ?></div>
+                        <?php endif; ?>
 
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        <div class="upload-area" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; border-width: 2px; border-style: dashed;" onclick="document.getElementById('aadhar-upload').click();">
-                            <div class="upload-icon" style="width: 80px; height: 80px; font-size: 40px;">
-                                <i class='bx bx-cloud-upload'></i>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            <div class="upload-area" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; border-width: 2px; border-style: dashed;" onclick="document.getElementById('aadhar-upload').click();">
+                                <div class="upload-icon" style="width: 80px; height: 80px; font-size: 40px;">
+                                    <i class='bx bx-cloud-upload'></i>
+                                </div>
+                                <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here or click to browse</h4>
+                                <p style="margin: 0 0 32px 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
+                                
+                                <input type="file" id="aadhar-upload" name="aadhar_file" accept=".pdf, .jpg, .jpeg, .png" style="display: none;" onchange="handleAjaxUpload(this)" onclick="event.stopPropagation()">
+                                <button type="button" id="choose-file-btn" class="btn-primary" style="width: auto; min-width: 200px; padding: 14px 32px; font-size: 15px; text-align: center; display: inline-flex; justify-content: center; align-items: center;">Choose File</button>
                             </div>
-                            <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 700; color: var(--text-dark);">Drag and drop your Aadhar Card here or click to browse</h4>
-                            <p style="margin: 0 0 32px 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">Supports: PDF, JPG, PNG (Max. 10MB)</p>
-                            
-                            <input type="file" id="aadhar-upload" name="aadhar_file" accept=".pdf, .jpg, .jpeg, .png" style="display: none;" onchange="this.form.submit()" onclick="event.stopPropagation()">
-                            <button type="button" class="btn-primary" style="width: auto; min-width: 200px; padding: 14px 32px; font-size: 15px; text-align: center; display: inline-flex; justify-content: center; align-items: center;">Choose File</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                    <?php else: ?>
+                    <div class="side-widget" style="text-align: center; padding: 60px 24px;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10B981; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px;"><i class='bx bx-check-shield'></i></div>
+                        <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 800; color: var(--text-dark);">Identity Verified</h3>
+                        <p style="margin: 0; font-size: 14px; font-weight: 500; color: var(--text-gray); line-height: 1.6;">Your Aadhar Card has been securely uploaded and verified.<br>You cannot overwrite a verified document.</p>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php else: ?>
-                <div class="side-widget" style="text-align: center; padding: 60px 24px;">
-                    <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10B981; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px;"><i class='bx bx-check-shield'></i></div>
-                    <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 800; color: var(--text-dark);">Identity Verified</h3>
-                    <p style="margin: 0; font-size: 14px; font-weight: 500; color: var(--text-gray); line-height: 1.6;">Your Aadhar Card has been securely uploaded and verified.<br>You cannot overwrite a verified document.</p>
-                </div>
-                <?php endif; ?>
 
                 <!-- Tips Widget (Moved outside docs-layout) -->
             </div>
@@ -478,6 +494,81 @@ $pending_count = 2 - $verified_count;
         </div>
     </main>
 </div>
+
+<script>
+    function handleAjaxUpload(input) {
+        if(!input.files.length) return;
+        
+        let formData = new FormData();
+        formData.append('aadhar_file', input.files[0]);
+        formData.append('ajax_upload', '1');
+        
+        let btn = document.getElementById('choose-file-btn');
+        let originalText = btn.innerHTML;
+        btn.innerHTML = "<i class='bx bx-loader bx-spin' style='margin-right: 8px;'></i> Uploading...";
+        btn.disabled = true;
+        
+        fetch(window.location.href, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                // Update Widget UI Seamlessly
+                document.getElementById('upload-widget-container').innerHTML = `
+                    <div class="side-widget" style="text-align: center; padding: 60px 24px; animation: fadeIn 0.5s;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10B981; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px;"><i class='bx bx-check-shield'></i></div>
+                        <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 800; color: var(--text-dark);">Identity Verified</h3>
+                        <p style="margin: 0; font-size: 14px; font-weight: 500; color: var(--text-gray); line-height: 1.6;">Your Aadhar Card has been securely uploaded and verified.<br>You cannot overwrite a verified document.</p>
+                    </div>
+                `;
+                
+                // Update KPI Cards
+                let kpiH2s = document.querySelectorAll('.kpi-card h2');
+                if(kpiH2s.length >= 3) {
+                    kpiH2s[1].innerText = parseInt(kpiH2s[1].innerText) + 1; // Verified
+                    kpiH2s[2].innerText = parseInt(kpiH2s[2].innerText) - 1; // Pending
+                }
+                
+                // Update Table Row
+                let tableRows = document.querySelectorAll('.docs-table tbody tr');
+                for (let tr of tableRows) {
+                    if(tr.innerText.includes('Aadhar Card')) {
+                        let cells = tr.querySelectorAll('td');
+                        if (cells.length >= 6) {
+                            cells[2].innerHTML = `<div style="font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px;">Uploaded</div><div style="font-size: 11px; font-weight: 500; color: var(--text-gray);"></div>`;
+                            cells[3].innerHTML = `<span class="status-badge status-Verified"><i class='bx bx-check-circle'></i> Verified</span>`;
+                            cells[4].innerHTML = `<span style="font-size: 12px; font-weight: 600; color: var(--text-dark);">Available</span>`;
+                            cells[5].innerHTML = `
+                                <div style="display: flex;">
+                                    <a href="${data.url}" target="_blank" class="action-btn" style="text-decoration: none;" title="View"><i class='bx bx-show'></i></a>
+                                    <a href="${data.url}" download class="action-btn" style="text-decoration: none;" title="Download"><i class='bx bx-download'></i></a>
+                                </div>
+                            `;
+                            tr.style.animation = "fadeIn 1s";
+                        }
+                    }
+                }
+                
+                // Add simple fade in animation to page
+                let style = document.createElement('style');
+                style.innerHTML = '@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }';
+                document.head.appendChild(style);
+                
+            } else {
+                alert("Upload Error: " + data.msg);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert("Upload failed due to network error.");
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        });
+    }
+</script>
 
 </body>
 </html>
