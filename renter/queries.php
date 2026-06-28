@@ -667,5 +667,35 @@ $unread_count = 1; // Match mockup notification count
         </div>
     </main>
 </div>
+<script>
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.page-btn');
+    if (btn && btn.tagName === 'A') {
+        e.preventDefault();
+        const url = btn.href;
+        
+        // Add a subtle opacity to indicate loading
+        const listCard = document.querySelector('.list-card');
+        listCard.style.opacity = '0.5';
+        listCard.style.pointerEvents = 'none';
+        
+        fetch(url)
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newList = doc.querySelector('.list-card').innerHTML;
+                listCard.innerHTML = newList;
+                
+                // Restore opacity
+                listCard.style.opacity = '1';
+                listCard.style.pointerEvents = 'auto';
+                
+                // Update URL without scrolling
+                window.history.pushState({path: url}, '', url);
+            });
+    }
+});
+</script>
 </body>
 </html>
