@@ -556,31 +556,37 @@ if (isset($_GET['ajax_id'])) {
                     </div>
                 </div>
             </div>
-            
-            <!-- Right: Details -->
-            <div class="detail-card" id="detail-pane">
-                <!-- Loaded via AJAX -->
-            </div>
         </div>
     </main>
 </div>
 
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="notice-modal" onclick="if(event.target===this) closeModal()">
+    <div class="detail-card" onclick="event.stopPropagation()">
+        <div class="modal-close" onclick="closeModal()"><i class='bx bx-x' style="font-size: 24px;"></i></div>
+        <div id="detail-pane" style="display: flex; flex-direction: column; flex: 1;">
+            <!-- Loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
 <script>
-    // Load first notice initially
+    const modal = document.getElementById('notice-modal');
     const detailPane = document.getElementById('detail-pane');
     
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+    
     function loadDetails(id) {
-        detailPane.style.opacity = '0.5';
+        detailPane.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class=\'bx bx-loader-alt bx-spin\' style="font-size: 32px;"></i></div>';
+        modal.classList.add('active');
         fetch('notices.php?ajax_id=' + id)
             .then(res => res.text())
             .then(html => {
                 detailPane.innerHTML = html;
-                detailPane.style.opacity = '1';
             });
     }
-    
-    // Initialize
-    loadDetails(1);
     
     // Add click listeners to items
     document.querySelectorAll('.notice-item').forEach(item => {
