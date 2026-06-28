@@ -211,18 +211,26 @@ $unread_count = 1; // Match mockup notification count
             margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
         }
         .header-actions { display: flex; align-items: center; gap: 16px; }
-        .icon-btn {
-            width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--border);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: var(--text-gray); cursor: pointer;
-            background: var(--white); transition: all 0.2s; position: relative;
+        .header-actions .icon-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
+            position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
-        .icon-btn:hover { color: var(--primary-purple); border-color: rgba(98, 75, 255, 0.2); }
+        .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+        .btn-outline {
+            border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
+            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            white-space: nowrap;
+        }
+        .btn-outline:hover { background: rgba(98, 75, 255, 0.02); }
         .user-profile {
-            display: flex; align-items: center; gap: 10px;
-            padding: 6px 14px 6px 6px; border-radius: 24px;
-            border: 1px solid var(--border); background: var(--white); cursor: pointer;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
         }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-info span:first-child { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info span:last-child { font-size: 11px; color: var(--text-gray); margin: 0; }
         
         /* KPI Grid */
         .kpi-grid-4 {
@@ -416,12 +424,12 @@ $unread_count = 1; // Match mockup notification count
                 <a href="#" class="btn-outline" style="width: auto; padding: 10px 20px; border-radius: 12px;"><i class='bx bx-help-circle'></i> Help & Support</a>
                 
                 <div class="user-profile">
-                    <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-purple); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">
+                    <div class="user-avatar">
                         <?php echo strtoupper(substr($display_name, 0, 2)); ?>
                     </div>
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-size: 14px; font-weight: 700; color: var(--text-dark);"><?php echo htmlspecialchars($display_name); ?></span>
-                        <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Room <?php echo htmlspecialchars($_SESSION['room_no'] ?? '201'); ?></span>
+                    <div class="user-info">
+                        <span><?php echo htmlspecialchars($display_name); ?></span>
+                        <span>Room <?php echo htmlspecialchars($_SESSION['room_no'] ?? '201'); ?></span>
                     </div>
                     <i class='bx bx-chevron-down' style="color: var(--text-gray); margin-left: 8px;"></i>
                 </div>
