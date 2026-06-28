@@ -197,7 +197,27 @@ $documents = [
 <body>
 
 <div class="app-container">
-    <?php include "sidebar.php"; ?>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><i class='bx bx-home-heart'></i></div>
+            <div class="sidebar-brand">
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
+                <p>Resident Dashboard</p>
+            </div>
+        </div>
+        <nav class="nav-menu">
+            <a href="dashboard.php" class="nav-item"><i class='bx bx-grid-alt'></i><span>Dashboard</span></a>
+            <a href="my-payments.php" class="nav-item"><i class='bx bx-wallet'></i><span>My Payments</span></a>
+            <a href="electricity-record.php" class="nav-item"><i class='bx bx-bolt-circle'></i><span>Electricity Record</span></a>
+            <a href="my-bills.php" class="nav-item"><i class='bx bx-receipt'></i><span>My Bills</span></a>
+            <a href="queries.php" class="nav-item"><i class='bx bx-message-square-dots'></i><span>Raise Query</span></a>
+            <a href="notices.php" class="nav-item"><i class='bx bx-bell'></i><span>Notices</span></a>
+            <a href="documents.php" class="nav-item active"><i class='bx bx-folder'></i><span>Documents</span></a>
+            <a href="profile.php" class="nav-item"><i class='bx bx-user-circle'></i><span>Profile Settings</span></a>
+            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;"><i class='bx bx-log-out'></i><span>Logout</span></a>
+        </nav>
+    </aside>
 
     <main class="main-content">
         <!-- Top Header -->
