@@ -281,16 +281,6 @@ if($ann_q){
                 <span>Profile Settings</span>
             </a>
         </nav>
-        
-        <div class="save-more-card">
-            <h4>Save More</h4>
-            <p>Conserve electricity and save on your monthly bills.</p>
-            <!-- Using an illustration approximation with boxicons -->
-            <div style="font-size: 64px; color: #F59E0B; margin-bottom: 16px;">
-                <i class='bx bx-bulb'></i>
-            </div>
-            <a href="#" class="btn-tips"><i class='bx bx-bulb'></i> Tips to Save Electricity</a>
-        </div>
     </aside>
 
     <!-- Main Content -->
