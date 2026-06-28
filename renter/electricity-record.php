@@ -119,16 +119,35 @@ if($ann_q){
             width: 100%;
             min-height: 100vh;
         }
-
-        /* Sidebar Overrides & Additions */
+        /* Sidebar Styles */
         .sidebar {
-            width: 230px; background: white; padding: 24px 20px; border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; height: 100vh; position: fixed; left: 0; top: 0; z-index: 100; -ms-overflow-style: none; scrollbar-width: none; }
-        .sidebar::-webkit-scrollbar { display: none; }
-        .sidebar-header { margin-bottom: 40px; display: flex; align-items: center; gap: 12px; }
-        .sidebar-logo { width: 40px; height: 40px; background: #1E293B; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; font-weight: 800; }
-        .sidebar-brand h2 { font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
+            width: 230px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .sidebar-logo {
+            width: 40px; height: 40px;
+            background: #1E293B; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px; font-weight: 800;
+        }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
-        
+
         .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         .nav-item {
             display: flex; align-items: center; gap: 12px;
@@ -139,7 +158,7 @@ if($ann_q){
         .nav-item i { font-size: 18px; opacity: 0.8; }
         .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
-        .nav-item.active i { opacity: 1; }
+        .nav-item.active i { opacity: 1; } }
         
         .save-more-card { background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 20px; text-align: center; margin-top: 24px; }
         .save-more-card h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; }
