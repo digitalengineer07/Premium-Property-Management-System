@@ -216,6 +216,13 @@ $unread_count = 1; // Match mockup notification count
             position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+        .page-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: white;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 14px; font-weight: 600;
+            cursor: pointer; text-decoration: none; transition: 0.2s;
+        }
+        .page-btn:hover:not(:disabled) { background: #f8fafc; border-color: rgba(98, 75, 255, 0.3); color: var(--primary-purple); }
+        .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
         .btn-outline {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
             padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
