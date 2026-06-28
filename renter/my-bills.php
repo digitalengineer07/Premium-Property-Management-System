@@ -457,16 +457,18 @@ $unread_count = count($unread_notifications);
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         .btn-outline-support {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
-            padding: 8px 12px; border-radius: 20px; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         .user-profile-pill {
-            display: flex; align-items: center; gap: 8px; cursor: pointer; padding-left: 8px;
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
         }
-        .user-avatar { width: 34px; height: 34px; background: var(--primary-purple); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; white-space: nowrap; }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; white-space: nowrap; }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info { display: flex; flex-direction: column; }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
 
         /* Red Reminder Banner */
         .reminder-banner {
