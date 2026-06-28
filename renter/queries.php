@@ -643,23 +643,23 @@ $unread_count = 1; // Match mockup notification count
                     <span>Showing <?php echo $start_idx; ?> to <?php echo $end_idx; ?> of <?php echo $total_queries; ?> queries</span>
                     <div style="display: flex; gap: 8px;">
                         <?php if($page > 1): ?>
-                            <a href="?page=<?php echo $page - 1; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><i class='bx bx-chevron-left'></i></a>
+                            <a href="?page=<?php echo $page - 1; ?>" class="page-btn"><i class='bx bx-chevron-left'></i></a>
                         <?php else: ?>
-                            <button class="icon-btn" style="width: 32px; height: 32px; opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-left'></i></button>
+                            <button class="page-btn" style="opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-left'></i></button>
                         <?php endif; ?>
                         
                         <?php for($i = 1; $i <= $total_pages; $i++): ?>
                             <?php if($i == $page): ?>
-                                <button class="icon-btn" style="width: 32px; height: 32px; background: var(--primary-purple); color: white; border-color: var(--primary-purple);"><?php echo $i; ?></button>
+                                <button class="page-btn active"><?php echo $i; ?></button>
                             <?php else: ?>
-                                <a href="?page=<?php echo $i; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><?php echo $i; ?></a>
+                                <a href="?page=<?php echo $i; ?>" class="page-btn"><?php echo $i; ?></a>
                             <?php endif; ?>
                         <?php endfor; ?>
                         
                         <?php if($page < $total_pages): ?>
-                            <a href="?page=<?php echo $page + 1; ?>" class="icon-btn" style="width: 32px; height: 32px; text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
+                            <a href="?page=<?php echo $page + 1; ?>" class="page-btn"><i class='bx bx-chevron-right'></i></a>
                         <?php else: ?>
-                            <button class="icon-btn" style="width: 32px; height: 32px; opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-right'></i></button>
+                            <button class="page-btn" style="opacity: 0.5; cursor: not-allowed;" disabled><i class='bx bx-chevron-right'></i></button>
                         <?php endif; ?>
                     </div>
                 </div>
