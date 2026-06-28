@@ -309,10 +309,10 @@ if($ann_q){
                 <div class="icon-btn">
                     <i class='bx bx-moon'></i>
                 </div>
-                <a href="#" class="btn-support">
+                <a href="#" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
-                <div class="user-profile">
+                <div class="user-profile-pill">
                     <div class="user-avatar">
                         <?php echo strtoupper(substr($user['name'], 0, 2)); ?>
                     </div>
