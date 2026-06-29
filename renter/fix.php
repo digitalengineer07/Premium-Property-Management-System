@@ -1,1 +1,5 @@
-<?php $f="c:/xampp/htdocs/renter-system/renter/dashboard.php"; file_put_contents($f, preg_replace("/<h2[^>]*>.*?Rent History<\/h2>/i", "<h2 style=\"font-size: 18px; font-weight: 700;\">?? Rent History</h2>", file_get_contents($f)));
+<?php
+$c = file_get_contents('payment_modal.php');
+$c = mb_convert_encoding($c, 'UTF-8', 'UTF-16LE');
+file_put_contents('payment_modal.php', $c);
+echo "Fixed encoding.";
