@@ -269,7 +269,7 @@ $unread_count = 1; // Match mockup notification count
 
         /* 2-Column Layout */
         .query-layout {
-            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: stretch;
+            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: start;
         }
 
         /* Form Card */
