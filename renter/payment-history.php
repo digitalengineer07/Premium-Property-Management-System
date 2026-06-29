@@ -977,7 +977,7 @@ $unread_count = count($unread_notifications);
                 </div>
             </div>
             
-            <h4 style="margin-top: 24px; margin-bottom: 16px; font-size: 15px; color: var(--text-dark);">Transaction History</h4>
+            <h4 style="margin-top: 24px; margin-bottom: 16px; margin-left: 24px; font-size: 15px; color: var(--text-dark);">Transaction History</h4>
             
             <div style="overflow-x: auto;">
                 <table class="payments-table">
