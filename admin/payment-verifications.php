@@ -29,14 +29,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
             if ($action == 'approve') {
                 mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
                 
-                // If this payment was for a bill, update the bill status to Paid
+                // If this payment was for a bill, update the bill status
                 if ($notif['bill_id']) {
                     $bid = (int)$notif['bill_id'];
                     if ($notif['bill_type'] == 'rent') {
                         mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE id=$bid");
+                    } elseif ($notif['bill_type'] == 'elec_rent') {
+                        mysqli_query($conn, "UPDATE electricity SET rent_status='Paid' WHERE id=$bid");
+                        // If electricity part is also paid or zero, mark overall status Paid, else Partial
+                        $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT amount, elec_status FROM electricity WHERE id=$bid"));
+                        if ($ck && ($ck['elec_status'] == 'Paid' || (float)$ck['amount'] <= 0)) {
+                            mysqli_query($conn, "UPDATE electricity SET status='Paid' WHERE id=$bid");
+                        } else {
+                            mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
+                        }
                     } elseif ($notif['bill_type'] == 'electricity') {
-                        mysqli_query($conn, "UPDATE electricity SET status='Paid' WHERE id=$bid");
+                        mysqli_query($conn, "UPDATE electricity SET elec_status='Paid' WHERE id=$bid");
+                        // If rent part is also paid or zero, mark overall status Paid, else Partial
+                        $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rent_amount, maintenance, dues, rent_status FROM electricity WHERE id=$bid"));
+                        if ($ck && ($ck['rent_status'] == 'Paid' || ((float)$ck['rent_amount'] + (float)$ck['maintenance'] + (float)$ck['dues']) <= 0)) {
+                            mysqli_query($conn, "UPDATE electricity SET status='Paid' WHERE id=$bid");
+                        } else {
+                            mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
+                        }
                     }
+                } elseif ($notif['bill_type'] == 'total') {
+                    $uid = (int)$notif['user_id'];
+                    mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id=$uid AND status!='Paid'");
+                    mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id=$uid AND status!='Paid'");
                 }
                 
                 $success = "Payment #{$notif['transaction_id']} approved successfully.";
