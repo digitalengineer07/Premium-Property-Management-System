@@ -537,14 +537,32 @@ $unread_count = 1; // Match mockup notification count
         </div>
 
         <?php if($success): ?>
-            <div style="padding: 16px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <div id="successMsgAlert" style="padding: 16px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: opacity 0.5s ease-out;">
                 <i class='bx bx-check-circle' style="font-size: 20px;"></i> <?php echo $success; ?>
             </div>
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('successMsgAlert');
+                    if(el) {
+                        el.style.opacity = '0';
+                        setTimeout(() => el.style.display = 'none', 500);
+                    }
+                }, 4000);
+            </script>
         <?php endif; ?>
         <?php if($error): ?>
-            <div style="padding: 16px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <div id="errorMsgAlert" style="padding: 16px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: opacity 0.5s ease-out;">
                 <i class='bx bx-error-circle' style="font-size: 20px;"></i> <?php echo $error; ?>
             </div>
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('errorMsgAlert');
+                    if(el) {
+                        el.style.opacity = '0';
+                        setTimeout(() => el.style.display = 'none', 500);
+                    }
+                }, 4000);
+            </script>
         <?php endif; ?>
 
         <!-- 2-Column Layout -->
