@@ -983,24 +983,24 @@ $unread_count = count($unread_notifications);
                     <div id="bdIcon" style="width: 48px; height: 48px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-home'></i>
                     </div>
-                    <div>
-                        <h4 id="bdTitle" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">Rent for February 2026</h4>
-                        <p id="bdSubtitle" style="margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500; white-space: nowrap;">Room 201</p>
+                    <div style="flex: 1; min-width: 0;">
+                        <h4 id="bdTitle" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rent for February 2026</h4>
+                        <p id="bdSubtitle" style="margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room 201</p>
                     </div>
-                    <div style="margin-left: auto; text-align: right;">
+                    <div style="margin-left: auto; text-align: right; flex-shrink: 0;">
                         <p style="margin: 0 0 4px 0; font-size: 11px; color: var(--text-gray);">Due Date</p>
                         <h4 id="bdDueDate" style="margin: 0; font-size: 13px; font-weight: 700; color: #FF4B6B;">05 Feb 2026</h4>
                     </div>
                 </div>
 
-                <div style="background: #F8F9FA; border-radius: 16px; padding: 20px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; border: 1px solid rgba(0,0,0,0.03);">
+                <div style="background: #F8F9FA; border-radius: 16px; padding: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid rgba(0,0,0,0.03);">
                     <div style="min-width: 0;">
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Total Amount</p>
-                        <h2 id="bdAmount" style="margin: 0; font-size: 24px; font-weight: 800; color: #FF4B6B; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹8,000.00</h2>
+                        <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: #FF4B6B; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹8,000.00</h2>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
-                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
-                        <button id="bdBtnDownload" style="background: white; color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
+                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
+                        <button id="bdBtnDownload" style="background: white; color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
 
