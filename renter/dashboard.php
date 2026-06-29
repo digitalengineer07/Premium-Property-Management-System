@@ -25,23 +25,6 @@ $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
 $room_no = $user['room_no'] ?? 'N/A';
 
 /* Calculate totals */
-// 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$r1 = mysqli_stmt_get_result($stmt);
-$r1a = mysqli_fetch_assoc($r1);
-$pure_rent_due = (float)($r1a['total'] ?? 0);
-mysqli_stmt_close($stmt);
-
-            break;
-        }
-    }
-}
-
-// Handle Rejection Dismissal
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dismiss_rejection'])) {
-    $dismiss_id = (int)$_POST['dismiss_id'];
     @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
     mysqli_query($conn, "UPDATE payment_notifications SET is_dismissed = 1 WHERE id = $dismiss_id AND user_id = $user_id");
     header("Location: dashboard.php");
