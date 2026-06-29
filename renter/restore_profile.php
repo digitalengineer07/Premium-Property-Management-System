@@ -1,10 +1,7 @@
 <?php
 $c = file_get_contents("profile.php");
-$pos = strpos($c, "\$user = mysqli_fetch_assoc(\$res);\nmysqli_stmt_close(\$stmt);");
-if ($pos !== false) {
-    $pos_end = strpos($c, "(function() {", $pos);
-    if ($pos_end !== false) {
-        $replacement = "\$user = mysqli_fetch_assoc(\$res);
+$pattern = '/\$user\s*=\s*mysqli_fetch_assoc\(\$res\);\s*mysqli_stmt_close\(\$stmt\);.*?\(function\(\)\s*\{/s';
+$replacement = "\$user = mysqli_fetch_assoc(\$res);
 mysqli_stmt_close(\$stmt);
 
 /* Fetch electricity records for this user, recent first */
@@ -30,10 +27,9 @@ mysqli_stmt_close(\$elec_q);
     <!-- Immediate Theme Setter to prevent flashes -->
     <script>
         window.HOUSE_NAME = <?php echo json_encode(HOUSE_NAME); ?>;
-        ";
-        $c = substr_replace($c, $replacement, $pos, $pos_end - $pos);
-        file_put_contents("profile.php", $c);
-        echo "Successfully restored profile.php\n";
-    }
-}
+        (function() {";
+
+$c = preg_replace($pattern, $replacement, $c, 1);
+file_put_contents("profile.php", $c);
+echo "Successfully restored profile.php\n";
 ?>
