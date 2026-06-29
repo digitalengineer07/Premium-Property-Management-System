@@ -65,6 +65,33 @@ if ($res) {
     }
 }
 
+// Calculate KPIs
+$total_notices = count($notices);
+$new_notices = 0;
+$this_month_notices = 0;
+$important_notices = 0;
+
+$now = time();
+$current_month = date('Y-m');
+$current_month_name = date('M Y');
+
+foreach ($notices as $n) {
+    // $n['date'] is in 'd M Y' format, which strtotime handles well
+    $ts = strtotime($n['date']);
+    if (($now - $ts) <= 7 * 86400) {
+        $new_notices++;
+    }
+    if (date('Y-m', $ts) === $current_month) {
+        $this_month_notices++;
+    }
+    if ($n['category'] === 'Important') {
+        $important_notices++;
+    }
+}
+
+// Update unread_count header badge to reflect new notices
+$unread_count = $new_notices;
+
 // Pagination logic
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $items_per_page = 7;
@@ -521,7 +548,7 @@ if (isset($_GET['ajax_id'])) {
                     </div>
                     <div class="kpi-info">
                         <h4>Total Notices</h4>
-                        <h2>24</h2>
+                        <h2><?php echo $total_notices; ?></h2>
                     </div>
                 </div>
                 <div class="kpi-badge-wrap">
@@ -536,11 +563,11 @@ if (isset($_GET['ajax_id'])) {
                     </div>
                     <div class="kpi-info">
                         <h4>New Notices</h4>
-                        <h2>5</h2>
+                        <h2><?php echo $new_notices; ?></h2>
                     </div>
                 </div>
                 <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Unread</span>
+                    <span class="kpi-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Last 7 Days</span>
                 </div>
             </div>
 
@@ -551,11 +578,11 @@ if (isset($_GET['ajax_id'])) {
                     </div>
                     <div class="kpi-info">
                         <h4>This Month</h4>
-                        <h2>6</h2>
+                        <h2><?php echo $this_month_notices; ?></h2>
                     </div>
                 </div>
                 <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">May 2026</span>
+                    <span class="kpi-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><?php echo $current_month_name; ?></span>
                 </div>
             </div>
 
@@ -566,7 +593,7 @@ if (isset($_GET['ajax_id'])) {
                     </div>
                     <div class="kpi-info">
                         <h4>Important Notices</h4>
-                        <h2>7</h2>
+                        <h2><?php echo $important_notices; ?></h2>
                     </div>
                 </div>
                 <div class="kpi-badge-wrap">
