@@ -767,201 +767,6 @@ if (isset($_GET['ajax_id'])) {
         modal.classList.add('active');
         fetch('notices.php?ajax_id=' + id)
             .then(res => res.text())
-    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
-    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
-    
-    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
-?>
-<?php if (!empty($real_pic)): ?>
-    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-<?php else: ?>
-    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
-<?php endif; ?>
-</div>
-                        <div class="user-info">
-                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
-                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $usr['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
-                        </div>
-                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
-                    </div>
-                    
-                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
-                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
-                        </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
-                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- KPI Grid -->
-        <div class="kpi-grid-4">
-            <div class="kpi-card">
-                <div class="kpi-card-top">
-                    <div class="kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">
-                        <i class='bx bxs-megaphone'></i>
-                    </div>
-                    <div class="kpi-info">
-                        <h4>Total Notices</h4>
-                        <h2><?php echo $total_notices; ?></h2>
-                    </div>
-                </div>
-                <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple);">All time</span>
-                </div>
-            </div>
-            
-            <div class="kpi-card">
-                <div class="kpi-card-top">
-                    <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                        <i class='bx bx-file'></i>
-                    </div>
-                    <div class="kpi-info">
-                        <h4>New Notices</h4>
-                        <h2><?php echo $new_notices; ?></h2>
-                    </div>
-                </div>
-                <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Last 7 Days</span>
-                </div>
-            </div>
-
-            <div class="kpi-card">
-                <div class="kpi-card-top">
-                    <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
-                        <i class='bx bx-calendar'></i>
-                    </div>
-                    <div class="kpi-info">
-                        <h4>This Month</h4>
-                        <h2><?php echo $this_month_notices; ?></h2>
-                    </div>
-                </div>
-                <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><?php echo $current_month_name; ?></span>
-                </div>
-            </div>
-
-            <div class="kpi-card">
-                <div class="kpi-card-top">
-                    <div class="kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                        <i class='bx bx-map-pin'></i>
-                    </div>
-                    <div class="kpi-info">
-                        <h4>Important Notices</h4>
-                        <h2><?php echo $important_notices; ?></h2>
-                    </div>
-                </div>
-                <div class="kpi-badge-wrap">
-                    <span class="kpi-badge" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">High Priority</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2-Column Layout -->
-        <div class="notice-layout">
-            <!-- Left: List -->
-            <div class="list-card">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                    <div class="tabs">
-                        <div class="tab active">All Notices</div>
-                        <div class="tab">Important</div>
-                        <div class="tab">General</div>
-                        <div class="tab">Maintenance</div>
-                        <div class="tab">Events</div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 12px; margin-left: 16px;">
-                        <select style="padding: 8px 32px 8px 16px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 13px; font-family: inherit; color: var(--text-dark); appearance: none; background: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>') no-repeat right 10px center; background-size: 14px;">
-                            <option>All Categories</option>
-                        </select>
-                        <button class="btn-outline" style="padding: 8px 16px; border-radius: 8px;"><i class='bx bx-filter'></i> Filter</button>
-                    </div>
-                </div>
-
-                <div style="flex: 1;" id="notice-list-container">
-                    <?php if (count($paginated_notices) > 0): ?>
-                        <?php foreach($paginated_notices as $i => $n): ?>
-                    <div class="notice-item <?php echo $i===0 ? 'active' : ''; ?> <?php echo $n['is_new'] ? 'unread' : ''; ?>" data-id="<?php echo $n['id']; ?>">
-                        <div class="ni-dot"></div>
-                        <div class="ni-icon" style="background: <?php echo $n['icon_bg']; ?>; color: <?php echo $n['icon_color']; ?>;">
-                            <i class='bx <?php echo $n['icon']; ?>'></i>
-                        </div>
-                        <div class="ni-details">
-                            <div class="ni-header">
-                                <h4><?php echo htmlspecialchars($n['title']); ?></h4>
-                                <span class="ni-badge" style="background: <?php echo $n['badge_bg']; ?>; color: <?php echo $n['badge_color']; ?>;">
-                                    <?php echo htmlspecialchars($n['category']); ?>
-                                </span>
-                            </div>
-                            <p class="ni-desc"><?php echo htmlspecialchars($n['desc']); ?></p>
-                        </div>
-                        <div class="ni-meta" style="flex-direction: row; align-items: center; justify-content: flex-end; gap: 16px; min-width: 150px;">
-                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-                                <p class="date"><?php echo htmlspecialchars($n['date']); ?></p>
-                                <p class="time"><?php echo htmlspecialchars($n['time']); ?></p>
-                            </div>
-                            <?php if($n['is_new']): ?>
-                            <div>
-                                <span class="ni-new-badge">New</span>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; min-height: 400px; color: var(--text-gray); text-align: center;">
-                            <div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(98, 75, 255, 0.05); display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
-                                <i class='bx bx-ghost' style="font-size: 64px; color: rgba(98, 75, 255, 0.3);"></i>
-                            </div>
-                            <h3 style="margin: 0 0 8px 0; font-size: 18px; color: var(--text-dark); font-weight: 700;">No Notices Available</h3>
-                            <p style="margin: 0; font-size: 14px; max-width: 250px; line-height: 1.5;">You're all caught up! There are currently no active announcements from the management.</p>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Footer Pagination -->
-                <?php if ($total_items > 0): ?>
-                <div style="margin-top: auto; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px; font-weight: 500;">
-                    <span>Showing <?php echo $start_item; ?> to <?php echo $end_item; ?> of <?php echo $total_items; ?> notices</span>
-                    <div style="display: flex; gap: 8px;">
-                        <a href="?page=<?php echo max(1, $page - 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-left'></i></a>
-                        <?php for ($p = 1; $p <= $total_pages; $p++): ?>
-                            <a href="?page=<?php echo $p; ?>" class="page-btn <?php echo $p === $page ? 'active' : ''; ?>" style="text-decoration: none;"><?php echo $p; ?></a>
-                        <?php endfor; ?>
-                        <a href="?page=<?php echo min($total_pages, $page + 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
-                    </div>
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </main>
-</div>
-<!-- Modal Overlay -->
-<div class="modal-overlay" id="notice-modal" onclick="if(event.target===this) closeModal()">
-    <div class="detail-card" onclick="event.stopPropagation()">
-        <div class="modal-close" onclick="closeModal()"><i class='bx bx-x' style="font-size: 24px;"></i></div>
-        <div id="detail-pane" style="display: flex; flex-direction: column; flex: 1;">
-            <!-- Loaded via AJAX -->
-        </div>
-    </div>
-</div>
-
-<script>
-    const modal = document.getElementById('notice-modal');
-    const detailPane = document.getElementById('detail-pane');
-    
-    function closeModal() {
-        modal.classList.remove('active');
-    }
-    
-    function loadDetails(id) {
-        detailPane.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class='bx bx-loader-alt bx-spin' style="font-size: 32px;"></i></div>`;
-        modal.classList.add('active');
-        fetch('notices.php?ajax_id=' + id)
-            .then(res => res.text())
             .then(html => {
                 detailPane.innerHTML = html;
             });
@@ -994,6 +799,16 @@ if (isset($_GET['ajax_id'])) {
             if (!readNotices.includes(noticeId)) {
                 readNotices.push(noticeId);
                 localStorage.setItem('readNotices', JSON.stringify(readNotices));
+                // Update KPI badge
+                const unreadBadge = document.querySelector('.header-actions .icon-btn span');
+                if (unreadBadge) {
+                    let count = parseInt(unreadBadge.innerText);
+                    if (count > 1) {
+                        unreadBadge.innerText = count - 1;
+                    } else {
+                        unreadBadge.style.display = 'none';
+                    }
+                }
             }
             
             // Open modal
@@ -1003,6 +818,9 @@ if (isset($_GET['ajax_id'])) {
 </script>
 
     <script>
+                currentX = e.touches[0].clientX;
+                let diff = currentX - startX;
+                if (diff < 0) { // Only allow swiping left
                     content.style.transform = `translateX(${diff}px)`;
                 }
             }, {passive: true});
