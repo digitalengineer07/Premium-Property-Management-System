@@ -179,10 +179,11 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <head>
     <meta charset="utf-8">
     <title>My Profile | <?php echo HOUSE_NAME; ?></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- Immediate Theme Setter to prevent flashes -->
     <script>
+        window.HOUSE_NAME = <?php echo json_encode(HOUSE_NAME); ?>;
         (function() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark-theme');
@@ -190,12 +191,11 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         })();
     </script>
     
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <!-- Fonts & Icons -->
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link rel="manifest" href="../manifest.json">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <script>
       if ('serviceWorker' in navigator) {
@@ -208,6 +208,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
       }
     </script>
+    <script src="../assets/js/pwa.js" defer></script>
     
     <!-- Cropper JS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
