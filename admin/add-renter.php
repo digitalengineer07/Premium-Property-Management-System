@@ -43,9 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $joining_date = $_POST['joining_date'] ?? null;
                 if(empty($joining_date)) $joining_date = date('Y-m-d');
-                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?)");
+                $block = trim($_POST['block'] ?? '');
+                $floor = trim($_POST['floor'] ?? '');
+                $parking = trim($_POST['parking'] ?? '');
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssidddis", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date);
+                mysqli_stmt_bind_param($stmt, "ssssssidddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
@@ -159,8 +162,20 @@ $admin_user = s($_SESSION['admin']);
 
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
-                                <label>Room No / Floor</label>
-                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104, 2nd Floor">
+                                <label>Flat / Room No.</label>
+                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104">
+                            </div>
+                            <div class="form-group">
+                                <label>Block / Building</label>
+                                <input type="text" name="block" placeholder="e.g. Block A">
+                            </div>
+                            <div class="form-group">
+                                <label>Floor</label>
+                                <input type="text" name="floor" placeholder="e.g. 2nd Floor">
+                            </div>
+                            <div class="form-group">
+                                <label>Parking Slot</label>
+                                <input type="text" name="parking" placeholder="e.g. A-15">
                             </div>
                             <div class="form-group">
                                 <label>Phone Number</label>
