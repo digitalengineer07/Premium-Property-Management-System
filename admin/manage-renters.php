@@ -305,7 +305,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                         if (isset($nameParts[0])) $initials .= strtoupper(substr($nameParts[0], 0, 1));
                                         if (isset($nameParts[1])) $initials .= strtoupper(substr($nameParts[1], 0, 1));
                                     ?>
-                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 2px solid #FFFFFF; box-shadow: 0 2px 5px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 2px solid #FFFFFF; box-shadow: 0 2px 5px rgba(98, 75, 255, 0.1); overflow: hidden;">
+                                          <?php if (!empty($r['profile_pic'])): ?>
+                                              <img src="../<?php echo htmlspecialchars($r['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                                          <?php else: ?>
+                                              <?php echo $initials ?: '?'; ?>
+                                          <?php endif; ?>
+                                      </div>
                                 <?php endif; ?>
                                 <div>
                                     <?php 
