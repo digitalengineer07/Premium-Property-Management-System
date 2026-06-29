@@ -1121,7 +1121,7 @@ $unread_count = count($unread_notifications);
 
     <?php include 'payment_modal.php'; ?>
 
-    <?php include 'scanner_modal.php'; ?>
+
 </main>
 
     <script>
