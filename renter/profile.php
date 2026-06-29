@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 $user_id = (int) $_SESSION['user_id'];
+require_once "fetch_notifications.php";
 
 /* CSRF */
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
@@ -183,7 +184,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 // Fetch notices for header notification dropdown
 $qNotices = mysqli_query($conn, "SELECT * FROM announcements ORDER BY created_at DESC LIMIT 5");
 $notices = [];
-$unread_count = 0;
+
 while($n = mysqli_fetch_assoc($qNotices)) {
     $ts = strtotime($n['created_at']);
     $is_new = (time() - $ts) <= 7 * 86400;

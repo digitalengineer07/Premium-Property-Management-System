@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
+require_once "fetch_notifications.php";
 
 // User Profile for Header
 $stmt = mysqli_prepare($conn, "SELECT username, name, profile_pic, room_no FROM users WHERE id = ?");
@@ -19,7 +20,6 @@ $display_name = $usr['name'] ?: $usr['username'];
 $profile_pic = $usr['profile_pic'] ?: "assets/img/default-avatar.png";
 mysqli_stmt_close($stmt);
 
-$unread_count = 2;
 
 // Fetch Announcements from DB
 $notices = [];
@@ -90,7 +90,7 @@ foreach ($notices as $n) {
 }
 
 // Update unread_count header badge to reflect new notices
-$unread_count = $new_notices;
+
 
 // Pagination logic
 $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;

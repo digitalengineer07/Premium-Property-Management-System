@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
+require_once "fetch_notifications.php";
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
 
 /* Fetch profile */
@@ -229,7 +230,7 @@ if ($total_due > 0) {
 }
 $show_banner = ($is_late && !empty($overdue_list));
 // Notification System Logic
-$unread_notifications = [];
+
 $dismissed_cookie = $_COOKIE['dismissed_notifs'] ?? '';
 $dismissed_ids = $dismissed_cookie ? explode(',', $dismissed_cookie) : [];
 
@@ -291,7 +292,6 @@ usort($unread_notifications, function($a, $b) {
     return strtotime($b['time']) - strtotime($a['time']);
 });
 
-$unread_count = count($unread_notifications);
 ?>
 <!doctype html>
 <html lang="en">

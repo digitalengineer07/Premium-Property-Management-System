@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
+require_once "fetch_notifications.php";
 $success = "";
 if (isset($_GET['success']) && $_GET['success'] == '1') {
     $success = "Your query has been submitted successfully.";
@@ -100,7 +101,6 @@ $display_name = $usr['name'] ?: $usr['username'];
 $profile_pic = $usr['profile_pic'] ?: "assets/img/default-avatar.png";
 mysqli_stmt_close($stmt);
 
-$unread_count = 1; // Match mockup notification count
 ?>
 <!doctype html>
 <html lang="en">

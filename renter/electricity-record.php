@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../db.php";
+require_once "fetch_notifications.php";
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
@@ -70,7 +71,7 @@ function money($val) {
 // Unread Notifications Count (mock or real)
 $dismissed_cookie = $_COOKIE['dismissed_notifs'] ?? '';
 $dismissed_ids = $dismissed_cookie ? explode(',', $dismissed_cookie) : [];
-$unread_count = 0;
+
 $ann_q = mysqli_query($conn, "SELECT id FROM announcements WHERE created_at >= NOW() - INTERVAL 1 DAY");
 if($ann_q){
     while($ac = mysqli_fetch_assoc($ann_q)) {
