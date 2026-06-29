@@ -797,23 +797,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div class="info-list">
                     <div class="info-row">
                         <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <div class="info-value">••••••••</div>
-                            <button class="btn-outline" style="padding: 4px 12px;" onclick="alert('Password change modal')">Change</button>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label"><i class='bx bx-envelope'></i> Login Email</div>
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <div class="info-value"><?php echo htmlspecialchars($user['email'] ?: 'user@example.com'); ?></div>
-                            <button class="btn-outline" style="padding: 4px 12px;">Change</button>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label"><i class='bx bx-shield-quarter'></i> Two-Factor Auth</div>
-                        <div style="display: flex; align-items: center; gap: 20px;">
-                            <div class="info-value value-green">Enabled</div>
-                            <button class="btn-outline" style="padding: 4px 12px;">Manage</button>
                         </div>
                     </div>
                     <div class="info-row">
