@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Get user info
-$stmt = mysqli_prepare($conn, "SELECT name, email, room_no FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT name, email, room_no, profile_pic FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $user_res = mysqli_stmt_get_result($stmt);
@@ -361,11 +361,21 @@ if($ann_q){
                 </a>
                 <div style="position: relative;">
                     <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
-                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple);"><?php if (!empty($user['profile_pic'])): ?>
-    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
+<?php 
+    $real_pic = '';
+    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
+    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
+    
+    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
+?>
+<?php if (!empty($real_pic)): ?>
+    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
 <?php else: ?>
-    <?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?>
-<?php endif; ?></div>
+    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
+<?php endif; ?>
+</div>
                         <div class="user-info">
                             <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
                             <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
