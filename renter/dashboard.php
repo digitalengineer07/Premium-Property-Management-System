@@ -18,22 +18,6 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
-mysqli_stmt_close($stmt);
-
-$display_name = $user['name'] ?: $user['username'];
-$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
-$room_no = $user['room_no'] ?? 'N/A';
-
-/* Calculate totals */
-    @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
-    mysqli_query($conn, "UPDATE payment_notifications SET is_dismissed = 1 WHERE id = $dismiss_id AND user_id = $user_id");
-    header("Location: dashboard.php");
-    exit;
-}
-
-// Payment Notification Handling
-$payment_success = "";
-$payment_error = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $payment_error = "Invalid CSRF token.";
