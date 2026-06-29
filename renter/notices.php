@@ -736,37 +736,37 @@ if (isset($_GET['ajax_id'])) {
                         <?php for ($p = 1; $p <= $total_pages; $p++): ?>
                             <a href="?page=<?php echo $p; ?>" class="page-btn <?php echo $p === $page ? 'active' : ''; ?>" style="text-decoration: none;"><?php echo $p; ?></a>
                         <?php endfor; ?>
-<i class='bx <?php echo $notif['icon']; ?>'></i>
-                                            </div>
-                                            <div style="flex: 1; padding-right: 36px;">
-                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
-                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
-                                                </div>
-                                                <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
-                                            </div>
-                                            <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
-                                                <i class='bx bx-x'></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+                        <a href="?page=<?php echo min($total_pages, $page + 1); ?>" class="page-btn" style="text-decoration: none;"><i class='bx bx-chevron-right'></i></a>
                     </div>
                 </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </main>
+</div>
+<!-- Modal Overlay -->
+<div class="modal-overlay" id="notice-modal" onclick="if(event.target===this) closeModal()">
+    <div class="detail-card" onclick="event.stopPropagation()">
+        <div class="modal-close" onclick="closeModal()"><i class='bx bx-x' style="font-size: 24px;"></i></div>
+        <div id="detail-pane" style="display: flex; flex-direction: column; flex: 1;">
+            <!-- Loaded via AJAX -->
+        </div>
+    </div>
+</div>
 
-
-                <div class="icon-btn" onclick="document.documentElement.classList.toggle('dark-theme');" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dark); font-size: 20px;">
-                    <i class='bx bx-moon'></i>
-                </div>
-                <a href="#" class="btn-outline" style="border-radius: 20px;"><i class='bx bx-help-circle'></i> Help & Support</a>
-                <div style="position: relative;">
-                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
-                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
-<?php 
-    $real_pic = '';
-    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+<script>
+    const modal = document.getElementById('notice-modal');
+    const detailPane = document.getElementById('detail-pane');
+    
+    function closeModal() {
+        modal.classList.remove('active');
+    }
+    
+    function loadDetails(id) {
+        detailPane.innerHTML = `<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class='bx bx-loader-alt bx-spin' style="font-size: 32px;"></i></div>`;
+        modal.classList.add('active');
+        fetch('notices.php?ajax_id=' + id)
+            .then(res => res.text())
     elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
     elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
     
@@ -1001,6 +1001,36 @@ if (isset($_GET['ajax_id'])) {
         });
     });
 </script>
-<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+
+    <script>
+                    content.style.transform = `translateX(${diff}px)`;
+                }
+            }, {passive: true});
+            
+            item.addEventListener('touchend', e => {
+                let diff = currentX - startX;
+                content.style.transition = 'transform 0.2s ease-out';
+                if (diff < -80) { // threshold
+                    content.style.transform = `translateX(-100%)`;
+                    setTimeout(() => {
+                        dismissNotification(item.getAttribute('data-id'), item);
+                    }, 200);
+                } else {
+                    content.style.transform = `translateX(0)`;
+                }
+            });
+        });
+    </script>
+    <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+
+<script>
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+
+    </script>
+<script>
+document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
+
+</script>
 </body>
 </html>
