@@ -684,6 +684,9 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         cropperModal.style.display = 'none';
         if (cropper) cropper.destroy();
+        
+        // Auto submit form to save picture
+        document.getElementById('saveProfileBtn').click();
     }
 
     const aadhaarInput = document.querySelector('input[name="aadhaar"]');
