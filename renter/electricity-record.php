@@ -52,21 +52,6 @@ $chart_records = array_reverse($chart_records);
 $chart_labels = [];
 $chart_data = [];
 foreach($chart_records as $cr) {
-    $dateObj = DateTime::createFromFormat('F Y', $cr['month']);
-    $shortMonth = $dateObj ? $dateObj->format('M Y') : $cr['month'];
-    $chart_labels[] = $shortMonth;
-    $chart_data[] = $cr['units_consumed'];
-}
-
-// Last Recorded Reading & Current Month Details
-$latest_record = $electricity_records[0] ?? null;
-$last_reading = $latest_record['current_reading'] ?? 0;
-// We'll use created_at for the date of the reading, or current date if none
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electricity Record - <?php echo HOUSE_NAME; ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
