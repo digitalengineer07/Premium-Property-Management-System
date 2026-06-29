@@ -872,10 +872,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="doc-actions">
                             <?php if ($user['agreement_document']): ?>
                                 <a href="../<?php echo htmlspecialchars($user['agreement_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
-                            <?php else: ?>
-                                <a href="documents.php#upload-widget-container" title="Upload"><i class='bx bx-upload'></i></a>
                             <?php endif; ?>
-                            <a href="documents.php#upload-widget-container"><i class='bx bx-chevron-right'></i></a>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
 
@@ -887,10 +885,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="doc-actions">
                             <?php if ($user['electricity_document']): ?>
                                 <a href="../<?php echo htmlspecialchars($user['electricity_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
-                            <?php else: ?>
-                                <a href="documents.php#upload-widget-container" title="Upload"><i class='bx bx-upload'></i></a>
                             <?php endif; ?>
-                            <a href="documents.php#upload-widget-container"><i class='bx bx-chevron-right'></i></a>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
                 </div>
