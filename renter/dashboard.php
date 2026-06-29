@@ -11,6 +11,18 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 require_once "fetch_notifications.php";
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
+
+/* Fetch profile */
+$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$res = mysqli_stmt_get_result($stmt);
+$user = mysqli_fetch_assoc($res);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
+    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
+        $payment_error = "Invalid CSRF token.";
+    } else {
+        $b_type = $_POST['bill_type'] ?? 'total';
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
