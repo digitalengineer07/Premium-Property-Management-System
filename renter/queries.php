@@ -749,6 +749,21 @@ $unread_count = 1; // Match mockup notification count
     </main>
 </div>
 <script>
+function toggleDetails(index) {
+    const detailsDiv = document.getElementById('details-' + index);
+    const btn = document.getElementById('btn-' + index);
+    if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+        detailsDiv.style.display = 'block';
+        btn.style.transform = 'rotate(90deg)';
+        btn.style.background = 'var(--primary-purple)';
+        btn.style.color = 'white';
+    } else {
+        detailsDiv.style.display = 'none';
+        btn.style.transform = 'rotate(0deg)';
+        btn.style.background = '#F1F5F9';
+        btn.style.color = 'var(--text-gray)';
+    }
+}
 document.addEventListener('click', function(e) {
     const btn = e.target.closest('.page-btn');
     if (btn && btn.tagName === 'A') {
