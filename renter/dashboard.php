@@ -976,8 +976,10 @@ $unread_count = count($unread_notifications);
                         <div style="text-align: center; padding: 30px; color: var(--text-gray); font-size: 13px; margin: auto;">No recent transactions found.</div>
                     <?php else: ?>
                         <?php 
-                        // Combine and sort merged_rents and elecs to get actual recent transactions
-                        $all_tx = array_merge($merged_rents, $elecs);
+                        // Combine and filter to get only Paid transactions
+                        $all_tx = array_filter(array_merge($merged_rents, $elecs), function($tx) {
+                            return isset($tx['status']) && $tx['status'] === 'Paid';
+                        });
                         
                         // Sort by payment_date descending, fallback to id descending
                         usort($all_tx, function($a, $b) {
