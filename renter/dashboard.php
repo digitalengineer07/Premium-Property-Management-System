@@ -675,7 +675,7 @@ $unread_count = count($unread_notifications);
             </div>
             <div class="header-actions">
                 <div class="notification-wrapper">
-                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'flex' : 'none';">
+                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
                             <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
@@ -1136,7 +1136,7 @@ $unread_count = count($unread_notifications);
         document.addEventListener('click', function(event) {
             const dropdown = document.getElementById('notifDropdown');
             const bell = document.querySelector('.bell-icon');
-            if (dropdown && dropdown.style.display === 'flex') {
+            if (dropdown && dropdown.style.display === 'block') {
                 if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
                     dropdown.style.display = 'none';
                 }
