@@ -1241,24 +1241,24 @@ $unread_count = count($unread_notifications);
           </style>
           <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
               <div class="pm-header">
-                  <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0;">Make Payment</h2>
-                  <div onclick="closePaymentModal()" style="width: 32px; height: 32px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
+                  <h2 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Make Payment</h2>
+                  <div onclick="closePaymentModal()" style="width: 36px; height: 36px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
                       <i class='bx bx-x' style="font-size: 22px; color: var(--text-gray);"></i>
                   </div>
               </div>
               
               <div class="pm-layout">
                   <div class="pm-col-left">
-                      <div id="paymentDetails" style="margin-bottom: 16px;">
-                          <div id="paymentTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 6px; color: var(--text-gray);">Total Outstanding Balance</div>
-                          <div id="pmAmountContainer" style="font-size: 28px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
+                      <div id="paymentDetails" style="margin-bottom: 20px;">
+                          <div id="paymentTitle" style="font-weight: 700; font-size: 16px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
+                          <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
                       </div>
 
-                      <div style="background: rgba(98, 75, 255, 0.04); padding: 10px 14px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 16px;">
-                          <p class="pm-timer-container" style="font-size: 11px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                              <i class='bx bx-timer' style="font-size: 15px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 2px 6px; border-radius: 4px;">05:00</span>
+                      <div style="background: rgba(98, 75, 255, 0.04); padding: 14px 18px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 20px;">
+                          <p class="pm-timer-container" style="font-size: 13px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 6px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                              <i class='bx bx-timer' style="font-size: 18px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 3px 8px; border-radius: 6px;">05:00</span>
                           </p>
-                          <p class="pm-timer-text" style="font-size: 10px; color: var(--text-gray); margin: 0; text-align: center;">Transfer within this time to ensure amount accuracy.</p>
+                          <p class="pm-timer-text" style="font-size: 12px; color: var(--text-gray); margin: 0; text-align: center;">Transfer within this time to ensure amount accuracy.</p>
                       </div>
 
                       <form method="POST" id="paymentNotifyForm" style="text-align: left;">
@@ -1267,11 +1267,11 @@ $unread_count = count($unread_notifications);
                           <input type="hidden" name="bill_id" id="hiddenBillId">
                           <input type="hidden" name="amount" id="hiddenAmount">
                           
-                          <label style="font-size: 11px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 6px;">Enter Transaction ID / UTR</label>
-                          <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 13px;">
+                          <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Enter Transaction ID / UTR</label>
+                          <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
                           
-                          <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 13px; border-radius: 10px;">
-                              <i class='bx bx-check-shield'></i> Confirm Payment
+                          <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 15px; border-radius: 12px; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);">
+                              <i class='bx bx-check-shield' style="font-size: 18px;"></i> Confirm Payment
                           </button>
                       </form>
                       
