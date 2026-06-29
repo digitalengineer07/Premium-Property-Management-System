@@ -624,7 +624,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <div class="panel">
                 <div class="panel-header">
                     <h3>Residence Details</h3>
-                    <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
                 </div>
                 <div class="residence-grid">
                     <div class="residence-item">
