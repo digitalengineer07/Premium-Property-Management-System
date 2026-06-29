@@ -88,10 +88,17 @@
                           
                           <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px;">
                               <p style="font-size: 10px; color: var(--text-gray); margin: 0 0 8px 0;">Having issues? Use the permanent scanner:</p>
-                              <button type="button" onclick="openScannerModal()" style="background: white; border: 1px solid var(--border); color: var(--text-dark); border-radius: 10px; width: 100%; justify-content: center; font-size: 11px; padding: 8px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">
-                                  <i class='bx bx-qr-scan'></i> Open Owner's Scanner
+                              <button type="button" onclick="showOwnerScannerInline()" style="background: white; border: 1px solid var(--border); color: var(--text-dark); border-radius: 10px; width: 100%; justify-content: center; font-size: 11px; padding: 8px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">
+                                  <i class='bx bx-qr-scan'></i> Show Owner's Scanner
                               </button>
                           </div>
+                          <script>
+                          function showOwnerScannerInline() {
+                              document.getElementById('dynamicQR').src = '../assets/img/gpay-qr.jpg';
+                              let deepLink = document.getElementById('upiDeepLinkBtn');
+                              if (deepLink) deepLink.style.display = 'none';
+                          }
+                          </script>
                       </div>
                   </div>
               </div>
