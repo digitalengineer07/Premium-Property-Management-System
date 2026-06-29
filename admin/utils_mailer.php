@@ -109,83 +109,72 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
 function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $amount_due, $pdf_file_path = null) {
     if (empty($to_email)) return false;
 
-    $subject = "Action Required: Payment Reminder for Madhav Kunj";
-    
-    // HTML Template
-    $message = "
-    <html>
-    <head>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-            .header { background: #624BFF; color: white; padding: 40px 20px; text-align: center; }
-            .content { padding: 40px; }
-            .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
-            .btn { display: inline-block; padding: 14px 28px; background: #624BFF; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 25px; }
-            .bill-list { background: #f1f5f9; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #624BFF; }
-            .total { font-size: 24px; font-weight: 800; color: #ef4444; }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <h1 style='margin:0; font-size: 28px;'>Madhav Kunj</h1>
-                <p style='margin-top:10px; opacity: 0.9;'>Payment Notification System</p>
-            </div>
-            <div class='content'>
-                <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
-                <p>This is a friendly reminder that you have outstanding payments on your account. To maintain accurate accounting and service continuity, please clear your dues.</p>
-                
-                <div class='bill-list'>
-                    <p style='margin-top:0; font-weight:700; color:#624BFF;'>Pending Bills:</p>
-                    " . implode("<br>", array_map(function($b) { return "• " . htmlspecialchars($b); }, $overdue_bills)) . "
+    $mail = get_phpmailer_instance();
+    if (!$mail) return false;
+
+    try {
+        $mail->addAddress($to_email, $renter_name);
+        $mail->Subject = "Action Required: Payment Reminder for Madhav Kunj";
+        $mail->isHTML(true);
+        
+        $message = "
+        <html>
+        <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
+                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .header { background: #624BFF; color: white; padding: 40px 20px; text-align: center; }
+                .content { padding: 40px; }
+                .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
+                .btn { display: inline-block; padding: 14px 28px; background: #624BFF; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 25px; }
+                .bill-list { background: #f1f5f9; padding: 20px; border-radius: 12px; margin: 25px 0; border-left: 4px solid #624BFF; }
+                .total { font-size: 24px; font-weight: 800; color: #ef4444; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h1 style='margin:0; font-size: 28px;'>Madhav Kunj</h1>
+                    <p style='margin-top:10px; opacity: 0.9;'>Payment Notification System</p>
                 </div>
-                
-                <p style='margin-bottom:10px;'>Total Amount Due:</p>
-                <div class='total'>₹" . number_format($amount_due, 2) . "</div>
-                
-                <p style='margin-top:30px;'>Please clear these payments by visiting your dashboard. If you have already paid, please ignore this email or upload your receipt for verification.</p>
-                
-                <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
+                <div class='content'>
+                    <h2 style='margin-top:0;'>Hi " . htmlspecialchars($renter_name) . ",</h2>
+                    <p>This is a friendly reminder that you have outstanding payments on your account. To maintain accurate accounting and service continuity, please clear your dues.</p>
+                    
+                    <div class='bill-list'>
+                        <p style='margin-top:0; font-weight:700; color:#624BFF;'>Pending Bills:</p>
+                        " . implode("<br>", array_map(function($b) { return "• " . htmlspecialchars($b); }, $overdue_bills)) . "
+                    </div>
+                    
+                    <p style='margin-bottom:10px;'>Total Amount Due:</p>
+                    <div class='total'>₹" . number_format($amount_due, 2) . "</div>
+                    
+                    <p style='margin-top:30px;'>Please clear these payments by visiting your dashboard. If you have already paid, please ignore this email or upload your receipt for verification.</p>
+                    
+                    <center><a href='https://succorkart.in/login.php' class='btn'>Log In to Dashboard</a></center>
+                </div>
+                <div class='footer'>
+                    <p><strong>Madhav Kunj</strong></p>
+                    <p>&copy; " . date('Y') . " All rights reserved.</p>
+                </div>
             </div>
-            <div class='footer'>
-                <p><strong>Madhav Kunj</strong></p>
-                <p>&copy; " . date('Y') . " All rights reserved.</p>
-            </div>
-        </div>
-    </body>
-    </html>
-    ";
+        </body>
+        </html>
+        ";
 
-    $boundary = md5(time());
+        $mail->Body = $message;
+        $mail->AltBody = "Hi $renter_name, this is a reminder to clear your pending dues of ₹" . number_format($amount_due, 2) . ". Please login to your dashboard.";
 
-    $headers  = "From: Madhav Kunj <madhavkunj@succorkart.in>\r\n";
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: multipart/mixed; boundary=\"" . $boundary . "\"\r\n";
+        if ($pdf_file_path && file_exists(__DIR__ . '/../' . $pdf_file_path)) {
+            $mail->addAttachment(__DIR__ . '/../' . $pdf_file_path);
+        }
 
-    // Build the email body
-    $body = "--" . $boundary . "\r\n";
-    $body .= "Content-Type: text/html; charset=iso-8859-1\r\n";
-    $body .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-    $body .= $message . "\r\n\r\n";
-
-    // Handle PDF Attachment if it exists
-    if ($pdf_file_path && file_exists(__DIR__ . '/../' . $pdf_file_path)) {
-        $file_content = file_get_contents(__DIR__ . '/../' . $pdf_file_path);
-        $encoded_file = chunk_split(base64_encode($file_content));
-        $filename = basename($pdf_file_path);
-
-        $body .= "--" . $boundary . "\r\n";
-        $body .= "Content-Type: application/pdf; name=\"" . $filename . "\"\r\n";
-        $body .= "Content-Disposition: attachment; filename=\"" . $filename . "\"\r\n";
-        $body .= "Content-Transfer-Encoding: base64\r\n\r\n";
-        $body .= $encoded_file . "\r\n\r\n";
+        return $mail->send();
+    } catch (Exception $e) {
+        error_log("Failed to send payment reminder email: {$mail->ErrorInfo}");
+        return false;
     }
-
-    $body .= "--" . $boundary . "--";
-
-    return @mail($to_email, $subject, $body, $headers);
 }
 
 /**
