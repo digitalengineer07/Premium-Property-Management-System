@@ -589,7 +589,7 @@ $unread_count = count($unread_notifications);
         }
         
         .notification-wrapper { position: relative; }
-        #notifDropdown { position: absolute; top: 50px; right: 0; width: 340px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; overflow: hidden; }
+        #notifDropdown { position: absolute; top: 50px; right: 0; width: 380px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; overflow: hidden; }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
@@ -708,10 +708,10 @@ $unread_count = count($unread_notifications);
                                             <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                                 <i class='bx <?php echo $notif['icon']; ?>'></i>
                                             </div>
-                                            <div style="flex: 1; padding-right: 20px;">
+                                            <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark);"><?php echo htmlspecialchars($notif['title']); ?></h4>
-                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
                                             </div>
