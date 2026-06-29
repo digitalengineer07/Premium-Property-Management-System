@@ -162,6 +162,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dismiss_rejection']))
     exit;
 }
 
+$payment_success = "";
+$payment_error = "";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $payment_error = "Invalid CSRF token.";
@@ -704,12 +707,12 @@ $show_banner = ($is_late && !empty($overdue_list));
         </header>
 
         <!-- Alerts -->
-        <?php if ($payment_success): ?>
+        <?php if (!empty($payment_success)): ?>
             <div class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7;">
                 <i class='bx bx-check-circle'></i> <?php echo $payment_success; ?>
             </div>
         <?php endif; ?>
-        <?php if ($payment_error): ?>
+        <?php if (!empty($payment_error)): ?>
             <div class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2;">
                 <i class='bx bx-error-circle'></i> <?php echo $payment_error; ?>
             </div>
