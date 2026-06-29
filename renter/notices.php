@@ -245,6 +245,9 @@ if (isset($_GET['ajax_id'])) {
             flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box;
         }
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         
         .page-btn {
@@ -456,11 +459,10 @@ if (isset($_GET['ajax_id'])) {
     <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
-            <div>
-                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0 0 8px 0; color: var(--text-dark);">Notices</h1>
-                <p style="font-size: 15px; color: var(--text-gray); font-weight: 500; margin: 0;">Stay informed about important updates and announcements.</p>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
-            
             <div class="header-actions">
                 <div class="icon-btn" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; color: var(--text-dark); font-size: 20px;">
                     <i class='bx bx-bell'></i>

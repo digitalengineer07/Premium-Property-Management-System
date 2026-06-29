@@ -182,6 +182,9 @@ if($ann_q){
         
         /* Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-title h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
         .header-title p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
@@ -335,14 +338,9 @@ if($ann_q){
     <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
-            <div class="header-title" style="display: flex; align-items: center; gap: 20px;">
-                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
-                    <i class='bx bx-bolt-circle' style="font-size: 28px; color: var(--primary-purple);"></i>
-                </div>
-                <div>
-                    <h1 style="margin: 0 0 6px 0;">Electricity Record</h1>
-                    <p>Track your monthly electricity usage and billing details.</p>
-                </div>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
             <div class="header-actions">
                 <div class="icon-btn bell-icon">

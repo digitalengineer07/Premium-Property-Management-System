@@ -224,6 +224,9 @@ $pending_count = 2 - $verified_count;
         }
         
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         
         .btn-outline {
@@ -375,23 +378,10 @@ $pending_count = 2 - $verified_count;
     <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
-            <div>
-                <div style="display: flex; align-items: center; gap: 16px;">
-                    <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, var(--primary-purple) 0%, #8B5CF6 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(98, 75, 255, 0.2);">
-                        <i class='bx bx-folder-open' style="font-size: 26px; color: #ffffff;"></i>
-                    </div>
-                    <div>
-                        <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; color: var(--text-dark); display: flex; align-items: center; gap: 10px;">
-                            My Documents
-                            <span style="font-size: 11px; font-weight: 700; background: rgba(16, 185, 129, 0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; letter-spacing: 0;">Secured</span>
-                        </h1>
-                        <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">
-                            View, download, and manage your important rental documents.
-                        </p>
-                    </div>
-                </div>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
-            
             <div class="header-actions">
                 <div style="position: relative; cursor: pointer;">
                     <i class='bx bx-bell' style="font-size: 24px; color: var(--text-gray);"></i>

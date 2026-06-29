@@ -206,6 +206,9 @@ $unread_count = 1; // Match mockup notification count
         .top-header {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
         }
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
             width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
@@ -415,21 +418,10 @@ $unread_count = 1; // Match mockup notification count
     <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
-            <div>
-                <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
-                    <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.15), rgba(98, 75, 255, 0.05)); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 26px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.2);">
-                        <i class='bx bx-support'></i>
-                    </div>
-                    <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0; background: linear-gradient(135deg, #1E293B, var(--primary-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                        Raise Query
-                    </h1>
-                </div>
-                <p style="font-size: 15px; color: var(--text-gray); font-weight: 500; margin: 0; display: flex; align-items: center; gap: 6px;">
-                    <i class='bx bx-info-circle' style="color: var(--primary-purple); font-size: 18px;"></i>
-                    Report an issue or request assistance. We're here to help!
-                </p>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
-            
             <div class="header-actions">
                 <div class="icon-btn">
                     <i class='bx bx-bell'></i>

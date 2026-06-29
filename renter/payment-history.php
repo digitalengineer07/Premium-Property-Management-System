@@ -730,16 +730,9 @@ $unread_count = count($unread_notifications);
     <main class="main-content">
         <!-- Top Header -->
         <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
-            <div class="header-greeting" style="display: flex; align-items: center; gap: 20px;">
-                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
-                    <i class='bx bx-history' style="font-size: 28px; color: var(--primary-purple);"></i>
-                </div>
-                <div>
-                    <h1 style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-dark); margin: 0 0 6px 0; display: flex; align-items: center; gap: 12px;">
-                        Payment History
-                    </h1>
-                    <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">Review your past transactions and download receipts.</p>
-                </div>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
             <div class="header-actions">
                 <div class="notification-wrapper">

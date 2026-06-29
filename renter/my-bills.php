@@ -749,16 +749,9 @@ $unread_count = count($unread_notifications);
         <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
-            <div class="header-greeting" style="display: flex; align-items: center; gap: 20px;">
-                <div>
-                    <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text-dark); margin: 0 0 8px 0; display: flex; align-items: center; gap: 16px;">
-                        <span style="display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1) 0%, rgba(98, 75, 255, 0.2) 100%); color: var(--primary-purple); border-radius: 14px; font-size: 24px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.15);">
-                            <i class='bx bx-wallet-alt'></i>
-                        </span>
-                        My Bills
-                    </h1>
-                    <p style="font-size: 15px; color: var(--text-gray); font-weight: 500; margin: 0 0 0 64px;">View and manage all your bills in one place.</p>
-                </div>
+            <div class="header-greeting">
+                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
             <div class="header-actions">
                 <div class="notification-wrapper">
