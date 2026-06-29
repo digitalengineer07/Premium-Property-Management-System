@@ -181,8 +181,8 @@ if ($conn) {
     }
     
     @mysqli_query($conn, "ALTER TABLE payment_notifications MODIFY COLUMN bill_type VARCHAR(50) NOT NULL");
-    @mysqli_query($conn, "UPDATE electricity SET elec_status = status WHERE elec_status IS NULL OR elec_status = ''");
-    @mysqli_query($conn, "UPDATE electricity SET rent_status = status WHERE rent_status IS NULL OR rent_status = ''");
+    @mysqli_query($conn, "UPDATE electricity SET elec_status = 'Paid' WHERE elec_status = 'Due' AND status = 'Paid'");
+    @mysqli_query($conn, "UPDATE electricity SET rent_status = 'Paid' WHERE rent_status = 'Due' AND status = 'Paid'");
 
     // Also quietly fix the payments table ENUM if it is rejecting 'advance'
     $res_payments = @mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'bill_type'");
