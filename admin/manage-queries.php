@@ -87,44 +87,56 @@ $queries_res = mysqli_query($conn, "
                 $border_color = $q['status'] == 'Resolved' ? '#10B981' : ($q['status'] == 'In Progress' ? '#3B82F6' : '#F59E0B');
                 $status_clean = str_replace(' ', '-', $q['status']);
             ?>
-                <div class="query-card" style="border-left-color: <?php echo $border_color; ?>;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;" class="query-header">
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
-                                <span class="badge" style="background: #F3F4F6; color: #4B5563;"><?php echo $q['category']; ?></span>
-                                <span style="font-size: 13px; color: var(--text-gray);"><?php echo date('M d, Y at H:i', strtotime($q['created_at'])); ?></span>
+                <div class="panel query-card" style="margin-bottom: 24px; padding: 0; border-radius: 16px; overflow: hidden; border-left: 4px solid <?php echo $border_color; ?>;">
+                    <div style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;" class="query-header">
+                        <div style="display: flex; gap: 16px; align-items: flex-start; min-width: 0;">
+                            <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
+                                <i class='bx <?php echo strpos(strtolower($q['category']), 'electricity') !== false ? 'bx-bulb' : (strpos(strtolower($q['category']), 'water') !== false ? 'bx-droplet' : 'bx-message-square-detail'); ?>'></i>
                             </div>
-                            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark);"><?php echo htmlspecialchars($q['subject']); ?></h2>
-                            <p style="font-size: 14px; color: var(--primary-purple); font-weight: 600; margin-top: 4px;">
-                                From: <?php echo htmlspecialchars($q['renter_name']); ?> (Room <?php echo $q['room_no']; ?>)
-                            </p>
+                            <div style="min-width: 0;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
+                                    <span style="font-size: 10px; font-weight: 800; background: #F1F5F9; color: #475569; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase;"><?php echo $q['category']; ?></span>
+                                    <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);"><i class='bx bx-time-five' style="vertical-align: middle; margin-top: -2px;"></i> <?php echo date('M d, Y \a\t h:i A', strtotime($q['created_at'])); ?></span>
+                                </div>
+                                <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;"><?php echo htmlspecialchars($q['subject']); ?></h2>
+                                <p style="font-size: 14px; color: var(--primary-purple); font-weight: 600; margin: 0;">
+                                    From: <?php echo htmlspecialchars($q['renter_name']); ?> (Room <?php echo $q['room_no']; ?>)
+                                </p>
+                            </div>
                         </div>
-                        <span class="status-badge status-<?php echo $status_clean; ?>">
-                            <?php echo $q['status']; ?>
-                        </span>
+                        <div style="flex-shrink: 0;">
+                            <span class="status-badge status-<?php echo $status_clean; ?>" style="background: <?php echo $q['status'] == 'Resolved' ? '#F0FDF4' : ($q['status'] == 'In Progress' ? '#EFF6FF' : '#FFF7ED'); ?>; color: <?php echo $border_color; ?>; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+                                <i class='bx <?php echo $q['status'] == 'Resolved' ? 'bx-check-circle' : ($q['status'] == 'In Progress' ? 'bx-loader-circle' : 'bx-time-five'); ?>'></i> <?php echo $q['status']; ?>
+                            </span>
+                        </div>
                     </div>
 
-                    <div style="background: var(--bg-main); padding: 20px; border-radius: 16px; margin-bottom: 24px; border: 1px dashed var(--border);">
-                        <p style="line-height: 1.6; color: var(--text-dark);"><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
+                    <div style="background: #FAFBFC; padding: 24px;">
+                        <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                            <p style="margin: 0; line-height: 1.6; color: var(--text-dark); font-size: 14px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
+                        </div>
                     </div>
 
-                    <form method="POST" class="query-action-form" style="display: grid; grid-template-columns: 200px 1fr auto; gap: 16px; align-items: end;">
+                    <form method="POST" class="query-action-form" style="padding: 20px 24px; display: grid; grid-template-columns: 200px 1fr auto; gap: 16px; align-items: end; border-top: 1px solid var(--border); background: white;">
                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                         <input type="hidden" name="query_id" value="<?php echo $q['id']; ?>">
                         <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px;">Update Status</label>
-                            <select name="status" class="btn-outline" style="width: 100%; padding: 10px; height: 44px;">
-                                <option value="Pending" <?php echo $q['status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
-                                <option value="In Progress" <?php echo $q['status'] == 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
-                                <option value="Resolved" <?php echo $q['status'] == 'Resolved' ? 'selected' : ''; ?>>Resolved</option>
-                            </select>
+                            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);">Update Status</label>
+                            <div style="position: relative;">
+                                <select name="status" style="width: 100%; padding: 10px 16px; height: 44px; border-radius: 8px; border: 1px solid var(--border); background: white; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-dark); appearance: none; outline: none; cursor: pointer;">
+                                    <option value="Pending" <?php echo $q['status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
+                                    <option value="In Progress" <?php echo $q['status'] == 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
+                                    <option value="Resolved" <?php echo $q['status'] == 'Resolved' ? 'selected' : ''; ?>>Resolved</option>
+                                </select>
+                                <i class='bx bx-chevron-down' style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--text-gray); pointer-events: none;"></i>
+                            </div>
                         </div>
                         <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px;">Admin Response / Remark</label>
-                            <input type="text" name="admin_remark" value="<?php echo htmlspecialchars($q['admin_remark'] ?? ''); ?>" class="btn-outline" style="width: 100%; border-style: solid; text-align: left; padding: 10px; height: 44px;" placeholder="Type your response here...">
+                            <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);">Admin Response / Remark</label>
+                            <input type="text" name="admin_remark" value="<?php echo htmlspecialchars($q['admin_remark'] ?? ''); ?>" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; text-align: left; padding: 10px 16px; height: 44px; font-family: inherit; font-size: 13px; color: var(--text-dark); outline: none;" placeholder="Type your response here...">
                         </div>
-                        <button type="submit" name="update_query" class="btn-primary" style="height: 44px; padding: 0 24px;">
-                            Save Changes
+                        <button type="submit" name="update_query" class="btn-primary" style="height: 44px; padding: 0 24px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: center;">
+                            <i class='bx bx-check-circle' style="font-size: 16px;"></i> Save Changes
                         </button>
                     </form>
                 </div>
