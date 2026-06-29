@@ -64,22 +64,6 @@ $stmt = mysqli_prepare($conn, "
     FROM rent r 
     LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
     WHERE r.user_id = ? 
-    ORDER BY r.id DESC LIMIT 10
-");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$rent_res = mysqli_stmt_get_result($stmt);
-$merged_rents = []; 
-while ($row = mysqli_fetch_assoc($rent_res)) {
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$elec_res = mysqli_stmt_get_result($stmt);
-$elecs = []; while ($row = mysqli_fetch_assoc($elec_res)) $elecs[] = $row;
-mysqli_stmt_close($stmt);
-
-// Calculate advance paid
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = ? AND bill_type = 'advance'");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 $adv_paid = (float)$adv_paid_res['adv_paid'];
