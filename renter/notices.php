@@ -799,16 +799,6 @@ if (isset($_GET['ajax_id'])) {
             if (!readNotices.includes(noticeId)) {
                 readNotices.push(noticeId);
                 localStorage.setItem('readNotices', JSON.stringify(readNotices));
-                // Update KPI badge
-                const unreadBadge = document.querySelector('.header-actions .icon-btn span');
-                if (unreadBadge) {
-                    let count = parseInt(unreadBadge.innerText);
-                    if (count > 1) {
-                        unreadBadge.innerText = count - 1;
-                    } else {
-                        unreadBadge.style.display = 'none';
-                    }
-                }
             }
             
             // Open modal
@@ -816,39 +806,9 @@ if (isset($_GET['ajax_id'])) {
         });
     });
 </script>
-
-    <script>
-                currentX = e.touches[0].clientX;
-                let diff = currentX - startX;
-                if (diff < 0) { // Only allow swiping left
-                    content.style.transform = `translateX(${diff}px)`;
-                }
-            }, {passive: true});
-            
-            item.addEventListener('touchend', e => {
-                let diff = currentX - startX;
-                content.style.transition = 'transform 0.2s ease-out';
-                if (diff < -80) { // threshold
-                    content.style.transform = `translateX(-100%)`;
-                    setTimeout(() => {
-                        dismissNotification(item.getAttribute('data-id'), item);
-                    }, 200);
-                } else {
-                    content.style.transform = `translateX(0)`;
-                }
-            });
-        });
-    </script>
-    <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
-
-<script>
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-
-    </script>
+<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 <script>
 document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
-
 </script>
 </body>
 </html>
