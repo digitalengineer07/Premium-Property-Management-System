@@ -1218,6 +1218,10 @@ $admin_user = s($_SESSION['admin']);
             const selectText = document.getElementById('customSelectText');
             
             options.forEach(opt => opt.classList.remove('selected'));
+            if (!id) {
+                selectText.textContent = '-- Choose a Resident --';
+                return;
+            }
             const targetOpt = Array.from(options).find(opt => opt.getAttribute('data-value') == id);
             if(targetOpt) {
                 targetOpt.classList.add('selected');
@@ -1552,7 +1556,9 @@ $admin_user = s($_SESSION['admin']);
                     }
                 }, 300);
             } else {
-                restoreFormState();
+                localStorage.removeItem('billFormState');
+                selectRenterDropdown('');
+                if (typeof resetForm === 'function') resetForm();
             }
         });
 
