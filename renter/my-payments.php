@@ -618,10 +618,10 @@ $unread_count = count($unread_notifications);
         .filter-select { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text-dark); outline: none; background: #FAFBFC; font-family: 'Outfit', sans-serif; cursor: pointer; }
         .btn-filter { background: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 6px; }
         
-        .payments-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
-        .payments-table th { text-align: left; padding: 16px 12px; font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-        .payments-table td { padding: 16px 12px; font-size: 13px; font-weight: 600; color: var(--text-dark); border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
-        .payments-table tr:last-child td { border-bottom: none; }
+        .payments-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; white-space: nowrap; }
+        .payments-table th { text-align: left; padding: 16px 12px; font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: none; white-space: nowrap; }
+        .payments-table td { padding: 16px 12px; font-size: 13px; font-weight: 600; color: var(--text-dark); border-bottom: none; vertical-align: middle; white-space: nowrap; }
+        .payments-table tr { background: transparent; }
         .payments-table tr:hover td { background: #FAFBFC; }
         
         .td-bill-type { display: flex; align-items: center; gap: 12px; }
