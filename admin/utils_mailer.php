@@ -525,4 +525,58 @@ function send_move_out_thank_you_email($to_email, $renter_name) {
         return false;
     }
 }
+
+/**
+ * Generic email sender function wrapper for system notifications
+ */
+function sendEmail($to_email, $subject, $msg) {
+    if (empty($to_email)) return false;
+
+    $mail = get_phpmailer_instance();
+    if (!$mail) return false;
+
+    try {
+        $mail->addAddress($to_email);
+        $mail->Subject = $subject;
+        $mail->isHTML(true);
+
+        $html_body = "
+        <html>
+        <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <style>
+                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
+                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .header { background: #624BFF; color: white; padding: 30px 20px; text-align: center; }
+                .header h2 { margin: 0; font-size: 22px; font-weight: 800; }
+                .content { padding: 40px; font-size: 15px; color: #334155; }
+                .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>Madhav Kunj Administration</h2>
+                </div>
+                <div class='content'>
+                    $msg
+                </div>
+                <div class='footer'>
+                    <p><strong>Madhav Kunj Administration</strong></p>
+                    <p>&copy; " . date('Y') . " All rights reserved.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        ";
+
+        $mail->Body = $html_body;
+        $mail->AltBody = strip_tags(str_replace('<br>', \"\\n\", $msg));
+
+        return $mail->send();
+    } catch (Exception $e) {
+        error_log(\"Failed to send generic email: {$mail->ErrorInfo}\");
+        return false;
+    }
+}
 ?>
