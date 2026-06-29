@@ -574,52 +574,55 @@ while($n = mysqli_fetch_assoc($qNotices)) {
             </div>
         </div>
           <div class="header-actions">
-              <div style="position: relative;">
-                  <div class="icon-btn" onclick="document.getElementById('notificationDropdown').style.display = document.getElementById('notificationDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();" style="position: relative; cursor: pointer; transition: 0.2s;">
+              <div class="notification-wrapper">
+                  <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                       <i class='bx bx-bell'></i>
                       <?php if ($unread_count > 0): ?>
-                          <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white;"><?php echo $unread_count; ?></span>
+                          <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
+                              <?php echo $unread_count; ?>
+                          </span>
                       <?php endif; ?>
                   </div>
                   
-                  <div id="notificationDropdown" style="display: none; position: absolute; top: 120%; right: -20px; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.1); width: 340px; z-index: 1000; overflow: hidden; text-align: left;">
-                      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #FAFBFC;">
-                          <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h4>
-                          <?php if ($unread_count > 0): ?>
-                              <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;"><?php echo $unread_count; ?> New</span>
+                  <!-- Notification Dropdown -->
+                  <div id="notifDropdown" style="display: none;">
+                      <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                          <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                          <?php if($unread_count > 0): ?>
+                              <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                           <?php endif; ?>
                       </div>
-                      <div style="max-height: 380px; overflow-y: auto;">
-                          <?php if (count($notices) > 0): ?>
-                              <?php foreach($notices as $n): ?>
-                              <a href="notices.php" style="display: flex; gap: 14px; padding: 16px 20px; text-decoration: none; border-bottom: 1px solid var(--border); transition: 0.2s; background: <?php echo $n['is_new'] ? 'rgba(98, 75, 255, 0.03)' : 'white'; ?>;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='<?php echo $n['is_new'] ? 'rgba(98, 75, 255, 0.03)' : 'white'; ?>'">
-                                  <div style="width: 40px; height: 40px; border-radius: 12px; background: <?php echo $n['icon_bg']; ?>; color: <?php echo $n['icon_color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
-                                      <i class='bx <?php echo $n['icon']; ?>'></i>
-                                  </div>
-                                  <div>
-                                      <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; justify-content: space-between;">
-                                          <?php echo htmlspecialchars($n['title']); ?>
-                                          <?php if($n['is_new']): ?><div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-purple);"></div><?php endif; ?>
-                                      </h5>
-                                      <p style="margin: 0 0 6px 0; font-size: 13px; color: var(--text-gray); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;"><?php echo htmlspecialchars($n['desc']); ?></p>
-                                      <p style="margin: 0; font-size: 11px; color: #94A3B8; font-weight: 500;"><i class='bx bx-time-five' style="vertical-align: middle;"></i> <?php echo htmlspecialchars($n['time']); ?>, <?php echo htmlspecialchars($n['date']); ?></p>
-                                  </div>
-                              </a>
-                              <?php endforeach; ?>
-                          <?php else: ?>
-                              <div style="padding: 40px 20px; text-align: center; color: var(--text-gray);">
-                                  <div style="width: 64px; height: 64px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
-                                      <i class='bx bx-bell-off' style="font-size: 32px; color: #CBD5E1;"></i>
-                                  </div>
-                                  <p style="margin: 0; font-size: 14px; font-weight: 500;">No new notifications</p>
+                      <div style="max-height: 350px; overflow-y: auto;">
+                          <?php if (empty($unread_notifications)): ?>
+                              <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                  <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                  <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
                               </div>
+                          <?php else: ?>
+                              <?php foreach ($unread_notifications as $notif): ?>
+                                  <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                      <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
+                                          <i class='bx bx-trash'></i>
+                                      </div>
+                                      <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                          <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                              <i class='bx <?php echo $notif['icon']; ?>'></i>
+                                          </div>
+                                          <div style="flex: 1; padding-right: 36px;">
+                                              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                                  <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                  <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                              </div>
+                                              <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
+                                          </div>
+                                          <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
+                                              <i class='bx bx-x'></i>
+                                          </button>
+                                      </div>
+                                  </div>
+                              <?php endforeach; ?>
                           <?php endif; ?>
                       </div>
-                      <?php if (count($notices) > 0): ?>
-                      <div style="padding: 12px; text-align: center; background: white; border-top: 1px solid var(--border);">
-                          <a href="notices.php" style="color: var(--primary-purple); font-size: 13px; font-weight: 600; text-decoration: none;">View All Notices <i class='bx bx-right-arrow-alt' style="vertical-align: middle;"></i></a>
-                      </div>
-                      <?php endif; ?>
                   </div>
               </div>
               <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
