@@ -375,7 +375,6 @@ if (isset($_GET['ajax_id'])) {
             padding: 4px 16px; border-radius: 12px; font-size: 11px; font-weight: 800;
             min-width: 48px; text-align: center; display: inline-block;
         }
-
             .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;

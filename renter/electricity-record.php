@@ -253,7 +253,6 @@ if($ann_q){
         
         .view-more-container { text-align: center; margin-top: 16px; padding-top: 16px; }
         .btn-view-more { background: none; border: none; color: var(--primary-purple); font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-        
             .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;

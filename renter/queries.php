@@ -333,7 +333,6 @@ $unread_count = 1; // Match mockup notification count
             cursor: pointer; transition: all 0.2s; background: var(--white);
         }
         .qi-action:hover { border-color: var(--primary-purple); background: rgba(98,75,255,0.05); }
-
             .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;

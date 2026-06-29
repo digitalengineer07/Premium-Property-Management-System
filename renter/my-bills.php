@@ -646,7 +646,6 @@ $unread_count = count($unread_notifications);
         .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
         .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
-
             .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;
@@ -667,7 +666,7 @@ $unread_count = count($unread_notifications);
             .pagination-purple { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; border: 1px solid var(--border); background: white; color: var(--text-gray); }
             .pagination-purple.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
             .pagination-purple:hover:not(.active) { background: #FAFBFC; }
-                .user-profile-pill {
+            .user-profile-pill {
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;
         }
