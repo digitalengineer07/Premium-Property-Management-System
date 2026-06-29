@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
 }
 
 // Fetch User Documents
-$stmt = mysqli_prepare($conn, "SELECT aadhaar_file, agreement_document, agreement_upload_date FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT aadhaar_file, agreement_document, agreement_upload_date, electricity_document, electricity_upload_date FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $user_docs = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
@@ -101,8 +101,21 @@ if (!empty($user_docs['agreement_document'])) {
     ];
 }
 
-$verified_count = (!empty($user_docs['aadhaar_file']) ? 1 : 0) + (!empty($user_docs['agreement_document']) ? 1 : 0);
-$pending_count = 2 - $verified_count;
+if (!empty($user_docs['electricity_document'])) {
+    $date_str = date('d M Y', strtotime($user_docs['electricity_upload_date'] ?? 'now'));
+    $documents[] = [
+        'name' => 'Electricity Copy', 'desc' => 'Utility Document', 'category' => 'Utility', 'cat_color' => '#10B981', 'cat_bg' => 'rgba(16, 185, 129, 0.1)',
+        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-bolt-circle', 'url' => '../' . $user_docs['electricity_document']
+    ];
+} else {
+    $documents[] = [
+        'name' => 'Electricity Copy', 'desc' => 'Utility Document', 'category' => 'Utility', 'cat_color' => '#10B981', 'cat_bg' => 'rgba(16, 185, 129, 0.1)',
+        'date' => '-', 'time' => '-', 'status' => 'Pending', 'size' => '-', 'icon' => 'bx-bolt-circle', 'url' => ''
+    ];
+}
+
+$verified_count = (!empty($user_docs['aadhaar_file']) ? 1 : 0) + (!empty($user_docs['agreement_document']) ? 1 : 0) + (!empty($user_docs['electricity_document']) ? 1 : 0);
+$pending_count = 3 - $verified_count;
 ?>
 <!doctype html>
 <html lang="en">
