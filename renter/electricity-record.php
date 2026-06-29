@@ -133,6 +133,7 @@ if($ann_q){
             top: 0;
             z-index: 100;
         }
+
         .sidebar-header {
             display: flex;
             align-items: center;
@@ -159,15 +160,24 @@ if($ann_q){
         .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
         .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
         .nav-item.active i { opacity: 1; }
-        
-        .save-more-card { background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 20px; text-align: center; margin-top: 24px; }
-        .save-more-card h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; }
-        .save-more-card p { font-size: 12px; color: var(--text-gray); font-weight: 500; margin: 0 0 16px 0; line-height: 1.4; }
-        .save-more-img { width: 120px; margin: 0 auto 16px auto; display: block; } /* Using an icon fallback for illustration */
-        .btn-tips { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; background: white; border: 1px solid rgba(139, 92, 246, 0.2); color: var(--primary-purple); padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; text-decoration: none;}
-        .btn-tips:hover { border-color: var(--primary-purple); }
 
-        /* Main Content */
+        .go-mobile-widget {
+            background: rgba(98, 75, 255, 0.03); border: 1px solid rgba(98, 75, 255, 0.05);
+            border-radius: 16px; padding: 16px; text-align: left;
+            margin-top: auto;
+        }
+        .go-mobile-widget h4 { font-size: 15px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
+        .go-mobile-widget p { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; line-height: 1.4; }
+        .go-mobile-imgs { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
+        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .btn-download {
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--primary-purple); color: white; border: none; padding: 10px;
+            border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
+        }
+        .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
         .main-content { flex: 1; margin-left: 230px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 230px); box-sizing: border-box; }
         
         /* Top Header */
@@ -281,18 +291,18 @@ if($ann_q){
                 <span>Electricity Record</span>
             </a>
             <a href="my-bills.php" class="nav-item">
-                <i class=\'bx bx-receipt\'></i>
+                <i class='bx bx-receipt'></i>
                 <span>My Bills</span>
             </a>
             <a href="queries.php" class="nav-item">
                 <i class='bx bx-message-square-dots'></i>
                 <span>Raise Query</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="notices.php" class="nav-item">
                 <i class='bx bx-bell'></i>
                 <span>Notices</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="documents.php" class="nav-item">
                 <i class='bx bx-folder'></i>
                 <span>Documents</span>
             </a>
@@ -300,7 +310,25 @@ if($ann_q){
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
             </a>
+            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
         </nav>
+        
+        <div class="go-mobile-widget">
+            <h4>Go Mobile!</h4>
+            <p>Manage your payments on the go.</p>
+            <div class="go-mobile-imgs">
+                <div class="mock-phone">
+                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
+                </div>
+                <div class="mock-qr">
+                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
+                </div>
+            </div>
+            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
+        </div>
     </aside>
 
     <!-- Main Content -->

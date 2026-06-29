@@ -379,14 +379,6 @@ $unread_count = count($unread_notifications);
             z-index: 100;
         }
 
-        /* Split Layout */
-        .bills-layout {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 24px;
-            align-items: start;
-        }
-
         .sidebar-header {
             display: flex;
             align-items: center;
@@ -431,7 +423,6 @@ $unread_count = count($unread_notifications);
         }
         .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
-        /* Main Content Area */
         .main-content {
             flex: 1;
             margin-left: 230px;
@@ -708,18 +699,18 @@ $unread_count = count($unread_notifications);
                 <span>Electricity Record</span>
             </a>
             <a href="my-bills.php" class="nav-item active">
-                <i class=\'bx bx-receipt\'></i>
+                <i class='bx bx-receipt'></i>
                 <span>My Bills</span>
             </a>
             <a href="queries.php" class="nav-item">
                 <i class='bx bx-message-square-dots'></i>
                 <span>Raise Query</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="notices.php" class="nav-item">
                 <i class='bx bx-bell'></i>
                 <span>Notices</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="documents.php" class="nav-item">
                 <i class='bx bx-folder'></i>
                 <span>Documents</span>
             </a>
