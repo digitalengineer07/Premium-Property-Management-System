@@ -1212,25 +1212,6 @@ $unread_count = count($unread_notifications);
             document.addEventListener('DOMContentLoaded', () => {
                 renderTable();
             });
-            
-            // Re-using the payment modal logic from the bottom of the file
-            function openPaymentModal(amount, title, type, id) {
-                const pm = document.getElementById('paymentModal');
-                if(pm) {
-                    pm.style.display = 'flex';
-                    document.getElementById('pmTitle').textContent = title;
-                    document.getElementById('pmAmount').textContent = formatMoney(amount);
-                    document.getElementById('hiddenAmount').value = amount;
-                    document.getElementById('hiddenBillType').value = type;
-                    document.getElementById('hiddenBillId').value = id;
-                }
-            }
-            function closePaymentModal() {
-                const pm = document.getElementById('paymentModal');
-                if(pm) {
-                    pm.style.display = 'none';
-                }
-            }
         </script>
         
       <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
@@ -1247,8 +1228,8 @@ $unread_count = count($unread_notifications);
               </div>
               
               <div id="paymentDetails" style="margin-bottom: 24px;">
-                  <div id="pmTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
-                  <div id="pmAmount" style="font-size: 32px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹0</div>
+                  <div id="paymentTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
+                  <div style="font-size: 32px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
               </div>
   
               <div style="background: #F8F9FA; padding: 24px; border-radius: 20px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03);">
