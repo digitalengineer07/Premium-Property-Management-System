@@ -1134,6 +1134,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
     });
 </script>
-
+<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
