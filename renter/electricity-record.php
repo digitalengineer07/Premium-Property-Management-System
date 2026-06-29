@@ -192,12 +192,6 @@ if($ann_q){
         .btn-outline-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); white-space: nowrap; }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         
-        .user-profile-pill { display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px; white-space: nowrap; }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info { display: flex; flex-direction: column; }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; font-weight: 500; }
-        
         /* KPI Cards */
         .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
         .kpi-card { background: white; border-radius: 20px; padding: 20px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 14px; transition: all 0.3s ease; }
@@ -260,6 +254,13 @@ if($ann_q){
         .view-more-container { text-align: center; margin-top: 16px; padding-top: 16px; }
         .btn-view-more { background: none; border: none; color: var(--primary-purple); font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
         
+            .user-profile-pill {
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
+        }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
     </style>
 </head>
 <body>
@@ -359,15 +360,24 @@ if($ann_q){
                 <a href="#" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
-                <div class="user-profile-pill">
-                    <div class="user-avatar">
-                        <?php echo strtoupper(substr($user['name'], 0, 2)); ?>
+                <div style="position: relative;">
+                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                        <div class="user-avatar"><?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?></div>
+                        <div class="user-info">
+                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
+                        </div>
+                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
-                    <div class="user-info">
-                        <h4><?php echo htmlspecialchars($user['name']); ?></h4>
-                        <p>Room <?php echo htmlspecialchars($user['room_no']); ?></p>
+                    
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                        </a>
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                        </a>
                     </div>
-                    <i class='bx bx-chevron-down' style="color: var(--text-gray); font-size: 18px;"></i>
                 </div>
             </div>
         </header>

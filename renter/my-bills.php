@@ -452,14 +452,6 @@ $unread_count = count($unread_notifications);
             white-space: nowrap;
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
-        .user-profile-pill {
-            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
-        }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info { display: flex; flex-direction: column; }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
 
         /* Red Reminder Banner */
         .reminder-banner {
@@ -655,6 +647,13 @@ $unread_count = count($unread_notifications);
         .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
 
+            .user-profile-pill {
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
+        }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
     </style>
 
         <style>
@@ -668,7 +667,14 @@ $unread_count = count($unread_notifications);
             .pagination-purple { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; border: 1px solid var(--border); background: white; color: var(--text-gray); }
             .pagination-purple.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
             .pagination-purple:hover:not(.active) { background: #FAFBFC; }
-        </style>
+                .user-profile-pill {
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
+        }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
+    </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
 
@@ -772,12 +778,12 @@ $unread_count = count($unread_notifications);
                 <a href="queries.php" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
-                                <div style="position: relative;">
+                <div style="position: relative;">
                     <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
-                        <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
+                        <div class="user-avatar"><?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?></div>
                         <div class="user-info">
-                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name))[0]); ?></h4>
-                            <p>Room <?php echo htmlspecialchars($room_no); ?></p>
+                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
                         </div>
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
