@@ -241,6 +241,12 @@ $pending_count = 3 - $verified_count;
         .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
+        .header-actions .icon-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
+            position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         
         .btn-outline {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
@@ -398,12 +404,18 @@ $pending_count = 3 - $verified_count;
                 </div>
             </div>
             <div class="header-actions">
-                <div style="position: relative; cursor: pointer;">
-                    <i class='bx bx-bell' style="font-size: 24px; color: var(--text-gray);"></i>
-                    <span style="position: absolute; top: -2px; right: -2px; background: #EF4444; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; border: 2px solid var(--bg-main);">2</span>
+                <div class="notification-wrapper">
+                    <div class="icon-btn bell-icon">
+                        <i class='bx bx-bell'></i>
+                        <?php if ($unread_count > 0): ?>
+                            <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
+                                <?php echo $unread_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <div style="cursor: pointer;" onclick="document.documentElement.classList.toggle('dark-theme'); localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');">
-                    <i class='bx bx-moon' style="font-size: 24px; color: var(--text-gray);"></i>
+                <div class="icon-btn moon-icon" onclick="document.documentElement.classList.toggle('dark-theme'); localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');">
+                    <i class='bx bx-moon'></i>
                 </div>
                 <a href="#" class="btn-outline"><i class='bx bx-help-circle'></i> Help & Support</a>
                 <div style="position: relative;">
