@@ -317,10 +317,11 @@ $unread_count = 1; // Match mockup notification count
         }
         .list-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); }
         
+        .query-row { border-bottom: 1px solid var(--border); }
+        .query-row:last-child { border-bottom: none; }
         .query-item {
-            display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 16px;
+            display: flex; align-items: center; padding: 12px 0; gap: 16px;
         }
-        .query-item:last-child { border-bottom: none; }
         
         .qi-icon {
             width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
@@ -684,33 +685,35 @@ $unread_count = 1; // Match mockup notification count
                         $date_formatted = date('d M Y', strtotime($q['created_at']));
                         $qid_formatted = '#QRY-' . str_pad($q['id'], 4, '0', STR_PAD_LEFT);
                     ?>
-                    <div class="query-item" onclick="toggleDetails(<?php echo $index; ?>)" style="cursor: pointer;">
-                        <div class="qi-icon" style="background: <?php echo $bg; ?>; color: <?php echo $col; ?>;">
-                            <i class='bx <?php echo $icon; ?>'></i>
-                        </div>
-                        <div class="qi-details">
-                            <h4><?php echo htmlspecialchars($q['subject']); ?></h4>
-                            <span class="category"><?php echo htmlspecialchars($q['category']); ?></span>
-                            <p><?php echo htmlspecialchars($q['message']); ?></p>
-                        </div>
-                        <div class="qi-status" style="background: <?php echo $s_bg; ?>; color: <?php echo $s_col; ?>;">
-                            <?php echo htmlspecialchars($q['ui_status']); ?>
-                        </div>
-                        <div class="qi-meta">
-                            <span class="date"><?php echo $date_formatted; ?></span>
-                            <span class="qid"><?php echo $qid_formatted; ?></span>
-                        </div>
-                        <button class="qi-action" id="btn-<?php echo $index; ?>" style="transition: transform 0.3s;"><i class='bx bx-chevron-right'></i></button>
-                    </div>
-                    <div id="details-<?php echo $index; ?>" style="display: none; padding: 20px; background: #F8FAFC; border-radius: 12px; margin-top: -12px; margin-bottom: 16px; border: 1px solid var(--border); border-top: none; border-top-left-radius: 0; border-top-right-radius: 0;">
-                        <p style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.6;"><strong>Full Message:</strong><br><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
-                        <?php if(!empty($q['admin_remark'])): ?>
-                            <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
-                                <p style="font-size: 13px; color: var(--primary-purple); margin: 0; line-height: 1.5;"><strong>Admin Reply:</strong><br><?php echo nl2br(htmlspecialchars($q['admin_remark'])); ?></p>
+                    <div class="query-row">
+                        <div class="query-item" onclick="toggleDetails(<?php echo $index; ?>)" style="cursor: pointer;">
+                            <div class="qi-icon" style="background: <?php echo $bg; ?>; color: <?php echo $col; ?>;">
+                                <i class='bx <?php echo $icon; ?>'></i>
                             </div>
-                        <?php else: ?>
-                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-style: italic;">No response from admin yet.</p>
-                        <?php endif; ?>
+                            <div class="qi-details">
+                                <h4><?php echo htmlspecialchars($q['subject']); ?></h4>
+                                <span class="category"><?php echo htmlspecialchars($q['category']); ?></span>
+                                <p><?php echo htmlspecialchars($q['message']); ?></p>
+                            </div>
+                            <div class="qi-status" style="background: <?php echo $s_bg; ?>; color: <?php echo $s_col; ?>;">
+                                <?php echo htmlspecialchars($q['ui_status']); ?>
+                            </div>
+                            <div class="qi-meta">
+                                <span class="date"><?php echo $date_formatted; ?></span>
+                                <span class="qid"><?php echo $qid_formatted; ?></span>
+                            </div>
+                            <button class="qi-action" id="btn-<?php echo $index; ?>" style="transition: transform 0.3s;"><i class='bx bx-chevron-right'></i></button>
+                        </div>
+                        <div id="details-<?php echo $index; ?>" style="display: none; padding: 0 0 20px 64px;">
+                            <p style="font-size: 14px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                            <?php if(!empty($q['admin_remark'])): ?>
+                                <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
+                                    <p style="font-size: 13px; color: var(--primary-purple); margin: 0; line-height: 1.5;"><strong>Admin Reply:</strong><br><?php echo nl2br(htmlspecialchars($q['admin_remark'])); ?></p>
+                                </div>
+                            <?php else: ?>
+                                <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-style: italic;">No response from admin yet.</p>
+                            <?php endif; ?>
+                        </div>
                     </div>
                     <?php endforeach; ?>
                 </div>
