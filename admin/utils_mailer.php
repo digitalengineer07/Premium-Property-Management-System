@@ -571,11 +571,11 @@ function sendEmail($to_email, $subject, $msg) {
         ";
 
         $mail->Body = $html_body;
-        $mail->AltBody = strip_tags(str_replace('<br>', \"\\n\", $msg));
+        $mail->AltBody = strip_tags(str_replace('<br>', "\n", $msg));
 
         return $mail->send();
     } catch (Exception $e) {
-        error_log(\"Failed to send generic email: {$mail->ErrorInfo}\");
+        error_log("Failed to send generic email: " . $mail->ErrorInfo);
         return false;
     }
 }
