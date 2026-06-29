@@ -951,7 +951,7 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
                 
-                <div style="padding: 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                <div style="padding: 0 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 12px 10px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL FOR</th>
