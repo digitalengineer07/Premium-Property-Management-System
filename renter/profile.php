@@ -701,7 +701,12 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                   </div>
                   <div class="info-list">
                       <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value"><?php echo htmlspecialchars($user['email'] ?: '-'); ?></div></div>
+                      <?php
+                      $email_val = $user['email'] ?: '-';
+                      $em_len = strlen($email_val);
+                      $em_fs = $em_len > 30 ? '11px' : ($em_len > 24 ? '12px' : ($em_len > 18 ? '13px' : '14px'));
+                      ?>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value" style="font-size: <?php echo $em_fs; ?>; max-width: 70%; white-space: nowrap;"><?php echo htmlspecialchars($email_val); ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['phone'] ?: '-'); ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value"><?php echo htmlspecialchars($user['whatsapp'] ?: '-'); ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value"><?php echo $user['dob'] ? date('d M Y', strtotime($user['dob'])) : '-'; ?></div></div>
