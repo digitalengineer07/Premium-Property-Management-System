@@ -71,59 +71,6 @@ mysqli_stmt_execute($stmt);
 $rent_res = mysqli_stmt_get_result($stmt);
 $merged_rents = []; 
 while ($row = mysqli_fetch_assoc($rent_res)) {
-    $row['source'] = 'rent_table';
-    $merged_rents[] = $row;
-}
-mysqli_stmt_close($stmt);
-
-// Get rent portions from electricity bills (slips)
-$stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, e.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
-    FROM electricity e 
-    LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
-    WHERE e.user_id = ? AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0) 
-    ORDER BY e.id DESC LIMIT 10
-");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$elec_rent_res = mysqli_stmt_get_result($stmt);
-while ($row = mysqli_fetch_assoc($elec_rent_res)) {
-    $row['source'] = 'elec_table';
-    $merged_rents[] = $row;
-}
-mysqli_stmt_close($stmt);
-
-// Get advance payments 
-$stmt = mysqli_prepare($conn, "
-    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
-    FROM payments p 
-    WHERE p.user_id = ? AND p.bill_type = 'advance'
-    ORDER BY p.id DESC LIMIT 10
-");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$adv_res = mysqli_stmt_get_result($stmt);
-while ($row = mysqli_fetch_assoc($adv_res)) {
-    $row['source'] = 'advance';
-    $merged_rents[] = $row;
-}
-mysqli_stmt_close($stmt);
-
-// Sort merged_rents by ID descending to show latest first
-usort($merged_rents, function($a, $b) {
-    return $b['id'] - $a['id'];
-});
-// Limit to top 10 after merge
-$merged_rents = array_slice($merged_rents, 0, 10);
-
-// Electricity list (only the usage part)
-$stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
-    FROM electricity e 
-    LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
-    WHERE e.user_id = ? 
-    ORDER BY e.id DESC LIMIT 10
-");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $elec_res = mysqli_stmt_get_result($stmt);
