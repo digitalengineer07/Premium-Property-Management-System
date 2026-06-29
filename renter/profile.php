@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 }
 
 /* Fetch user info */
-$stmt = mysqli_prepare($conn, "SELECT username, name, phone, email, whatsapp, room_no, profile_pic, about, aadhaar_file, agreement_document, agreement_upload_date, agreement_expiry_date, electricity_document FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT username, name, phone, email, whatsapp, room_no, profile_pic, about, aadhaar_file, agreement_document, agreement_upload_date, agreement_expiry_date, electricity_document, dob, gender, address, emergency_contact_name, emergency_contact_relation, emergency_contact_phone, emergency_contact_address, block, floor, parking, joining_date, fixed_rent, advance_payment FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
@@ -594,20 +594,20 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
             <!-- Basic Information -->
             <div class="panel">
-                <div class="panel-header">
-                    <h3>Basic Information</h3>
-                    <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
-                </div>
-                <div class="info-list">
-                    <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value"><?php echo htmlspecialchars($user['email'] ?: '-'); ?></div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['phone'] ?: '-'); ?></div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value"><?php echo htmlspecialchars($user['whatsapp'] ?: '+91 91234 56789'); ?></div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value">15 Aug 1995</div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value">Male</div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;">Madhav Kunj Apartments, Block A,<br>Room <?php echo htmlspecialchars($user['room_no']); ?>, City Center, Patna - 800001</div></div>
-                </div>
-            </div>
+                  <div class="panel-header">
+                      <h3>Basic Information</h3>
+                      <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
+                  </div>
+                  <div class="info-list">
+                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value"><?php echo htmlspecialchars($user['email'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['phone'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value"><?php echo htmlspecialchars($user['whatsapp'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value"><?php echo $user['dob'] ? date('d M Y', strtotime($user['dob'])) : '-'; ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value"><?php echo htmlspecialchars($user['gender'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars($user['address'] ?: '-'); ?></div></div>
+                  </div>
+              </div>
 
             <!-- Residence Details -->
             <div class="panel">
@@ -720,17 +720,17 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
             <!-- Emergency Contact -->
             <div class="panel">
-                <div class="panel-header">
-                    <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
-                    <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
-                </div>
-                <div class="info-list">
-                    <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value">Ramesh Kumar</div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value">Father</div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value">+91 87654 32109</div></div>
-                    <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value">Patna, Bihar - 800001</div></div>
-                </div>
-            </div>
+                  <div class="panel-header">
+                      <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
+                      <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
+                  </div>
+                  <div class="info-list">
+                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_name'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: '-'); ?></div></div>
+                  </div>
+              </div>
 
             <!-- Linked Documents -->
             <div class="panel">
