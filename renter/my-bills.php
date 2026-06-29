@@ -653,7 +653,7 @@ $unread_count = count($unread_notifications);
     </style>
 
         <style>
-            .bill-row td { padding: 12px 8px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+            .bill-row td { padding: 12px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
             .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding-left: 12px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; padding-right: 12px; }
@@ -931,7 +931,7 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.2fr) 320px; gap: 24px; align-items: stretch;">
+        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
@@ -954,12 +954,12 @@ $unread_count = count($unread_notifications);
                 <div style="padding: 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL FOR</th>
-                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">DUE DATE</th>
-                            <th style="text-align: right; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">AMOUNT</th>
-                            <th style="text-align: center; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">STATUS</th>
-                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">ACTION</th>
+                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
+                            <th style="text-align: left; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">DUE DATE</th>
+                            <th style="text-align: right; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">AMOUNT</th>
+                            <th style="text-align: center; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">STATUS</th>
+                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
