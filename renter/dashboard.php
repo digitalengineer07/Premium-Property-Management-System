@@ -34,20 +34,6 @@ $r1a = mysqli_fetch_assoc($r1);
 $pure_rent_due = (float)($r1a['total'] ?? 0);
 mysqli_stmt_close($stmt);
 
-// 2. Electricity and Rent components from 'electricity' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(amount),0) as elec_total, IFNULL(SUM(rent_amount + maintenance + dues),0) as rent_portion_total FROM electricity WHERE user_id = ? AND status = 'Due'");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$r2 = mysqli_stmt_get_result($stmt);
-$r2a = mysqli_fetch_assoc($r2);
-$elec_due = (float)($r2a['elec_total'] ?? 0);
-$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
-mysqli_stmt_close($stmt);
-$ann_check_q = mysqli_query($conn, "SELECT id FROM announcements WHERE created_at >= NOW() - INTERVAL 1 DAY");
-if ($ann_check_q) {
-    while($ac = mysqli_fetch_assoc($ann_check_q)) {
-        if (!in_array('ann_' . $ac['id'], $dismissed_ids_arr)) {
-            $has_new_notice = true;
             break;
         }
     }
