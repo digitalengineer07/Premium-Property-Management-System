@@ -979,17 +979,17 @@ $unread_count = count($unread_notifications);
                     <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-                    <div id="bdIcon" style="width: 48px; height: 48px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <div id="bdIcon" style="width: 40px; height: 40px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
                         <i class='bx bx-home'></i>
                     </div>
                     <div style="flex: 1; min-width: 0;">
-                        <h4 id="bdTitle" style="margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rent for February 2026</h4>
-                        <p id="bdSubtitle" style="margin: 0; font-size: 12px; color: var(--text-gray); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room 201</p>
+                        <h4 id="bdTitle" style="margin: 0 0 2px 0; font-size: 12px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rent for February 2026</h4>
+                        <p id="bdSubtitle" style="margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room 201</p>
                     </div>
                     <div style="margin-left: auto; text-align: right; flex-shrink: 0;">
-                        <p style="margin: 0 0 4px 0; font-size: 11px; color: var(--text-gray);">Due Date</p>
-                        <h4 id="bdDueDate" style="margin: 0; font-size: 13px; font-weight: 700; color: #FF4B6B;">05 Feb 2026</h4>
+                        <p style="margin: 0 0 2px 0; font-size: 10px; color: var(--text-gray);">Due Date</p>
+                        <h4 id="bdDueDate" style="margin: 0; font-size: 12px; font-weight: 700; color: #FF4B6B;">05 Feb 2026</h4>
                     </div>
                 </div>
 
