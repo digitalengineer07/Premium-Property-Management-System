@@ -1218,76 +1218,101 @@ $unread_count = count($unread_notifications);
           <style>
               #paymentModalPanel::-webkit-scrollbar { display: none; }
               #paymentModalPanel { -ms-overflow-style: none; scrollbar-width: none; }
+              
+              .pm-layout { display: flex; flex-direction: column; gap: 0; }
+              .pm-qr-section { background: #F8F9FA; padding: 24px; border-radius: 20px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03); }
+              .pm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+              
+              @media (min-width: 768px) {
+                  #paymentModalPanel { max-width: 780px !important; padding: 40px !important; }
+                  .pm-layout { flex-direction: row; gap: 40px; text-align: left; }
+                  .pm-col-left, .pm-col-right { flex: 1; min-width: 0; }
+                  .pm-col-left { display: flex; flex-direction: column; justify-content: center; }
+                  .pm-qr-section { margin-bottom: 0; height: 100%; display: flex; flex-direction: column; justify-content: center; }
+                  #paymentDetails { text-align: left; align-items: flex-start; }
+                  #pmAmountContainer { justify-content: flex-start !important; }
+                  .pm-timer-container { justify-content: flex-start !important; }
+                  .pm-timer-text { text-align: left !important; }
+              }
+              @media (max-width: 767px) {
+                  .pm-col-left { order: 2; }
+                  .pm-col-right { order: 1; }
+              }
           </style>
           <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 32px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-                  <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Make Payment</h2>
-                  <div onclick="closePaymentModal()" style="width: 32px; height: 32px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
-                      <i class='bx bx-x' style="font-size: 20px; color: var(--text-gray);"></i>
+              <div class="pm-header">
+                  <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0;">Make Payment</h2>
+                  <div onclick="closePaymentModal()" style="width: 36px; height: 36px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
+                      <i class='bx bx-x' style="font-size: 22px; color: var(--text-gray);"></i>
                   </div>
               </div>
               
-              <div id="paymentDetails" style="margin-bottom: 24px;">
-                  <div id="paymentTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
-                  <div style="font-size: 32px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
-              </div>
-  
-              <div style="background: #F8F9FA; padding: 24px; border-radius: 20px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03);">
-                  <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
-                      <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 160px; height: 160px; display: block; border-radius: 8px;">
+              <div class="pm-layout">
+                  <div class="pm-col-left">
+                      <div id="paymentDetails" style="margin-bottom: 24px;">
+                          <div id="paymentTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
+                          <div id="pmAmountContainer" style="font-size: 32px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
+                      </div>
+
+                      <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 16px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 24px;">
+                          <p class="pm-timer-container" style="font-size: 11px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 6px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                              <i class='bx bx-timer' style="font-size: 16px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 2px 6px; border-radius: 4px;">05:00</span>
+                          </p>
+                          <p class="pm-timer-text" style="font-size: 11px; color: var(--text-gray); margin: 0; text-align: center;">Transfer within this time to ensure amount accuracy.</p>
+                      </div>
+
+                      <form method="POST" id="paymentNotifyForm" style="text-align: left;">
+                          <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
+                          <input type="hidden" name="bill_type" id="hiddenBillType">
+                          <input type="hidden" name="bill_id" id="hiddenBillId">
+                          <input type="hidden" name="amount" id="hiddenAmount">
+                          
+                          <label style="font-size: 11px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 6px;">Enter Transaction ID / UTR</label>
+                          <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 16px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 13px;">
+                          
+                          <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 14px; border-radius: 12px;">
+                              <i class='bx bx-check-shield'></i> Confirm Payment
+                          </button>
+                      </form>
+                      
+                      <script>
+                      document.getElementById('paymentNotifyForm').addEventListener('submit', function(e) {
+                          let btn = document.getElementById('submitPaymentBtn');
+                          if (btn.disabled) {
+                              e.preventDefault();
+                              return;
+                          }
+                          setTimeout(() => {
+                              btn.disabled = true;
+                              btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Submitting...";
+                          }, 10);
+                      });
+                      </script>
                   </div>
-                  <p style="font-size: 13px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
-                  <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
                   
-                  <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 14px; font-weight: 700; padding: 14px; justify-content: center; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 8px;">
-                      <i class='bx bx-mobile-alt' style="font-size: 18px;"></i> Pay directly on your phone
-                  </a>
+                  <div class="pm-col-right">
+                      <div class="pm-qr-section">
+                          <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); align-self: center;">
+                              <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 160px; height: 160px; display: block; border-radius: 8px;">
+                          </div>
+                          <p style="font-size: 13px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
+                          <div style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px;">nikhil119124-1@oksbi</div>
+                          
+                          <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 14px; font-weight: 700; padding: 14px; justify-content: center; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 8px; margin-bottom: 16px;">
+                              <i class='bx bx-mobile-alt' style="font-size: 18px;"></i> Pay on phone
+                          </a>
+                          
+                          <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 16px; margin-top: auto;">
+                              <p style="font-size: 11px; color: var(--text-gray); margin: 0 0 10px 0;">Having issues? Use the permanent scanner:</p>
+                              <button onclick="openScannerModal()" style="background: white; border: 1px solid var(--border); color: var(--text-dark); border-radius: 10px; width: 100%; justify-content: center; font-size: 12px; padding: 10px; display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 600; transition: 0.2s;">
+                                  <i class='bx bx-qr-scan'></i> Open Owner's Scanner
+                              </button>
+                          </div>
+                      </div>
+                  </div>
               </div>
-  
-              <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 16px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 24px;">
-                  <p style="font-size: 11px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                      <i class='bx bx-timer' style="font-size: 16px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 2px 6px; border-radius: 4px;">05:00</span>
-                  </p>
-                  <p style="font-size: 11px; color: var(--text-gray); margin: 0;">Transfer within this time to ensure amount accuracy.</p>
-              </div>
-
-            <form method="POST" id="paymentNotifyForm" style="text-align: left; border-top: 1px solid var(--border); padding-top: 16px;">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                <input type="hidden" name="bill_type" id="hiddenBillType">
-                <input type="hidden" name="bill_id" id="hiddenBillId">
-                <input type="hidden" name="amount" id="hiddenAmount">
-                
-                <label style="font-size: 11px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 6px;">Enter Transaction ID / UTR</label>
-                <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; background: var(--bg-main); color: var(--text-dark); outline: none; font-size: 13px;">
-                
-                <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 13px;">
-                    <i class='bx bx-bell'></i> Notify Admin
-                </button>
-            </form>
-
-            <script>
-            document.getElementById('paymentNotifyForm').addEventListener('submit', function(e) {
-                let btn = document.getElementById('submitPaymentBtn');
-                if (btn.disabled) {
-                    e.preventDefault();
-                    return;
-                }
-                // Don't prevent default, we want the form to submit
-                setTimeout(() => {
-                    btn.disabled = true;
-                    btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Submitting...";
-                }, 10);
-            });
-            </script>
-
-            <div style="border-top: 1px solid var(--border); padding-top: 15px; margin-top: 16px;">
-                <p style="font-size: 11px; color: var(--text-gray); margin-bottom: 10px;">Having issues? Use the permanent scanner:</p>
-                <button onclick="openScannerModal()" class="btn-outline" style="width: 100%; justify-content: center; font-size: 11px; padding: 8px;">
-                    <i class='bx bx-qr-scan'></i> Open Owner's Scanner
-                </button>
-            </div>
-        </div>
-    </div>
+          </div>
+      </div>
 
     <!-- Owner Scanner Modal -->
     <div id="scannerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
