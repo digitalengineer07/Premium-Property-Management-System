@@ -107,7 +107,93 @@ function closePaymentModal() { paymentModal.style.display = 'none'; if (timerInt
 function openScannerModal() { scannerModal.style.display = 'flex'; }
 function closeScannerModal() { scannerModal.style.display = 'none'; }
 
-window.onclick = function (event) {
+window.addEventListener('click', function (event) {
     if (event.target == paymentModal) closePaymentModal();
     if (event.target == scannerModal) closeScannerModal();
+    
+    const notifDropdown = document.getElementById('notifDropdown');
+    if (notifDropdown && notifDropdown.style.display === 'block') {
+        if (!notifDropdown.contains(event.target) && !event.target.closest('.bell-icon')) {
+            notifDropdown.style.display = 'none';
+        }
+    }
+});
+
+// Universal Notification Dismissal Logic
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(name) {
+    let nameEQ = name + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0;i < ca.length;i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+
+function dismissNotification(id, el) {
+    let item = el.closest('.notif-item');
+    if (item) {
+        item.style.height = item.offsetHeight + 'px';
+        item.style.transition = 'all 0.3s';
+        item.style.transform = 'translateX(-100%)';
+        
+        setTimeout(() => {
+            item.style.height = '0px';
+            item.style.padding = '0px';
+            item.style.border = 'none';
+            setTimeout(() => item.remove(), 300);
+        }, 300);
+    }
+    
+    let currentStr = getCookie('dismissed_notifs');
+    let currentIds = currentStr ? currentStr.split(',') : [];
+    if (!currentIds.includes(id)) {
+        currentIds.push(id);
+        setCookie('dismissed_notifs', currentIds.join(','), 30);
+    }
+    
+    let badge = document.querySelector('.bell-icon span');
+    if (badge) {
+        let count = parseInt(badge.innerText) - 1;
+        if (count <= 0) {
+            badge.remove();
+            let container = document.querySelector('#notifDropdown > div:nth-child(2)');
+            if (container && document.querySelectorAll('.notif-item').length <= 1) {
+                setTimeout(() => {
+                    container.innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                        <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                        <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                    </div>`;
+                }, 600);
+            }
+        } else {
+            badge.innerText = count;
+        }
+    }
+    
+    let countLabel = document.querySelector('#notifDropdown span[style*="background: rgba(239, 68, 68, 0.1)"]');
+    if (countLabel) {
+        let count = parseInt(countLabel.innerText) - 1;
+        if (count <= 0) countLabel.remove();
+        else countLabel.innerText = count + ' New';
+    }
+    
+    if (id.startsWith('ann_')) {
+        let remainingAnns = Array.from(document.querySelectorAll('.notif-item')).filter(el => el.getAttribute('data-id') && el.getAttribute('data-id').startsWith('ann_'));
+        if (remainingAnns.length <= 1) {
+            let redDot = document.getElementById('helpSupportRedDot');
+            if (redDot) redDot.style.display = 'none';
+        }
+    }
 }
