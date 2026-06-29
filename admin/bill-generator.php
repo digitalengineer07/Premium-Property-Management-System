@@ -1064,7 +1064,6 @@ $admin_user = s($_SESSION['admin']);
                     // Sync with hidden select
                     hiddenSelect.value = val;
                     hiddenSelect.dispatchEvent(new Event('change'));
-                    saveFormState();
 
                     customSelect.classList.remove('open');
                     searchInput.value = '';
@@ -1212,7 +1211,6 @@ $admin_user = s($_SESSION['admin']);
             const hiddenSelect = document.getElementById('renterSelect');
             hiddenSelect.value = id;
             hiddenSelect.dispatchEvent(new Event('change'));
-            saveFormState();
             
             // Also update custom select visually
             const customSelect = document.getElementById('customRenterSelect');
