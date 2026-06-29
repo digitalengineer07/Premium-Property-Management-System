@@ -1220,9 +1220,9 @@ $unread_count = count($unread_notifications);
                     pm.style.display = 'flex';
                     document.getElementById('pmTitle').textContent = title;
                     document.getElementById('pmAmount').textContent = formatMoney(amount);
-                    document.getElementById('pay_amount_hidden').value = amount;
-                    document.getElementById('pay_bill_type').value = type;
-                    document.getElementById('pay_bill_id').value = id;
+                    document.getElementById('hiddenAmount').value = amount;
+                    document.getElementById('hiddenBillType').value = type;
+                    document.getElementById('hiddenBillId').value = id;
                 }
             }
             function closePaymentModal() {
