@@ -471,6 +471,13 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             overflow: hidden;
             border-radius: 16px;
         }
+            .user-profile-pill {
+            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
+            white-space: nowrap;
+        }
+        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
+        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
     </style>
 </head>
 <body style="display: block;">
