@@ -399,9 +399,26 @@ if (isset($_GET['ajax_id'])) {
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-    .notification-wrapper { position: relative; } #notifDropdown { position: absolute; top: 110%; right: 0; width: 320px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); border: 1px solid var(--border); z-index: 1000; overflow: hidden; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); } @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    </style>
+    
+    /* Standardized Notification Dropdown CSS */
+    .notification-wrapper { position: relative; }
+    #notifDropdown { 
+        position: absolute; 
+        top: 110%; 
+        right: 0; 
+        width: 340px; 
+        background: white; 
+        border-radius: 16px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+        border: 1px solid var(--border); 
+        z-index: 99999; 
+        overflow: hidden; 
+        text-align: left;
+    }
+
+</style>
 </head>
 <body style="display: block;">
 <div class="app-container">

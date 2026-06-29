@@ -229,68 +229,7 @@ if ($total_due > 0) {
     }
 }
 $show_banner = ($is_late && !empty($overdue_list));
-// Notification System Logic
 
-$dismissed_cookie = $_COOKIE['dismissed_notifs'] ?? '';
-$dismissed_ids = $dismissed_cookie ? explode(',', $dismissed_cookie) : [];
-
-// 1. Unread Announcements
-$ann_q = @mysqli_query($conn, "SELECT id, title, created_at FROM announcements WHERE created_at >= NOW() - INTERVAL 7 DAY ORDER BY created_at DESC");
-if ($ann_q) {
-    while($a = mysqli_fetch_assoc($ann_q)) {
-        $nid = 'ann_' . $a['id'];
-        if (in_array($nid, $dismissed_ids)) continue;
-        $unread_notifications[] = [
-            'id' => $nid,
-            'type' => 'announcement',
-            'title' => 'New Announcement',
-            'message' => $a['title'],
-            'time' => $a['created_at'],
-            'icon' => 'bx-speaker',
-            'color' => '#3B82F6'
-        ];
-    }
-}
-
-// 2. Rejected Payments
-@mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
-$rej_notif_q = @mysqli_query($conn, "SELECT id, transaction_id, admin_note, amount, created_at FROM payment_notifications WHERE user_id = $user_id AND status = 'Rejected' AND IFNULL(is_dismissed, 0) = 0 ORDER BY id DESC");
-if ($rej_notif_q) {
-    while($r = mysqli_fetch_assoc($rej_notif_q)) {
-        $nid = 'rej_' . $r['id'];
-        if (in_array($nid, $dismissed_ids)) continue;
-        $unread_notifications[] = [
-            'id' => $nid,
-            'type' => 'rejection',
-            'title' => 'Payment Rejected',
-            'message' => '₹' . number_format($r['amount'], 2) . ' (UTR: ' . $r['transaction_id'] . ') ' . (!empty($r['admin_note']) ? '- ' . $r['admin_note'] : ''),
-            'time' => $r['created_at'],
-            'icon' => 'bx-x-circle',
-            'color' => '#EF4444'
-        ];
-    }
-}
-
-// 3. Outstanding Balance
-if ($total_due > 0) {
-    $nid = 'due_' . date('Y_m');
-    if (!in_array($nid, $dismissed_ids)) {
-        $unread_notifications[] = [
-            'id' => $nid,
-            'type' => 'due',
-            'title' => 'Payment Due',
-            'message' => 'You have an outstanding balance of ₹' . number_format($total_due, 2),
-            'time' => date('Y-m-d H:i:s'),
-            'icon' => 'bx-wallet',
-            'color' => '#F59E0B'
-        ];
-    }
-}
-
-// Sort by time descending
-usort($unread_notifications, function($a, $b) {
-    return strtotime($b['time']) - strtotime($a['time']);
-});
 
 ?>
 <!doctype html>
@@ -588,8 +527,8 @@ usort($unread_notifications, function($a, $b) {
             .header-actions { width: 100%; justify-content: space-between; }
         }
         
-        .notification-wrapper { position: relative; }
-        #notifDropdown { position: absolute; top: 50px; right: 0; width: 340px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; overflow: hidden; }
+        
+        
     
         /* My Payments V2 CSS */
         .kpi-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
@@ -667,7 +606,24 @@ usort($unread_notifications, function($a, $b) {
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-    </style>
+    
+    /* Standardized Notification Dropdown CSS */
+    .notification-wrapper { position: relative; }
+    #notifDropdown { 
+        position: absolute; 
+        top: 110%; 
+        right: 0; 
+        width: 340px; 
+        background: white; 
+        border-radius: 16px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+        border: 1px solid var(--border); 
+        z-index: 99999; 
+        overflow: hidden; 
+        text-align: left;
+    }
+
+</style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
 

@@ -493,7 +493,24 @@ while($n = mysqli_fetch_assoc($qNotices)) {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    </style>
+    
+    /* Standardized Notification Dropdown CSS */
+    .notification-wrapper { position: relative; }
+    #notifDropdown { 
+        position: absolute; 
+        top: 110%; 
+        right: 0; 
+        width: 340px; 
+        background: white; 
+        border-radius: 16px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+        border: 1px solid var(--border); 
+        z-index: 99999; 
+        overflow: hidden; 
+        text-align: left;
+    }
+
+</style>
 </head>
 <body style="display: block;">
 
