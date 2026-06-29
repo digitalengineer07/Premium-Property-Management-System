@@ -673,7 +673,7 @@ $unread_count = count($unread_notifications);
                 <i class='bx bx-grid-alt'></i>
                 <span>Dashboard</span>
             </a>
-            <a href="my-payments.php" class="nav-item">
+            <a href="my-payments.php" class="nav-item active">
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
