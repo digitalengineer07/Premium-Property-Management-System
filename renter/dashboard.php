@@ -555,7 +555,7 @@ $unread_count = count($unread_notifications);
         .fw-icon.bell { color: var(--primary-purple); }
         .fw-info h4 { font-size: 15px; font-weight: 800; margin: 0 0 4px 0; color: var(--text-dark); }
         .fw-info p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
-        .btn-fw { border: 1px solid rgba(98, 75, 255, 0.2); background: transparent; color: var(--primary-purple); padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.03); }
+        .btn-fw { border: 1px solid rgba(98, 75, 255, 0.2); background: transparent; color: var(--primary-purple); padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.03); white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-fw:hover { background: rgba(98, 75, 255, 0.03); border-color: var(--primary-purple); }
 
         /* App Footer */
