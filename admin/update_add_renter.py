@@ -1,6 +1,6 @@
 import re
 
-with open('admin/add-renter.php', 'r', encoding='utf-8') as f:
+with open('add-renter.php', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Update DB INSERT
@@ -40,6 +40,6 @@ new_html = """<div class="form-group">
                             </div>"""
 content = re.sub(old_html, new_html, content)
 
-with open('admin/add-renter.php', 'w', encoding='utf-8') as f:
+with open('add-renter.php', 'w', encoding='utf-8') as f:
     f.write(content)
-print("Updated admin/add-renter.php")
+print("Updated add-renter.php")
