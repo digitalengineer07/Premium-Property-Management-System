@@ -40,24 +40,6 @@ $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
 // Fetch all electricity records
-$records_q = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = $user_id ORDER BY id DESC");
-$electricity_records = [];
-while($row = mysqli_fetch_assoc($records_q)) {
-    $electricity_records[] = $row;
-}
-
-// Chart Data (last 12 chronological)
-$chart_records = array_slice($electricity_records, 0, 12);
-$chart_records = array_reverse($chart_records);
-$chart_labels = [];
-$chart_data = [];
-foreach($chart_records as $cr) {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --bg-main: #FAFBFC;
-            --sidebar-bg: #FFFFFF;
-            --text-dark: #0F172A;
             --text-gray: #64748B;
             --primary-purple: #624BFF;
             --primary-hover: #5039E6;
