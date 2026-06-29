@@ -18,6 +18,150 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
+mysqli_stmt_close($stmt);
+
+$display_name = $user['name'] ?: $user['username'];
+$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
+$room_no = $user['room_no'] ?? 'N/A';
+
+/* Calculate totals */
+// 1. Rent from pure 'rent' table
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r1 = mysqli_stmt_get_result($stmt);
+$r1a = mysqli_fetch_assoc($r1);
+$pure_rent_due = (float)($r1a['total'] ?? 0);
+mysqli_stmt_close($stmt);
+
+// 2. Electricity and Rent components from 'electricity' table
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(amount),0) as elec_total, IFNULL(SUM(rent_amount + maintenance + dues),0) as rent_portion_total FROM electricity WHERE user_id = ? AND status = 'Due'");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r2 = mysqli_stmt_get_result($stmt);
+$r2a = mysqli_fetch_assoc($r2);
+$elec_due = (float)($r2a['elec_total'] ?? 0);
+$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
+mysqli_stmt_close($stmt);
+
+$rent_due = $pure_rent_due + $rent_portion_due;
+$unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
+$total_due = $elec_due + $rent_due - $unbilled_adj;
+
+/* Last payment */
+$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$lastp = mysqli_stmt_get_result($stmt);
+$last_payment = mysqli_fetch_assoc($lastp);
+mysqli_stmt_close($stmt);
+
+/* Fetch Billing Lists */
+// Get pure rents
+$stmt = mysqli_prepare($conn, "
+    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    FROM rent r 
+    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
+    WHERE r.user_id = ? 
+    ORDER BY r.id DESC LIMIT 10
+");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$rent_res = mysqli_stmt_get_result($stmt);
+$merged_rents = []; 
+while ($row = mysqli_fetch_assoc($rent_res)) {
+    $row['source'] = 'rent_table';
+    $merged_rents[] = $row;
+}
+mysqli_stmt_close($stmt);
+
+// Get rent portions from electricity bills (slips)
+$stmt = mysqli_prepare($conn, "
+    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    FROM electricity e 
+    LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
+    WHERE e.user_id = ? AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0) 
+    ORDER BY e.id DESC LIMIT 10
+");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$elec_rent_res = mysqli_stmt_get_result($stmt);
+while ($row = mysqli_fetch_assoc($elec_rent_res)) {
+    $row['source'] = 'elec_table';
+    $merged_rents[] = $row;
+}
+mysqli_stmt_close($stmt);
+
+// Get advance payments 
+$stmt = mysqli_prepare($conn, "
+    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    FROM payments p 
+    WHERE p.user_id = ? AND p.bill_type = 'advance'
+    ORDER BY p.id DESC LIMIT 10
+");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$adv_res = mysqli_stmt_get_result($stmt);
+while ($row = mysqli_fetch_assoc($adv_res)) {
+    $row['source'] = 'advance';
+    $merged_rents[] = $row;
+}
+mysqli_stmt_close($stmt);
+
+// Sort merged_rents by ID descending to show latest first
+usort($merged_rents, function($a, $b) {
+    return $b['id'] - $a['id'];
+});
+// Limit to top 10 after merge
+$merged_rents = array_slice($merged_rents, 0, 10);
+
+// Electricity list (only the usage part)
+$stmt = mysqli_prepare($conn, "
+    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    FROM electricity e 
+    LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
+    WHERE e.user_id = ? 
+    ORDER BY e.id DESC LIMIT 10
+");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$elec_res = mysqli_stmt_get_result($stmt);
+$elecs = []; while ($row = mysqli_fetch_assoc($elec_res)) $elecs[] = $row;
+mysqli_stmt_close($stmt);
+
+// Calculate advance paid
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = ? AND bill_type = 'advance'");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+$adv_paid = (float)$adv_paid_res['adv_paid'];
+mysqli_stmt_close($stmt);
+
+$advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
+
+// Check for recent announcements (last 24h)
+$dismissed_cookie_val = $_COOKIE['dismissed_notifs'] ?? '';
+$dismissed_ids_arr = $dismissed_cookie_val ? explode(',', $dismissed_cookie_val) : [];
+$has_new_notice = false;
+$ann_check_q = mysqli_query($conn, "SELECT id FROM announcements WHERE created_at >= NOW() - INTERVAL 1 DAY");
+if ($ann_check_q) {
+    while($ac = mysqli_fetch_assoc($ann_check_q)) {
+        if (!in_array('ann_' . $ac['id'], $dismissed_ids_arr)) {
+            $has_new_notice = true;
+            break;
+        }
+    }
+}
+
+// Handle Rejection Dismissal
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dismiss_rejection'])) {
+    $dismiss_id = (int)$_POST['dismiss_id'];
+    @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
+    mysqli_query($conn, "UPDATE payment_notifications SET is_dismissed = 1 WHERE id = $dismiss_id AND user_id = $user_id");
+    header("Location: dashboard.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $payment_error = "Invalid CSRF token.";
