@@ -215,20 +215,36 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     
     <style>
         :root {
-            --primary-purple: #624BFF;
-            --bg-main: #F4F6F9;
+            --bg-main: #FAFBFC;
             --sidebar-bg: #FFFFFF;
-            --white: #ffffff;
-            --text-dark: #1E293B;
+            --text-dark: #0F172A;
             --text-gray: #64748B;
-            --border: #E2E8F0;
+            --primary-purple: #624BFF;
+            --primary-hover: #5039E6;
+            --border: #F1F5F9;
+            --white: #FFFFFF;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+            
+            /* Neons/Accents */
+            --accent-red: #FF4B6B;
+            --accent-yellow: #F59E0B;
+            --accent-purple: #8B5CF6;
+            --accent-green: #10B981;
+            
             --transition: all 0.3s ease;
-            --card-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         
         * { box-sizing: border-box; }
         
-        body { margin: 0; background: var(--bg-main); font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Outfit', sans-serif !important;
+            background-color: var(--bg-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
 
         .app-container {
             display: flex;
