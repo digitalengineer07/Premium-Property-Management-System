@@ -24,8 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_announcement'])) 
     if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
         $error = "Security validation failed.";
     } else {
-        $title = s($_POST['title'] ?? '');
-        $message = s($_POST['message'] ?? '');
+        $title = $_POST['title'] ?? '';
+        $message = $_POST['message'] ?? '';
         $priority = s($_POST['priority'] ?? 'Normal');
         $notify_email = isset($_POST['notify_email']);
         
