@@ -384,8 +384,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         /* Avatar Card overrides */
         .avatar-card { text-align: center; background: #F8F7FF; border: none; padding: 40px 20px; }
         .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 20px; }
-        .avatar-huge { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--white); box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: var(--white); }
-        .btn-edit-avatar { position: absolute; bottom: 5px; right: 5px; width: 36px; height: 36px; border-radius: 50%; background: var(--white); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: var(--primary-purple); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: var(--transition); }
+        .avatar-huge { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: var(--white); }
+        .btn-edit-avatar { position: absolute; bottom: 4px; right: 4px; width: 40px; height: 40px; border-radius: 50%; background: var(--white); border: 3px solid #F8F7FF; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--primary-purple); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: var(--transition); }
         .btn-edit-avatar:hover { transform: scale(1.1); }
         
         .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
@@ -581,8 +581,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <button type="submit" name="save_profile" id="saveProfileBtn"></button>
                     </form>
                 </div>
-                <h2 style="margin: 0 0 8px 0; font-weight: 800; font-size: 24px; color: var(--text-dark);"><?php echo htmlspecialchars($display_name); ?></h2>
-                <span style="display: inline-block; padding: 6px 16px; background: var(--white); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+                <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
+                <span style="display: inline-block; padding: 6px 16px; background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13px;">Room <?php echo htmlspecialchars($user['room_no']); ?></span>
             </div>
 
             <!-- Basic Information -->
