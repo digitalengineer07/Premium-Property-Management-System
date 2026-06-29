@@ -792,11 +792,13 @@ $unread_count = count($unread_notifications);
         <div class="kpi-grid animate-up">
             <!-- Total Outstanding -->
             <div class="kpi-card">
-                <div class="kpi-top">
-                    <div class="kpi-icon-box <?php echo $total_due > 0 ? 'red' : 'green'; ?>"><i class='bx bx-credit-card'></i></div>
-                    <div class="kpi-title">Total Outstanding</div>
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box <?php echo $total_due > 0 ? 'red' : 'green'; ?>" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Total Outstanding</div>
+                        <div class="kpi-amount" style="margin-bottom: 0; <?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></div>
+                    </div>
                 </div>
-                <div class="kpi-amount" style="<?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></div>
                 <div class="kpi-bottom">
                     <?php if ($total_due > 0): ?>
                         <div class="kpi-tag alert"><i class='bx bx-error-circle'></i> Payment Due</div>
@@ -823,11 +825,13 @@ $unread_count = count($unread_notifications);
 
             <!-- Electricity Due -->
             <div class="kpi-card">
-                <div class="kpi-top">
-                    <div class="kpi-icon-box yellow"><i class='bx bx-bolt'></i></div>
-                    <div class="kpi-title">Electricity Due</div>
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box yellow" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-bolt'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Electricity Due</div>
+                        <div class="kpi-amount" style="margin-bottom: 0;"><?php echo money($elec_due); ?></div>
+                    </div>
                 </div>
-                <div class="kpi-amount"><?php echo money($elec_due); ?></div>
                 <div class="kpi-bottom">
                     <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: <?php echo date('t M Y'); ?></div>
                 </div>
@@ -845,11 +849,13 @@ $unread_count = count($unread_notifications);
 
             <!-- Rent Due -->
             <div class="kpi-card">
-                <div class="kpi-top">
-                    <div class="kpi-icon-box purple"><i class='bx bx-home'></i></div>
-                    <div class="kpi-title">Rent Due</div>
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box purple" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-home'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Rent Due</div>
+                        <div class="kpi-amount" style="margin-bottom: 0;"><?php echo money($rent_due); ?></div>
+                    </div>
                 </div>
-                <div class="kpi-amount"><?php echo money($rent_due); ?></div>
                 <div class="kpi-bottom">
                     <div class="kpi-due-date"><i class='bx bx-calendar'></i> Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
                 </div>
