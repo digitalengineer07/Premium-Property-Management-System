@@ -59,7 +59,7 @@ mysqli_stmt_close($stmt);
 /* Fetch Billing Lists */
 // Get pure rents
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
+    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
     FROM rent r 
     LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
     WHERE r.user_id = ? 
@@ -77,7 +77,7 @@ mysqli_stmt_close($stmt);
 
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, e.status, p.adjustment_amount, p.adjustment_type 
+    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, e.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
     WHERE e.user_id = ? AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0) 
@@ -94,7 +94,7 @@ mysqli_stmt_close($stmt);
 
 // Get advance payments 
 $stmt = mysqli_prepare($conn, "
-    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type 
+    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
     FROM payments p 
     WHERE p.user_id = ? AND p.bill_type = 'advance'
     ORDER BY p.id DESC LIMIT 10
@@ -117,7 +117,7 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type 
+    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
     WHERE e.user_id = ? 
@@ -967,32 +967,46 @@ $unread_count = count($unread_notifications);
                         <?php 
                         // Combine and sort merged_rents and elecs to get actual recent transactions
                         $all_tx = array_merge($merged_rents, $elecs);
-                        // Very rough sort by month descending assuming month is formatted YYYY-MM or similar, but here it's likely 'Jan 2026'.
-                        // For display logic, we'll just show the latest 5 from merged_rents to simulate.
-                        $display_tx = array_slice($merged_rents, 0, 5); 
+                        
+                        // Sort by payment_date descending, fallback to id descending
+                        usort($all_tx, function($a, $b) {
+                            $timeA = !empty($a['payment_date']) ? strtotime($a['payment_date']) : 0;
+                            $timeB = !empty($b['payment_date']) ? strtotime($b['payment_date']) : 0;
+                            if ($timeA == $timeB) {
+                                return $b['id'] - $a['id'];
+                            }
+                            return $timeB - $timeA;
+                        });
+                        
+                        $display_tx = array_slice($all_tx, 0, 5); 
                         foreach($display_tx as $tx):
                             $is_paid = ($tx['status'] == 'Paid');
-                            $is_elec = ($tx['source'] == 'elec_table');
-                            $is_adv = ($tx['source'] == 'advance');
+                            $is_elec = (isset($tx['source']) && $tx['source'] == 'elec_table');
+                            $is_adv = (isset($tx['source']) && $tx['source'] == 'advance');
                             
                             $icon_class = 'up';
                             $icon_bx = 'bx-up-arrow-alt';
                             if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt'; }
                             else if ($is_adv) { $icon_class = 'adv'; $icon_bx = 'bx-wallet'; }
                             else { $icon_class = 'up'; $icon_bx = 'bx-up-arrow-alt'; }
+                            
+                            $title = 'Rent Payment';
+                            if ($is_elec) $title = 'Electricity Payment';
+                            if ($is_adv) $title = 'Advance Payment';
+                            if (!isset($tx['source'])) $title = 'Electricity Payment'; // from $elecs array
                         ?>
                         <div class="transaction-item">
                             <div class="tx-left">
                                 <div class="tx-icon <?php echo $icon_class; ?>"><i class='bx <?php echo $icon_bx; ?>'></i></div>
                                 <div class="tx-info">
-                                    <h4><?php echo $is_elec ? 'Electricity Payment' : ($is_adv ? 'Advance Payment' : 'Rent Payment'); ?></h4>
+                                    <h4><?php echo $title; ?></h4>
                                     <p>For <?php echo htmlspecialchars($tx['month']); ?></p>
                                 </div>
                             </div>
                             <div class="tx-right">
                                 <div class="tx-amount <?php echo $is_paid ? '' : 'pending'; ?>"><?php echo money($tx['amount']); ?></div>
-                                <div class="tx-status <?php echo $is_paid ? 'paid' : 'pending'; ?>"><?php echo $tx['status']; ?></div>
-                                <div class="tx-date"><?php echo date('d M Y'); ?></div>
+                                <div class="tx-status <?php echo $is_paid ? 'paid' : 'pending'; ?>"><?php echo htmlspecialchars($tx['status']); ?></div>
+                                <div class="tx-date"><?php echo !empty($tx['payment_date']) ? date('d M Y', strtotime($tx['payment_date'])) : '-'; ?></div>
                             </div>
                         </div>
                         <?php endforeach; ?>
