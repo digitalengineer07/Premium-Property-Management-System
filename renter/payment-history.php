@@ -755,7 +755,11 @@ $unread_count = count($unread_notifications);
                 </a>
                 <div style="position: relative;">
                     <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
-                        <div class="user-avatar"><?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?></div>
+                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple);"><?php if (!empty($user['profile_pic'])): ?>
+    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+<?php else: ?>
+    <?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?>
+<?php endif; ?></div>
                         <div class="user-info">
                             <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
                             <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
