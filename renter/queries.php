@@ -286,7 +286,7 @@ $unread_count = 1; // Match mockup notification count
 
         /* 2-Column Layout */
         .query-layout {
-            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: start;
+            display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: stretch;
         }
 
         /* Form Card */
@@ -607,9 +607,9 @@ $unread_count = 1; // Match mockup notification count
                         <label class="form-label">Subject</label>
                         <input type="text" name="subject" class="form-control" placeholder="Enter a short subject" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                         <label class="form-label">Description</label>
-                        <textarea name="message" class="form-control" rows="3" placeholder="Describe your issue or request in detail..." required style="resize: none;"></textarea>
+                        <textarea name="message" class="form-control" rows="3" placeholder="Describe your issue or request in detail..." required style="resize: none; flex: 1; min-height: 80px;"></textarea>
                         <div style="text-align: right; margin-top: 8px; font-size: 11px; color: var(--text-gray); font-weight: 500;">0/500</div>
                     </div>
                     
