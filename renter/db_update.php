@@ -1,5 +1,5 @@
 <?php
-require_once "db.php";
+require_once "../db.php";
 
 $queries = [
     "ALTER TABLE users ADD COLUMN electricity_document VARCHAR(255) DEFAULT NULL",
