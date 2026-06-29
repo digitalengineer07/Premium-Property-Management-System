@@ -701,6 +701,6 @@ function money($val) {
         viewMoreBtn.style.display = 'none';
     }
 </script>
-
+<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
