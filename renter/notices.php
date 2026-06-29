@@ -1001,36 +1001,6 @@ if (isset($_GET['ajax_id'])) {
         });
     });
 </script>
-
-    <script>
-                    content.style.transform = `translateX(${diff}px)`;
-                }
-            }, {passive: true});
-            
-            item.addEventListener('touchend', e => {
-                let diff = currentX - startX;
-                content.style.transition = 'transform 0.2s ease-out';
-                if (diff < -80) { // threshold
-                    content.style.transform = `translateX(-100%)`;
-                    setTimeout(() => {
-                        dismissNotification(item.getAttribute('data-id'), item);
-                    }, 200);
-                } else {
-                    content.style.transform = `translateX(0)`;
-                }
-            });
-        });
-    </script>
-    <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
-
-<script>
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-
-    </script>
-<script>
-document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
-
-</script>
+<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
