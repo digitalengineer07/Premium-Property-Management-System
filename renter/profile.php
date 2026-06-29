@@ -1118,6 +1118,25 @@ while($n = mysqli_fetch_assoc($qNotices)) {
         }, 3000);
     }
 
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileToggle = document.querySelector('.user-profile-pill');
+        if (profileDropdown && profileDropdown.style.display === 'block') {
+            if (!profileDropdown.contains(event.target) && !profileToggle.contains(event.target)) {
+                profileDropdown.style.display = 'none';
+            }
+        }
+        
+        const notifDropdown = document.getElementById('notificationDropdown');
+        const notifToggle = document.querySelector('.icon-btn'); // The bell icon
+        if (notifDropdown && notifDropdown.style.display === 'block') {
+            if (!notifDropdown.contains(event.target) && !event.target.closest('.icon-btn')) {
+                notifDropdown.style.display = 'none';
+            }
+        }
+    });
+
     document.querySelectorAll('.pwd-toggle').forEach(icon => {
         icon.addEventListener('click', function() {
             const input = this.previousElementSibling;
