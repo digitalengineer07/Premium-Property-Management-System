@@ -3,15 +3,14 @@ import re
 with open('profile.php', 'r', encoding='utf-8') as f:
     content = f.read()
 
-old_html = r"""              <div class="user-profile-pill">
+old_html = r"""<div class="user-profile-pill">
                   <div class="user-avatar"><\?php echo strtoupper\(substr\(\$display_name, 0, 2\)\); \?></div>
                   <div class="user-info">
                       <h4><\?php echo htmlspecialchars\(\$display_name\); \?></h4>
                       <p>Room <\?php echo htmlspecialchars\(\$user\['room_no'\]\); \?></p>
-                  </div>
-              </div>"""
+                  </div>.*?</div>"""
 
-new_html = """              <div style="position: relative;">
+new_html = """<div style="position: relative;">
                   <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                       <div class="user-avatar"><?php echo strtoupper(substr($display_name ?? $user['name'] ?? 'User', 0, 2)); ?></div>
                       <div class="user-info">
@@ -31,9 +30,9 @@ new_html = """              <div style="position: relative;">
                   </div>
               </div>"""
 
-content = re.sub(old_html, new_html, content)
+content = re.sub(old_html, new_html, content, flags=re.DOTALL)
 
 with open('profile.php', 'w', encoding='utf-8') as f:
     f.write(content)
 
-print("Updated profile header button")
+print("Fixed profile header button")
