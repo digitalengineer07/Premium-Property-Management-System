@@ -10,6 +10,9 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = (int) $_SESSION['user_id'];
 $success = "";
+if (isset($_GET['success']) && $_GET['success'] == '1') {
+    $success = "Your query has been submitted successfully.";
+}
 $error = "";
 
 // Handle form submission
@@ -24,11 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
         $stmt = mysqli_prepare($conn, "INSERT INTO queries (user_id, category, subject, message) VALUES (?, ?, ?, ?)");
         mysqli_stmt_bind_param($stmt, "isss", $user_id, $category, $subject, $message);
         if (mysqli_stmt_execute($stmt)) {
-            $success = "Your query has been submitted successfully.";
+            mysqli_stmt_close($stmt);
+            header("Location: queries.php?success=1");
+            exit;
         } else {
             $error = "Failed to submit query. Please try again.";
         }
-        mysqli_stmt_close($stmt);
+        if (isset($stmt)) mysqli_stmt_close($stmt);
     }
 }
 
