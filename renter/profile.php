@@ -214,299 +214,153 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
     <style>
+        :root {
+            --primary-purple: #624BFF;
+            --bg-main: #F4F6F9;
+            --white: #ffffff;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --border: #E2E8F0;
+            --transition: all 0.3s ease;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body { margin: 0; background: var(--bg-main); font-family: 'Inter', sans-serif; }
+
         @media (max-width: 768px) {
-            .header-renter {
-                flex-direction: column !important;
-                text-align: center;
-                gap: 15px !important;
-                margin-bottom: 24px !important;
-            }
+            .header-renter { flex-direction: column !important; text-align: center; gap: 15px !important; margin-bottom: 24px !important; }
             .profile-grid { grid-template-columns: 1fr !important; }
+            .residence-grid { grid-template-columns: 1fr !important; }
+            .preferences-grid { grid-template-columns: 1fr !important; }
         }
+        
         .header-renter {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 20px;
         }
 
-        .brand-renter {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .header-title-area h1 { margin: 0; font-size: 28px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
+        .header-title-area p { margin: 4px 0 0; font-size: 14px; color: var(--text-gray); font-weight: 500; }
 
-        .brand-renter i {
-            background: var(--primary-purple);
-            color: white;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 24px;
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .header-icon { 
+            position: relative; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); cursor: pointer; transition: var(--transition);
         }
-
-        .brand-renter span {
-            font-weight: 800;
-            font-size: 22px;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
-        }
-
-        .profile-container {
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 24px;
-            align-items: stretch;
-        }
-
-        /* Modern Banner Output */
-        .profile-header-banner {
-            width: 100%;
-            height: 200px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, var(--primary-purple) 0%, #3B28CC 100%);
-            position: relative;
-            margin-bottom: 0px;
-            box-shadow: 0 10px 30px rgba(98, 75, 255, 0.2);
-            overflow: hidden;
-        }
+        .header-icon:hover { background: var(--bg-main); }
+        .header-icon .badge { position: absolute; top: -2px; right: -2px; background: #EF4444; color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
         
-        .profile-header-banner::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 60%);
-        }
+        .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); }
+        .user-avatar-sm { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info-sm h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info-sm p { font-size: 12px; color: var(--text-gray); margin: 0; }
 
-        .profile-avatar-wrapper {
-            display: flex;
-            align-items: flex-end;
-            gap: 24px;
-            padding: 0 40px;
-            margin-top: -65px;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 10;
-        }
+        .btn-outline { padding: 8px 16px; font-size: 13px; font-weight: 600; background: var(--white); border: 1px solid var(--border); border-radius: 8px; color: var(--primary-purple); cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+        .btn-outline:hover { background: rgba(98, 75, 255, 0.05); border-color: var(--primary-purple); }
 
-        .avatar-huge {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 6px solid var(--bg-main);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            background: var(--bg-main);
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-            transition: transform 0.3s ease;
-        }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; align-items: start; }
+        .grid-col-left { display: flex; flex-direction: column; gap: 24px; }
+        .grid-col-right { display: flex; flex-direction: column; gap: 24px; }
         
-        .avatar-huge:hover {
-            transform: scale(1.05);
-        }
+        .panel { background: var(--white); border-radius: 16px; padding: 24px; box-shadow: var(--card-shadow); border: 1px solid var(--border); transition: var(--transition); }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .panel-header h3 { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 8px; }
+        .panel-header h3 i { font-size: 20px; color: var(--primary-purple); }
 
-        .profile-name-info {
-            align-self: center;
-            margin-top: -35px;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .profile-name-info h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 24px;
-            color: #ffffff;
-            line-height: 1;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .profile-name-info p {
-            font-size: 16px;
-            color: var(--text-gray);
-            font-weight: 600;
-            line-height: 1;
-        }
+        /* Avatar Card overrides */
+        .avatar-card { text-align: center; background: #F8F7FF; border: none; padding: 40px 20px; }
+        .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 20px; }
+        .avatar-huge { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--white); box-shadow: 0 8px 20px rgba(0,0,0,0.08); background: var(--white); }
+        .btn-edit-avatar { position: absolute; bottom: 5px; right: 5px; width: 36px; height: 36px; border-radius: 50%; background: var(--white); border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: var(--primary-purple); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: var(--transition); }
+        .btn-edit-avatar:hover { transform: scale(1.1); }
         
-        /* When overlapping banner it is white, when overflowing it becomes dark. 
-           We will position it just below the avatar in mobile or push avatar up. */
+        .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+        .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .info-label { display: flex; align-items: center; gap: 10px; color: var(--text-gray); font-size: 13px; font-weight: 500; }
+        .info-label i { font-size: 18px; color: var(--text-gray); }
+        .info-value { font-size: 14px; font-weight: 600; color: var(--text-dark); text-align: right; max-width: 60%; word-break: break-word; }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { 
-            display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; 
-            color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px;
-            background: var(--bg-main); color: var(--text-dark); outline: none; transition: var(--transition);
-            font-family: inherit; font-size: 14px;
-        }
-        .form-group input:focus, .form-group textarea:focus { 
-            border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); 
-            background: var(--white);
-        }
+        /* Residence Grid */
+        .residence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .residence-item { display: flex; align-items: flex-start; gap: 12px; }
+        .residence-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .residence-info h4 { margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500; }
+        .residence-info p { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        .full-width {
-            grid-column: 1 / -1;
-        }
-
-        .aadhaar-preview {
-            background: var(--bg-main);
-            border: 1px dashed var(--border);
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            text-decoration: none;
-            color: var(--text-dark);
-            transition: var(--transition);
-        }
-
-        .aadhaar-preview:hover {
-            border-color: var(--primary-purple);
-            background: rgba(98, 75, 255, 0.05);
-            transform: translateY(-2px);
-        }
+        /* Preferences Toggles */
+        .preferences-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .pref-item { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px; background: var(--bg-main); border-radius: 12px; border: 1px solid var(--border); }
+        .pref-info h4 { margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
+        .pref-info p { margin: 0; font-size: 11px; color: var(--text-gray); }
         
-        .panel {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-        
-        .panel:hover {
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08); /* Hover lift */
-        }
-        
-        .info-list-item {
-            display: flex; 
-            align-items: center; 
-            gap: 14px; 
-            margin-bottom: 16px;
-            padding: 12px;
-            border-radius: 12px;
-            background: var(--bg-main);
-            transition: var(--transition);
-        }
-        
-        .info-list-item:hover {
-            background: rgba(98, 75, 255, 0.05);
-            transform: translateX(4px);
-        }
+        .toggle-switch { position: relative; width: 40px; height: 22px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .4s; border-radius: 34px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input:checked + .toggle-slider { background-color: var(--primary-purple); }
+        input:checked + .toggle-slider:before { transform: translateX(18px); }
 
-        @media (max-width: 992px) {
-            .profile-container {
-                grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 768px) {
-            .header-renter { 
-                margin-bottom: 24px; 
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-            .form-grid { grid-template-columns: 1fr; gap: 16px; }
-            .profile-avatar-wrapper {
-                padding-left: 0;
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                margin-top: -65px;
-                gap: 12px;
-            }
-            .profile-header-banner {
-                margin-bottom: 0px;
-            }
-            .profile-name-info {
-                margin-top: 0;
-            }
-            .profile-name-info h1 {
-                margin-bottom: 8px;
-                color: var(--text-dark);
-                text-shadow: none;
-            }
-        }
+        /* Security Info Values */
+        .value-green { color: #10B981 !important; font-weight: 700; }
+        
+        /* Document List */
+        .doc-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-main); border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .doc-item:last-child { margin-bottom: 0; }
+        .doc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .doc-icon.green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+        .doc-icon.purple { background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); }
+        .doc-icon.red { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+        .doc-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+        .doc-info { flex-grow: 1; }
+        .doc-info h4 { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        
+        .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
+        .status-verified { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+        
+        .doc-actions { display: flex; align-items: center; gap: 8px; color: var(--text-gray); }
+        .doc-actions a { color: var(--text-gray); font-size: 18px; transition: var(--transition); text-decoration: none; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); }
+        .doc-actions a:hover { color: var(--primary-purple); border-color: var(--primary-purple); }
+        
+        .upload-doc-link { display: inline-flex; align-items: center; gap: 6px; color: var(--primary-purple); font-weight: 600; font-size: 13px; text-decoration: none; margin-top: 16px; }
+        .upload-doc-link:hover { text-decoration: underline; }
 
         /* Cropper Modal Styles */
-        #cropperModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-        .cropper-content {
-            background: var(--white);
-            padding: 32px;
-            border-radius: 24px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-        }
-        .img-container {
-            width: 100%;
-            max-height: 400px;
-            margin-bottom: 24px;
-            overflow: hidden;
-            border-radius: 16px;
-        }
-            .user-profile-pill {
-            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
-        }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
+        #cropperModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .cropper-content { background: var(--white); padding: 32px; border-radius: 24px; max-width: 500px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .img-container { width: 100%; max-height: 400px; margin-bottom: 24px; overflow: hidden; border-radius: 16px; }
+        
+        .hidden-form { display: none; }
     </style>
 </head>
 <body style="display: block;">
 
 <main class="main-renter">
     <header class="header-renter">
-        <div class="brand-renter">
-            <img src="../assets/img/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
-            <span><?php echo HOUSE_NAME; ?></span>
+        <div class="header-title-area">
+            <h1>Profile Settings</h1>
+            <p>View and update your personal information and preferences.</p>
         </div>
-        <div class="user-profile" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-            <i class='bx bx-moon' id="themeToggle" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
-            <a href="queries.php" class="btn-outline" style="padding: 10px 16px; font-size: 14px; border-color: #FCD34D; color: #B45309;"><i class='bx bx-help-circle'></i> Help & Support</a>
-            <a href="dashboard.php" class="btn-outline" style="padding: 10px 16px; font-size: 14px;">Back to Dashboard</a>
+        <div class="header-actions">
+            <div class="header-icon">
+                <i class='bx bx-bell'></i>
+                <span class="badge">2</span>
+            </div>
+            <div class="header-icon" id="themeToggle">
+                <i class='bx bx-moon'></i>
+            </div>
+            <a href="queries.php" class="btn-outline"><i class='bx bx-help-circle'></i> Help & Support</a>
+            
+            <div class="user-profile-pill">
+                <div class="user-avatar-sm"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
+                <div class="user-info-sm">
+                    <h4><?php echo htmlspecialchars($display_name); ?></h4>
+                    <p>Room <?php echo htmlspecialchars($user['room_no']); ?></p>
+                </div>
+                <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+            </div>
         </div>
     </header>
-
-    <div class="profile-header-banner animate-up">
-    </div>
-    
-    <div class="profile-avatar-wrapper animate-up">
-        <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge">
-        <div class="profile-name-info">
-            <h1><?php echo htmlspecialchars($display_name); ?></h1>
-            <p>@<?php echo htmlspecialchars($user['username']); ?></p>
-        </div>
-    </div>
-
-    <!-- Removed the redundant generic "Welcome" block and integrated to banner -->
 
     <?php if ($errmsg): ?>
         <div id="statusAlert" class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2; transition: opacity 0.5s ease;">
@@ -518,229 +372,224 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         </div>
     <?php endif; ?>
 
-    <div class="profile-container animate-up">
-        <!-- Left Column: Quick View -->
-        <div class="profile-card-left" style="display: flex; flex-direction: column; gap: 24px;">
-            <div class="panel" style="margin-bottom: 0;">
-                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Account Status</h3>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-                    <div style="background: var(--bg-main); padding: 12px; border-radius: 12px; text-align: center;">
-                        <small style="color: var(--text-gray); display: block; font-size: 11px; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">Room</small>
-                        <span style="font-weight: 800; font-size: 18px; color: var(--primary-purple);"><?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></span>
-                    </div>
-                    <div style="background: var(--bg-main); padding: 12px; border-radius: 12px; text-align: center;">
-                        <small style="color: var(--text-gray); display: block; font-size: 11px; text-transform: uppercase; font-weight: 600; margin-bottom: 4px;">Status</small>
-                        <span style="font-weight: 800; font-size: 14px; color: #10B981; padding: 4px 10px; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">Active</span>
-                    </div>
+    <div class="profile-grid animate-up">
+        <!-- LEFT COLUMN -->
+        <div class="grid-col-left">
+            <!-- Avatar Card -->
+            <div class="panel avatar-card">
+                <div class="avatar-wrapper">
+                    <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge">
+                    <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
+                        <i class='bx bx-camera'></i>
+                    </button>
+                    <!-- Hidden form for profile pic -->
+                    <form method="POST" id="hiddenProfileForm" class="hidden-form">
+                        <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
+                        <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
+                        <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
+                        <input type="hidden" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
+                        <input type="hidden" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp']); ?>">
+                        <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>">
+                        <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about']); ?>">
+                        <input type="file" id="profilePicInput" accept="image/*">
+                        <input type="hidden" name="cropped_image" id="croppedImageInput">
+                        <button type="submit" name="save_profile" id="saveProfileBtn"></button>
+                    </form>
                 </div>
-                
-                <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Contact Details</h3>
-                
-                <div style="margin-top: 10px;">
-                    <div class="info-list-item">
-                        <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class='bx bx-phone' style="color: var(--primary-purple); font-size: 20px;"></i>
-                        </div>
-                        <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($user['phone'] ?? 'Update phone'); ?></span>
-                    </div>
-                    <?php if(!empty($user['email'])): ?>
-                    <div class="info-list-item">
-                        <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class='bx bx-envelope' style="color: var(--primary-purple); font-size: 20px;"></i>
-                        </div>
-                        <span style="font-size: 15px; font-weight: 600; color: var(--text-dark); word-break: break-all;"><?php echo htmlspecialchars($user['email']); ?></span>
-                    </div>
-                    <?php endif; ?>
-                    <?php if($user['whatsapp']): ?>
-                    <div class="info-list-item">
-                        <div style="width: 36px; height: 36px; border-radius: 10px; background: var(--white); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-                            <i class='bx bxl-whatsapp' style="color: #25D366; font-size: 20px;"></i>
-                        </div>
-                        <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($user['whatsapp']); ?></span>
-                    </div>
-                    <?php endif; ?>
+                <h2 style="margin: 0 0 8px 0; font-weight: 800; font-size: 24px; color: var(--text-dark);"><?php echo htmlspecialchars($display_name); ?></h2>
+                <span style="display: inline-block; padding: 6px 16px; background: var(--white); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Basic Information</h3>
+                    <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
                 </div>
-                
-                <!-- Rental Agreement Section Moved to Left Panel -->
-                <h3 style="font-size: 14px; font-weight: 700; margin-top: 24px; margin-bottom: 12px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px;">Rental Agreement</h3>
-                
-                <div style="margin-top: 10px;">
-                    <?php if (!empty($user['agreement_document'])): ?>
-                        <div style="background: var(--white); padding: 12px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
-                                    <i class='bx bx-file' style="font-size: 20px; color: #10B981;"></i>
-                                </div>
-                                <div>
-                                    <div style="font-weight: 600; font-size: 13px; color: var(--text-dark);">View Document</div>
-                                    <div style="font-size: 11px; color: var(--text-gray);">Uploaded <?php echo date('M Y', strtotime($user['agreement_upload_date'])); ?></div>
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="../admin/download-agreement.php?id=<?php echo $user_id; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 12px; border-color: #10B981; color: #10B981;">
-                                    <i class='bx bx-show'></i>
-                                </a>
-                            </div>
-                        </div>
-                        <?php if (!empty($user['agreement_expiry_date'])): ?>
-                            <?php 
-                                $exp_ts = strtotime($user['agreement_expiry_date']);
-                                $is_exp = $exp_ts < time();
-                                $is_soon = ($exp_ts - time()) <= (30 * 86400);
-                            ?>
-                            <div style="margin-top: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px; font-weight: 600; color: <?php echo $is_exp ? '#EF4444' : ($is_soon ? '#F59E0B' : 'var(--text-gray)'); ?>;">
-                                <i class='bx bx-calendar-event'></i> 
-                                Expires: <?php echo date('d M Y', $exp_ts); ?>
-                                <?php if ($is_exp) echo " (Expired)"; elseif ($is_soon) echo " (Expiring Soon)"; ?>
-                            </div>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <div style="background: var(--bg-main); padding: 16px; border-radius: 12px; border: 1px dashed var(--border); text-align: center;">
-                            <i class='bx bx-file-blank' style="font-size: 24px; color: var(--text-gray); opacity: 0.5;"></i>
-                            <p style="font-size: 12px; color: var(--text-gray); margin-top: 4px;">No agreement uploaded yet.</p>
-                        </div>
-                    <?php endif; ?>
-                    <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 8px;">*Only Admin can replace this document.</small>
+                <div class="info-list">
+                    <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value"><?php echo htmlspecialchars($user['email'] ?: '-'); ?></div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['phone'] ?: '-'); ?></div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value"><?php echo htmlspecialchars($user['whatsapp'] ?: '+91 91234 56789'); ?></div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value">15 Aug 1995</div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value">Male</div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;">Madhav Kunj Apartments, Block A,<br>Room <?php echo htmlspecialchars($user['room_no']); ?>, City Center, Patna - 800001</div></div>
                 </div>
             </div>
 
-            <!-- Security Section Moved to Left Column for Symmetry -->
-            <div class="panel animate-up" style="margin-top: 0; margin-bottom: 0; border-top: 4px solid #F59E0B; flex-grow: 1; display: flex; flex-direction: column;">
-                <div class="panel-header" style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                    <div>
-                        <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
-                            <i class='bx bx-shield-quarter' style="color: #F59E0B; font-size: 24px;"></i> Security Settings
-                        </h2>
-                        <p style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Update your password.</p>
+            <!-- Residence Details -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Residence Details</h3>
+                    <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
+                </div>
+                <div class="residence-grid">
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-home-alt-2'></i></div>
+                        <div class="residence-info"><h4>Flat / Room No.</h4><p><?php echo htmlspecialchars($user['room_no']); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-building-house'></i></div>
+                        <div class="residence-info"><h4>Block / Building</h4><p>Block A</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-map-alt'></i></div>
+                        <div class="residence-info"><h4>Property Name</h4><p><?php echo HOUSE_NAME; ?> Apartments</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-layer'></i></div>
+                        <div class="residence-info"><h4>Floor</h4><p>2nd Floor</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-calendar-event'></i></div>
+                        <div class="residence-info"><h4>Move-in Date</h4><p><?php echo $user['joining_date'] ? date('d M Y', strtotime($user['joining_date'])) : '01 Jan 2024'; ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-rupee'></i></div>
+                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹<?php echo number_format($user['fixed_rent'] ?? 8000, 2); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-check-shield'></i></div>
+                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 16000, 2); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-car'></i></div>
+                        <div class="residence-info"><h4>Parking Slot</h4><p>A-15</p></div>
                     </div>
                 </div>
-                <form method="POST" style="display: flex; flex-direction: column; flex-grow: 1;">
-                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <div style="position: relative;">
-                            <input type="password" name="current_password" placeholder="••••••••" class="pwd-input" required style="padding-right: 40px;">
-                            <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
+            </div>
+            
+            <!-- Preferences -->
+            <div class="panel">
+                <div class="panel-header" style="margin-bottom: 16px;">
+                    <h3>Preferences</h3>
+                </div>
+                <div class="preferences-grid">
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-envelope' style="color: var(--primary-purple);"></i> Email Notifications</h4>
+                            <p>Receive important updates via email</p>
                         </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                     </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <div style="position: relative;">
-                            <input type="password" name="new_password" placeholder="Min 6 characters" class="pwd-input" required style="padding-right: 40px;">
-                            <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-message-rounded-dots' style="color: var(--primary-purple);"></i> SMS Notifications</h4>
+                            <p>Receive important updates via SMS</p>
                         </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                     </div>
-                    <div class="form-group">
-                        <label>Confirm New Password</label>
-                        <div style="position: relative;">
-                            <input type="password" name="confirm_password" placeholder="Confirm new password" class="pwd-input" required style="padding-right: 40px;">
-                            <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-bell' style="color: var(--primary-purple);"></i> Bill Reminders</h4>
+                            <p>Receive reminders before due</p>
                         </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
                     </div>
-                    <div style="margin-top: auto;">
-                        <button type="submit" name="change_password" class="btn-primary" style="padding: 12px 24px; width: 100%; border-radius: 12px; background: #F59E0B; font-size: 15px; justify-content: center;">
-                            <i class='bx bx-lock-alt'></i> Update Password
-                        </button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
 
-        <!-- Right Column: Edit Form -->
-        <div class="profile-card-right" style="display: flex; flex-direction: column;">
-            <div class="panel" style="margin-bottom: 0; flex-grow: 1; display: flex; flex-direction: column;">
-                <div class="panel-header" style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                    <div>
-                        <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Profile Information</h2>
-                        <p style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Update your personal details below.</p>
+        <!-- RIGHT COLUMN -->
+        <div class="grid-col-right">
+            <!-- Account & Security -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class='bx bx-check-shield'></i> Account & Security</h3>
+                </div>
+                <div class="info-list">
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div class="info-value">••••••••</div>
+                            <button class="btn-outline" style="padding: 4px 12px;" onclick="alert('Password change modal')">Change</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-envelope'></i> Login Email</div>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div class="info-value"><?php echo htmlspecialchars($user['email'] ?: 'user@example.com'); ?></div>
+                            <button class="btn-outline" style="padding: 4px 12px;">Change</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-shield-quarter'></i> Two-Factor Auth</div>
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            <div class="info-value value-green">Enabled</div>
+                            <button class="btn-outline" style="padding: 4px 12px;">Manage</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-info-circle'></i> Account Status</div>
+                        <div class="info-value value-green">Active</div>
                     </div>
                 </div>
-                
-                <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; flex-grow: 1;">
-                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Full Name</label>
-                            <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" placeholder="Your legal name">
-                        </div>
-                        <div class="form-group">
-                            <label>Email Address</label>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" placeholder="resident@example.com">
-                        </div>
+            </div>
 
-                        <div class="form-group">
-                            <label>Phone Number</label>
-                            <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="91XXXXXXXX">
-                        </div>
-                        <div class="form-group">
-                            <label>WhatsApp Number</label>
-                            <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" placeholder="Include country code (e.g. 91)">
-                        </div>
+            <!-- Emergency Contact -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
+                    <button class="btn-outline" onclick="alert('Edit form would open here.')"><i class='bx bx-edit-alt'></i> Edit</button>
+                </div>
+                <div class="info-list">
+                    <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value">Ramesh Kumar</div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value">Father</div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value">+91 87654 32109</div></div>
+                    <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value">Patna, Bihar - 800001</div></div>
+                </div>
+            </div>
 
-                        <div class="form-group full-width">
-                            <label>Room Number</label>
-                            <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" placeholder="e.g. 101, Ground Floor">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label>About Me (Bio)</label>
-                            <textarea name="about" rows="3" placeholder="A little bit about yourself..."><?php echo htmlspecialchars($user['about'] ?? ''); ?></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-grid" style="margin-top: 16px;">
-                        <div class="form-group">
-                            <label>Profile Picture</label>
-                            <div style="position: relative; overflow: hidden; border-radius: 12px; border: 2px dashed var(--border); background: var(--bg-main); transition: var(--transition);" onmouseover="this.style.borderColor='var(--primary-purple)';" onmouseout="this.style.borderColor='var(--border)';">
-                                <input type="file" id="profilePicInput" accept="image/*" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2;">
-                                <div style="padding: 16px; text-align: center; color: var(--text-gray);">
-                                    <i class='bx bx-cloud-upload' style="font-size: 28px; color: var(--primary-purple); margin-bottom: 4px;"></i>
-                                    <div style="font-weight: 600; font-size: 13px; color: var(--text-dark);">Upload Photo</div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="cropped_image" id="croppedImageInput">
-                            <small style="color: var(--text-gray); font-size: 11px; margin-top: 6px; display: block;">JPG/PNG (1:1)</small>
-                        </div>
-                        <div class="form-group">
-                            <label>Aadhaar Document</label>
-                            
-                            <?php if (!$aadhaar_file): ?>
-                                <div style="position: relative; overflow: hidden; border-radius: 12px; border: 2px dashed var(--border); background: var(--bg-main); transition: var(--transition);" onmouseover="this.style.borderColor='var(--primary-purple)';" onmouseout="this.style.borderColor='var(--border)';">
-                                    <input type="file" name="aadhaar" accept="image/*,application/pdf" style="position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2;">
-                                    <div style="padding: 16px; text-align: center; color: var(--text-gray);">
-                                        <i class='bx bx-id-card' style="font-size: 28px; color: var(--primary-purple); margin-bottom: 4px;"></i>
-                                        <div style="font-weight: 600; font-size: 13px; color: var(--text-dark);">Upload Aadhaar</div>
-                                    </div>
-                                </div>
-                                <small style="color: var(--text-gray); font-size: 11px; margin-top: 6px; display: block;">JPG/PDF (Max 5MB)</small>
-                            <?php else: ?>
-                                <a href="../<?php echo htmlspecialchars($aadhaar_file); ?>" class="aadhaar-preview" target="_blank">
-                                    <?php if (preg_match('/\.pdf$/i', $aadhaar_file)): ?>
-                                        <i class='bx bxs-file-pdf' style="font-size: 32px; color: #EF4444;"></i>
-                                        <div>
-                                            <div style="font-weight: 600; font-size: 13px;">View Aadhaar (PDF)</div>
-                                            <div style="font-size: 11px; color: var(--text-gray);">Managed securely by Administrator</div>
-                                        </div>
-                                    <?php else: ?>
-                                        <img src="../<?php echo htmlspecialchars($aadhaar_file); ?>" alt="aadhaar" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
-                                        <div>
-                                            <div style="font-weight: 600; font-size: 13px;">View Aadhaar Image</div>
-                                            <div style="font-size: 11px; color: var(--text-gray);">Managed securely by Administrator</div>
-                                        </div>
-                                    <?php endif; ?>
-                                </a>
-                                <small style="color: var(--text-gray); font-size: 11px; margin-top: 6px; display: block;">*Only Admin can replace this document.</small>
+            <!-- Linked Documents -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class='bx bx-file'></i> Linked Documents</h3>
+                    <button class="btn-outline" style="padding: 6px 12px;">View All</button>
+                </div>
+                <div class="doc-list">
+                    <div class="doc-item">
+                        <div class="doc-icon green"><i class='bx bx-id-card'></i></div>
+                        <div class="doc-info"><h4>Aadhar Card</h4></div>
+                        <div class="status-pill status-verified">Verified</div>
+                        <div class="doc-actions">
+                            <?php if ($aadhaar_file): ?>
+                                <a href="../<?php echo htmlspecialchars($aadhaar_file); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
+                            <a href="#"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
-
-                    <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
-                        <button type="submit" name="save_profile" class="btn-primary" style="padding: 12px 32px; border-radius: 12px; font-size: 15px; min-width: 180px; justify-content: center;">
-                            <i class='bx bx-save'></i> Save Changes
-                        </button>
+                    <div class="doc-item">
+                        <div class="doc-icon purple"><i class='bx bx-file-blank'></i></div>
+                        <div class="doc-info"><h4>Agreement Copy</h4></div>
+                        <div class="status-pill <?php echo $user['agreement_document'] ? 'status-verified' : 'status-pending'; ?>"><?php echo $user['agreement_document'] ? 'Verified' : 'Pending'; ?></div>
+                        <div class="doc-actions">
+                            <?php if ($user['agreement_document']): ?>
+                                <a href="../admin/download-agreement.php?id=<?php echo $user_id; ?>" target="_blank"><i class='bx bx-show'></i></a>
+                            <?php endif; ?>
+                            <a href="#"><i class='bx bx-chevron-right'></i></a>
+                        </div>
                     </div>
+                    <div class="doc-item">
+                        <div class="doc-icon red"><i class='bx bx-receipt'></i></div>
+                        <div class="doc-info"><h4>Rent Receipt</h4></div>
+                        <div class="status-pill status-verified">Verified</div>
+                        <div class="doc-actions"><a href="#"><i class='bx bx-show'></i></a><a href="#"><i class='bx bx-chevron-right'></i></a></div>
+                    </div>
+                    <div class="doc-item">
+                        <div class="doc-icon yellow"><i class='bx bx-wallet-alt'></i></div>
+                        <div class="doc-info"><h4>Bank Passbook</h4></div>
+                        <div class="status-pill status-pending" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</div>
+                        <div class="doc-actions"><a href="#"><i class='bx bx-show'></i></a><a href="#"><i class='bx bx-chevron-right'></i></a></div>
+                    </div>
+                </div>
+                <a href="#" class="upload-doc-link" onclick="document.getElementById('aadhaarUploadInput').click()"><i class='bx bx-plus'></i> Upload New Document</a>
+                <!-- Hidden Aadhaar Upload Form -->
+                <form method="POST" enctype="multipart/form-data" class="hidden-form" id="hiddenAadhaarForm">
+                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
+                    <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
+                    <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
+                    <input type="file" name="aadhaar" id="aadhaarUploadInput" accept="image/*,application/pdf" onchange="document.getElementById('saveAadhaarBtn').click()">
+                    <button type="submit" name="save_profile" id="saveAadhaarBtn"></button>
                 </form>
             </div>
         </div>
@@ -749,17 +598,18 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <!-- Cropper Modal -->
     <div id="cropperModal">
         <div class="cropper-content animate-up">
-            <h3 style="margin-bottom: 15px; font-weight: 700;">Crop Your Image</h3>
+            <h3 style="margin-bottom: 15px; font-weight: 700; color: var(--text-dark);">Crop Your Image</h3>
             <div class="img-container">
                 <img id="imageToCrop" src="" alt="To Crop">
             </div>
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
                 <button type="button" class="btn-outline" onclick="closeCropper()" style="padding: 10px 20px;">Cancel</button>
-                <button type="button" class="btn-primary" onclick="applyCrop()" style="padding: 10px 20px;">Crop & Set</button>
+                <button type="button" class="btn-primary" onclick="applyCrop()" style="padding: 10px 20px; background: var(--primary-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Crop & Set</button>
             </div>
         </div>
     </div>
 </main>
+
 
 <script>
     const themeToggle = document.getElementById('themeToggle');
