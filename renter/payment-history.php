@@ -689,11 +689,11 @@ $unread_count = count($unread_notifications);
                 <i class='bx bx-message-square-dots'></i>
                 <span>Raise Query</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="notices.php" class="nav-item">
                 <i class='bx bx-bell'></i>
                 <span>Notices</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="documents.php" class="nav-item">
                 <i class='bx bx-folder'></i>
                 <span>Documents</span>
             </a>
