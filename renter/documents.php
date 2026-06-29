@@ -798,10 +798,55 @@ $pending_count = 3 - $verified_count;
         // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
 
+                currentX = e.touches[0].clientX;
+                let diff = currentX - startX;
+                if (diff < 0) { // Only allow swiping left
+                    content.style.transform = `translateX(${diff}px)`;
+                }
+            }, {passive: true});
+            
+            item.addEventListener('touchend', e => {
+                let diff = currentX - startX;
+                content.style.transition = 'transform 0.2s ease-out';
+                if (diff < -80) { // threshold
+                    content.style.transform = `translateX(-100%)`;
+                    setTimeout(() => {
+                        dismissNotification(item.getAttribute('data-id'), item);
+                    }, 200);
+                } else {
+                    content.style.transform = `translateX(0)`;
+                }
+            });
+        });
+    </script>
+    <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+
+<script>
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+
     </script>
 <script>
 document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
 
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash === '#upload-widget-container') {
+        setTimeout(function() {
+            const el = document.getElementById('upload-widget-container');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.style.transition = 'box-shadow 0.5s ease, transform 0.5s ease';
+                el.style.boxShadow = '0 0 0 4px rgba(98, 75, 255, 0.4), 0 10px 25px rgba(98, 75, 255, 0.15)';
+                el.style.borderRadius = '20px';
+                setTimeout(() => { 
+                    el.style.boxShadow = 'none'; 
+                }, 2500);
+            }
+        }, 300);
+    }
+});
 </script>
 </body>
 </html>
