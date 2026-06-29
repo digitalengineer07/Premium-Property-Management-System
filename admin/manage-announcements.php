@@ -108,9 +108,18 @@ while ($row = mysqli_fetch_assoc($res)) $announcements[] = $row;
     </div>
 
     <?php if ($success): ?>
-        <div class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7;">
+        <div class="animate-up" id="successMsgAlert" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease-out;">
             <i class='bx bx-check-circle'></i> <?php echo $success; ?>
         </div>
+        <script>
+            setTimeout(() => {
+                const el = document.getElementById('successMsgAlert');
+                if(el) {
+                    el.style.opacity = '0';
+                    setTimeout(() => el.style.display = 'none', 500);
+                }
+            }, 3000);
+        </script>
     <?php endif; ?>
 
     <div class="symmetric-grid animate-up">
@@ -120,7 +129,7 @@ while ($row = mysqli_fetch_assoc($res)) $announcements[] = $row;
                     <h2 style="font-size: 18px; font-weight: 700;">Active Notices</h2>
                 </div>
                 <div class="table-responsive" style="flex: 1; margin: 0; padding-bottom: 20px;">
-                    <table style="height: 100%;">
+                    <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr>
                                 <th>Notice</th>
@@ -129,9 +138,9 @@ while ($row = mysqli_fetch_assoc($res)) $announcements[] = $row;
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody style="height: 100%; display: table-row-group;">
+                        <tbody>
                             <?php if (empty($announcements)): ?>
-                                <tr style="height: 100%;"><td colspan="4" style="text-align: center; vertical-align: middle; padding: 60px; color: var(--text-gray); font-style: italic;">No announcements posted yet.</td></tr>
+                                <tr><td colspan="4" style="text-align: center; vertical-align: middle; padding: 60px; color: var(--text-gray); font-style: italic;">No announcements posted yet.</td></tr>
                             <?php else: foreach ($announcements as $a): ?>
                             <tr>
                                 <td style="padding: 18px 16px;">
