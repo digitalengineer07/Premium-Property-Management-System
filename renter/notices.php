@@ -695,19 +695,6 @@ if (isset($_GET['ajax_id'])) {
 <script>
     const modal = document.getElementById('notice-modal');
     const detailPane = document.getElementById('detail-pane');
-    
-    function closeModal() {
-        modal.classList.remove('active');
-    }
-    
-    function loadDetails(id) {
-        detailPane.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class='bx bx-loader-alt bx-spin' style="font-size: 32px;"></i></div>';
-        modal.classList.add('active');
-        fetch('notices.php?ajax_id=' + id)
-            .then(res => res.text())
-            .then(html => {
-                detailPane.innerHTML = html;
-            });
     }
     
     // Handle read state from localStorage
