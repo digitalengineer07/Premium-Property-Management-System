@@ -1,4 +1,4 @@
-﻿      <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
+      <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
           <style>
               #paymentModalPanel::-webkit-scrollbar { display: none; }
               #paymentModalPanel { -ms-overflow-style: none; scrollbar-width: none; }
@@ -35,7 +35,7 @@
                   <div class="pm-col-left">
                       <div id="paymentDetails" style="margin-bottom: 20px;">
                           <div id="paymentTitle" style="font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text-dark);">Total Outstanding Balance</div>
-                          <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">â‚¹<span id="paymentAmountDisplay">0</span></div>
+                          <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">&#8377;<span id="paymentAmountDisplay">0</span></div>
                       </div>
 
                       <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 10px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 20px;">
