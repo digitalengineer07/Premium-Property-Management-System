@@ -43,21 +43,6 @@ $r2a = mysqli_fetch_assoc($r2);
 $elec_due = (float)($r2a['elec_total'] ?? 0);
 $rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
 mysqli_stmt_close($stmt);
-
-$rent_due = $pure_rent_due + $rent_portion_due;
-$unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
-$total_due = $elec_due + $rent_due - $unbilled_adj; // If adj is negative (remaining), it adds to total. If positive, subtracts.
-
-
-/* Last payment */
-$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-
-// Check for recent announcements (last 24h)
-$dismissed_cookie_val = $_COOKIE['dismissed_notifs'] ?? '';
-$dismissed_ids_arr = $dismissed_cookie_val ? explode(',', $dismissed_cookie_val) : [];
-$has_new_notice = false;
 $ann_check_q = mysqli_query($conn, "SELECT id FROM announcements WHERE created_at >= NOW() - INTERVAL 1 DAY");
 if ($ann_check_q) {
     while($ac = mysqli_fetch_assoc($ann_check_q)) {
