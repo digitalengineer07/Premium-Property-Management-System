@@ -934,7 +934,7 @@ $unread_count = count($unread_notifications);
 
         <!-- Payments Table Section -->
         <div class="payments-container animate-up" style="animation-delay: 0.1s;">
-            <div class="tabs-header" style="flex-wrap: wrap; gap: 16px;">
+            <div class="tabs-header" style="flex-wrap: wrap; gap: 16px; padding: 24px;">
                 <div class="filter-group">
                     <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Date Range</label>
                     <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; background: white; min-width: 200px;">
