@@ -789,26 +789,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
         <!-- RIGHT COLUMN -->
         <div class="grid-col-right">
-            <!-- Account & Security -->
-            <div class="panel">
-                <div class="panel-header">
-                    <h3><i class='bx bx-check-shield'></i> Account & Security</h3>
-                </div>
-                <div class="info-list">
-                    <div class="info-row">
-                        <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label"><i class='bx bx-info-circle'></i> Account Status</div>
-                        <div class="info-value value-green">Active</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Emergency Contact -->
-            <div class="panel">
-                  <div class="panel-header">
                       <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
                       <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
