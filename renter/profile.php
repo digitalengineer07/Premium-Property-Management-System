@@ -830,7 +830,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     const cropperModal = document.getElementById('cropperModal');
     const imageToCrop = document.getElementById('imageToCrop');
     const croppedImageInput = document.getElementById('croppedImageInput');
-    const avatarPreview = document.querySelector('.avatar-huge');
+    const avatarPreview = document.getElementById('profileAvatarImg');
 
     profilePicInput.onchange = function(e) {
         const file = e.target.files[0];
@@ -875,6 +875,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         const base64Image = canvas.toDataURL('image/jpeg', 0.9);
         croppedImageInput.value = base64Image;
         avatarPreview.src = base64Image;
+        avatarPreview.style.display = 'block';
+        if (document.getElementById('profileAvatarFallback')) {
+            document.getElementById('profileAvatarFallback').style.display = 'none';
+        }
         
         cropperModal.style.display = 'none';
         if (cropper) cropper.destroy();
