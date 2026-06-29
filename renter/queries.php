@@ -702,7 +702,7 @@ $unread_count = 1; // Match mockup notification count
                         $date_formatted = date('d M Y', strtotime($q['created_at']));
                         $qid_formatted = '#QRY-' . str_pad($q['id'], 4, '0', STR_PAD_LEFT);
                     ?>
-                    <div class="query-row">
+                    <div class="query-row" data-id="<?php echo $q['id']; ?>">
                         <div class="query-item" onclick="toggleDetails(<?php echo $index; ?>)" style="cursor: pointer;">
                             <div class="qi-icon" style="background: <?php echo $bg; ?>; color: <?php echo $col; ?>;">
                                 <i class='bx <?php echo $icon; ?>'></i>
@@ -787,6 +787,49 @@ function toggleDetails(index) {
         btn.style.color = 'var(--text-gray)';
     }
 }
+// Polling for instant updates
+setInterval(() => {
+    fetch(window.location.href)
+        .then(res => res.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // For each query row in the fetched document
+            doc.querySelectorAll('.query-row').forEach(newRow => {
+                const qid = newRow.getAttribute('data-id');
+                const oldRow = document.querySelector(`.query-row[data-id="${qid}"]`);
+                if (oldRow) {
+                    // Check if status changed
+                    const oldStatus = oldRow.querySelector('.qi-status');
+                    const newStatus = newRow.querySelector('.qi-status');
+                    if (oldStatus.innerHTML !== newStatus.innerHTML) {
+                        oldStatus.innerHTML = newStatus.innerHTML;
+                        oldStatus.style.background = newStatus.style.background;
+                        oldStatus.style.color = newStatus.style.color;
+                    }
+                    
+                    // Check if details (admin reply) changed
+                    // The details div has an id like details-0, details-1... which might shift if list order changes, 
+                    // but since we're staying on the same page, the index mapping should be consistent unless new queries are inserted.
+                    // Instead, let's select the details div inside the row.
+                    const oldDetails = oldRow.querySelector('div[id^="details-"]');
+                    const newDetails = newRow.querySelector('div[id^="details-"]');
+                    if (oldDetails && newDetails && oldDetails.innerHTML !== newDetails.innerHTML) {
+                        // We only want to update the contents of the details, not its display style (which controls accordion visibility)
+                        const isExpanded = oldDetails.style.display !== 'none';
+                        oldDetails.innerHTML = newDetails.innerHTML;
+                        // re-apply display state in case innerHTML replacement affected it (though it shouldn't)
+                        oldDetails.style.display = isExpanded ? 'block' : 'none';
+                    }
+                }
+            });
+            
+            // We could also check if the number of rows changed to trigger a full refresh, 
+            // but for simple status updates, updating existing rows is sufficient.
+        });
+}, 5000); // 5 seconds
+
 document.addEventListener('click', function(e) {
     const btn = e.target.closest('.page-btn');
     if (btn && btn.tagName === 'A') {
