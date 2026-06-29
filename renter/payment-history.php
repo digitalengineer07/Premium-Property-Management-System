@@ -1276,5 +1276,6 @@ $unread_count = count($unread_notifications);
             }
         });
 </script>
+</div>
 </body>
 </html>
