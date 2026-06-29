@@ -563,7 +563,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <!-- Avatar Card -->
             <div class="panel avatar-card">
                 <div class="avatar-wrapper">
-                    <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge">
+                    <?php if (!empty($profile_pic) && file_exists("../" . $profile_pic)): ?>
+                        <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge" id="profileAvatarImg">
+                    <?php else: ?>
+                        <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: var(--primary-purple); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px;">
+                            <?php echo strtoupper(substr($display_name, 0, 2)); ?>
+                        </div>
+                        <img src="" alt="profile" class="avatar-huge" id="profileAvatarImg" style="display: none;">
+                    <?php endif; ?>
                     <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
                         <i class='bx bx-camera'></i>
                     </button>
