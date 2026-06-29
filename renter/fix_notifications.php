@@ -3,22 +3,15 @@ $files = glob("c:/xampp/htdocs/renter-system/renter/*.php");
 $bell_block = file_get_contents("bell_block.txt");
 $dismiss_script = file_get_contents("dismiss_script.txt");
 
-// clean up the bell_block.txt and dismiss_script.txt output which might have PowerShell formatting
-$bell_block = preg_replace('/^> /m', '', $bell_block);
-$bell_block = preg_replace('/^renter\\\\dashboard\.php:\d+:/m', '', $bell_block);
-$bell_block = trim($bell_block);
-
-$dismiss_script = preg_replace('/^> /m', '', $dismiss_script);
-$dismiss_script = preg_replace('/^renter\\\\dashboard\.php:\d+:/m', '', $dismiss_script);
-$dismiss_script = trim($dismiss_script);
-
 foreach($files as $f) {
     if(basename($f) == 'dashboard.php' || basename($f) == 'profile.php' || basename($f) == 'fix_notifications.php') continue;
     
     $c = file_get_contents($f);
     
     // Pattern to find the old static bell icon block
-    $pattern = '/<div class="icon-btn"[^>]*>\s*<i class=\'bx bx-bell\'><\/i>\s*<\?php if \(\$unread_count > 0\): \?>\s*<span[^>]*><\?php echo \$unread_count; \?><\/span>\s*<\?php endif; \?>\s*<\/div>/is';
+    // It looks like: <div class="icon-btn"[^>]*>\s*<i class='bx bx-bell'><\/i>\s*(?:<\?php if \(\$unread_count > 0\): \?>\s*<span[^>]*><\?php echo \$unread_count; \?><\/span>\s*<\?php endif; \?>)?\s*<\/div>
+    // Wait! In notices.php, the 'bx-bell' is inside <div class="icon-btn" style="...">
+    $pattern = '/<div class="icon-btn"[^>]*>\s*<i class=\'bx bx-bell\'(?:[^>]*)><\/i>\s*(?:<\?php if \(\$unread_count > 0\): \?>\s*<span[^>]*><\?php echo \$unread_count; \?><\/span>\s*<\?php endif; \?>)?\s*<\/div>/is';
     
     if (preg_match($pattern, $c)) {
         // Replace with the notification wrapper
@@ -44,7 +37,7 @@ foreach($files as $f) {
         });
             ";
             // inject after dismissNotification or before </body>
-            $c = str_replace('</body>', $click_outside . "\n</body>", $c);
+            $c = str_replace('</body>', "<script>\n" . $click_outside . "\n</script>\n</body>", $c);
         }
 
         // Add the CSS for .notification-wrapper if not present
