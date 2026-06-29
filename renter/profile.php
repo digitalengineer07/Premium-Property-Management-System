@@ -175,53 +175,6 @@ mysqli_stmt_bind_param($elec_q, "i", $user_id);
 mysqli_stmt_execute($elec_q);
 $elec_res = mysqli_stmt_get_result($elec_q);
 $elec_rows = [];
-while ($r = mysqli_fetch_assoc($elec_res)) $elec_rows[] = $r;
-mysqli_stmt_close($elec_q);
-
-$display_name = $user['name'] ?: $user['username'];
-$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
-$aadhaar_file = $user['aadhaar_file'] ?? null;
-// Fetch notices for header notification dropdown
-$qNotices = mysqli_query($conn, "SELECT * FROM announcements ORDER BY created_at DESC LIMIT 5");
-$notices = [];
-
-while($n = mysqli_fetch_assoc($qNotices)) {
-    $ts = strtotime($n['created_at']);
-    $is_new = (time() - $ts) <= 7 * 86400;
-    if ($is_new) $unread_count++;
-    
-    $badge_color = '#10B981';
-    $badge_bg = 'rgba(16, 185, 129, 0.1)';
-    $icon = 'bx-info-circle';
-    $icon_color = '#3B82F6';
-    $icon_bg = 'rgba(59, 130, 246, 0.1)';
-    
-    if ($n['priority'] === 'High' || $n['priority'] === 'Urgent') {
-        $badge_color = '#EF4444';
-        $badge_bg = 'rgba(239, 68, 68, 0.1)';
-        $icon = 'bxs-megaphone';
-        $icon_color = '#EF4444';
-        $icon_bg = 'rgba(239, 68, 68, 0.1)';
-    }
-    
-    $notices[] = [
-        'id' => $n['id'],
-        'title' => $n['title'],
-        'desc' => $n['message'],
-        'date' => date('d M Y', $ts),
-        'time' => date('h:i A', $ts),
-        'is_new' => $is_new,
-        'icon' => $icon,
-        'icon_color' => $icon_color,
-        'icon_bg' => $icon_bg
-    ];
-}
-
-?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
     <title>My Profile | <?php echo HOUSE_NAME; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
