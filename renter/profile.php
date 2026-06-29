@@ -382,7 +382,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .panel-header h3 i { font-size: 20px; color: var(--primary-purple); }
 
         /* Avatar Card overrides */
-        .avatar-card { text-align: center; background: #F8F7FF; border: none; padding: 50px 20px; display: flex; flex-direction: column; justify-content: center; min-height: 350px; }
+        .avatar-card { text-align: center; background: #F8F7FF; border: none; padding: 50px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 350px; }
         .avatar-wrapper { position: relative; display: inline-block; margin-bottom: 20px; }
         .avatar-huge { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.08); background: var(--white); }
         .btn-edit-avatar { position: absolute; bottom: 4px; right: 4px; width: 40px; height: 40px; border-radius: 50%; background: var(--white); border: 3px solid #F8F7FF; box-shadow: 0 4px 10px rgba(0,0,0,0.05); color: var(--primary-purple); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: var(--transition); }
@@ -566,7 +566,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <?php if (!empty($profile_pic) && file_exists("../" . $profile_pic)): ?>
                         <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge" id="profileAvatarImg">
                     <?php else: ?>
-                        <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: var(--primary-purple); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px;">
+                        <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); box-shadow: 0 10px 25px rgba(98, 75, 255, 0.25); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                             <?php echo strtoupper(substr($display_name, 0, 2)); ?>
                         </div>
                         <img src="" alt="profile" class="avatar-huge" id="profileAvatarImg" style="display: none;">
@@ -589,7 +589,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     </form>
                 </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
-                <span style="display: inline-block; padding: 6px 16px; background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13px;">Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
             </div>
 
             <!-- Basic Information -->
