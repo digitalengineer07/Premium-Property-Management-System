@@ -62,29 +62,6 @@ foreach($chart_records as $cr) {
 $latest_record = $electricity_records[0] ?? null;
 $last_reading = $latest_record['current_reading'] ?? 0;
 // We'll use created_at for the date of the reading, or current date if none
-$last_reading_date = $latest_record ? date("d M Y", strtotime($latest_record['created_at'])) : 'N/A';
-
-function money($val) {
-    return '₹' . number_format((float)$val, 2);
-}
-
-// Unread Notifications Count (mock or real)
-$dismissed_cookie = $_COOKIE['dismissed_notifs'] ?? '';
-$dismissed_ids = $dismissed_cookie ? explode(',', $dismissed_cookie) : [];
-
-$ann_q = mysqli_query($conn, "SELECT id FROM announcements WHERE created_at >= NOW() - INTERVAL 1 DAY");
-if($ann_q){
-    while($ac = mysqli_fetch_assoc($ann_q)) {
-        if(!in_array('ann_'.$ac['id'], $dismissed_ids)) {
-            $unread_count++;
-        }
-    }
-}
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Electricity Record - <?php echo HOUSE_NAME; ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
