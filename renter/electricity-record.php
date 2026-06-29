@@ -339,8 +339,8 @@ if($ann_q){
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting">
-                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
-                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
+                <h1>Electricity Record</h1>
+                <p>Track your daily usage and readings.</p>
             </div>
             <div class="header-actions">
                 <div class="icon-btn bell-icon">

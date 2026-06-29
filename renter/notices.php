@@ -460,8 +460,8 @@ if (isset($_GET['ajax_id'])) {
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting">
-                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
-                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
+                <h1>Notices & Announcements</h1>
+                <p>Stay updated with the latest alerts.</p>
             </div>
             <div class="header-actions">
                 <div class="icon-btn" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; color: var(--text-dark); font-size: 20px;">

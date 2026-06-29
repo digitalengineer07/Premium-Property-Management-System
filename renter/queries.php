@@ -419,8 +419,8 @@ $unread_count = 1; // Match mockup notification count
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting">
-                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
-                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
+                <h1>Raise Query</h1>
+                <p>Submit a request or report an issue.</p>
             </div>
             <div class="header-actions">
                 <div class="icon-btn">
