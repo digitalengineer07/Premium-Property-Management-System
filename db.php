@@ -150,7 +150,9 @@ if ($conn) {
             'extra_charges_desc' => "varchar(255) DEFAULT NULL",
             'meter_screenshot_orig' => "varchar(255) DEFAULT NULL",
             'meter_screenshot_thumb' => "varchar(255) DEFAULT NULL",
-            'bill_file' => "varchar(255) DEFAULT NULL"
+            'bill_file' => "varchar(255) DEFAULT NULL",
+            'elec_status' => "varchar(20) DEFAULT 'Due'",
+            'rent_status' => "varchar(20) DEFAULT 'Due'"
         ]
     ];
 
@@ -158,7 +160,7 @@ if ($conn) {
     @mysqli_query($conn, "CREATE TABLE IF NOT EXISTS payment_notifications (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
-        bill_type ENUM('rent', 'electricity', 'total', 'advance') NOT NULL,
+        bill_type VARCHAR(50) NOT NULL,
         bill_id INT NULL,
         amount DECIMAL(10, 2) NOT NULL,
         transaction_id VARCHAR(50) NOT NULL,
@@ -178,6 +180,10 @@ if ($conn) {
         }
     }
     
+    @mysqli_query($conn, "ALTER TABLE payment_notifications MODIFY COLUMN bill_type VARCHAR(50) NOT NULL");
+    @mysqli_query($conn, "UPDATE electricity SET elec_status = status WHERE elec_status IS NULL OR elec_status = ''");
+    @mysqli_query($conn, "UPDATE electricity SET rent_status = status WHERE rent_status IS NULL OR rent_status = ''");
+
     // Also quietly fix the payments table ENUM if it is rejecting 'advance'
     $res_payments = @mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'bill_type'");
     if ($res_payments && mysqli_num_rows($res_payments) > 0) {
