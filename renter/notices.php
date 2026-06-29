@@ -688,11 +688,53 @@ if (isset($_GET['ajax_id'])) {
                 </div>
             </div>
             <div class="header-actions">
-                <div class="icon-btn" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; color: var(--text-dark); font-size: 20px;">
-                    <i class='bx bx-bell'></i>
-                    <?php if ($unread_count > 0): ?>
-                        <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white;"><?php echo $unread_count; ?></span>
-                    <?php endif; ?>
+                <div style="position: relative;">
+                    <div class="icon-btn" onclick="document.getElementById('notificationDropdown').style.display = document.getElementById('notificationDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; color: var(--text-dark); font-size: 20px; transition: 0.2s;">
+                        <i class='bx bx-bell'></i>
+                        <?php if ($unread_count > 0): ?>
+                            <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white;"><?php echo $unread_count; ?></span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div id="notificationDropdown" style="display: none; position: absolute; top: 120%; right: -20px; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 16px 40px rgba(0,0,0,0.1); width: 340px; z-index: 1000; overflow: hidden;">
+                        <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #FAFBFC;">
+                            <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h4>
+                            <?php if ($unread_count > 0): ?>
+                                <span style="background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;"><?php echo $unread_count; ?> New</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="max-height: 380px; overflow-y: auto;">
+                            <?php if (count($notices) > 0): ?>
+                                <?php $limit = 0; foreach($notices as $n): if($limit++ >= 5) break; ?>
+                                <a href="notices.php" style="display: flex; gap: 14px; padding: 16px 20px; text-decoration: none; border-bottom: 1px solid var(--border); transition: 0.2s; background: <?php echo $n['is_new'] ? 'rgba(98, 75, 255, 0.03)' : 'white'; ?>;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='<?php echo $n['is_new'] ? 'rgba(98, 75, 255, 0.03)' : 'white'; ?>'">
+                                    <div style="width: 40px; height: 40px; border-radius: 12px; background: <?php echo $n['icon_bg']; ?>; color: <?php echo $n['icon_color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                        <i class='bx <?php echo $n['icon']; ?>'></i>
+                                    </div>
+                                    <div>
+                                        <h5 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; justify-content: space-between;">
+                                            <?php echo htmlspecialchars($n['title']); ?>
+                                            <?php if($n['is_new']): ?><div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-purple);"></div><?php endif; ?>
+                                        </h5>
+                                        <p style="margin: 0 0 6px 0; font-size: 13px; color: var(--text-gray); overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.4;"><?php echo htmlspecialchars($n['desc']); ?></p>
+                                        <p style="margin: 0; font-size: 11px; color: #94A3B8; font-weight: 500;"><i class='bx bx-time-five' style="vertical-align: middle;"></i> <?php echo htmlspecialchars($n['time']); ?>, <?php echo htmlspecialchars($n['date']); ?></p>
+                                    </div>
+                                </a>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <div style="padding: 40px 20px; text-align: center; color: var(--text-gray);">
+                                    <div style="width: 64px; height: 64px; background: #F1F5F9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
+                                        <i class='bx bx-bell-off' style="font-size: 32px; color: #CBD5E1;"></i>
+                                    </div>
+                                    <p style="margin: 0; font-size: 14px; font-weight: 500;">No new notifications</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php if (count($notices) > 0): ?>
+                        <div style="padding: 12px; text-align: center; background: white; border-top: 1px solid var(--border);">
+                            <a href="notices.php" style="color: var(--primary-purple); font-size: 13px; font-weight: 600; text-decoration: none;">View All Notices <i class='bx bx-right-arrow-alt' style="vertical-align: middle;"></i></a>
+                        </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
                 <div class="icon-btn" onclick="document.documentElement.classList.toggle('dark-theme');" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dark); font-size: 20px;">
                     <i class='bx bx-moon'></i>
