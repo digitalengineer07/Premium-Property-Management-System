@@ -3,7 +3,7 @@ session_start();
 $_SESSION['user_id'] = 1;
 $_SESSION['csrf'] = 'test';
 ob_start();
-include 'renter/dashboard.php';
+include 'dashboard.php';
 $out = ob_get_clean();
 if (strpos($out, 'paymentAmountDisplay') !== false) {
     echo "FOUND paymentAmountDisplay\n";
