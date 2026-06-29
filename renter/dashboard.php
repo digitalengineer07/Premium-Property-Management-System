@@ -837,7 +837,7 @@ $unread_count = count($unread_notifications);
             <!-- Electricity Due -->
             <div class="kpi-card">
                 <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
-                    <div class="kpi-icon-box yellow" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-bolt'></i></div>
+                    <div class="kpi-icon-box yellow" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-bolt-circle'></i></div>
                     <div>
                         <div class="kpi-title" style="margin-bottom: 4px;">Electricity Due</div>
                         <div class="kpi-amount" style="margin-bottom: 0;"><?php echo money($elec_due); ?></div>
@@ -920,7 +920,7 @@ $unread_count = count($unread_notifications);
                                 <?php if ($pb['type'] == 'rent'): ?>
                                     <div class="bill-icon"><i class='bx bx-home'></i></div>
                                 <?php else: ?>
-                                    <div class="bill-icon yellow"><i class='bx bx-bolt'></i></div>
+                                    <div class="bill-icon yellow"><i class='bx bx-bolt-circle'></i></div>
                                 <?php endif; ?>
                                 <div class="bill-info">
                                     <h4><?php echo $pb['type'] == 'rent' ? 'Rent' : 'Electricity'; ?> for <?php echo htmlspecialchars($pb['month']); ?></h4>
@@ -1009,7 +1009,7 @@ $unread_count = count($unread_notifications);
                             
                             $icon_class = 'up';
                             $icon_bx = 'bx-up-arrow-alt';
-                            if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt'; }
+                            if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt-circle'; }
                             else if ($is_adv) { $icon_class = 'adv'; $icon_bx = 'bx-wallet'; }
                             else { $icon_class = 'up'; $icon_bx = 'bx-up-arrow-alt'; }
                             
