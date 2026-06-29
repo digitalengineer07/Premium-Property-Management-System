@@ -1241,7 +1241,7 @@ $unread_count = count($unread_notifications);
           </style>
           <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
               <div class="pm-header">
-                  <h2 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">Make Payment</h2>
+                  <h2 style="font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--primary-purple), #FF4B6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -0.5px;">Make Payment</h2>
                   <div onclick="closePaymentModal()" style="width: 36px; height: 36px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
                       <i class='bx bx-x' style="font-size: 22px; color: var(--text-gray);"></i>
                   </div>
@@ -1250,15 +1250,15 @@ $unread_count = count($unread_notifications);
               <div class="pm-layout">
                   <div class="pm-col-left">
                       <div id="paymentDetails" style="margin-bottom: 20px;">
-                          <div id="paymentTitle" style="font-weight: 700; font-size: 16px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
+                          <div id="paymentTitle" style="font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text-dark);">Total Outstanding Balance</div>
                           <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹<span id="paymentAmountDisplay">0</span></div>
                       </div>
 
-                      <div style="background: rgba(98, 75, 255, 0.04); padding: 14px 18px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 20px;">
+                      <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 10px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 20px;">
                           <p class="pm-timer-container" style="font-size: 13px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 6px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
                               <i class='bx bx-timer' style="font-size: 18px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 3px 8px; border-radius: 6px;">05:00</span>
                           </p>
-                          <p class="pm-timer-text" style="font-size: 12px; color: var(--text-gray); margin: 0; text-align: center;">Transfer within this time to ensure amount accuracy.</p>
+                          <p class="pm-timer-text" style="font-size: 11px; color: var(--text-gray); margin: 0; text-align: center; white-space: nowrap; letter-spacing: -0.2px;">Transfer within this time to ensure amount accuracy.</p>
                       </div>
 
                       <form method="POST" id="paymentNotifyForm" style="text-align: left;">
