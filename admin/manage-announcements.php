@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_announcement'])) 
                 
                 // Blast Email if requested
                 if ($notify_email) {
-                    $qUsers = mysqli_query($conn, "SELECT name, email FROM users WHERE email IS NOT NULL AND email != ''");
+                    $qUsers = mysqli_query($conn, "SELECT name, email FROM users WHERE email IS NOT NULL AND email != '' AND status = 'active'");
                     $emails_sent = 0;
                     while ($user = mysqli_fetch_assoc($qUsers)) {
                         send_announcement_email($user['email'], $user['name'], $title, $message, $priority);
