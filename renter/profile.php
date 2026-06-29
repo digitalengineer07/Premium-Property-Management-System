@@ -1113,7 +1113,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             }
         }
         
-        const notifDropdown = document.getElementById('notificationDropdown');
+        const notifDropdown = document.getElementById('notifDropdown');
         const notifToggle = document.querySelector('.icon-btn'); // The bell icon
         if (notifDropdown && notifDropdown.style.display === 'block') {
             if (!notifDropdown.contains(event.target) && !event.target.closest('.icon-btn')) {
