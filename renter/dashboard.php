@@ -26,7 +26,7 @@ $room_no = $user['room_no'] ?? 'N/A';
 
 /* Calculate totals */
 // 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r1 = mysqli_stmt_get_result($stmt);
@@ -35,10 +35,7 @@ $pure_rent_due = (float)($r1a['total'] ?? 0);
 mysqli_stmt_close($stmt);
 
 // 2. Electricity and Rent components from 'electricity' table
-$stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(CASE WHEN COALESCE(NULLIF(elec_status, ''), status) != 'Paid' THEN amount ELSE 0 END), 0) as elec_total, 
-    IFNULL(SUM(CASE WHEN COALESCE(NULLIF(rent_status, ''), status) != 'Paid' THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
-    FROM electricity WHERE user_id = ?");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(amount),0) as elec_total, IFNULL(SUM(rent_amount + maintenance + dues),0) as rent_portion_total FROM electricity WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);
@@ -50,7 +47,6 @@ mysqli_stmt_close($stmt);
 $rent_due = $pure_rent_due + $rent_portion_due;
 $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
 $total_due = $elec_due + $rent_due - $unbilled_adj;
-$is_all_clear = ($total_due <= 0 && $elec_due <= 0 && $rent_due <= 0);
 
 /* Last payment */
 $stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
@@ -746,21 +742,21 @@ $show_banner = ($is_late && !empty($overdue_list));
             <!-- Total Outstanding -->
             <div class="kpi-card">
                 <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
-                    <div class="kpi-icon-box <?php echo (!$is_all_clear) ? 'red' : 'green'; ?>" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card'></i></div>
+                    <div class="kpi-icon-box <?php echo $total_due > 0 ? 'red' : 'green'; ?>" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card'></i></div>
                     <div>
                         <div class="kpi-title" style="margin-bottom: 4px;">Total Outstanding</div>
-                        <div class="kpi-amount" style="margin-bottom: 0; <?php echo (!$is_all_clear) ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></div>
+                        <div class="kpi-amount" style="margin-bottom: 0; <?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></div>
                     </div>
                 </div>
                 <div class="kpi-bottom">
-                    <?php if (!$is_all_clear): ?>
+                    <?php if ($total_due > 0): ?>
                         <div class="kpi-tag alert"><i class='bx bx-error-circle'></i> Payment Due</div>
                         <button class="btn-pay-now-trigger" onclick="openPaymentModal(<?php echo $total_due; ?>, 'Total Outstanding Balance', 'total')" style="display:none;"></button>
                     <?php else: ?>
                         <div class="kpi-tag success"><i class='bx bx-check-circle'></i> All Clear</div>
                     <?php endif; ?>
                 </div>
-                <svg class="kpi-sparkline <?php echo (!$is_all_clear) ? 'red' : 'green'; ?>" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <svg class="kpi-sparkline <?php echo $total_due > 0 ? 'red' : 'green'; ?>" viewBox="0 0 100 40" preserveAspectRatio="none">
                     <defs>
                         <linearGradient id="gradRed" x1="0%" y1="0%" x2="0%" y2="100%">
                             <stop offset="0%" style="stop-color:#FF4B6B;stop-opacity:0.25" />
@@ -771,8 +767,8 @@ $show_banner = ($is_late && !empty($overdue_list));
                             <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
                         </linearGradient>
                     </defs>
-                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5 L100,40 L0,40 Z" fill="url(#<?php echo (!$is_all_clear) ? 'gradRed' : 'gradGreen'; ?>)" />
-                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5" fill="none" stroke="<?php echo (!$is_all_clear) ? '#FF4B6B' : '#10B981'; ?>" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5 L100,40 L0,40 Z" fill="url(#<?php echo $total_due > 0 ? 'gradRed' : 'gradGreen'; ?>)" />
+                    <path d="M0,35 L10,30 L20,33 L30,25 L40,30 L50,20 L60,23 L70,15 L80,17 L90,10 L100,5" fill="none" stroke="<?php echo $total_due > 0 ? '#FF4B6B' : '#10B981'; ?>" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
 

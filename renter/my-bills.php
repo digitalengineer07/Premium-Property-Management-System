@@ -19,16 +19,6 @@ mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
 mysqli_stmt_close($stmt);
-require_once "fetch_notifications.php";
-if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
-
-/* Fetch profile */
-$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
-$user = mysqli_fetch_assoc($res);
-mysqli_stmt_close($stmt);
 
 $display_name = $user['name'] ?: $user['username'];
 $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
@@ -36,7 +26,7 @@ $room_no = $user['room_no'] ?? 'N/A';
 
 /* Calculate totals */
 // 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r1 = mysqli_stmt_get_result($stmt);
@@ -45,10 +35,7 @@ $pure_rent_due = (float)($r1a['total'] ?? 0);
 mysqli_stmt_close($stmt);
 
 // 2. Electricity and Rent components from 'electricity' table
-$stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(CASE WHEN COALESCE(NULLIF(elec_status, ''), status) != 'Paid' THEN amount ELSE 0 END), 0) as elec_total, 
-    IFNULL(SUM(CASE WHEN COALESCE(NULLIF(rent_status, ''), status) != 'Paid' THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
-    FROM electricity WHERE user_id = ?");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(amount),0) as elec_total, IFNULL(SUM(rent_amount + maintenance + dues),0) as rent_portion_total FROM electricity WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);
@@ -60,7 +47,6 @@ mysqli_stmt_close($stmt);
 $rent_due = $pure_rent_due + $rent_portion_due;
 $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
 $total_due = $elec_due + $rent_due - $unbilled_adj; // If adj is negative (remaining), it adds to total. If positive, subtracts.
-$is_all_clear = ($total_due <= 0 && $elec_due <= 0 && $rent_due <= 0);
 
 
 /* Last payment */
@@ -637,6 +623,289 @@ $show_banner = ($is_late && !empty($overdue_list));
         text-align: left;
     }
 
+</style>
+</head>
+<body style="display: block;"> <!-- Overriding body:flex from design-system -->
+
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class='bx bx-home-heart'></i>
+            </div>
+            <div class="sidebar-brand">
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
+                <p>Resident Dashboard</p>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.php" class="nav-item">
+                <i class='bx bx-grid-alt'></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="my-payments.php" class="nav-item">
+                <i class='bx bx-wallet'></i>
+                <span>My Payments</span>
+            </a>
+            <a href="electricity-record.php" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
+            </a>
+            <a href="my-bills.php" class="nav-item active">
+                <i class='bx bx-receipt'></i>
+                <span>My Bills</span>
+            </a>
+            <a href="queries.php" class="nav-item">
+                <i class='bx bx-message-square-dots'></i>
+                <span>Raise Query</span>
+            </a>
+            <a href="notices.php" class="nav-item">
+                <i class='bx bx-bell'></i>
+                <span>Notices</span>
+            </a>
+            <a href="documents.php" class="nav-item">
+                <i class='bx bx-folder'></i>
+                <span>Documents</span>
+            </a>
+            <a href="profile.php" class="nav-item">
+                <i class='bx bx-user-circle'></i>
+                <span>Profile Settings</span>
+            </a>
+            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+        
+        <div class="go-mobile-widget">
+            <h4>Go Mobile!</h4>
+            <p>Manage your payments on the go.</p>
+            <div class="go-mobile-imgs">
+                <div class="mock-phone">
+                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
+                </div>
+                <div class="mock-qr">
+                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
+                </div>
+            </div>
+            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    
+        <main class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
+                    <i class='bx bx-receipt' style="font-size: 24px; color: var(--primary-purple);"></i>
+                </div>
+                <div>
+                    <h1 style="margin: 0 0 4px 0;">My Bills</h1>
+                    <p style="margin: 0;">View your upcoming and past bills.</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                                <div class="notification-wrapper">
+                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
+                        <i class='bx bx-bell'></i>
+                        <?php if ($unread_count > 0): ?>
+                            <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
+                                <?php echo $unread_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notifDropdown" style="display: none;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                            <?php if($unread_count > 0): ?>
+                                <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="max-height: 350px; overflow-y: auto;">
+                            <?php if (empty($unread_notifications)): ?>
+                                <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                    <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($unread_notifications as $notif): ?>
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
+                                            <i class='bx bx-trash'></i>
+                                        </div>
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                                <i class='bx <?php echo $notif['icon']; ?>'></i>
+                                            </div>
+                                            <div style="flex: 1; padding-right: 36px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                                </div>
+                                                <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
+                                            </div>
+                                            <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
+                                                <i class='bx bx-x'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
+                    <i class='bx bx-moon'></i>
+                </div>
+                <a href="queries.php" class="btn-outline-support">
+                    <i class='bx bx-help-circle'></i> Help & Support
+                </a>
+                <div style="position: relative;">
+                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
+<?php 
+    $real_pic = '';
+    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
+    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
+    
+    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
+?>
+<?php if (!empty($real_pic)): ?>
+    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+<?php else: ?>
+    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
+<?php endif; ?>
+</div>
+                        <div class="user-info">
+                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
+                        </div>
+                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                    </div>
+                    
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                        </a>
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <?php
+        // Prepare all bills data
+        $all_bills = [];
+
+        // 1. Pure Rent
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, p.payment_date 
+                                       FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
+                                       WHERE r.user_id=$user_id");
+        while($r = mysqli_fetch_assoc($rent_q)) {
+            $all_bills[] = [
+                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : ($r['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'title' => 'Rent for ' . $r['month'], 'subtitle' => 'Room ' . $room_no,
+                'period' => $r['month'],
+                'bill_date' => date('01 M Y', strtotime($r['month'])),
+                'due_date' => date('07 M Y', strtotime($r['month'])),
+                'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
+                'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
+                'icon' => 'bx-home', 'color' => 'purple',
+                'summary' => [
+                    'Monthly Rent' => $r['amount'],
+                    'Maintenance Charge' => 0,
+                    'Other Charges' => 0
+                ]
+            ];
+        }
+
+        // 2. Electricity (Usage)
+        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, p.payment_date 
+                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND e.amount > 0");
+        while($e = mysqli_fetch_assoc($elec_q)) {
+            $all_bills[] = [
+                'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : ($e['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'title' => 'Electricity for ' . $e['month'], 'subtitle' => 'Room ' . $room_no,
+                'period' => $e['month'],
+                'bill_date' => date('01 M Y', strtotime($e['month'])),
+                'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
+                'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
+                'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
+                'icon' => 'bx-bulb', 'color' => 'yellow',
+                'summary' => [
+                    'Electricity Usage' => $e['amount'],
+                    'Maintenance Charge' => 0,
+                    'Other Charges' => 0
+                ]
+            ];
+        }
+
+        // 3. Rent & Maintenance (From Electricity)
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, (e.rent_amount + e.maintenance + e.dues) as combined_amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, p.payment_date 
+                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
+        while($m = mysqli_fetch_assoc($maint_q)) {
+            $all_bills[] = [
+                'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : ($m['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'title' => 'Rent for ' . $m['month'], 'subtitle' => 'Room ' . $room_no,
+                'period' => $m['month'],
+                'bill_date' => date('01 M Y', strtotime($m['month'])),
+                'due_date' => date('07 M Y', strtotime($m['month'])),
+                'amount' => $m['combined_amount'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
+                'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
+                'icon' => 'bx-home', 'color' => 'purple',
+                'summary' => [
+                    'Monthly Rent' => $m['rent_amount'],
+                    'Maintenance Charge' => $m['maintenance'],
+                    'Other Charges' => $m['dues']
+                ]
+            ];
+        }
+        
+        // Sort by Period Descending
+        usort($all_bills, function($a, $b) { 
+            return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+        });
+        
+        // Compute KPIs
+        $paid_this_year = 0;
+        $bills_paid_count = 0;
+        foreach($all_bills as $b) {
+            if ($b['status'] == 'Paid') {
+                $paid_this_year += $b['amount'];
+                $bills_paid_count++;
+            }
+        }
+        $due_this_month = $total_due; 
+        ?>
+
+        <!-- 4-Col KPI Grid -->
+        <div class="kpi-grid-4 animate-up" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px;">
+            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+                <div class="kpi-min-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
+                <div class="kpi-min-info">
+                    <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Total Outstanding</h4>
+                    <h2 style="font-size: 24px; color: #FF4B6B; margin: 0 0 6px 0; font-weight: 800;"><?php echo money($total_due); ?></h2>
+                    <div style="font-size: 11px; font-weight: 700; color: #FF4B6B; background: rgba(255,75,107,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block; white-space: nowrap;">Payment Due</div>
+                </div>
+            </div>
+            
+            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-calendar-event'></i></div>
+                <div class="kpi-min-info">
+                    <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Due This Month</h4>
                     <h2 style="font-size: 24px; color: var(--text-dark); margin: 0 0 6px 0; font-weight: 800;"><?php echo money($due_this_month); ?></h2>
                     <div style="font-size: 11px; font-weight: 700; color: #F59E0B; background: rgba(245,158,11,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block; white-space: nowrap;">Due on 05 <?php echo date('M Y'); ?></div>
                 </div>
