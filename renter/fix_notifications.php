@@ -1,7 +1,7 @@
 <?php
 $files = glob("c:/xampp/htdocs/renter-system/renter/*.php");
-$bell_block = file_get_contents("bell_block.txt");
-$dismiss_script = file_get_contents("dismiss_script.txt");
+$bell_block = file_get_contents("../bell_block.txt");
+$dismiss_script = file_get_contents("../dismiss_script.txt");
 
 foreach($files as $f) {
     if(basename($f) == 'dashboard.php' || basename($f) == 'profile.php' || basename($f) == 'fix_notifications.php') continue;
