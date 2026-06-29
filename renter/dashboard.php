@@ -590,13 +590,10 @@ $unread_count = count($unread_notifications);
         
         .notification-wrapper { position: relative; }
         #notifDropdown { position: absolute; top: 50px; right: 0; width: 340px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; overflow: hidden; }
-            .user-profile-pill {
-            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
-        }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
+                    .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
     </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
@@ -1097,13 +1094,10 @@ $unread_count = count($unread_notifications);
         
         .introjs-helperLayer { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); border: 2px solid #624BFF; border-radius: 20px; box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.4); }
         .dark-theme .introjs-helperLayer { background: rgba(0, 0, 0, 0.1); border-color: #818CF8; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7); }
-            .user-profile-pill {
-            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
-        }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
+                    .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
     </style>
 
     <!-- Payment Modal -->

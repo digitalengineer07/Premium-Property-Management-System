@@ -297,13 +297,10 @@ $pending_count = 2 - $verified_count;
         .tips-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .tips-list li { display: flex; align-items: start; gap: 10px; font-size: 13px; color: var(--text-dark); line-height: 1.5; font-weight: 500; }
         .tips-list li i { color: #10B981; font-size: 16px; margin-top: 2px; }
-            .user-profile-pill {
-            display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
-            white-space: nowrap;
-        }
-        .user-avatar { width: 38px; height: 38px; background: var(--primary-purple); color: white; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; }
-        .user-info p { font-size: 11px; color: var(--text-gray); margin: 0; }
+                    .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
     </style>
 </head>
 <body style="display: block;">

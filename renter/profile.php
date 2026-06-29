@@ -355,10 +355,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .header-icon:hover { background: var(--bg-main); }
         .header-icon .badge { position: absolute; top: -2px; right: -2px; background: #EF4444; color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white); }
         
-        .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); }
-        .user-avatar-sm { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info-sm h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .user-info-sm p { font-size: 12px; color: var(--text-gray); margin: 0; }
+                .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
 
         .btn-outline { padding: 8px 16px; font-size: 13px; font-weight: 600; background: var(--white); border: 1px solid var(--border); border-radius: 8px; color: var(--primary-purple); cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
         .btn-outline:hover { background: rgba(98, 75, 255, 0.05); border-color: var(--primary-purple); }
@@ -523,8 +523,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="queries.php" class="btn-outline"><i class='bx bx-help-circle'></i> Help & Support</a>
             
             <div class="user-profile-pill">
-                <div class="user-avatar-sm"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
-                <div class="user-info-sm">
+                <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
+                <div class="user-info">
                     <h4><?php echo htmlspecialchars($display_name); ?></h4>
                     <p>Room <?php echo htmlspecialchars($user['room_no']); ?></p>
                 </div>
