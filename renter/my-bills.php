@@ -653,7 +653,7 @@ $unread_count = count($unread_notifications);
     </style>
 
         <style>
-            .bill-row td { padding: 12px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .bill-row td { padding: 8px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
             .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding-left: 12px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; padding-right: 12px; }
@@ -954,12 +954,12 @@ $unread_count = count($unread_notifications);
                 <div style="padding: 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
-                            <th style="text-align: left; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">DUE DATE</th>
-                            <th style="text-align: right; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">AMOUNT</th>
-                            <th style="text-align: center; padding: 16px 6px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">STATUS</th>
-                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">ACTION</th>
+                            <th style="text-align: left; padding: 12px 10px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL FOR</th>
+                            <th style="text-align: left; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">DUE DATE</th>
+                            <th style="text-align: right; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">AMOUNT</th>
+                            <th style="text-align: center; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">STATUS</th>
+                            <th style="text-align: center; padding: 12px 10px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
@@ -1137,34 +1137,34 @@ $unread_count = count($unread_notifications);
                     
                     let actionBtn = '';
                     if (bill.status === 'Unpaid') {
-                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 16px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
+                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
                     } else {
-                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:15px; width: 32px; height: 32px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
+                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:14px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
                             <td>
-                                <div style="display:flex; align-items:center; gap:16px;">
+                                <div style="display:flex; align-items:center; gap:12px;">
                                     ${iconHtml}
                                     <div>
-                                        <h4 style="margin:0 0 4px 0; font-size:13px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
-                                        <p style="margin:0; font-size:11px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
+                                        <h4 style="margin:0 0 2px 0; font-size:12px; font-weight:700; color:var(--text-dark);">${bill.period}</h4>
+                                        <p style="margin:0; font-size:10px; color:var(--text-gray); font-weight:500;">${bill.subtitle}</p>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span style="font-size:11px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:6px 10px; border-radius:20px; text-transform:capitalize;">${bill.type}</span>
+                                <span style="font-size:10px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:4px 8px; border-radius:20px; text-transform:capitalize;">${bill.type}</span>
                             </td>
                             <td>
-                                <p style="margin:0; font-size:12px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:4px 0 0 0; font-size:10px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
+                                <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
+                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
                             </td>
                             <td style="text-align:right;">
-                                <span style="font-size:13px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
+                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
                             </td>
                             <td style="text-align:center;">
-                                <span style="font-size:11px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:6px 12px; border-radius:20px; display:inline-block; min-width: 60px;">${bill.status}</span>
+                                <span style="font-size:10px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:4px 10px; border-radius:20px; display:inline-block; min-width: 50px;">${bill.status}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}
