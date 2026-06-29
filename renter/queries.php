@@ -92,7 +92,7 @@ while ($row = mysqli_fetch_assoc($res)) {
 mysqli_stmt_close($stmt);
 
 // User Profile for Header
-$stmt = mysqli_prepare($conn, "SELECT username, name, profile_pic FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT username, name, profile_pic, room_no FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $usr = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
