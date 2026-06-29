@@ -58,35 +58,41 @@ if ($rej_notif_q) {
     }
 }
 
-// 3. Outstanding Balance
-if (!isset($total_due)) {
-    $stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
-    if ($stmt_n) {
-        mysqli_stmt_bind_param($stmt_n, "i", $notif_user_id);
-        mysqli_stmt_execute($stmt_n);
-        $r1_n = mysqli_stmt_get_result($stmt_n);
-        $pure_rent_due_n = (float)(mysqli_fetch_assoc($r1_n)['total'] ?? 0);
-        mysqli_stmt_close($stmt_n);
-    } else { $pure_rent_due_n = 0; }
-
-    $stmt_n2 = mysqli_prepare($conn, "SELECT IFNULL(SUM(amount),0) as elec_total, IFNULL(SUM(rent_amount + maintenance + dues),0) as rent_portion_total FROM electricity WHERE user_id = ? AND status = 'Due'");
-    if ($stmt_n2) {
-        mysqli_stmt_bind_param($stmt_n2, "i", $notif_user_id);
-        mysqli_stmt_execute($stmt_n2);
-        $r2_n = mysqli_stmt_get_result($stmt_n2);
-        $r2a_n = mysqli_fetch_assoc($r2_n);
-        $elec_due_n = (float)($r2a_n['elec_total'] ?? 0);
-        $rent_portion_due_n = (float)($r2a_n['rent_portion_total'] ?? 0);
-        mysqli_stmt_close($stmt_n2);
-    } else { $elec_due_n = 0; $rent_portion_due_n = 0; }
-
-    $u_adj_q = @mysqli_query($conn, "SELECT pending_adjustment FROM users WHERE id = $notif_user_id");
-    $unbilled_adj_n = $u_adj_q ? (float)(mysqli_fetch_assoc($u_adj_q)['pending_adjustment'] ?? 0) : 0;
-
-    $notif_total_due = $elec_due_n + $pure_rent_due_n + $rent_portion_due_n - $unbilled_adj_n;
-} else {
-    $notif_total_due = $total_due;
+// 3. Outstanding Balance (Always calculated independently using decoupled status columns)
+$pure_rent_due_n = 0;
+$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+if ($stmt_n) {
+    mysqli_stmt_bind_param($stmt_n, "i", $notif_user_id);
+    mysqli_stmt_execute($stmt_n);
+    $r1_n = mysqli_stmt_get_result($stmt_n);
+    $pure_rent_due_n = (float)(mysqli_fetch_assoc($r1_n)['total'] ?? 0);
+    mysqli_stmt_close($stmt_n);
 }
+
+$elec_due_n = 0;
+$rent_portion_due_n = 0;
+$stmt_n2 = mysqli_prepare($conn, "SELECT amount, rent_amount, maintenance, dues, status, elec_status, rent_status FROM electricity WHERE user_id = ?");
+if ($stmt_n2) {
+    mysqli_stmt_bind_param($stmt_n2, "i", $notif_user_id);
+    mysqli_stmt_execute($stmt_n2);
+    $r2_n = mysqli_stmt_get_result($stmt_n2);
+    while ($row = mysqli_fetch_assoc($r2_n)) {
+        $e_status = !empty($row['elec_status']) ? $row['elec_status'] : $row['status'];
+        $r_status = !empty($row['rent_status']) ? $row['rent_status'] : $row['status'];
+        if ($e_status === 'Due') {
+            $elec_due_n += (float)$row['amount'];
+        }
+        if ($r_status === 'Due') {
+            $rent_portion_due_n += ((float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues']);
+        }
+    }
+    mysqli_stmt_close($stmt_n2);
+}
+
+$u_adj_q = @mysqli_query($conn, "SELECT pending_adjustment FROM users WHERE id = $notif_user_id");
+$unbilled_adj_n = $u_adj_q ? (float)(mysqli_fetch_assoc($u_adj_q)['pending_adjustment'] ?? 0) : 0;
+
+$notif_total_due = $elec_due_n + $pure_rent_due_n + $rent_portion_due_n - $unbilled_adj_n;
 
 if ($notif_total_due > 0) {
     $nid = 'due_' . date('Y_m');
