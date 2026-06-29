@@ -646,17 +646,17 @@ $unread_count = count($unread_notifications);
         .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
         .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
-                    .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
     </style>
 
         <style>
-            .bill-row td { padding: 12px 10px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .bill-row td { padding: 12px 8px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
             .bill-row:last-child td { border-bottom: none; }
-            .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; }
-            .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; }
+            .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding-left: 12px; }
+            .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; padding-right: 12px; }
             .bill-row { background: transparent; cursor: pointer; }
             .bill-row:hover td { background: #FAFBFC; }
             .bill-row.active td { background: #F4F0FF; border-bottom: 1px solid transparent; }
@@ -931,10 +931,10 @@ $unread_count = count($unread_notifications);
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: stretch;">
+        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.2fr) 320px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: transparent; border-bottom: 1px solid var(--border);">
+                <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
                         <button type="button" class="tab-btn" data-filter="unpaid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Unpaid</button>
@@ -951,22 +951,22 @@ $unread_count = count($unread_notifications);
                     </div>
                 </div>
                 
-                <div style="padding: 12px 24px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                <div style="padding: 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL FOR</th>
-                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">DUE DATE</th>
-                            <th style="text-align: right; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">AMOUNT</th>
-                            <th style="text-align: center; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">STATUS</th>
-                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700;">ACTION</th>
+                            <th style="text-align: left; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL FOR</th>
+                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">DUE DATE</th>
+                            <th style="text-align: right; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">AMOUNT</th>
+                            <th style="text-align: center; padding: 16px 8px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">STATUS</th>
+                            <th style="text-align: center; padding: 16px 12px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
                         <!-- Rendered by JS -->
                     </tbody>
                 </table>
-                </div><div style="margin-top: auto; padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
+                </div><div style="margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
                     <span id="showingText">Showing 1 to 6 of 14 bills</span>
                     <div id="paginationControls" style="display: flex; gap: 4px;"></div>
                 </div>
