@@ -53,23 +53,6 @@ $total_due = $elec_due + $rent_due - $unbilled_adj; // If adj is negative (remai
 $stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-$lastp = mysqli_stmt_get_result($stmt);
-$last_payment = mysqli_fetch_assoc($lastp);
-mysqli_stmt_close($stmt);
-
-/* Fetch Billing Lists */
-// Get pure rents
-$stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
-    FROM rent r 
-    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
-    WHERE r.user_id = ? 
-mysqli_stmt_execute($stmt);
-$adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-$adv_paid = (float)$adv_paid_res['adv_paid'];
-mysqli_stmt_close($stmt);
-
-$advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
 
 // Check for recent announcements (last 24h)
 $dismissed_cookie_val = $_COOKIE['dismissed_notifs'] ?? '';
