@@ -153,6 +153,10 @@ if ($conn) {
             'bill_file' => "varchar(255) DEFAULT NULL",
             'elec_status' => "varchar(20) DEFAULT 'Due'",
             'rent_status' => "varchar(20) DEFAULT 'Due'"
+        ],
+        'payment_notifications' => [
+            'verified_by' => "varchar(100) DEFAULT NULL",
+            'verified_at' => "datetime DEFAULT NULL"
         ]
     ];
 
@@ -167,6 +171,8 @@ if ($conn) {
         payment_method VARCHAR(50) DEFAULT 'UPI',
         status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
         admin_note TEXT,
+        verified_by VARCHAR(100) DEFAULT NULL,
+        verified_at DATETIME DEFAULT NULL,
         is_dismissed TINYINT(1) DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
