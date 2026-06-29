@@ -1016,7 +1016,7 @@ $unread_count = count($unread_notifications);
 
                 <div id="bdWarning" style="background: #FFF7ED; border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: center; margin-top: auto;">
                     <i class='bx bx-error-circle' style="color: #F59E0B; font-size: 20px;"></i>
-                    <p style="margin: 0; font-size: 13px; color: #B45309; line-height: 1.6; font-weight: 600;">Please clear your dues before the due date<br>to avoid late fees.</p>
+                    <p style="margin: 0; font-size: 12.5px; color: #B45309; line-height: 1.6; font-weight: 600;">Please clear your dues before the due date to avoid late fees.</p>
                 </div>
             </div>
         </div>
