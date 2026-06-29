@@ -508,19 +508,24 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
 <main class="main-content">
     <header class="header-renter">
-        <div class="header-title-area">
-            <h1>Profile Settings</h1>
-            <p>View and update your personal information and preferences.</p>
+        <div class="header-greeting">
+            <div class="header-icon-wrapper">
+                <i class='bx bx-user-circle' style="font-size: 24px; color: var(--primary-purple);"></i>
+            </div>
+            <div class="header-title-area">
+                <h1>Profile Settings</h1>
+                <p>View and update your personal information and preferences.</p>
+            </div>
         </div>
         <div class="header-actions">
-            <div class="header-icon">
+            <div class="icon-btn">
                 <i class='bx bx-bell'></i>
                 <span class="badge">2</span>
             </div>
-            <div class="header-icon" id="themeToggle">
+            <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
                 <i class='bx bx-moon'></i>
             </div>
-            <a href="queries.php" class="btn-outline"><i class='bx bx-help-circle'></i> Help & Support</a>
+            <a href="queries.php" class="btn-outline-support"><i class='bx bx-help-circle'></i> Help & Support</a>
             
             <div class="user-profile-pill">
                 <div class="user-avatar"><?php echo strtoupper(substr($display_name, 0, 2)); ?></div>
