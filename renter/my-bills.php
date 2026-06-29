@@ -1216,19 +1216,7 @@ $unread_count = count($unread_notifications);
         
       <?php include 'payment_modal.php'; ?>
 
-    <!-- Owner Scanner Modal -->
-    <div id="scannerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
-        <div class="panel animate-up" style="max-width: 400px; width: 100%; text-align: center; padding: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark);">Owner's Scanner</h2>
-                <i class='bx bx-x' onclick="closeScannerModal()" style="font-size: 26px; cursor: pointer; color: var(--text-gray);"></i>
-            </div>
-            <div style="background: white; padding: 10px; border-radius: 20px; margin-bottom: 15px;">
-                <img src="../assets/img/gpay-qr.jpg" alt="Owner Scanner" style="width: 100%; border-radius: 12px; display: block;">
-            </div>
-            <p style="font-size: 12px; color: var(--text-gray);">Fixed GPay scanner for manual amount entry.</p>
-        </div>
-    </div>
+    <?php include 'scanner_modal.php'; ?>
 
 </main>
 
