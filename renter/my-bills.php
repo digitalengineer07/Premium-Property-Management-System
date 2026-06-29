@@ -1218,7 +1218,7 @@ $unread_count = count($unread_notifications);
                 const pm = document.getElementById('paymentModal');
                 if(pm) {
                     pm.style.display = 'flex';
-                    document.getElementById('pmTitle').textContent = 'Pay ' + title;
+                    document.getElementById('pmTitle').textContent = title;
                     document.getElementById('pmAmount').textContent = formatMoney(amount);
                     document.getElementById('pay_amount_hidden').value = amount;
                     document.getElementById('pay_bill_type').value = type;
@@ -1233,38 +1233,42 @@ $unread_count = count($unread_notifications);
             }
         </script>
         
-        <!-- Note: We are keeping the existing payment modal div and logic intact below -->
-    <!-- Payment Modal -->
-    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 10px;">
-        <div class="panel animate-up" style="max-width: 400px; width: 100%; text-align: center; padding: 20px; max-height: 85vh; overflow-y: auto; border-radius: 24px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h2 style="font-size: 16px; font-weight: 800; color: var(--text-dark);">Make Payment</h2>
-                <i class='bx bx-x' onclick="closePaymentModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
-            </div>
-            
-            <div id="paymentDetails" style="margin-bottom: 16px;">
-                <div id="paymentTitle" style="font-weight: 700; font-size: 14px; margin-bottom: 4px; color: var(--text-gray);">Total Outstanding Balance</div>
-                <div style="font-size: 26px; font-weight: 800; color: var(--primary-purple); letter-spacing: -0.5px;">₹<span id="paymentAmountDisplay">0</span></div>
-            </div>
-
-            <div style="background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 16px; border: 1px solid var(--border);">
-                <div style="background: #fff; padding: 8px; border-radius: 12px; display: inline-block; margin-bottom: 10px; border: 1px solid #f0f0f0;">
-                    <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 150px; height: 150px; display: block;">
-                </div>
-                <p style="font-size: 11px; color: #64748b; font-weight: 600;">Scan with any UPI App</p>
-                <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-top: 4px; margin-bottom: 12px;">nikhil119124-1@oksbi</div>
-                
-                <a id="upiDeepLinkBtn" href="#" class="btn-primary" style="display: none; background: linear-gradient(135deg, #10B981, #059669); border: none; font-size: 13px; padding: 12px; justify-content: center; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-                    <i class='bx bx-mobile-alt' style="font-size: 16px;"></i> Pay directly on your phone
-                </a>
-            </div>
-
-            <div style="background: rgba(98, 75, 255, 0.04); padding: 10px; border-radius: 12px; border: 1px solid rgba(98, 75, 255, 0.1); margin-bottom: 16px;">
-                <p style="font-size: 10px; color: var(--primary-purple); font-weight: 700; text-transform: uppercase; margin-bottom: 2px;">
-                    <i class='bx bx-timer'></i> Session Expires in <span id="paymentTimer">05:00</span>
-                </p>
-                <p style="font-size: 9px; color: var(--text-gray); line-height: 1.4;">Transfer within this time to ensure amount accuracy.</p>
-            </div>
+      <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 16px;">
+          <style>
+              #paymentModalPanel::-webkit-scrollbar { display: none; }
+              #paymentModalPanel { -ms-overflow-style: none; scrollbar-width: none; }
+          </style>
+          <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 32px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                  <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Make Payment</h2>
+                  <div onclick="closePaymentModal()" style="width: 32px; height: 32px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
+                      <i class='bx bx-x' style="font-size: 20px; color: var(--text-gray);"></i>
+                  </div>
+              </div>
+              
+              <div id="paymentDetails" style="margin-bottom: 24px;">
+                  <div id="pmTitle" style="font-weight: 600; font-size: 14px; margin-bottom: 8px; color: var(--text-gray);">Total Outstanding Balance</div>
+                  <div id="pmAmount" style="font-size: 32px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">₹0</div>
+              </div>
+  
+              <div style="background: #F8F9FA; padding: 24px; border-radius: 20px; margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03);">
+                  <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04);">
+                      <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 160px; height: 160px; display: block; border-radius: 8px;">
+                  </div>
+                  <p style="font-size: 13px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
+                  <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
+                  
+                  <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 14px; font-weight: 700; padding: 14px; justify-content: center; width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 8px;">
+                      <i class='bx bx-mobile-alt' style="font-size: 18px;"></i> Pay directly on your phone
+                  </a>
+              </div>
+  
+              <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 16px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 24px;">
+                  <p style="font-size: 11px; color: var(--primary-purple); font-weight: 800; text-transform: uppercase; margin: 0 0 4px 0; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                      <i class='bx bx-timer' style="font-size: 16px;"></i> Session Expires in <span id="paymentTimer" style="background: var(--primary-purple); color: white; padding: 2px 6px; border-radius: 4px;">05:00</span>
+                  </p>
+                  <p style="font-size: 11px; color: var(--text-gray); margin: 0;">Transfer within this time to ensure amount accuracy.</p>
+              </div>
 
             <form method="POST" id="paymentNotifyForm" style="text-align: left; border-top: 1px solid var(--border); padding-top: 16px;">
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
