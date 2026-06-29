@@ -30,6 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_query'])) {
     }
 }
 
+// Handle query deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_query'])) {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Security validation failed.";
+    } else {
+        $qid = (int) $_POST['query_id'];
+        $stmt = mysqli_prepare($conn, "DELETE FROM queries WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $qid);
+        if (mysqli_stmt_execute($stmt)) {
+            $success = "Query deleted successfully.";
+        } else {
+            $error = "Failed to delete query.";
+        }
+        mysqli_stmt_close($stmt);
+    }
+}
+
 // Fetch all queries with resident names
 $queries_res = mysqli_query($conn, "
     SELECT q.*, u.name as renter_name, u.room_no 
@@ -135,9 +152,14 @@ $queries_res = mysqli_query($conn, "
                             <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);">Admin Response / Remark</label>
                             <input type="text" name="admin_remark" value="<?php echo htmlspecialchars($q['admin_remark'] ?? ''); ?>" style="width: 100%; border: 1px solid var(--border); border-radius: 8px; text-align: left; padding: 10px 16px; height: 44px; font-family: inherit; font-size: 13px; color: var(--text-dark); outline: none;" placeholder="Type your response here...">
                         </div>
-                        <button type="submit" name="update_query" class="btn-primary" style="height: 44px; padding: 0 24px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: center;">
-                            <i class='bx bx-check-circle' style="font-size: 16px;"></i> Save Changes
-                        </button>
+                        <div style="display: flex; gap: 12px; height: 44px;">
+                            <button type="submit" name="delete_query" class="btn-outline" style="height: 100%; padding: 0 16px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: center; color: #EF4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);" onclick="return confirm('Are you sure you want to delete this query?');">
+                                <i class='bx bx-trash' style="font-size: 16px;"></i>
+                            </button>
+                            <button type="submit" name="update_query" class="btn-primary" style="flex: 1; height: 100%; padding: 0 24px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; justify-content: center;">
+                                <i class='bx bx-check-circle' style="font-size: 16px;"></i> Save Changes
+                            </button>
+                        </div>
                     </form>
                 </div>
             <?php endwhile; ?>
