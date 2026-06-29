@@ -682,7 +682,7 @@ $unread_count = count($unread_notifications);
                 <span>Electricity Record</span>
             </a>
             <a href="my-bills.php" class="nav-item">
-                <i class='bx bx-receipt\'></i>
+                <i class='bx bx-receipt'></i>
                 <span>My Bills</span>
             </a>
             <a href="queries.php" class="nav-item">
