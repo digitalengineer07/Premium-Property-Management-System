@@ -54,16 +54,27 @@ let timerInterval = null;
 
 function openPaymentModal(amount, title = "Total Outstanding Balance", type = "total", id = null) {
     if (!amountSpan) return;
-    amountSpan.textContent = amount.toLocaleString();
+    
+    // Format amount securely (strip commas, ensure 2 decimal places)
+    let numericAmount = parseFloat(amount.toString().replace(/,/g, ''));
+    if (isNaN(numericAmount)) numericAmount = 0;
+    const formattedAmount = numericAmount.toFixed(2);
+    
+    amountSpan.textContent = numericAmount.toLocaleString('en-IN');
     paymentTitle.textContent = title;
-    hiddenAmount.value = amount;
+    hiddenAmount.value = numericAmount;
     hiddenBillType.value = type;
     hiddenBillId.value = id;
 
     const upiId = "nikhil119124-1@oksbi";
     const name = "Nikhil Kumar";
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR&tn=${encodeURIComponent(title)}`;
-
+    
+    // Sanitize title for the transaction note (some apps fail on special chars)
+    const cleanTitle = title.replace(/[^a-zA-Z0-9 ]/g, "").substring(0, 40);
+    // Unique transaction reference for secure tracking
+    const trRef = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
+    
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=${trRef}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(cleanTitle)}`;
     dynamicQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
     
     const deepLinkBtn = document.getElementById('upiDeepLinkBtn');
