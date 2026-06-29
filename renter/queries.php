@@ -12,6 +12,8 @@ $user_id = (int) $_SESSION['user_id'];
 $success = "";
 if (isset($_GET['success']) && $_GET['success'] == '1') {
     $success = "Your query has been submitted successfully.";
+} elseif (isset($_GET['deleted']) && $_GET['deleted'] == '1') {
+    $success = "Query deleted successfully.";
 }
 $error = "";
 
@@ -35,6 +37,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
         }
         if (isset($stmt)) mysqli_stmt_close($stmt);
     }
+}
+
+// Handle query deletion
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+    $del_id = (int) $_GET['id'];
+    $stmt = mysqli_prepare($conn, "DELETE FROM queries WHERE id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($stmt, "ii", $del_id, $user_id);
+    if (mysqli_stmt_execute($stmt)) {
+        mysqli_stmt_close($stmt);
+        header("Location: queries.php?deleted=1");
+        exit;
+    } else {
+        $error = "Failed to delete query.";
+    }
+    if (isset($stmt)) mysqli_stmt_close($stmt);
 }
 
 // Fetch user queries
@@ -705,7 +722,10 @@ $unread_count = 1; // Match mockup notification count
                             <button class="qi-action" id="btn-<?php echo $index; ?>" style="transition: transform 0.3s;"><i class='bx bx-chevron-right'></i></button>
                         </div>
                         <div id="details-<?php echo $index; ?>" style="display: none; padding: 0 0 20px 64px;">
-                            <p style="font-size: 14px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
+                                <p style="font-size: 14px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                                <a href="?action=delete&id=<?php echo $q['id']; ?>" onclick="return confirm('Are you sure you want to delete this query?');" style="color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px; flex-shrink: 0; background: rgba(239, 68, 68, 0.05);"><i class='bx bx-trash'></i> Delete</a>
+                            </div>
                             <?php if(!empty($q['admin_remark'])): ?>
                                 <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
                                     <p style="font-size: 13px; color: var(--primary-purple); margin: 0; line-height: 1.5;"><strong>Admin Reply:</strong><br><?php echo nl2br(htmlspecialchars($q['admin_remark'])); ?></p>
