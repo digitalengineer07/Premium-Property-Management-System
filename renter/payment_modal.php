@@ -79,8 +79,8 @@
                           <div style="background: white; padding: 10px; border-radius: 16px; display: inline-block; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); align-self: center;">
                               <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 140px; height: 140px; display: block; border-radius: 8px;">
                           </div>
-                          <p style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
-                          <div style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
+                          <p id="pmQrText1" style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
+                          <div id="pmQrText2" style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
                           
                           <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 13px; font-weight: 700; padding: 10px; justify-content: center; width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 8px; margin-bottom: 16px;">
                               <i class='bx bx-mobile-alt' style="font-size: 16px;"></i> Pay on phone
@@ -94,9 +94,22 @@
                           </div>
                           <script>
                           function showOwnerScannerInline() {
-                              document.getElementById('dynamicQR').src = '../assets/img/gpay-qr.jpg';
+                              let qr = document.getElementById('dynamicQR');
+                              qr.src = '../assets/img/gpay-qr.jpg';
+                              qr.style.width = '100%';
+                              qr.style.height = 'auto';
+                              qr.style.maxWidth = '250px';
+                              
+                              let container = qr.parentElement;
+                              container.style.padding = '0';
+                              container.style.overflow = 'hidden';
+                              container.style.borderRadius = '16px';
+                              
                               let deepLink = document.getElementById('upiDeepLinkBtn');
                               if (deepLink) deepLink.style.display = 'none';
+                              
+                              document.getElementById('pmQrText1').style.display = 'none';
+                              document.getElementById('pmQrText2').style.display = 'none';
                           }
                           </script>
                       </div>
