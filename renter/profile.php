@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
 }
 
 /* Fetch user info */
-$stmt = mysqli_prepare($conn, "SELECT username, name, phone, email, whatsapp, room_no, profile_pic, about, aadhaar_file, agreement_document, agreement_upload_date, agreement_expiry_date FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT username, name, phone, email, whatsapp, room_no, profile_pic, about, aadhaar_file, agreement_document, agreement_upload_date, agreement_expiry_date, electricity_document FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
@@ -736,53 +736,50 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <div class="panel">
                 <div class="panel-header">
                     <h3><i class='bx bx-file'></i> Linked Documents</h3>
-                    <button class="btn-outline" style="padding: 6px 12px;">View All</button>
+                    <button class="btn-outline" style="padding: 6px 12px;" onclick="window.location.href='documents.php'">View All</button>
                 </div>
                 <div class="doc-list">
+                    <!-- Aadhar Card -->
                     <div class="doc-item">
                         <div class="doc-icon green"><i class='bx bx-id-card'></i></div>
                         <div class="doc-info"><h4>Aadhar Card</h4></div>
-                        <div class="status-pill status-verified">Verified</div>
+                        <div class="status-pill <?php echo $user['aadhaar_file'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['aadhaar_file'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['aadhaar_file'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
-                            <?php if ($aadhaar_file): ?>
-                                <a href="../<?php echo htmlspecialchars($aadhaar_file); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                            <?php if ($user['aadhaar_file']): ?>
+                                <a href="../<?php echo htmlspecialchars($user['aadhaar_file']); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                            <?php else: ?>
+                                <a href="documents.php" title="Upload"><i class='bx bx-upload'></i></a>
                             <?php endif; ?>
-                            <a href="#"><i class='bx bx-chevron-right'></i></a>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
+                    
+                    <!-- Agreement Copy -->
                     <div class="doc-item">
                         <div class="doc-icon purple"><i class='bx bx-file-blank'></i></div>
                         <div class="doc-info"><h4>Agreement Copy</h4></div>
-                        <div class="status-pill <?php echo $user['agreement_document'] ? 'status-verified' : 'status-pending'; ?>"><?php echo $user['agreement_document'] ? 'Verified' : 'Pending'; ?></div>
+                        <div class="status-pill <?php echo $user['agreement_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['agreement_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['agreement_document'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['agreement_document']): ?>
-                                <a href="../admin/download-agreement.php?id=<?php echo $user_id; ?>" target="_blank"><i class='bx bx-show'></i></a>
+                                <a href="../<?php echo htmlspecialchars($user['agreement_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
-                            <a href="#"><i class='bx bx-chevron-right'></i></a>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
+
+                    <!-- Electricity Copy -->
                     <div class="doc-item">
-                        <div class="doc-icon red"><i class='bx bx-receipt'></i></div>
-                        <div class="doc-info"><h4>Rent Receipt</h4></div>
-                        <div class="status-pill status-verified">Verified</div>
-                        <div class="doc-actions"><a href="#"><i class='bx bx-show'></i></a><a href="#"><i class='bx bx-chevron-right'></i></a></div>
-                    </div>
-                    <div class="doc-item">
-                        <div class="doc-icon yellow"><i class='bx bx-wallet-alt'></i></div>
-                        <div class="doc-info"><h4>Bank Passbook</h4></div>
-                        <div class="status-pill status-pending" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</div>
-                        <div class="doc-actions"><a href="#"><i class='bx bx-show'></i></a><a href="#"><i class='bx bx-chevron-right'></i></a></div>
+                        <div class="doc-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-bolt-circle'></i></div>
+                        <div class="doc-info"><h4>Electricity Copy</h4></div>
+                        <div class="status-pill <?php echo $user['electricity_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['electricity_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['electricity_document'] ? 'Verified' : 'Pending'; ?></div>
+                        <div class="doc-actions">
+                            <?php if ($user['electricity_document']): ?>
+                                <a href="../<?php echo htmlspecialchars($user['electricity_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                            <?php endif; ?>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
+                        </div>
                     </div>
                 </div>
-                <a href="#" class="upload-doc-link" onclick="document.getElementById('aadhaarUploadInput').click()"><i class='bx bx-plus'></i> Upload New Document</a>
-                <!-- Hidden Aadhaar Upload Form -->
-                <form method="POST" enctype="multipart/form-data" class="hidden-form" id="hiddenAadhaarForm">
-                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                    <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
-                    <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
-                    <input type="file" name="aadhaar" id="aadhaarUploadInput" accept="image/*,application/pdf" onchange="document.getElementById('saveAadhaarBtn').click()">
-                    <button type="submit" name="save_profile" id="saveAadhaarBtn"></button>
-                </form>
             </div>
         </div>
     </div>
