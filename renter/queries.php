@@ -53,9 +53,12 @@ while ($row = mysqli_fetch_assoc($res)) {
     
     // Normalize status for UI
     $st = strtolower($row['status'] ?? 'pending');
-    if ($st === 'pending' || $st === 'open' || $st === 'in progress') {
+    if ($st === 'pending' || $st === 'open') {
         $open_queries++;
         $row['ui_status'] = 'Open';
+    } elseif ($st === 'in progress') {
+        $open_queries++;
+        $row['ui_status'] = 'In Progress';
     } elseif ($st === 'resolved' || $st === 'completed') {
         $resolved_queries++;
         $row['ui_status'] = 'Resolved';
@@ -670,6 +673,8 @@ $unread_count = 1; // Match mockup notification count
                         $st = strtolower($q['ui_status']);
                         if ($st == 'open') {
                             $s_bg = 'rgba(245, 158, 11, 0.1)'; $s_col = '#F59E0B';
+                        } elseif ($st == 'in progress') {
+                            $s_bg = 'rgba(59, 130, 246, 0.1)'; $s_col = '#3B82F6';
                         } elseif ($st == 'resolved') {
                             $s_bg = 'rgba(16, 185, 129, 0.1)'; $s_col = '#10B981';
                         } else {
@@ -679,7 +684,7 @@ $unread_count = 1; // Match mockup notification count
                         $date_formatted = date('d M Y', strtotime($q['created_at']));
                         $qid_formatted = '#QRY-' . str_pad($q['id'], 4, '0', STR_PAD_LEFT);
                     ?>
-                    <div class="query-item">
+                    <div class="query-item" onclick="toggleDetails(<?php echo $index; ?>)" style="cursor: pointer;">
                         <div class="qi-icon" style="background: <?php echo $bg; ?>; color: <?php echo $col; ?>;">
                             <i class='bx <?php echo $icon; ?>'></i>
                         </div>
@@ -695,7 +700,17 @@ $unread_count = 1; // Match mockup notification count
                             <span class="date"><?php echo $date_formatted; ?></span>
                             <span class="qid"><?php echo $qid_formatted; ?></span>
                         </div>
-                        <button class="qi-action"><i class='bx bx-chevron-right'></i></button>
+                        <button class="qi-action" id="btn-<?php echo $index; ?>" style="transition: transform 0.3s;"><i class='bx bx-chevron-right'></i></button>
+                    </div>
+                    <div id="details-<?php echo $index; ?>" style="display: none; padding: 20px; background: #F8FAFC; border-radius: 12px; margin-top: -12px; margin-bottom: 16px; border: 1px solid var(--border); border-top: none; border-top-left-radius: 0; border-top-right-radius: 0;">
+                        <p style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.6;"><strong>Full Message:</strong><br><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
+                        <?php if(!empty($q['admin_remark'])): ?>
+                            <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
+                                <p style="font-size: 13px; color: var(--primary-purple); margin: 0; line-height: 1.5;"><strong>Admin Reply:</strong><br><?php echo nl2br(htmlspecialchars($q['admin_remark'])); ?></p>
+                            </div>
+                        <?php else: ?>
+                            <p style="font-size: 13px; color: var(--text-gray); margin: 0; font-style: italic;">No response from admin yet.</p>
+                        <?php endif; ?>
                     </div>
                     <?php endforeach; ?>
                 </div>
