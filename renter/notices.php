@@ -461,7 +461,7 @@ if (isset($_GET['ajax_id'])) {
         <header class="top-header">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
                 <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
-                    <i class=\'bx bx-bell\' style="font-size: 24px; color: var(--primary-purple);"></i>
+                    <i class='bx bx-bell' style="font-size: 24px; color: var(--primary-purple);"></i>
                 </div>
                 <div>
                     <h1 style="margin: 0 0 4px 0;">Notices & Announcements</h1>
@@ -663,7 +663,7 @@ if (isset($_GET['ajax_id'])) {
     }
     
     function loadDetails(id) {
-        detailPane.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class=\'bx bx-loader-alt bx-spin\' style="font-size: 32px;"></i></div>';
+        detailPane.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-gray);"><i class='bx bx-loader-alt bx-spin' style="font-size: 32px;"></i></div>';
         modal.classList.add('active');
         fetch('notices.php?ajax_id=' + id)
             .then(res => res.text())

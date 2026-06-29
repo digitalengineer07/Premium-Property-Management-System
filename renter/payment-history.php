@@ -685,7 +685,7 @@ $unread_count = count($unread_notifications);
                 <span>Electricity Record</span>
             </a>
             <a href="my-bills.php" class="nav-item">
-                <i class=\'bx bx-receipt\'></i>
+                <i class='bx bx-receipt\'></i>
                 <span>My Bills</span>
             </a>
             <a href="queries.php" class="nav-item">
@@ -732,7 +732,7 @@ $unread_count = count($unread_notifications);
         <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
                 <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
-                    <i class=\'bx bx-history\' style="font-size: 24px; color: var(--primary-purple);"></i>
+                    <i class='bx bx-history' style="font-size: 24px; color: var(--primary-purple);"></i>
                 </div>
                 <div>
                     <h1 style="margin: 0 0 4px 0;">Payment History</h1>
