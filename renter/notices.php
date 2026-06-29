@@ -737,8 +737,19 @@ if (isset($_GET['ajax_id'])) {
             if (!readNotices.includes(noticeId)) {
                 readNotices.push(noticeId);
                 localStorage.setItem('readNotices', JSON.stringify(readNotices));
+                // Update KPI badge
+                const unreadBadge = document.querySelector('.header-actions .icon-btn span');
+                if (unreadBadge) {
+                    let count = parseInt(unreadBadge.innerText);
+                    if (count > 1) {
+                        unreadBadge.innerText = count - 1;
+                    } else {
+                        unreadBadge.style.display = 'none';
+                    }
+                }
             }
             
+            // Open modal
             loadDetails(noticeId);
         });
     });
