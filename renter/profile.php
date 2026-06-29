@@ -168,19 +168,6 @@ mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
 mysqli_stmt_close($stmt);
-
-/* Fetch electricity records for this user, recent first */
-$elec_q = mysqli_prepare($conn, "SELECT * FROM electricity WHERE user_id = ? ORDER BY id DESC");
-mysqli_stmt_bind_param($elec_q, "i", $user_id);
-mysqli_stmt_execute($elec_q);
-$elec_res = mysqli_stmt_get_result($elec_q);
-$elec_rows = [];
-    <title>My Profile | <?php echo HOUSE_NAME; ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- Immediate Theme Setter to prevent flashes -->
-    <script>
-        window.HOUSE_NAME = <?php echo json_encode(HOUSE_NAME); ?>;
         (function() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark-theme');
