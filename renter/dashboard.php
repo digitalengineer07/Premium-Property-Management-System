@@ -893,43 +893,53 @@ $unread_count = count($unread_notifications);
                 </div>
                 
                 <div style="display: flex; flex-direction: column; flex: 1;">
-                    <?php if ($rent_due > 0): ?>
-                    <div class="bill-item">
-                        <div class="bill-left">
-                            <div class="bill-icon"><i class='bx bx-home'></i></div>
-                            <div class="bill-info">
-                                <h4>Rent for <?php echo date('F Y'); ?></h4>
-                                <p>Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></p>
-                            </div>
-                        </div>
-                        <div class="bill-right">
-                            <h4><?php echo money($rent_due); ?></h4>
-                            <p>Pending</p>
-                        </div>
-                    </div>
-                    <?php endif; ?>
+                    <?php 
+                    $pending_bills_display = [];
+                    foreach ($merged_rents as $r) {
+                        if (isset($r['status']) && $r['status'] == 'Due') {
+                            $pending_bills_display[] = ['type' => 'rent', 'month' => $r['month'], 'amount' => $r['amount']];
+                        }
+                    }
+                    foreach ($elecs as $e) {
+                        if (isset($e['status']) && $e['status'] == 'Due') {
+                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['total_amount']];
+                        }
+                    }
+                    $pending_bills_display = array_slice($pending_bills_display, 0, 3);
+                    ?>
 
-                    <?php if ($elec_due > 0): ?>
-                    <div class="bill-item">
-                        <div class="bill-left">
-                            <div class="bill-icon yellow"><i class='bx bx-bolt'></i></div>
-                            <div class="bill-info">
-                                <h4>Electricity for <?php echo date('F Y'); ?></h4>
-                                <p>Due Date: <?php echo date('t M Y'); ?></p>
-                            </div>
-                        </div>
-                        <div class="bill-right">
-                            <h4 style="color: #F59E0B;"><?php echo money($elec_due); ?></h4>
-                            <p style="color: #F59E0B;">Pending</p>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php if ($rent_due == 0 && $elec_due == 0): ?>
+                    <?php if (empty($pending_bills_display)): ?>
                     <div style="text-align: center; padding: 20px; color: var(--text-gray); font-size: 13px; margin: auto;">
                         <i class='bx bx-check-circle' style="font-size: 32px; color: #10B981; margin-bottom: 8px;"></i><br>
                         No upcoming bills! You're all caught up.
                     </div>
+                    <?php else: ?>
+                        <?php foreach($pending_bills_display as $pb): ?>
+                        <div class="bill-item">
+                            <div class="bill-left">
+                                <?php if ($pb['type'] == 'rent'): ?>
+                                    <div class="bill-icon"><i class='bx bx-home'></i></div>
+                                <?php else: ?>
+                                    <div class="bill-icon yellow"><i class='bx bx-bolt'></i></div>
+                                <?php endif; ?>
+                                <div class="bill-info">
+                                    <h4><?php echo $pb['type'] == 'rent' ? 'Rent' : 'Electricity'; ?> for <?php echo htmlspecialchars($pb['month']); ?></h4>
+                                    <p>Due Date: <?php 
+                                        $ts = strtotime($pb['month']);
+                                        if ($pb['type'] == 'rent') {
+                                            echo '05 ' . date('M Y', strtotime('+1 month', $ts));
+                                        } else {
+                                            echo date('t M Y', $ts);
+                                        }
+                                    ?></p>
+                                </div>
+                            </div>
+                            <div class="bill-right">
+                                <h4 <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>><?php echo money($pb['amount']); ?></h4>
+                                <p <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>>Pending</p>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
                     <?php endif; ?>
                     
                     <a href="#" class="btn-view-all">View All Bills</a>
