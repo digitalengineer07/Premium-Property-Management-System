@@ -138,16 +138,6 @@ if (isset($_GET['ajax_id'])) {
         <?php echo nl2br(htmlspecialchars($selected['full_desc'])); ?>
     </div>
     
-    <div style="margin-top: 32px; background: rgba(98, 75, 255, 0.04); border-radius: 16px; padding: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(98, 75, 255, 0.1);">
-        <div style="display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: var(--text-dark);">
-            <i class='bx bx-bell' style="color: var(--primary-purple); font-size: 20px;"></i>
-            Don't miss any important updates!
-        </div>
-        <button class="btn-outline" style="margin: 0;"><i class='bx bx-x'></i></button>
-    </div>
-    <div style="margin-top: 12px; text-align: center;">
-        <button class="btn-outline" style="border-color: var(--primary-purple); background: white;">Enable Notifications</button>
-    </div>
     <?php
     exit;
 }
