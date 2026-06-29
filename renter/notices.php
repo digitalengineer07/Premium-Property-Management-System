@@ -687,23 +687,6 @@ if (isset($_GET['ajax_id'])) {
     <div class="detail-card" onclick="event.stopPropagation()">
         <div class="modal-close" onclick="closeModal()"><i class='bx bx-x' style="font-size: 24px;"></i></div>
         <div id="detail-pane" style="display: flex; flex-direction: column; flex: 1;">
-            <!-- Loaded via AJAX -->
-        </div>
-    </div>
-</div>
-
-<script>
-    const modal = document.getElementById('notice-modal');
-    const detailPane = document.getElementById('detail-pane');
-    }
-    
-    // Handle read state from localStorage
-    const readNotices = JSON.parse(localStorage.getItem('readNotices') || '[]');
-
-    // Add click listeners to items
-    document.querySelectorAll('.notice-item').forEach(item => {
-        const noticeId = item.dataset.id;
-        
         // Hide badge on page load if already read
         if (readNotices.includes(noticeId)) {
             item.classList.remove('unread');
