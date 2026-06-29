@@ -320,6 +320,8 @@ $pending_count = 3 - $verified_count;
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
+    .notification-wrapper { position: relative; } #notifDropdown { position: absolute; top: 110%; right: 0; width: 320px; background: white; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); border: 1px solid var(--border); z-index: 1000; overflow: hidden; animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1); } @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body style="display: block;">
@@ -404,8 +406,8 @@ $pending_count = 3 - $verified_count;
                 </div>
             </div>
             <div class="header-actions">
-                <div class="notification-wrapper">
-                    <div class="icon-btn bell-icon">
+                                <div class="notification-wrapper">
+                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
                             <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
@@ -413,7 +415,50 @@ $pending_count = 3 - $verified_count;
                             </span>
                         <?php endif; ?>
                     </div>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notifDropdown" style="display: none;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                            <?php if($unread_count > 0): ?>
+                                <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="max-height: 350px; overflow-y: auto;">
+                            <?php if (empty($unread_notifications)): ?>
+                                <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                    <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($unread_notifications as $notif): ?>
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
+                                            <i class='bx bx-trash'></i>
+                                        </div>
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                                <i class='bx <?php echo $notif['icon']; ?>'></i>
+                                            </div>
+                                            <div style="flex: 1; padding-right: 36px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                                </div>
+                                                <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
+                                            </div>
+                                            <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
+                                                <i class='bx bx-x'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
+
+
                 <div class="icon-btn moon-icon" onclick="document.documentElement.classList.toggle('dark-theme'); localStorage.setItem('theme', document.documentElement.classList.contains('dark-theme') ? 'dark' : 'light');">
                     <i class='bx bx-moon'></i>
                 </div>
@@ -707,5 +752,39 @@ $pending_count = 3 - $verified_count;
     }
 </script>
 
+
+    <script>
+                currentX = e.touches[0].clientX;
+                let diff = currentX - startX;
+                if (diff < 0) { // Only allow swiping left
+                    content.style.transform = `translateX(${diff}px)`;
+                }
+            }, {passive: true});
+            
+            item.addEventListener('touchend', e => {
+                let diff = currentX - startX;
+                content.style.transition = 'transform 0.2s ease-out';
+                if (diff < -80) { // threshold
+                    content.style.transform = `translateX(-100%)`;
+                    setTimeout(() => {
+                        dismissNotification(item.getAttribute('data-id'), item);
+                    }, 200);
+                } else {
+                    content.style.transform = `translateX(0)`;
+                }
+            });
+        });
+    </script>
+    <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+
+<script>
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+
+    </script>
+<script>
+document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
+
+</script>
 </body>
 </html>

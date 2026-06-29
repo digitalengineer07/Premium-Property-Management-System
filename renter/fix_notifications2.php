@@ -11,7 +11,7 @@ foreach($files as $f) {
     $c = file_get_contents($f);
     
     // Pattern to find the broken notification-wrapper block without onclick
-    $pattern = '/<div class="notification-wrapper">\s*<div class="icon-btn bell-icon">\s*<i class=\'bx bx-bell\'><\/i>\s*(?:<\?php if \(\$unread_count > 0\): \?>\s*<span[^>]*><\?php echo \$unread_count; \?><\/span>\s*<\?php endif; \?>)?\s*<\/div>\s*<\/div>/is';
+    $pattern = '/<div class="notification-wrapper">\s*<div class="icon-btn bell-icon">\s*<i class=\'bx bx-bell\'><\/i>\s*(?:<\?php if \(\$unread_count > 0\): \?>\s*<span[^>]*>\s*<\?php echo \$unread_count; \?>\s*<\/span>\s*<\?php endif; \?>)?\s*<\/div>\s*<\/div>/is';
     
     if (preg_match($pattern, $c)) {
         $c = preg_replace($pattern, $bell_block, $c);
