@@ -187,15 +187,13 @@ if ($conn) {
     }
     
     @mysqli_query($conn, "ALTER TABLE payment_notifications MODIFY COLUMN bill_type VARCHAR(50) NOT NULL");
+    @mysqli_query($conn, "ALTER TABLE payments MODIFY COLUMN bill_type VARCHAR(50) NOT NULL");
+    
+    $check_tx = @mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'transaction_id'");
+    if ($check_tx && mysqli_num_rows($check_tx) == 0) {
+        @mysqli_query($conn, "ALTER TABLE `payments` ADD COLUMN `transaction_id` VARCHAR(100) DEFAULT NULL");
+    }
+
     @mysqli_query($conn, "UPDATE electricity SET elec_status = 'Paid' WHERE elec_status = 'Due' AND status = 'Paid'");
     @mysqli_query($conn, "UPDATE electricity SET rent_status = 'Paid' WHERE rent_status = 'Due' AND status = 'Paid'");
-
-    // Also quietly fix the payments table ENUM if it is rejecting 'advance'
-    $res_payments = @mysqli_query($conn, "SHOW COLUMNS FROM `payments` LIKE 'bill_type'");
-    if ($res_payments && mysqli_num_rows($res_payments) > 0) {
-        $col = mysqli_fetch_assoc($res_payments);
-        if (strpos($col['Type'], "'advance'") === false) {
-            @mysqli_query($conn, "ALTER TABLE `payments` MODIFY COLUMN `bill_type` enum('rent','electricity','advance','maintenance','other') NOT NULL");
-        }
-    }
 }
