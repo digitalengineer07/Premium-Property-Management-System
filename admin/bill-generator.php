@@ -1349,6 +1349,28 @@ $admin_user = s($_SESSION['admin']);
                 return;
             }
 
+            // Strict Protocol: Cannot generate bill for upcoming months relative to Invoice Issue Date or Current Calendar Date
+            const billDateStr = document.getElementById('billDate').value;
+            const billMonthStr = document.getElementById('billMonth').value; // e.g., "2026-03"
+            if (billDateStr && billMonthStr) {
+                const issueYearMonth = parseInt(billDateStr.substring(0, 4) + billDateStr.substring(5, 7), 10);
+                const consumptionYearMonth = parseInt(billMonthStr.substring(0, 4) + billMonthStr.substring(5, 7), 10);
+                const now = new Date();
+                const currentYearMonth = now.getFullYear() * 100 + (now.getMonth() + 1);
+
+                if (consumptionYearMonth > issueYearMonth) {
+                    const mNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    const cM = parseInt(billMonthStr.substring(5, 7), 10);
+                    const cY = billMonthStr.substring(0, 4);
+                    showMsg(`Protocol Violation: Cannot generate a bill for upcoming month (${mNames[cM-1]} ${cY}) when invoice issue date is ${billDateStr}. You can only generate bills up to the issue month.`, 'error');
+                    return;
+                }
+                if (consumptionYearMonth > currentYearMonth) {
+                    showMsg('Protocol Violation: Cannot generate a bill for an upcoming future month beyond the current calendar date.', 'error');
+                    return;
+                }
+            }
+
             const btn = document.getElementById('generateBtn');
             const originalText = btn.innerHTML;
             btn.innerHTML = "<i class='bx bx-loader bx-spin' style='font-size: 20px;'></i> Generating...";

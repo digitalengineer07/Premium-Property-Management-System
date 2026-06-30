@@ -56,6 +56,25 @@ if (!$incoming_date) {
     exit;
 }
 
+// Strict Protocol: Cannot generate bill for upcoming months relative to Invoice Issue Date or Current Calendar Date
+$issue_date_obj = DateTime::createFromFormat('Y-m-d', $bill_date) ?: new DateTime();
+$issue_ts = (int)$issue_date_obj->format('Ym');
+$incoming_ts = (int)$incoming_date->format('Ym');
+$current_ts = (int)date('Ym');
+
+if ($incoming_ts > $issue_ts) {
+    $issue_month_name = $issue_date_obj->format('F Y');
+    $incoming_month_name = $incoming_date->format('F Y');
+    echo json_encode(['success' => false, 'message' => "Protocol Violation: Cannot generate a bill for upcoming month ($incoming_month_name) when invoice issue date is in $issue_month_name. Bills can only be generated for past or current consumption periods up to the issue date."]);
+    exit;
+}
+
+if ($incoming_ts > $current_ts) {
+    $incoming_month_name = $incoming_date->format('F Y');
+    echo json_encode(['success' => false, 'message' => "Protocol Violation: Cannot generate a bill for an upcoming future month ($incoming_month_name) beyond the current calendar month."]);
+    exit;
+}
+
 // Fetch the latest bill for chronological validation
 $latest_query = mysqli_query($conn, "SELECT month, current_reading FROM electricity WHERE user_id = $user_id ORDER BY id DESC LIMIT 1");
 if ($latest_query && mysqli_num_rows($latest_query) > 0) {
