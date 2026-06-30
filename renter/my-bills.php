@@ -800,18 +800,6 @@ $show_banner = ($is_late && !empty($overdue_list));
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
                         <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
-                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <?php
-        // Prepare all bills data
-        $all_bills = [];
-
-        // 1. Pure Rent
         $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, p.payment_date 
                                        FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
