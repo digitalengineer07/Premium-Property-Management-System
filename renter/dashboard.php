@@ -893,7 +893,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     <h3 class="panel-title"><i class='bx bx-zap'></i> Quick Actions</h3>
                 </div>
                 <div class="quick-actions-grid">
-                    <a href="#" class="action-card" onclick="document.querySelector('.btn-pay-now-trigger')?.click(); return false;">
+                    <a href="#" class="action-card" onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total'); return false;">
                         <div class="action-icon"><i class='bx bx-credit-card-alt'></i></div>
                         <h4>Pay Dues</h4>
                         <p>Make secure payments</p>
