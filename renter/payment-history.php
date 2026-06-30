@@ -861,12 +861,6 @@ $show_banner = ($is_late && !empty($overdue_list));
                 $title = 'Electricity Payment';
                 $icon = 'bx-bulb';
                 $color = 'yellow';
-                if (!empty($p['bill_id'])) {
-                    $eq = mysqli_fetch_assoc(mysqli_query($conn, "SELECT units_consumed FROM electricity WHERE id=".(int)$p['bill_id']));
-                    if ($eq && $eq['units_consumed'] !== null) {
-                        $subtitle = 'Units: ' . $eq['units_consumed'];
-                    }
-                }
             } elseif ($type == 'advance') {
                 $title = 'Advance Payment';
                 $icon = 'bx-file';
@@ -876,7 +870,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 $icon = 'bx-wrench';
                 $color = 'red';
             } elseif ($type == 'total' || empty($type)) {
-                $title = 'Total Payment';
+                $title = 'Rent + Main.';
                 $icon = 'bx-credit-card';
                 $color = 'purple';
             }
@@ -886,9 +880,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 if (empty($processed_notif_ids[$nr['id']]) && abs((float)$nr['amount'] - $amt) < 0.01) {
                     if ($nr['bill_type'] == $type || $nr['bill_type'] == 'total' || $type == 'total' || empty($type) || (int)$nr['bill_id'] == (int)$p['bill_id']) {
                         $processed_notif_ids[$nr['id']] = true;
-                        if ($type != 'electricity' || empty($p['bill_id'])) {
-                            $subtitle = 'Ref: ' . $nr['transaction_id'];
-                        }
+                        $subtitle = 'Ref: ' . $nr['transaction_id'];
                         break;
                     }
                 }
@@ -940,8 +932,9 @@ $show_banner = ($is_late && !empty($overdue_list));
             }
             
             $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
-            $title = ($type == 'total' || empty($type)) ? 'Total Payment' : (ucfirst($type) . ' Payment');
+            $title = ($type == 'total' || empty($type)) ? 'Rent + Main.' : (ucfirst($type) . ' Payment');
             $subtitle = 'Ref: ' . $pn['transaction_id'];
+
             $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
             $color = ($type == 'rent') ? 'purple' : (($type == 'electricity') ? 'yellow' : 'blue');
             $ts = strtotime($month);
