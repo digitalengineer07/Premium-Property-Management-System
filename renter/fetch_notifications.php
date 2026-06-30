@@ -60,7 +60,7 @@ if ($rej_notif_q) {
 
 // 3. Outstanding Balance (Always calculated independently using decoupled status columns)
 $pure_rent_due_n = 0;
-$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
 if ($stmt_n) {
     mysqli_stmt_bind_param($stmt_n, "i", $notif_user_id);
     mysqli_stmt_execute($stmt_n);
