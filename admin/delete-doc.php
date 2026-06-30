@@ -51,6 +51,24 @@ if ($type === 'aadhaar') {
         mysqli_stmt_execute($stmt2);
         mysqli_stmt_close($stmt2);
     }
+} elseif ($type === 'electricity') {
+    $stmt = mysqli_prepare($conn, "SELECT electricity_document FROM users WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    $data = mysqli_fetch_assoc($res);
+    mysqli_stmt_close($stmt);
+
+    if ($data && !empty($data['electricity_document'])) {
+        $file_path = "../" . $data['electricity_document'];
+        if (file_exists($file_path)) {
+            @unlink($file_path);
+        }
+        $stmt2 = mysqli_prepare($conn, "UPDATE users SET electricity_document = NULL, electricity_upload_date = NULL WHERE id = ?");
+        mysqli_stmt_bind_param($stmt2, "i", $user_id);
+        mysqli_stmt_execute($stmt2);
+        mysqli_stmt_close($stmt2);
+    }
 }
 
 header("Location: view-renter.php?id=" . $user_id . "&success=doc_deleted");
