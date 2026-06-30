@@ -1361,6 +1361,23 @@ $show_banner = ($is_late && !empty($overdue_list));
                 profileDropdown.style.display = 'none';
             }
         });
+
+        // Highlight and smooth scroll to all bills container when directed from dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash === '#all-bills-container') {
+                setTimeout(() => {
+                    const el = document.getElementById('all-bills-container');
+                    if (el) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        el.style.transition = 'box-shadow 0.6s ease';
+                        el.style.boxShadow = '0 0 0 4px rgba(98, 75, 255, 0.4), 0 10px 30px rgba(98, 75, 255, 0.15)';
+                        setTimeout(() => {
+                            el.style.boxShadow = '';
+                        }, 3000);
+                    }
+                }, 100);
+            }
+        });
 </script>
 </body>
 </html>
