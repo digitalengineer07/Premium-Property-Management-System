@@ -66,8 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     $p_btype = $notif['bill_type'];
                     $p_amt = (float)$notif['amount'];
                     $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
-                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt");
-                    if (mysqli_num_rows($ck_p) == 0) {
+                    $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
+                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
+                    if ($ck_p && mysqli_num_rows($ck_p) == 0) {
                         $p_month = date('F Y');
                         if ($p_bid > 0) {
                             if ($p_btype == 'rent') {
@@ -78,8 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                                 if ($mr) $p_month = $mr['month'];
                             }
                         }
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE())");
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
                     }
+
 
                     $success = "Payment #{$notif['transaction_id']} approved successfully.";
                     
