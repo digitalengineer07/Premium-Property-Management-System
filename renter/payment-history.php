@@ -960,33 +960,45 @@ $show_banner = ($is_late && !empty($overdue_list));
             $pdate = date('d M Y', strtotime($pn['verified_at'] ? $pn['verified_at'] : $pn['created_at']));
             $month = date('F Y', strtotime($pdate));
             $slip_dt = null;
+            $has_elec_in_notif = false;
             if ($bid > 0) {
                 if ($type == 'rent') {
                     $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
                     if ($mr) $month = $mr['month'];
                 } elseif ($type == 'electricity' || $type == 'elec_rent' || $type == 'total') {
-                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE id=$bid"));
+                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE id=$bid"));
                     if ($mr) {
                         if (!empty($mr['month'])) $month = $mr['month'];
                         $slip_dt = !empty($mr['payment_date']) ? $mr['payment_date'] : $mr['created_at'];
+                        if (isset($mr['amount']) && (float)$mr['amount'] > 0 && $amt > ((float)$mr['rent_amount'] + (float)$mr['maintenance'] + (float)$mr['dues']) + 0.5) {
+                            $has_elec_in_notif = true;
+                        }
                     }
                 }
             } else {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if ($bm) {
                     if (!empty($bm['month'])) $month = $bm['month'];
                     if (!empty($bm['payment_date'])) $slip_dt = $bm['payment_date'];
                     elseif (!empty($bm['created_at'])) $slip_dt = $bm['created_at'];
+                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
+                        $has_elec_in_notif = true;
+                    }
                 }
             }
             if (!$slip_dt && !empty($month)) {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
-                if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
+                if ($bm) {
+                    $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
+                        $has_elec_in_notif = true;
+                    }
+                }
             }
             
             $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
-            $title = ($type == 'total' || empty($type)) ? 'Rent + Main. + Electricity' : (ucfirst($type) . ' Payment');
+            $title = ($type == 'total' || empty($type)) ? ($has_elec_in_notif ? 'Rent + Main. + Electricity' : 'Rent + Main.') : (ucfirst($type) . ' Payment');
             $subtitle = 'Ref: ' . $pn['transaction_id'];
 
             $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
