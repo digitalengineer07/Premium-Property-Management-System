@@ -50,14 +50,14 @@ if (empty($bill_month)) {
     exit;
 }
 
-$incoming_date = DateTime::createFromFormat('Y-m', $bill_month);
+$incoming_date = DateTime::createFromFormat('!Y-m', $bill_month);
 if (!$incoming_date) {
     echo json_encode(['success' => false, 'message' => 'Invalid bill month format']);
     exit;
 }
 
 // Strict Protocol: Cannot generate bill for upcoming months relative to Invoice Issue Date or Current Calendar Date
-$issue_date_obj = DateTime::createFromFormat('Y-m-d', $bill_date) ?: new DateTime();
+$issue_date_obj = DateTime::createFromFormat('!Y-m-d', $bill_date) ?: new DateTime();
 $issue_ts = (int)$issue_date_obj->format('Ym');
 $incoming_ts = (int)$incoming_date->format('Ym');
 $current_ts = (int)date('Ym');
@@ -80,7 +80,7 @@ $latest_query = mysqli_query($conn, "SELECT month, current_reading FROM electric
 if ($latest_query && mysqli_num_rows($latest_query) > 0) {
     $latest_bill = mysqli_fetch_assoc($latest_query);
     $latest_month_str = $latest_bill['month'];
-    $latest_date = DateTime::createFromFormat('F Y', $latest_month_str);
+    $latest_date = DateTime::createFromFormat('!F Y', $latest_month_str) ?: DateTime::createFromFormat('!Y-m', $latest_month_str);
     
     if ($latest_date) {
         $latest_ts = (int)$latest_date->format('Ym');
@@ -99,8 +99,8 @@ if ($latest_query && mysqli_num_rows($latest_query) > 0) {
         
         if ($incoming_ts > $expected_ts) {
             $skipped_month_name = $expected_next->format('F Y');
-            $incoming_month_name = $incoming_date->format('F');
-            echo json_encode(['success' => false, 'message' => "The bill for $skipped_month_name has not been generated yet. Please generate the $skipped_month_name bill before creating the $incoming_month_name bill to maintain accurate billing records."]);
+            $incoming_month_name = $incoming_date->format('F Y');
+            echo json_encode(['success' => false, 'message' => "The bill for $skipped_month_name has not been generated yet. Please generate the $skipped_month_name bill before creating the $incoming_month_name bill to prevent skipped months."]);
             exit;
         }
         

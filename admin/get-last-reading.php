@@ -18,7 +18,7 @@ if ($user_id <= 0) {
 }
 
 // Get the most recent electricity bill for this user
-$stmt = mysqli_prepare($conn, "SELECT current_reading FROM electricity WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+$stmt = mysqli_prepare($conn, "SELECT current_reading, month FROM electricity WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -35,6 +35,7 @@ if ($row) {
     echo json_encode([
         'success' => true,
         'last_reading' => (float)$row['current_reading'],
+        'last_month' => $row['month'],
         'pending_adjustment' => (float)($u_row['pending_adjustment'] ?? 0),
         'fixed_rent' => (float)($u_row['fixed_rent'] ?? 0),
         'fixed_maintenance' => (float)($u_row['fixed_maintenance'] ?? 0),
