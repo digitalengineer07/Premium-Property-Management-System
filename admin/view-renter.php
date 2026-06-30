@@ -486,7 +486,25 @@ $admin_user = s($_SESSION['admin'] ?? '');
             </div>
             <?php endif; ?>
 
-            <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document'])): ?>
+            <?php if (!empty($user['electricity_document'])): ?>
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        <i class='bx bx-bolt-circle'></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: var(--text-dark); font-size: 14px; margin-bottom: 4px;">Electricity Bill Copy</div>
+                        <div style="font-size: 12px; color: var(--text-gray);">Utility Document</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document']) && empty($user['electricity_document'])): ?>
             <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: #F8FAFC;">
                 <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: #CBD5E1;"></i><br>
                 No documents uploaded yet
