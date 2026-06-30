@@ -15,7 +15,7 @@ if ($id <= 0) {
 }
 
 /* Fetch user */
-$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, about, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, electricity_document, electricity_upload_date, about, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date FROM users WHERE id = ?");
 
 if (!$stmt) {
     die("<div style='padding:20px; background:#ffebeb; color:#d32f2f; border:1px solid #d32f2f; margin:20px;'><strong>Database Query Failed!</strong><br>Error details: " . mysqli_error($conn) . "</div>");
