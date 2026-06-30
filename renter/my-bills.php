@@ -9,6 +9,78 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
+require_once "fetch_notifications.php";
+if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
+
+/* Fetch profile */
+$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$res = mysqli_stmt_get_result($stmt);
+$user = mysqli_fetch_assoc($res);
+mysqli_stmt_close($stmt);
+
+$display_name = $user['name'] ?: $user['username'];
+$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
+$room_no = $user['room_no'] ?? 'N/A';
+
+/* Calculate totals */
+// 1. Rent from pure 'rent' table
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r1 = mysqli_stmt_get_result($stmt);
+$r1a = mysqli_fetch_assoc($r1);
+$pure_rent_due = (float)($r1a['total'] ?? 0);
+mysqli_stmt_close($stmt);
+
+// 2. Electricity and Rent components from 'electricity' table
+$stmt = mysqli_prepare($conn, "SELECT 
+    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status = 'Due') OR (status = 'Due' AND elec_status != 'Paid') THEN amount ELSE 0 END), 0) as elec_total, 
+    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status = 'Due') OR (status = 'Due' AND rent_status != 'Paid') THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
+FROM electricity WHERE user_id = ?");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r2 = mysqli_stmt_get_result($stmt);
+$r2a = mysqli_fetch_assoc($r2);
+$elec_due = (float)($r2a['elec_total'] ?? 0);
+$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
+mysqli_stmt_close($stmt);
+
+$rent_due = $pure_rent_due + $rent_portion_due;
+$unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
+$total_due = $elec_due + $rent_due - $unbilled_adj;
+
+
+/* Last payment */
+$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$lastp = mysqli_stmt_get_result($stmt);
+$last_payment = mysqli_fetch_assoc($lastp);
+mysqli_stmt_close($stmt);
+
+/* Fetch Billing Lists */
+// Get pure rents
+$stmt = mysqli_prepare($conn, "
+    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
+    FROM rent r 
+    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
+    WHERE r.user_id = ? 
+    ORDER BY r.id DESC LIMIT 10
+");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$rent_res = mysqli_stmt_get_result($stmt);
+$merged_rents = []; 
+while ($row = mysqli_fetch_assoc($rent_res)) {
+    $row['source'] = 'rent_table';
+    $merged_rents[] = $row;
+}
+mysqli_stmt_close($stmt);
+
+// Get rent portions from electricity bills (slips)
+$stmt = mysqli_prepare($conn, "
     SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, e.status, p.adjustment_amount, p.adjustment_type 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
