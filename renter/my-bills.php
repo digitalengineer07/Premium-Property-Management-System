@@ -1,11 +1,5 @@
 <?php
-// renter/dashboard.php - Redesigned with Unified SaaS UI
-session_start();
-require_once "../db.php";
-
-if (!isset($_SESSION['user_id'])) {
-<?php
-// renter/dashboard.php - Redesigned with Unified SaaS UI
+// renter/my-bills.php - Redesigned with Unified SaaS UI
 session_start();
 require_once "../db.php";
 
@@ -15,11 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$rent_res = mysqli_stmt_get_result($stmt);
-$merged_rents = []; 
-while ($row = mysqli_fetch_assoc($rent_res)) {
     $row['source'] = 'rent_table';
     $merged_rents[] = $row;
 }
