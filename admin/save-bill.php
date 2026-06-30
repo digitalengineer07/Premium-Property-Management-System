@@ -120,7 +120,7 @@ $total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $ext
 // Convert month to readable format (e.g., "2025-01" to "January 2025")
 $month_display = $bill_month;
 if ($bill_month) {
-    $date_obj = DateTime::createFromFormat('Y-m', $bill_month);
+    $date_obj = DateTime::createFromFormat('!Y-m', $bill_month);
     if ($date_obj) {
         $month_display = $date_obj->format('F Y');
     }

@@ -56,7 +56,7 @@ if (empty($bill_month)) {
     exit;
 }
 
-$incoming_date = DateTime::createFromFormat('Y-m', $bill_month);
+$incoming_date = DateTime::createFromFormat('!Y-m', $bill_month);
 if (!$incoming_date) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Invalid bill month format']);
@@ -68,7 +68,7 @@ $latest_query = mysqli_query($conn, "SELECT month, current_reading FROM electric
 if ($latest_query && mysqli_num_rows($latest_query) > 0) {
     $latest_bill = mysqli_fetch_assoc($latest_query);
     $latest_month_str = $latest_bill['month'];
-    $latest_date = DateTime::createFromFormat('F Y', $latest_month_str);
+    $latest_date = DateTime::createFromFormat('!F Y', $latest_month_str) ?: DateTime::createFromFormat('!Y-m', $latest_month_str);
     
     if ($latest_date) {
         $latest_ts = (int)$latest_date->format('Ym');
@@ -111,7 +111,7 @@ $total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $ext
 // Convert month string if needed (e.g., from '2025-01' to 'January 2025')
 $month_display = $bill_month;
 if (strpos($bill_month, '-') !== false && strlen($bill_month) === 7) {
-    $date_obj = DateTime::createFromFormat('Y-m', $bill_month);
+    $date_obj = DateTime::createFromFormat('!Y-m', $bill_month);
     if ($date_obj) {
         $month_display = $date_obj->format('F Y');
     }

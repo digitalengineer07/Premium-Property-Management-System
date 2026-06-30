@@ -33,7 +33,7 @@ if (isset($_POST['save'])) {
     $amount = $_POST['amount'];
     $status = $_POST['status'];
 
-    $p_date = DateTime::createFromFormat('F Y', $month) ?: DateTime::createFromFormat('Y-m', $month);
+    $p_date = DateTime::createFromFormat('!F Y', $month) ?: DateTime::createFromFormat('!Y-m', $month);
     if ($p_date && (int)$p_date->format('Ym') > (int)date('Ym')) {
         echo "<script>alert('Protocol Violation: Cannot generate electricity bill for upcoming/future months beyond current date.'); history.back();</script>";
         exit;

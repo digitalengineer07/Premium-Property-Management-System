@@ -52,7 +52,7 @@ $chart_records = array_reverse($chart_records);
 $chart_labels = [];
 $chart_data = [];
 foreach($chart_records as $cr) {
-    $dateObj = DateTime::createFromFormat('F Y', $cr['month']);
+    $dateObj = DateTime::createFromFormat('!F Y', $cr['month']);
     $shortMonth = $dateObj ? $dateObj->format('M Y') : $cr['month'];
     $chart_labels[] = $shortMonth;
     $chart_data[] = $cr['units_consumed'];
