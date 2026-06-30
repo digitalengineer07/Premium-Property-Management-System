@@ -791,76 +791,117 @@ $show_banner = ($is_late && !empty($overdue_list));
         <?php
         // Prepare all bills data
         $all_bills = [];
+        $recorded_tx = [];
 
-        // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, p.payment_date, p.payment_mode 
-                                       FROM rent r INNER JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
-                                       WHERE r.user_id=$user_id AND r.status='Paid'");
-        while($r = mysqli_fetch_assoc($rent_q)) {
+        // 1. Fetch all recorded payments directly
+        $pay_q = mysqli_query($conn, "SELECT * FROM payments WHERE user_id=$user_id ORDER BY payment_date DESC, id DESC");
+        while ($p = mysqli_fetch_assoc($pay_q)) {
+            $amt = (float)($p['paid_amount'] > 0 ? $p['paid_amount'] : $p['total_amount']);
+            $type = $p['bill_type'];
+            $month = $p['month'];
+            $pmode = !empty($p['payment_mode']) ? $p['payment_mode'] : 'UPI';
+            $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
+            
+            $title = ucfirst($type) . ' Payment';
+            $subtitle = 'Room ' . $room_no;
+            $icon = 'bx-credit-card';
+            $color = 'purple';
+            $filter_type = 'other';
+            $ts = strtotime($month);
+            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
+            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+            
+            if ($type == 'rent') {
+                $filter_type = 'rent';
+                $title = 'Rent Payment';
+                $icon = 'bx-home';
+                $color = 'purple';
+            } elseif ($type == 'electricity') {
+                $filter_type = 'electricity';
+                $title = 'Electricity Payment';
+                $icon = 'bx-bulb';
+                $color = 'yellow';
+                if (!empty($p['bill_id'])) {
+                    $eq = mysqli_fetch_assoc(mysqli_query($conn, "SELECT units_consumed FROM electricity WHERE id=".(int)$p['bill_id']));
+                    if ($eq && $eq['units_consumed'] !== null) {
+                        $subtitle = 'Units: ' . $eq['units_consumed'];
+                    }
+                }
+            } elseif ($type == 'advance') {
+                $title = 'Advance Payment';
+                $icon = 'bx-file';
+                $color = 'blue';
+            } elseif ($type == 'maintenance') {
+                $title = 'Maintenance Payment';
+                $icon = 'bx-wrench';
+                $color = 'red';
+            }
+            
+            $recorded_tx[$type . '_' . $p['bill_id'] . '_' . $amt] = true;
+
             $all_bills[] = [
-                'id' => $r['id'], 'type' => 'rent', 'filter_type' => 'rent',
-                'title' => 'Rent Payment', 'subtitle' => 'Room ' . $room_no,
-                'period' => $r['month'],
-                'bill_date' => date('01 M Y', strtotime($r['month'])),
-                'due_date' => date('07 M Y', strtotime($r['month'])),
-                'amount' => $r['amount'], 'status' => 'Paid',
-                'paid_on' => date('d M Y', strtotime($r['payment_date'])),
-                'payment_mode' => $r['payment_mode'] ? $r['payment_mode'] : 'UPI',
-                'icon' => 'bx-home', 'color' => 'purple'
+                'id' => $p['id'],
+                'type' => $type,
+                'filter_type' => $filter_type,
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'period' => $month,
+                'bill_date' => $bill_date,
+                'due_date' => $due_date,
+                'amount' => $amt,
+                'status' => 'Paid',
+                'paid_on' => $pdate,
+                'payment_mode' => $pmode,
+                'icon' => $icon,
+                'color' => $color
             ];
         }
 
-        // 2. Electricity (Usage)
-        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, e.status, p.payment_date, p.payment_mode 
-                                       FROM electricity e INNER JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.status='Paid' AND e.amount > 0");
-        while($e = mysqli_fetch_assoc($elec_q)) {
-            $all_bills[] = [
-                'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
-                'title' => 'Electricity Payment', 'subtitle' => 'Units: ' . $e['units_consumed'],
-                'period' => $e['month'],
-                'bill_date' => date('01 M Y', strtotime($e['month'])),
-                'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
-                'amount' => $e['amount'], 'status' => 'Paid',
-                'paid_on' => date('d M Y', strtotime($e['payment_date'])),
-                'payment_mode' => $e['payment_mode'] ? $e['payment_mode'] : 'UPI',
-                'icon' => 'bx-bulb', 'color' => 'yellow'
-            ];
-        }
+        // 2. Fallback: Include approved payment notifications
+        $notif_q = mysqli_query($conn, "SELECT * FROM payment_notifications WHERE user_id=$user_id AND status='Approved'");
+        while ($pn = mysqli_fetch_assoc($notif_q)) {
+            $amt = (float)$pn['amount'];
+            $type = $pn['bill_type'];
+            $bid = (int)$pn['bill_id'];
+            if (isset($recorded_tx[$type . '_' . $bid . '_' . $amt])) continue;
+            
+            $pmode = !empty($pn['payment_method']) ? $pn['payment_method'] : 'UPI';
+            $pdate = date('d M Y', strtotime($pn['verified_at'] ? $pn['verified_at'] : $pn['created_at']));
+            $month = date('F Y', strtotime($pdate));
+            if ($bid > 0) {
+                if ($type == 'rent') {
+                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
+                    if ($mr) $month = $mr['month'];
+                } elseif ($type == 'electricity' || $type == 'elec_rent') {
+                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$bid"));
+                    if ($mr) $month = $mr['month'];
+                }
+            }
+            
+            $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
+            $title = ucfirst($type) . ' Payment';
+            $subtitle = 'Ref: ' . $pn['transaction_id'];
+            $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
+            $color = ($type == 'rent') ? 'purple' : (($type == 'electricity') ? 'yellow' : 'blue');
+            $ts = strtotime($month);
+            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
+            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
 
-        // 3. Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.maintenance, e.status, p.payment_date, p.payment_mode 
-                                       FROM electricity e INNER JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.status='Paid' AND e.maintenance > 0");
-        while($m = mysqli_fetch_assoc($maint_q)) {
             $all_bills[] = [
-                'id' => $m['id'], 'type' => 'electricity', 'filter_type' => 'other',
-                'title' => 'Maintenance Charge', 'subtitle' => $m['month'],
-                'period' => $m['month'],
-                'bill_date' => date('01 M Y', strtotime($m['month'])),
-                'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $m['maintenance'], 'status' => 'Paid',
-                'paid_on' => date('d M Y', strtotime($m['payment_date'])),
-                'payment_mode' => $m['payment_mode'] ? $m['payment_mode'] : 'UPI',
-                'icon' => 'bx-wrench', 'color' => 'red'
-            ];
-        }
-
-        // 4. Advance Payments
-        $adv_q = mysqli_query($conn, "SELECT p.id, p.month, p.paid_amount as amount, p.payment_date, p.payment_mode 
-                                      FROM payments p 
-                                      WHERE p.user_id=$user_id AND p.bill_type='advance'");
-        while($a = mysqli_fetch_assoc($adv_q)) {
-            $all_bills[] = [
-                'id' => $a['id'], 'type' => 'advance', 'filter_type' => 'other',
-                'title' => 'Advance Payment', 'subtitle' => $a['month'],
-                'period' => $a['month'],
-                'bill_date' => date('d M Y', strtotime($a['payment_date'])),
-                'due_date' => date('d M Y', strtotime($a['payment_date'])),
-                'amount' => $a['amount'], 'status' => 'Paid',
-                'paid_on' => date('d M Y', strtotime($a['payment_date'])),
-                'payment_mode' => $a['payment_mode'] ? $a['payment_mode'] : 'Net Banking',
-                'icon' => 'bx-file', 'color' => 'blue'
+                'id' => $pn['id'],
+                'type' => $type,
+                'filter_type' => $filter_type,
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'period' => $month,
+                'bill_date' => $bill_date,
+                'due_date' => $due_date,
+                'amount' => $amt,
+                'status' => 'Paid',
+                'paid_on' => $pdate,
+                'payment_mode' => $pmode,
+                'icon' => $icon,
+                'color' => $color
             ];
         }
         
@@ -938,7 +979,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Date Range</label>
                     <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; background: white; min-width: 200px;">
                         <i class='bx bx-calendar' style="color: var(--text-gray); margin-right: 8px;"></i>
-                        <span style="font-size: 13px; font-weight: 500;">01 Jan 2025 - 31 Dec 2025</span>
+                        <span style="font-size: 13px; font-weight: 500;">All Time</span>
                         <i class='bx bx-chevron-down' style="margin-left: auto; color: var(--text-gray);"></i>
                     </div>
                 </div>
