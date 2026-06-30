@@ -914,7 +914,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 </div>
                 <div class="quick-actions-grid">
                     <?php if ($total_due > 0): ?>
-                    <a href="#" class="action-card" onclick="openPaymentModal(<?php echo (float)$total_due; ?>, 'Rent + Main.', 'total'); return false;">
+                    <a href="#" class="action-card" onclick="openPaymentModal(<?php echo (float)$total_due; ?>, 'Rent + Main. + Electricity', 'total'); return false;">
                         <div class="action-icon"><i class='bx bx-credit-card-alt'></i></div>
                         <h4>Pay Dues</h4>
                         <p>Make secure payments</p>
