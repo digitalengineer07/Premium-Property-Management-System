@@ -840,23 +840,37 @@ $show_banner = ($is_late && !empty($overdue_list));
             $type = trim($p['bill_type']);
             $month = $p['month'];
             $slip_dt = null;
+            $has_elec_in_total = false;
             if ($type == 'total' || empty($type) || (int)$p['bill_id'] == 0) {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if ($bm) {
                     if (!empty($bm['month'])) $month = $bm['month'];
                     if (!empty($bm['payment_date'])) $slip_dt = $bm['payment_date'];
                     elseif (!empty($bm['created_at'])) $slip_dt = $bm['created_at'];
+                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
+                        $has_elec_in_total = true;
+                    }
                 }
             } else {
                 if ($type == 'electricity' || $type == 'elec_rent') {
-                    $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE id=" . (int)$p['bill_id']));
-                    if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                    $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE id=" . (int)$p['bill_id']));
+                    if ($bm) {
+                        $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                        if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
+                            $has_elec_in_total = true;
+                        }
+                    }
                 }
             }
             if (!$slip_dt && !empty($month)) {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
-                if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
+                if ($bm) {
+                    $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
+                        $has_elec_in_total = true;
+                    }
+                }
             }
             $pmode = !empty($p['payment_mode']) ? $p['payment_mode'] : 'UPI';
             $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
@@ -894,7 +908,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 $icon = 'bx-wrench';
                 $color = 'red';
             } elseif ($type == 'total' || empty($type)) {
-                $title = 'Rent + Main. + Electricity';
+                $title = $has_elec_in_total ? 'Rent + Main. + Electricity' : 'Rent + Main.';
                 $icon = 'bx-credit-card';
                 $color = 'purple';
             }
