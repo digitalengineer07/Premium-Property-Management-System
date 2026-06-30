@@ -733,7 +733,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     <p>It's the <?php echo date('jS'); ?> of the month. Your bills for <?php echo implode(', ', array_unique($overdue_list)); ?> are still pending.<br>Please clear them to avoid service interruptions.</p>
                 </div>
             </div>
-            <button onclick="document.querySelector('.btn-pay-now-trigger')?.click()" class="btn-pay-now">
+            <button onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total')" class="btn-pay-now">
                 Pay Now <i class='bx bx-right-arrow-alt'></i>
             </button>
             <i class='bx bxs-calendar reminder-bg-art'></i>
@@ -754,10 +754,10 @@ $show_banner = ($is_late && !empty($overdue_list));
                 <div class="kpi-bottom">
                     <?php if ($total_due > 0): ?>
                         <div class="kpi-tag alert"><i class='bx bx-error-circle'></i> Payment Due</div>
-                        <button class="btn-pay-now-trigger" onclick="openPaymentModal(<?php echo $total_due; ?>, 'Total Outstanding Balance', 'total')" style="display:none;"></button>
                     <?php else: ?>
                         <div class="kpi-tag success"><i class='bx bx-check-circle'></i> All Clear</div>
                     <?php endif; ?>
+                    <button class="btn-pay-now-trigger" onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total')" style="display:none;"></button>
                 </div>
                 <svg class="kpi-sparkline <?php echo $total_due > 0 ? 'red' : 'green'; ?>" viewBox="0 0 100 40" preserveAspectRatio="none">
                     <defs>
