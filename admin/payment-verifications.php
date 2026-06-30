@@ -712,6 +712,7 @@ include "sidebar.php";
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
+                        </td>
                         <td>
                             <?php 
                             $bType = trim(ucfirst(s($n['bill_type']))); 
