@@ -934,6 +934,10 @@ $show_banner = ($is_late && !empty($overdue_list));
                     $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$bid"));
                     if ($mr) $month = $mr['month'];
                 }
+            } else {
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                if ($bm && !empty($bm['month'])) $month = $bm['month'];
             }
             
             $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
