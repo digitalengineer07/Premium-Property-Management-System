@@ -783,6 +783,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
     function closeAadhaarModal() {
         document.getElementById('aadhaarModal').style.display = 'none';
     }
+
+    function openElectricityModal() {
+        document.getElementById('electricityModal').style.display = 'flex';
+    }
+
+    function closeElectricityModal() {
+        document.getElementById('electricityModal').style.display = 'none';
+    }
 </script>
 
 </body>
