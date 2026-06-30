@@ -52,7 +52,7 @@ const hiddenAmount = document.getElementById('hiddenAmount');
 const paymentTimer = document.getElementById('paymentTimer');
 let timerInterval = null;
 
-function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null) {
+function openPaymentModal(amount, title = "Rent + Main. + Electricity", type = "total", id = null) {
     if (!amountSpan) return;
     
     // Format amount securely (strip commas, ensure 2 decimal places)
