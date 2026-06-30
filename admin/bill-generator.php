@@ -775,16 +775,23 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                         <!-- Main Form Grid: 2-Column Layout for balance -->
                         <div class="form-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Bill Date</label>
-                                <input type="date" id="billDate">
+                                <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 700; color: var(--text-dark);">Invoice Issue Date</span>
+                                    <span style="background: #F3F4F6; color: #4B5563; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;"><i class='bx bx-calendar'></i> Date Generated</span>
+                                </label>
+                                <input type="date" id="billDate" style="font-weight: 600;">
+                                <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 4px;">Actual date when this invoice is created (defaults to today).</small>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Billing Month</label>
+                                <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 700; color: var(--text-dark);">Bill For Month <span style="color: #EF4444;">*</span></span>
+                                    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;"><i class='bx bx-time'></i> Consumption Period</span>
+                                </label>
                                 <div style="display: flex; gap: 10px;">
-                                    <select id="selectMonth" onchange="updateMonthField()" style="flex: 1.5;">
+                                    <select id="selectMonth" onchange="updateMonthField()" style="flex: 1.5; font-weight: 600;">
                                         <option value="01">January</option>
                                         <option value="02">February</option>
                                         <option value="03">March</option>
@@ -798,13 +805,14 @@ $admin_user = s($_SESSION['admin']);
                                         <option value="11">November</option>
                                         <option value="12">December</option>
                                     </select>
-                                    <select id="selectYear" onchange="updateMonthField()" style="flex: 1;">
+                                    <select id="selectYear" onchange="updateMonthField()" style="flex: 1; font-weight: 600;">
                                         <option value="2024">2024</option>
                                         <option value="2025">2025</option>
                                         <option value="2026">2026</option>
                                         <option value="2027">2027</option>
                                     </select>
                                 </div>
+                                <small style="color: #4F46E5; font-size: 11px; font-weight: 600; display: block; margin-top: 4px;">Select the exact month during which electricity/rent was consumed.</small>
                                 <input type="hidden" id="billMonth">
                             </div>
                         </div>
