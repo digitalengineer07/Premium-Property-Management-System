@@ -52,12 +52,19 @@ const hiddenAmount = document.getElementById('hiddenAmount');
 const paymentTimer = document.getElementById('paymentTimer');
 let timerInterval = null;
 
-function openPaymentModal(amount, title = "Total Outstanding Balance", type = "total", id = null) {
+function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null) {
     if (!amountSpan) return;
     
     // Format amount securely (strip commas, ensure 2 decimal places)
     let numericAmount = parseFloat(amount.toString().replace(/,/g, ''));
-    if (isNaN(numericAmount)) numericAmount = 0;
+    if (isNaN(numericAmount) || numericAmount <= 0) {
+        if (typeof showToast === 'function') {
+            showToast("No pending dues to pay at this moment!", "success");
+        } else {
+            alert("No pending dues to pay at this moment!");
+        }
+        return;
+    }
     const formattedAmount = numericAmount.toFixed(2);
     
     amountSpan.textContent = numericAmount.toLocaleString('en-IN');

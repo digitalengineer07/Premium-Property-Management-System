@@ -913,17 +913,25 @@ $show_banner = ($is_late && !empty($overdue_list));
                     <h3 class="panel-title"><i class='bx bx-zap'></i> Quick Actions</h3>
                 </div>
                 <div class="quick-actions-grid">
-                    <a href="#" class="action-card" onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total'); return false;">
+                    <?php if ($total_due > 0): ?>
+                    <a href="#" class="action-card" onclick="openPaymentModal(<?php echo (float)$total_due; ?>, 'Rent + Main.', 'total'); return false;">
                         <div class="action-icon"><i class='bx bx-credit-card-alt'></i></div>
                         <h4>Pay Dues</h4>
                         <p>Make secure payments</p>
                     </a>
-                    <a href="#" class="action-card">
+                    <?php else: ?>
+                    <a href="#" class="action-card disabled" style="opacity: 0.55; cursor: not-allowed; pointer-events: none; background: #F3F4F6;" onclick="return false;" title="All dues are paid">
+                        <div class="action-icon" style="background: #E5E7EB; color: #9CA3AF;"><i class='bx bx-check-shield'></i></div>
+                        <h4>Pay Dues</h4>
+                        <p style="color: #10B981; font-weight: 600;">All Paid</p>
+                    </a>
+                    <?php endif; ?>
+                    <a href="payment-history.php" class="action-card">
                         <div class="action-icon"><i class='bx bx-history'></i></div>
                         <h4>Payment History</h4>
                         <p>View all transactions</p>
                     </a>
-                    <a href="#" class="action-card">
+                    <a href="electricity-record.php" class="action-card">
                         <div class="action-icon"><i class='bx bx-bolt-circle'></i></div>
                         <h4>Electricity Record</h4>
                         <p>View meter readings</p>
