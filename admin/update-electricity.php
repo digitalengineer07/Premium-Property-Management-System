@@ -378,8 +378,11 @@ if ($elec_id > 0) {
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Billing Month <span style="color:#EF4444">*</span></label>
-                                <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. 2024-02">
+                                <label style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Bill For Month <span style="color:#EF4444">*</span></span>
+                                    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">Consumption Period</span>
+                                </label>
+                                <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. February 2026">
                             </div>
                         </div>
                     </div>
