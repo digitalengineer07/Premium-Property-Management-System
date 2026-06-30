@@ -1160,11 +1160,11 @@ $show_banner = ($is_late && !empty($overdue_list));
                     const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
                     const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                     
-                    const typeColor = bill.type === 'rent' ? '#FF4B6B' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
-                    const typeBg = bill.type === 'rent' ? 'rgba(255, 75, 107, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
+                    const typeColor = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'var(--primary-purple)' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
+                    const typeBg = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'rgba(98, 75, 255, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
                     
                     let iconHtml = '';
-                    if (bill.type === 'rent') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(255, 75, 107, 0.1);color:#FF4B6B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
+                    if (bill.type === 'rent' || bill.type === 'elec_rent') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(98, 75, 255, 0.1);color:var(--primary-purple);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
                     else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bulb'></i></div>`;
                     else iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-wrench'></i></div>`;
 
@@ -1175,6 +1175,8 @@ $show_banner = ($is_late && !empty($overdue_list));
                     } else {
                         actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:14px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
+
+                    const displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
@@ -1188,7 +1190,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                                 </div>
                             </td>
                             <td>
-                                <span style="font-size:10px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:4px 8px; border-radius:20px; text-transform:capitalize;">${bill.type}</span>
+                                <span style="font-size:10px; font-weight:700; color:${typeColor}; background:${typeBg}; padding:4px 8px; border-radius:20px; ${bill.type === 'elec_rent' ? '' : 'text-transform:capitalize;'}">${displayTypeLabel}</span>
                             </td>
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
