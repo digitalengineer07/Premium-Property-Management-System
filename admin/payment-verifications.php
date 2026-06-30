@@ -713,7 +713,7 @@ include "sidebar.php";
                                 </div>
                             </div>
                         </td>
-                        <td>
+                            <?php 
                             $bType = trim(ucfirst(s($n['bill_type']))); 
                             $isTotal = (strtolower($bType) === 'total');
                             if ($isTotal) {
