@@ -827,7 +827,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             <div class="dash-panel">
                 <div class="panel-head">
                     <h3 class="panel-title"><i class='bx bx-calendar-event'></i> Upcoming Bills</h3>
-                    <a href="#" class="panel-link">View All</a>
+                    <a href="my-bills.php#all-bills-container" class="panel-link">View All</a>
                 </div>
                 
                 <div style="display: flex; flex-direction: column; flex: 1;">
@@ -880,7 +880,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                         <?php endforeach; ?>
                     <?php endif; ?>
                     
-                    <a href="#" class="btn-view-all">View All Bills</a>
+                    <a href="my-bills.php#all-bills-container" class="btn-view-all">View All Bills</a>
                 </div>
             </div>
 
@@ -917,7 +917,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             <div class="dash-panel">
                 <div class="panel-head">
                     <h3 class="panel-title"><i class='bx bx-receipt'></i> Recent Transactions</h3>
-                    <a href="#" class="panel-link">View All</a>
+                    <a href="payment-history.php" class="panel-link">View All</a>
                 </div>
                 <div class="transaction-list" style="overflow-y: auto; max-height: 250px;">
                     <?php if (empty($merged_rents) && empty($elecs)): ?>
