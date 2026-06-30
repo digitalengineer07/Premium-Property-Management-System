@@ -839,6 +839,11 @@ $show_banner = ($is_late && !empty($overdue_list));
             $amt = (float)($p['paid_amount'] > 0 ? $p['paid_amount'] : $p['total_amount']);
             $type = trim($p['bill_type']);
             $month = $p['month'];
+            if ($type == 'total' || empty($type) || (int)$p['bill_id'] == 0) {
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                if ($bm && !empty($bm['month'])) $month = $bm['month'];
+            }
             $pmode = !empty($p['payment_mode']) ? $p['payment_mode'] : 'UPI';
             $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
             
