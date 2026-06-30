@@ -712,14 +712,16 @@ include "sidebar.php";
                         <td>
                             <?php 
                             $bType = trim(ucfirst(s($n['bill_type']))); 
-                            if (strtolower($bType) === 'total') $bType = '';
+                            $isTotal = (strtolower($bType) === 'total');
+                            if ($isTotal) $bType = 'Rent + Main.';
                             ?>
                             <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>
-                                <span class="pv-bill-info-inv">Advance Payment</span>
+                                <span class="pv-bill-info-inv"><?php echo $isTotal ? 'Clear All Dues' : 'Advance Payment'; ?></span>
                             <?php endif; ?>
+
                         </td>
                         <td>
                             <span class="pv-amount-text">₹<?php echo number_format($n['amount'], 2); ?></span>
