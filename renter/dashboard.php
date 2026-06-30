@@ -62,7 +62,7 @@ mysqli_stmt_close($stmt);
 /* Fetch Billing Lists */
 // Get pure rents
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
     FROM rent r 
     LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
     WHERE r.user_id = ? 
@@ -80,7 +80,7 @@ mysqli_stmt_close($stmt);
 
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
     WHERE e.user_id = ? AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0) 
@@ -120,7 +120,7 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, p.payment_date 
+    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
     WHERE e.user_id = ? 
