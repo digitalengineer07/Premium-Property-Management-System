@@ -716,8 +716,16 @@ include "sidebar.php";
                         <td>
                             <?php 
                             $bType = trim(ucfirst(s($n['bill_type']))); 
-                            $isTotal = (strtolower($bType) === 'total');
-                            if ($isTotal) $bType = 'Rent + Main. + Electricity';
+                            if ($isTotal) {
+                                $u_id_pv = (int)$n['user_id'];
+                                $amt_pv = (float)$n['amount'];
+                                $eq_pv = mysqli_fetch_assoc(mysqli_query($conn, "SELECT amount, rent_amount, maintenance, dues FROM electricity WHERE user_id=$u_id_pv AND (total_amount=$amt_pv OR (rent_amount+maintenance+dues)=$amt_pv OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                                if ($eq_pv && (float)$eq_pv['amount'] > 0 && $amt_pv > ((float)$eq_pv['rent_amount'] + (float)$eq_pv['maintenance'] + (float)$eq_pv['dues']) + 0.5) {
+                                    $bType = 'Rent + Main. + Electricity';
+                                } else {
+                                    $bType = 'Rent + Main.';
+                                }
+                            }
                             ?>
                             <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
