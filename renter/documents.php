@@ -77,9 +77,10 @@ mysqli_stmt_close($stmt);
 $documents = [];
 
 if (!empty($user_docs['aadhaar_file'])) {
+    $aadhaar_url = (strpos($user_docs['aadhaar_file'], 'uploads/') === 0) ? '../' . $user_docs['aadhaar_file'] : '../uploads/aadhaar/' . $user_docs['aadhaar_file'];
     $documents[] = [
         'name' => 'Aadhar Card', 'desc' => 'Identity Proof', 'category' => 'Identity', 'cat_color' => '#3B82F6', 'cat_bg' => 'rgba(59, 130, 246, 0.1)',
-        'date' => 'Uploaded', 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-id-card', 'url' => '../' . $user_docs['aadhaar_file']
+        'date' => 'Uploaded', 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-id-card', 'url' => $aadhaar_url
     ];
 } else {
     $documents[] = [
@@ -90,9 +91,10 @@ if (!empty($user_docs['aadhaar_file'])) {
 
 if (!empty($user_docs['agreement_document'])) {
     $date_str = date('d M Y', strtotime($user_docs['agreement_upload_date'] ?? 'now'));
+    $agree_url = (strpos($user_docs['agreement_document'], 'uploads/') === 0) ? '../' . $user_docs['agreement_document'] : '../uploads/agreements/' . $user_docs['agreement_document'];
     $documents[] = [
         'name' => 'Agreement Copy', 'desc' => 'Rental Agreement', 'category' => 'Agreement', 'cat_color' => '#8B5CF6', 'cat_bg' => 'rgba(139, 92, 246, 0.1)',
-        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-file', 'url' => '../' . $user_docs['agreement_document']
+        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-file', 'url' => $agree_url
     ];
 } else {
     $documents[] = [
@@ -103,9 +105,10 @@ if (!empty($user_docs['agreement_document'])) {
 
 if (!empty($user_docs['electricity_document'])) {
     $date_str = date('d M Y', strtotime($user_docs['electricity_upload_date'] ?? 'now'));
+    $elec_url = (strpos($user_docs['electricity_document'], 'uploads/') === 0) ? '../' . $user_docs['electricity_document'] : '../uploads/documents/' . $user_docs['electricity_document'];
     $documents[] = [
         'name' => 'Electricity Copy', 'desc' => 'Utility Document', 'category' => 'Utility', 'cat_color' => '#10B981', 'cat_bg' => 'rgba(16, 185, 129, 0.1)',
-        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-bolt-circle', 'url' => '../' . $user_docs['electricity_document']
+        'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-bolt-circle', 'url' => $elec_url
     ];
 } else {
     $documents[] = [
