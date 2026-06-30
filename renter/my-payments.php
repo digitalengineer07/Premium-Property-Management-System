@@ -803,6 +803,38 @@ $show_banner = ($is_late && !empty($overdue_list));
             </div>
         </header>
         
+        <!-- Alerts -->
+        <?php if (!empty($payment_success)): ?>
+            <div id="paymentStatusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-top: 20px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+                <i class='bx bx-check-circle'></i> <?php echo $payment_success; ?>
+            </div>
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('paymentStatusAlert');
+                    if(el) {
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(-10px)';
+                        setTimeout(() => el.remove(), 500);
+                    }
+                }, 4000);
+            </script>
+        <?php endif; ?>
+        <?php if (!empty($payment_error)): ?>
+            <div id="paymentErrorAlert" class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-top: 20px; margin-bottom: 24px; border: 1px solid #FEE2E2; transition: opacity 0.5s ease-out, transform 0.5s ease-out;">
+                <i class='bx bx-error-circle'></i> <?php echo $payment_error; ?>
+            </div>
+            <script>
+                setTimeout(() => {
+                    const el = document.getElementById('paymentErrorAlert');
+                    if(el) {
+                        el.style.opacity = '0';
+                        el.style.transform = 'translateY(-10px)';
+                        setTimeout(() => el.remove(), 500);
+                    }
+                }, 5000);
+            </script>
+        <?php endif; ?>
+
         <?php
         // Prepare all bills data
         $all_bills = [];
