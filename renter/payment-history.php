@@ -824,18 +824,26 @@ $show_banner = ($is_late && !empty($overdue_list));
         // Prepare all bills data
         $all_bills = [];
         $recorded_tx = [];
+        $processed_notif_ids = [];
+
+        // Preload approved notifications for deduplication and UTR enrichment
+        $notifs_list = [];
+        $nq = mysqli_query($conn, "SELECT * FROM payment_notifications WHERE user_id=$user_id AND status='Approved'");
+        while ($nr = mysqli_fetch_assoc($nq)) {
+            $notifs_list[] = $nr;
+        }
 
         // 1. Fetch all recorded payments directly
         $pay_q = mysqli_query($conn, "SELECT * FROM payments WHERE user_id=$user_id ORDER BY payment_date DESC, id DESC");
         while ($p = mysqli_fetch_assoc($pay_q)) {
             $amt = (float)($p['paid_amount'] > 0 ? $p['paid_amount'] : $p['total_amount']);
-            $type = $p['bill_type'];
+            $type = trim($p['bill_type']);
             $month = $p['month'];
             $pmode = !empty($p['payment_mode']) ? $p['payment_mode'] : 'UPI';
             $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
             
             $title = ucfirst($type) . ' Payment';
-            $subtitle = 'Room ' . $room_no;
+            $subtitle = !empty($p['transaction_id']) ? ('Ref: ' . $p['transaction_id']) : ('Room ' . $room_no);
             $icon = 'bx-credit-card';
             $color = 'purple';
             $filter_type = 'other';
@@ -867,9 +875,29 @@ $show_banner = ($is_late && !empty($overdue_list));
                 $title = 'Maintenance Payment';
                 $icon = 'bx-wrench';
                 $color = 'red';
+            } elseif ($type == 'total' || empty($type)) {
+                $title = 'Total Payment';
+                $icon = 'bx-credit-card';
+                $color = 'purple';
             }
             
+            // Match against approved notification to enrich subtitle with Ref ID and prevent duplicate
+            foreach ($notifs_list as $nr) {
+                if (empty($processed_notif_ids[$nr['id']]) && abs((float)$nr['amount'] - $amt) < 0.01) {
+                    if ($nr['bill_type'] == $type || $nr['bill_type'] == 'total' || $type == 'total' || empty($type) || (int)$nr['bill_id'] == (int)$p['bill_id']) {
+                        $processed_notif_ids[$nr['id']] = true;
+                        if ($type != 'electricity' || empty($p['bill_id'])) {
+                            $subtitle = 'Ref: ' . $nr['transaction_id'];
+                        }
+                        break;
+                    }
+                }
+            }
+
             $recorded_tx[$type . '_' . $p['bill_id'] . '_' . $amt] = true;
+            if (!empty($p['transaction_id'])) {
+                $recorded_tx['tx_' . $p['transaction_id']] = true;
+            }
 
             $all_bills[] = [
                 'id' => $p['id'],
@@ -889,13 +917,14 @@ $show_banner = ($is_late && !empty($overdue_list));
             ];
         }
 
-        // 2. Fallback: Include approved payment notifications
-        $notif_q = mysqli_query($conn, "SELECT * FROM payment_notifications WHERE user_id=$user_id AND status='Approved'");
-        while ($pn = mysqli_fetch_assoc($notif_q)) {
+        // 2. Fallback: Include approved payment notifications not already processed
+        foreach ($notifs_list as $pn) {
+            if (!empty($processed_notif_ids[$pn['id']])) continue;
+            
             $amt = (float)$pn['amount'];
-            $type = $pn['bill_type'];
+            $type = trim($pn['bill_type']);
             $bid = (int)$pn['bill_id'];
-            if (isset($recorded_tx[$type . '_' . $bid . '_' . $amt])) continue;
+            if (isset($recorded_tx[$type . '_' . $bid . '_' . $amt]) || isset($recorded_tx['tx_' . $pn['transaction_id']])) continue;
             
             $pmode = !empty($pn['payment_method']) ? $pn['payment_method'] : 'UPI';
             $pdate = date('d M Y', strtotime($pn['verified_at'] ? $pn['verified_at'] : $pn['created_at']));
@@ -911,7 +940,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             }
             
             $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
-            $title = ucfirst($type) . ' Payment';
+            $title = ($type == 'total' || empty($type)) ? 'Total Payment' : (ucfirst($type) . ' Payment');
             $subtitle = 'Ref: ' . $pn['transaction_id'];
             $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
             $color = ($type == 'rent') ? 'purple' : (($type == 'electricity') ? 'yellow' : 'blue');
