@@ -11,22 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 require_once "fetch_notifications.php";
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
-
-/* Fetch profile */
-$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
-$user = mysqli_fetch_assoc($res);
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$lastp = mysqli_stmt_get_result($stmt);
-$last_payment = mysqli_fetch_assoc($lastp);
-mysqli_stmt_close($stmt);
-
-/* Fetch Billing Lists */
-// Get pure rents
-$stmt = mysqli_prepare($conn, "
     SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
     FROM rent r 
     LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
