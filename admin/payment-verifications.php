@@ -78,6 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                                 $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$p_bid"));
                                 if ($mr) $p_month = $mr['month'];
                             }
+                        } else {
+                            $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$p_uid AND (status='Paid' OR total_amount=$p_amt OR amount=$p_amt) ORDER BY id DESC LIMIT 1"));
+                            if (!$mr) $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$p_uid AND (status='Paid' OR rent_amount=$p_amt) ORDER BY id DESC LIMIT 1"));
+                            if ($mr && !empty($mr['month'])) $p_month = $mr['month'];
                         }
                         mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
                     }
