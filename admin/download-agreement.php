@@ -30,7 +30,8 @@ if (!$user_data || empty($user_data['agreement_document'])) {
     die("Agreement document not found for this user.");
 }
 
-$file_path = "../uploads/agreements/" . $user_data['agreement_document'];
+$rel_path = $user_data['agreement_document'];
+$file_path = (strpos($rel_path, 'uploads/') === 0) ? "../" . $rel_path : "../uploads/agreements/" . $rel_path;
 
 if (file_exists($file_path)) {
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
