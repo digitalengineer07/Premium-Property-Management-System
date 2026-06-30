@@ -489,10 +489,10 @@ function money($val) {
             <!-- Chart Panel -->
             <div class="panel">
                 <div class="panel-header">
-                    <h3>Usage Overview (Units)</h3>
-                    <select class="filter-select">
-                        <option>Units</option>
-                        <option>Amount</option>
+                    <h3 id="chartTitleText">Usage Overview (Units)</h3>
+                    <select class="filter-select" id="chartMetricSelect" style="cursor: pointer; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-weight: 600; font-family: 'Outfit', sans-serif;">
+                        <option value="units">Units</option>
+                        <option value="amount">Amount</option>
                     </select>
                 </div>
                 <div style="height: 250px; width: 100%;">
