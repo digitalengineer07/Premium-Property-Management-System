@@ -601,17 +601,333 @@ function money($val) {
                             <td style="text-align: center;">
                                 <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
                             </td>
+                    <i class='bx bx-help-circle'></i> Help & Support
+                </a>
+                <div style="position: relative;">
+                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
+<?php 
+    $real_pic = '';
+    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
+    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
+    
+    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
+?>
+<?php if (!empty($real_pic)): ?>
+    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+<?php else: ?>
+    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
+<?php endif; ?>
+</div>
+                        <div class="user-info">
+                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
+                        </div>
+                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                    </div>
+                    
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                        </a>
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon purple"><i class='bx bx-credit-card'></i></div>
+                <div class="kpi-info">
+                    <h4>Total Units (This Year)</h4>
+                    <h2><?php echo number_format($total_units); ?> Units</h2>
+                    <p>Total electricity consumed</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon green"><i class='bx bx-money'></i></div>
+                <div class="kpi-info">
+                    <h4>Amount Paid (This Year)</h4>
+                    <h2><?php echo money($amount_paid); ?></h2>
+                    <p>Total paid for electricity</p>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon orange"><i class='bx bx-time-five'></i></div>
+                <div class="kpi-info">
+                    <h4>Pending Amount</h4>
+                    <h2><?php echo money($pending_amount); ?></h2>
+                    <?php if($pending_amount == 0): ?>
+                        <p class="green">All payments cleared</p>
+                    <?php else: ?>
+                        <p style="color: #FF4B6B;">Outstanding dues</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class='bx bx-tachometer'></i></div>
+                <div class="kpi-info">
+                    <h4>Last Recorded Reading</h4>
+                    <h2><?php echo number_format($last_reading); ?> Units</h2>
+                    <p><?php echo $last_reading_date; ?></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Grid (Chart + Current Details) -->
+        <div class="dashboard-grid">
+            <!-- Chart Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 id="chartTitleText">Usage Overview (Units)</h3>
+                    <select class="filter-select" id="chartMetricSelect" style="cursor: pointer; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-weight: 600; font-family: 'Outfit', sans-serif;">
+                        <option value="units">Units</option>
+                        <option value="amount">Amount</option>
+                    </select>
+                </div>
+                <div style="height: 250px; width: 100%;">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Current Month Details -->
+            <div class="panel cmd-panel">
+                <div class="panel-header" style="margin-bottom: 20px;">
+                    <h3><i class='bx bx-bolt-circle'></i> Current Month Details</h3>
+                </div>
+                <?php if($latest_record): ?>
+                <div class="cmd-list">
+                    <div class="cmd-item">
+                        <span class="cmd-label">Billing Month</span>
+                        <span class="cmd-value"><?php echo htmlspecialchars($latest_record['month']); ?></span>
+                    </div>
+                    <div class="cmd-item">
+                        <span class="cmd-label">Previous Reading</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['previous_reading']); ?> Units</span>
+                    </div>
+                    <div class="cmd-item">
+                        <span class="cmd-label">Current Reading</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['current_reading']); ?> Units</span>
+                    </div>
+                    <div class="cmd-item">
+                        <span class="cmd-label">Units Consumed</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['units_consumed']); ?> Units</span>
+                    </div>
+                    <div class="cmd-item">
+                        <span class="cmd-label">Rate per Unit</span>
+                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit'], 2); ?></span>
+                    </div>
+                </div>
+                <div class="cmd-total">
+                    <span class="cmd-label">Amount Payable</span>
+                    <span class="cmd-value"><?php echo money($latest_record['amount']); ?></span>
+                </div>
+                <?php else: ?>
+                <div style="text-align: center; color: var(--text-gray); padding: 40px 0;">
+                    <i class='bx bx-info-circle' style="font-size: 32px; opacity: 0.5; margin-bottom: 8px;"></i>
+                    <p style="font-size: 13px; margin: 0;">No records found.</p>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Electricity Record Table Panel -->
+        <div class="panel">
+            <div class="panel-header" style="margin-bottom: 16px;">
+                <h3>Electricity Record</h3>
+                <div style="display: flex; gap: 12px;">
+                    <select class="filter-select">
+                        <option>All Years</option>
+                        <option><?php echo $current_year; ?></option>
+                    </select>
+                    <button class="btn-filter-small">
+                        <i class='bx bx-filter-alt'></i> Filter
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="er-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center;">#</th>
+                            <th>Month / Year</th>
+                            <th style="text-align: right;">Prev. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Curr. Reading<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Consumed<br><span style="text-transform:none; font-weight: 500;">(Units)</span></th>
+                            <th style="text-align: right;">Amount<br><span style="text-transform:none; font-weight: 500;">(₹)</span></th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Paid On</th>
+                            <th style="text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordTableBody">
+                        <?php 
+                        $counter = 1;
+                        foreach($electricity_records as $idx => $rec): 
+                            $is_current = ($idx === 0); // Assuming sorted DESC by ID
+                            $status_class = strtolower($rec['status']);
+                            if ($status_class == 'due') $status_class = 'unpaid';
+                            $status_text = ucfirst($status_class);
+                            if ($status_text == 'Due') $status_text = 'Unpaid';
+                        ?>
+                        <tr class="rec-row" data-index="<?php echo $idx; ?>">
+                            <td style="text-align: center; color: var(--text-gray); font-weight: 500;"><?php echo $counter++; ?></td>
+                            <td>
+                                <div style="display: flex; align-items: center;">
+                                    <?php echo htmlspecialchars($rec['month']); ?>
+                                </div>
+                            </td>
+                            <td style="text-align: right;"><?php echo number_format($rec['previous_reading']); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($rec['current_reading']); ?></td>
+                            <td style="text-align: right;"><?php echo number_format($rec['units_consumed']); ?></td>
+                            <td style="text-align: right; font-weight: 800;"><?php echo money($rec['amount']); ?></td>
+                            <td style="text-align: center;">
+                                <span class="status-badge <?php echo $status_class; ?>"><?php echo $status_text; ?></span>
+                            </td>
+                            <td style="text-align: center; color: var(--text-gray); font-weight: 500;">
+                                <?php echo ($rec['status'] == 'Paid' && !empty($rec['payment_date'])) ? date("d M Y", strtotime($rec['payment_date'])) : '&mdash;'; ?>
+                            </td>
+                            <td style="text-align: center;">
+                                <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" class="btn-table-action"><i class='bx bx-receipt'></i> View Bill</a>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-            
             <div class="view-more-container" id="viewMoreContainer" style="<?php echo (count($electricity_records) > 5) ? '' : 'display:none;'; ?>">
                 <button class="btn-view-more" onclick="showAllRecords()">
                     View More Records <i class='bx bx-chevron-down'></i>
                 </button>
             </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    // Data for Chart
+    const labels = <?php echo json_encode($chart_labels); ?>;
+    const unitsData = <?php echo json_encode($chart_data); ?>;
+    const amountData = <?php echo json_encode($chart_amounts); ?>;
+
+    // Initialize Chart
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    
+    // Create gradients for fill
+    let unitsGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    unitsGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+    unitsGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+    let amountGradient = ctx.createLinearGradient(0, 0, 0, 250);
+    amountGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+    amountGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+    let currentMetric = 'units';
+
+    let usageChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Units Consumed',
+                data: unitsData,
+                borderColor: '#8B5CF6',
+                backgroundColor: unitsGradient,
+                borderWidth: 2.5,
+                pointBackgroundColor: '#8B5CF6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4.5,
+                pointHoverRadius: 7,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                    padding: 12,
+                    titleFont: { family: 'Outfit', size: 13 },
+                    bodyFont: { family: 'Outfit', size: 14, weight: 'bold' },
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            if (currentMetric === 'amount') {
+                                return '₹' + context.parsed.y.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                            }
+                            return context.parsed.y + ' Units';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+                    ticks: {
+                        font: { family: 'Outfit', size: 11 },
+                        color: '#64748B',
+                        callback: function(value) {
+                            if (currentMetric === 'amount') {
+                                return '₹' + value;
+                            }
+                            return value;
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false },
+                    ticks: { font: { family: 'Outfit', size: 11 }, color: '#64748B' }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index',
+            },
+        }
+    });
+
+    const metricSelect = document.getElementById('chartMetricSelect');
+    const titleText = document.getElementById('chartTitleText');
+
+    if (metricSelect && titleText) {
+        metricSelect.addEventListener('change', function() {
+            currentMetric = this.value;
+            if (currentMetric === 'amount') {
+                titleText.textContent = 'Usage Overview (Amount)';
+                usageChart.data.datasets[0].label = 'Electricity Amount';
+                usageChart.data.datasets[0].data = amountData;
+                usageChart.data.datasets[0].borderColor = '#10B981';
+                usageChart.data.datasets[0].backgroundColor = amountGradient;
+                usageChart.data.datasets[0].pointBackgroundColor = '#10B981';
+            } else {
+                titleText.textContent = 'Usage Overview (Units)';
+                usageChart.data.datasets[0].label = 'Units Consumed';
+                usageChart.data.datasets[0].data = unitsData;
+                usageChart.data.datasets[0].borderColor = '#8B5CF6';
+                usageChart.data.datasets[0].backgroundColor = unitsGradient;
+                usageChart.data.datasets[0].pointBackgroundColor = '#8B5CF6';
+            }
+            usageChart.update();
+        });
+    }
+
+    // Simple View More logic
+    const allRows = document.querySelectorAll('.rec-row');
+    const viewMoreBtn = document.getElementById('viewMoreContainer');
+    
+    // Initially hide rows after 5
     allRows.forEach((row, index) => {
         if(index >= 5) {
             row.style.display = 'none';
