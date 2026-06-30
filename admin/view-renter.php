@@ -598,6 +598,34 @@ $admin_user = s($_SESSION['admin'] ?? '');
         </div>
     </div>
 
+    <!-- Electricity Bill Copy Upload Modal -->
+    <div id="electricityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+        <div class="panel animate-up" style="max-width: 400px; width: 100%; padding: 32px; background: var(--white);">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 64px; height: 64px; background: rgba(16, 185, 129, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <i class='bx bx-bolt-circle' style="font-size: 32px; color: #10B981;"></i>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Electricity Bill Copy</h3>
+                <p style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">Upload Electricity Document for <?php echo htmlspecialchars($user['name']); ?></p>
+            </div>
+            
+            <form action="upload-electricity-doc.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="<?php echo $id; ?>">
+                
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label>Select Document (PDF, PNG, JPG)</label>
+                    <input type="file" name="electricity_file" accept=".pdf, .png, .jpg, .jpeg" required style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 8px;">
+                    <small style="color: var(--text-gray); font-size: 11px;">Max size: 200MB (Verified Secure Upload)</small>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 12px;">
+                    <button type="button" onclick="closeElectricityModal()" class="btn-outline" style="justify-content: center;">Cancel</button>
+                    <button type="submit" class="btn-primary" style="justify-content: center; background: #10B981; border: none;">Upload Document</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Payment Mode Modal -->
     <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
         <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
