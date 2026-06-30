@@ -1267,6 +1267,29 @@ $admin_user = s($_SESSION['admin']);
                 const lastReading = data.last_reading || '0';
                 document.getElementById('infoLastReading').textContent = lastReading;
 
+                // Store last billed month and auto-select next month
+                window.lastBilledMonth = data.last_month || null;
+                if (window.lastBilledMonth) {
+                    const mNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    const parts = window.lastBilledMonth.split(' ');
+                    if (parts.length === 2) {
+                        let mIdx = mNames.indexOf(parts[0]);
+                        let yVal = parseInt(parts[1], 10);
+                        if (mIdx !== -1) {
+                            let nextIdx = (mIdx + 1) % 12;
+                            if (nextIdx === 0) yVal++;
+                            let nextMStr = (nextIdx + 1).toString().padStart(2, '0');
+                            if (document.getElementById('selectMonth').querySelector(`option[value="${nextMStr}"]`)) {
+                                document.getElementById('selectMonth').value = nextMStr;
+                            }
+                            if (document.getElementById('selectYear').querySelector(`option[value="${yVal}"]`)) {
+                                document.getElementById('selectYear').value = yVal.toString();
+                            }
+                            updateMonthField();
+                        }
+                    }
+                }
+
                 // Handle Pending Adjustment
                 const adj = data.pending_adjustment || 0;
                 const balanceDiv = document.getElementById('infoBalance');
@@ -1368,6 +1391,25 @@ $admin_user = s($_SESSION['admin']);
                 if (consumptionYearMonth > currentYearMonth) {
                     showMsg('Protocol Violation: Cannot generate a bill for an upcoming future month beyond the current calendar date.', 'error');
                     return;
+                }
+
+                // Check for skipped months against lastBilledMonth
+                if (window.lastBilledMonth) {
+                    const mNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    const parts = window.lastBilledMonth.split(' ');
+                    if (parts.length === 2) {
+                        let mIdx = mNames.indexOf(parts[0]);
+                        let yVal = parseInt(parts[1], 10);
+                        if (mIdx !== -1) {
+                            let nextIdx = (mIdx + 1) % 12;
+                            if (nextIdx === 0) yVal++;
+                            let expectedYM = yVal * 100 + (nextIdx + 1);
+                            if (consumptionYearMonth > expectedYM) {
+                                showMsg(`Protocol Violation: Skipped Month! The bill for ${mNames[nextIdx]} ${yVal} has not been generated yet. Please generate the ${mNames[nextIdx]} ${yVal} bill first.`, 'error');
+                                return;
+                            }
+                        }
+                    }
                 }
             }
 
