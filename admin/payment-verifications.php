@@ -714,7 +714,7 @@ include "sidebar.php";
                             </div>
                         </td>
                         <td>
-                            <?php 
+                            $bType = trim(ucfirst(s($n['bill_type']))); 
                             $isTotal = (strtolower($bType) === 'total');
                             if ($isTotal) {
                                 $u_id_pv = (int)$n['user_id'];
