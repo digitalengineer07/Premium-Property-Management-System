@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if(move_uploaded_file($_FILES['agreement_document']['tmp_name'], "../uploads/agreements/".$new_name)) {
                         $agreement_update = ", agreement_document=?, agreement_upload_date=NOW()";
                         $types .= "s";
-                        $params[] = $new_name;
+                        $params[] = "uploads/agreements/" . $new_name;
                     }
                 }
             }
