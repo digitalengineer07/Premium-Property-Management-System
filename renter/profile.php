@@ -856,7 +856,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="status-pill <?php echo $user['aadhaar_file'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['aadhaar_file'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['aadhaar_file'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['aadhaar_file']): ?>
-                                <a href="../<?php echo htmlspecialchars($user['aadhaar_file']); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                                <?php $aadhaar_url = (strpos($user['aadhaar_file'], 'uploads/') === 0) ? '../' . $user['aadhaar_file'] : '../uploads/aadhaar/' . $user['aadhaar_file']; ?>
+                                <a href="<?php echo htmlspecialchars($aadhaar_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php else: ?>
                                 <a href="documents.php#upload-widget-container" title="Upload"><i class='bx bx-upload'></i></a>
                             <?php endif; ?>
@@ -871,7 +872,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="status-pill <?php echo $user['agreement_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['agreement_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['agreement_document'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['agreement_document']): ?>
-                                <a href="../<?php echo htmlspecialchars($user['agreement_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                                <?php $agree_url = (strpos($user['agreement_document'], 'uploads/') === 0) ? '../' . $user['agreement_document'] : '../uploads/agreements/' . $user['agreement_document']; ?>
+                                <a href="<?php echo htmlspecialchars($agree_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
                             <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
@@ -884,7 +886,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="status-pill <?php echo $user['electricity_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['electricity_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['electricity_document'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['electricity_document']): ?>
-                                <a href="../<?php echo htmlspecialchars($user['electricity_document']); ?>" target="_blank"><i class='bx bx-show'></i></a>
+                                <?php $elec_url = (strpos($user['electricity_document'], 'uploads/') === 0) ? '../' . $user['electricity_document'] : '../uploads/documents/' . $user['electricity_document']; ?>
+                                <a href="<?php echo htmlspecialchars($elec_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
                             <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
