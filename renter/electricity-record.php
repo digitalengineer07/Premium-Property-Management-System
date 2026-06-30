@@ -51,11 +51,13 @@ $chart_records = array_slice($electricity_records, 0, 12);
 $chart_records = array_reverse($chart_records);
 $chart_labels = [];
 $chart_data = [];
+$chart_amounts = [];
 foreach($chart_records as $cr) {
     $dateObj = DateTime::createFromFormat('!F Y', $cr['month']);
     $shortMonth = $dateObj ? $dateObj->format('M Y') : $cr['month'];
     $chart_labels[] = $shortMonth;
-    $chart_data[] = $cr['units_consumed'];
+    $chart_data[] = (float)$cr['units_consumed'];
+    $chart_amounts[] = (float)$cr['amount'];
 }
 
 // Last Recorded Reading & Current Month Details
