@@ -933,7 +933,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             </div>
         </div>
 
-        <div class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: stretch;">
+        <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
