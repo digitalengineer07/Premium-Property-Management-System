@@ -717,7 +717,7 @@ include "sidebar.php";
                             <?php 
                             $bType = trim(ucfirst(s($n['bill_type']))); 
                             $isTotal = (strtolower($bType) === 'total');
-                            if ($isTotal) $bType = 'Rent + Main.';
+                            if ($isTotal) $bType = 'Rent + Main. + Electricity';
                             ?>
                             <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
