@@ -18,26 +18,6 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($res);
-mysqli_stmt_close($stmt);
-
-$display_name = $user['name'] ?: $user['username'];
-$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
-$room_no = $user['room_no'] ?? 'N/A';
-
-/* Calculate totals */
-// 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
-mysqli_stmt_close($stmt);
-
-$rent_due = $pure_rent_due + $rent_portion_due;
-$unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
-$total_due = $elec_due + $rent_due - $unbilled_adj; // If adj is negative (remaining), it adds to total. If positive, subtracts.
-
-
-/* Last payment */
-$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $lastp = mysqli_stmt_get_result($stmt);
