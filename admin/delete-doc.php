@@ -11,7 +11,7 @@ if (!isset($_SESSION['admin'])) {
 $user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 
-if ($user_id <= 0 || !in_array($type, ['aadhaar', 'agreement'])) {
+if ($user_id <= 0 || !in_array($type, ['aadhaar', 'agreement', 'electricity'])) {
     die("Invalid request.");
 }
 
