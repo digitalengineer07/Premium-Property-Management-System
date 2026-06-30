@@ -608,7 +608,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting">
-                <h1>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> 👋</h1>
+                <h1>Hello, <?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?> 👋</h1>
                 <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
             </div>
             <div class="header-actions">
