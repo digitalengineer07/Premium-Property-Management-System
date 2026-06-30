@@ -225,7 +225,7 @@ $overdue_list = [];
 
 if ($total_due > 0) {
     // Collect months that are unpaid
-    $due_q = mysqli_query($conn, "SELECT month FROM rent WHERE user_id = $user_id AND status = 'Due' UNION SELECT month FROM electricity WHERE user_id = $user_id AND status = 'Due'");
+    $due_q = mysqli_query($conn, "SELECT month FROM rent WHERE user_id = $user_id AND status != 'Paid' UNION SELECT month FROM electricity WHERE user_id = $user_id AND status != 'Paid'");
     while($dq = mysqli_fetch_assoc($due_q)) {
         $overdue_list[] = $dq['month'];
     }
