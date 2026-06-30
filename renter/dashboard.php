@@ -863,7 +863,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     }
                     foreach ($elecs as $e) {
                         if (isset($e['status']) && $e['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['total_amount']];
+                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['amount']];
                         }
                     }
                     $pending_bills_display = array_slice($pending_bills_display, 0, 3);
