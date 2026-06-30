@@ -28,6 +28,22 @@ $room_no = $user['room_no'] ?? 'N/A';
 // 1. Rent from pure 'rent' table
 $stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r1 = mysqli_stmt_get_result($stmt);
+$r1a = mysqli_fetch_assoc($r1);
+$pure_rent_due = (float)($r1a['total'] ?? 0);
+mysqli_stmt_close($stmt);
+
+// 2. Electricity and Rent components from 'electricity' table
+$stmt = mysqli_prepare($conn, "SELECT 
+    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status = 'Due') OR (status = 'Due' AND elec_status != 'Paid') THEN amount ELSE 0 END), 0) as elec_total, 
+    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status = 'Due') OR (status = 'Due' AND rent_status != 'Paid') THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
+FROM electricity WHERE user_id = ?");
+mysqli_stmt_bind_param($stmt, "i", $user_id);
+mysqli_stmt_execute($stmt);
+$r2 = mysqli_stmt_get_result($stmt);
+$r2a = mysqli_fetch_assoc($r2);
+$elec_due = (float)($r2a['elec_total'] ?? 0);
 $rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
 mysqli_stmt_close($stmt);
 
