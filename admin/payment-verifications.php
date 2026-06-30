@@ -60,6 +60,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id=$uid AND status!='Paid'");
                     }
                     
+                    // Automatically record transaction in payments table if not present
+                    $p_uid = (int)$notif['user_id'];
+                    $p_bid = (int)$notif['bill_id'];
+                    $p_btype = $notif['bill_type'];
+                    $p_amt = (float)$notif['amount'];
+                    $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
+                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt");
+                    if (mysqli_num_rows($ck_p) == 0) {
+                        $p_month = date('F Y');
+                        if ($p_bid > 0) {
+                            if ($p_btype == 'rent') {
+                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$p_bid"));
+                                if ($mr) $p_month = $mr['month'];
+                            } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
+                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$p_bid"));
+                                if ($mr) $p_month = $mr['month'];
+                            }
+                        }
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE())");
+                    }
+
                     $success = "Payment #{$notif['transaction_id']} approved successfully.";
                     
                     // Send email
