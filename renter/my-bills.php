@@ -1093,8 +1093,8 @@ $show_banner = ($is_late && !empty($overdue_list));
                 document.getElementById('bdDueDate').textContent = bill.due_date;
                 document.getElementById('bdDueDate').style.color = bill.status === 'Unpaid' ? '#FF4B6B' : 'var(--text-gray)';
 
-                const iconMap = {'rent': 'bx-home', 'electricity': 'bx-bulb', 'maintenance': 'bx-wrench'};
-                const colorMap = {'rent': ['rgba(255, 75, 107, 0.1)', '#FF4B6B'], 'electricity': ['rgba(245, 158, 11, 0.1)', '#F59E0B']};
+                const iconMap = {'rent': 'bx-home', 'elec_rent': 'bx-home', 'electricity': 'bx-bulb', 'maintenance': 'bx-wrench'};
+                const colorMap = {'rent': ['rgba(255, 75, 107, 0.1)', '#FF4B6B'], 'elec_rent': ['rgba(98, 75, 255, 0.1)', 'var(--primary-purple)'], 'electricity': ['rgba(245, 158, 11, 0.1)', '#F59E0B']};
                 
                 let iconClass = iconMap[bill.type] || 'bx-receipt';
                 let colors = colorMap[bill.type] || ['rgba(98, 75, 255, 0.1)', 'var(--primary-purple)'];
