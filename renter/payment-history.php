@@ -839,10 +839,24 @@ $show_banner = ($is_late && !empty($overdue_list));
             $amt = (float)($p['paid_amount'] > 0 ? $p['paid_amount'] : $p['total_amount']);
             $type = trim($p['bill_type']);
             $month = $p['month'];
+            $slip_dt = null;
             if ($type == 'total' || empty($type) || (int)$p['bill_id'] == 0) {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
-                if ($bm && !empty($bm['month'])) $month = $bm['month'];
+                if ($bm) {
+                    if (!empty($bm['month'])) $month = $bm['month'];
+                    if (!empty($bm['payment_date'])) $slip_dt = $bm['payment_date'];
+                    elseif (!empty($bm['created_at'])) $slip_dt = $bm['created_at'];
+                }
+            } else {
+                if ($type == 'electricity' || $type == 'elec_rent') {
+                    $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE id=" . (int)$p['bill_id']));
+                    if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
+                }
+            }
+            if (!$slip_dt && !empty($month)) {
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
+                if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
             }
             $pmode = !empty($p['payment_mode']) ? $p['payment_mode'] : 'UPI';
             $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
@@ -852,9 +866,14 @@ $show_banner = ($is_late && !empty($overdue_list));
             $icon = 'bx-credit-card';
             $color = 'purple';
             $filter_type = 'other';
-            $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+            if ($slip_dt) {
+                $bill_date = date('d M Y', strtotime($slip_dt));
+                $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
+            } else {
+                $ts = strtotime($month);
+                $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
+                $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+            }
             
             if ($type == 'rent') {
                 $filter_type = 'rent';
@@ -875,7 +894,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 $icon = 'bx-wrench';
                 $color = 'red';
             } elseif ($type == 'total' || empty($type)) {
-                $title = 'Rent + Main.';
+                $title = 'Rent + Main. + Electricity';
                 $icon = 'bx-credit-card';
                 $color = 'purple';
             }
@@ -926,29 +945,46 @@ $show_banner = ($is_late && !empty($overdue_list));
             $pmode = !empty($pn['payment_method']) ? $pn['payment_method'] : 'UPI';
             $pdate = date('d M Y', strtotime($pn['verified_at'] ? $pn['verified_at'] : $pn['created_at']));
             $month = date('F Y', strtotime($pdate));
+            $slip_dt = null;
             if ($bid > 0) {
                 if ($type == 'rent') {
                     $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
                     if ($mr) $month = $mr['month'];
-                } elseif ($type == 'electricity' || $type == 'elec_rent') {
-                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$bid"));
-                    if ($mr) $month = $mr['month'];
+                } elseif ($type == 'electricity' || $type == 'elec_rent' || $type == 'total') {
+                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE id=$bid"));
+                    if ($mr) {
+                        if (!empty($mr['month'])) $month = $mr['month'];
+                        $slip_dt = !empty($mr['payment_date']) ? $mr['payment_date'] : $mr['created_at'];
+                    }
                 }
             } else {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
                 if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
-                if ($bm && !empty($bm['month'])) $month = $bm['month'];
+                if ($bm) {
+                    if (!empty($bm['month'])) $month = $bm['month'];
+                    if (!empty($bm['payment_date'])) $slip_dt = $bm['payment_date'];
+                    elseif (!empty($bm['created_at'])) $slip_dt = $bm['created_at'];
+                }
+            }
+            if (!$slip_dt && !empty($month)) {
+                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
+                if ($bm) $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
             }
             
             $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
-            $title = ($type == 'total' || empty($type)) ? 'Rent + Main.' : (ucfirst($type) . ' Payment');
+            $title = ($type == 'total' || empty($type)) ? 'Rent + Main. + Electricity' : (ucfirst($type) . ' Payment');
             $subtitle = 'Ref: ' . $pn['transaction_id'];
 
             $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
             $color = ($type == 'rent') ? 'purple' : (($type == 'electricity') ? 'yellow' : 'blue');
-            $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+            if ($slip_dt) {
+                $bill_date = date('d M Y', strtotime($slip_dt));
+                $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
+            } else {
+                $ts = strtotime($month);
+                $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
+                $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+            }
 
             $all_bills[] = [
                 'id' => $pn['id'],
