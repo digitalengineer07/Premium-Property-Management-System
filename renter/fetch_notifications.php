@@ -79,10 +79,10 @@ if ($stmt_n2) {
     while ($row = mysqli_fetch_assoc($r2_n)) {
         $e_status = !empty($row['elec_status']) ? $row['elec_status'] : $row['status'];
         $r_status = !empty($row['rent_status']) ? $row['rent_status'] : $row['status'];
-        if ($e_status === 'Due') {
+        if ($e_status !== 'Paid') {
             $elec_due_n += (float)$row['amount'];
         }
-        if ($r_status === 'Due') {
+        if ($r_status !== 'Paid') {
             $rent_portion_due_n += ((float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues']);
         }
     }
