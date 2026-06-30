@@ -9,13 +9,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = (int) $_SESSION['user_id'];
-    $row['source'] = 'rent_table';
-    $merged_rents[] = $row;
-}
-mysqli_stmt_close($stmt);
-
-// Get rent portions from electricity bills (slips)
-$stmt = mysqli_prepare($conn, "
     SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as amount, e.status, p.adjustment_amount, p.adjustment_type 
     FROM electricity e 
     LEFT JOIN payments p ON p.bill_type = 'electricity' AND p.bill_id = e.id 
