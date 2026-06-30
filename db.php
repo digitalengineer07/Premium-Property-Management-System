@@ -152,7 +152,11 @@ if ($conn) {
             'meter_screenshot_thumb' => "varchar(255) DEFAULT NULL",
             'bill_file' => "varchar(255) DEFAULT NULL",
             'elec_status' => "varchar(20) DEFAULT 'Due'",
-            'rent_status' => "varchar(20) DEFAULT 'Due'"
+            'rent_status' => "varchar(20) DEFAULT 'Due'",
+            'paid_date' => "date DEFAULT NULL"
+        ],
+        'rent' => [
+            'paid_date' => "date DEFAULT NULL"
         ],
         'payment_notifications' => [
             'verified_by' => "varchar(100) DEFAULT NULL",
