@@ -42,7 +42,8 @@ if ($type === 'aadhaar') {
     mysqli_stmt_close($stmt);
 
     if ($data && !empty($data['agreement_document'])) {
-        $file_path = "../uploads/agreements/" . $data['agreement_document'];
+        $rel_path = $data['agreement_document'];
+        $file_path = (strpos($rel_path, 'uploads/') === 0) ? "../" . $rel_path : "../uploads/agreements/" . $rel_path;
         if (file_exists($file_path)) {
             @unlink($file_path);
         }
