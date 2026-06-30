@@ -53,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_close($stmt);
 
         if ($user_data && !empty($user_data['agreement_document'])) {
-            $old_file = $upload_dir . $user_data['agreement_document'];
+            $old_rel = $user_data['agreement_document'];
+            $old_file = (strpos($old_rel, 'uploads/') === 0) ? "../" . $old_rel : $upload_dir . $old_rel;
             if (file_exists($old_file)) {
                 @unlink($old_file);
             }
@@ -61,8 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (move_uploaded_file($file_tmp, $upload_dir . $new_name)) {
             chmod($upload_dir . $new_name, 0644);
+            $full_path_for_db = "uploads/agreements/" . $new_name;
             $stmt = mysqli_prepare($conn, "UPDATE users SET agreement_document = ?, agreement_upload_date = NOW(), agreement_expiry_date = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "ssi", $new_name, $expiry_date, $user_id);
+            mysqli_stmt_bind_param($stmt, "ssi", $full_path_for_db, $expiry_date, $user_id);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
             
