@@ -4,19 +4,17 @@ session_start();
 require_once "../db.php";
 
 if (!isset($_SESSION['user_id'])) {
+<?php
+// renter/dashboard.php - Redesigned with Unified SaaS UI
+session_start();
+require_once "../db.php";
+
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
     exit;
 }
 
 $user_id = (int) $_SESSION['user_id'];
-require_once "fetch_notifications.php";
-if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
-    FROM rent r 
-    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
-    WHERE r.user_id = ? 
-    ORDER BY r.id DESC LIMIT 10
-");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $rent_res = mysqli_stmt_get_result($stmt);
