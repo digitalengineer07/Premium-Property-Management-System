@@ -33,6 +33,12 @@ if (isset($_POST['save'])) {
     $amount = $_POST['amount'];
     $status = $_POST['status'];
 
+    $p_date = DateTime::createFromFormat('F Y', $month) ?: DateTime::createFromFormat('Y-m', $month);
+    if ($p_date && (int)$p_date->format('Ym') > (int)date('Ym')) {
+        echo "<script>alert('Protocol Violation: Cannot generate electricity bill for upcoming/future months beyond current date.'); history.back();</script>";
+        exit;
+    }
+
     $i_stmt = mysqli_prepare($conn, "INSERT INTO electricity (user_id, month, units, amount, status) VALUES (?, ?, ?, ?, ?)");
     mysqli_stmt_bind_param($i_stmt, "isiss", $user_id, $month, $units, $amount, $status);
     mysqli_stmt_execute($i_stmt);
