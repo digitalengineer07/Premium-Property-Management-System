@@ -27,7 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         
         if ($notif && $notif['status'] == 'Pending') {
             if ($action == 'approve') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                $admin_note_esc = mysqli_real_escape_string($conn, $admin_note);
+                $admin_user_esc = mysqli_real_escape_string($conn, $admin_user);
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note_esc', verified_by='$admin_user_esc', verified_at=NOW() WHERE id=$id");
                 
                 if ($upd_status) {
                     // If this payment was for a bill, update the bill status strictly
@@ -67,7 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     $p_amt = (float)$notif['amount'];
                     $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
                     $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
-                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
+                    $p_btype_esc = mysqli_real_escape_string($conn, $p_btype);
+                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype_esc' AND paid_amount=$p_amt))");
                     if ($ck_p && mysqli_num_rows($ck_p) == 0) {
                         $p_month = date('F Y');
                         if ($p_bid > 0) {
@@ -83,7 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                             if (!$mr) $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$p_uid AND (status='Paid' OR rent_amount=$p_amt) ORDER BY id DESC LIMIT 1"));
                             if ($mr && !empty($mr['month'])) $p_month = $mr['month'];
                         }
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
+                        $p_month_esc = mysqli_real_escape_string($conn, $p_month);
+                        $p_pmode_esc = mysqli_real_escape_string($conn, $p_pmode);
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype_esc', $p_bid, '$p_month_esc', $p_amt, '$p_pmode_esc', $p_amt, CURDATE(), '$p_tx')");
                     }
 
 
@@ -100,7 +105,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 }
                 
             } elseif ($action == 'reject') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                $admin_note_esc = mysqli_real_escape_string($conn, $admin_note);
+                $admin_user_esc = mysqli_real_escape_string($conn, $admin_user);
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note_esc', verified_by='$admin_user_esc', verified_at=NOW() WHERE id=$id");
                 if ($upd_status) {
                     $success = "Payment #{$notif['transaction_id']} rejected.";
                     
@@ -545,12 +552,12 @@ include "sidebar.php";
     
     <?php if ($success): ?>
         <div class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #DCFCE7;">
-            <i class='bx bx-check-circle'></i> <?php echo $success; ?>
+            <i class='bx bx-check-circle'></i> <?php echo htmlspecialchars($success); ?>
         </div>
     <?php endif; ?>
     <?php if ($error): ?>
         <div class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #FEE2E2;">
-            <i class='bx bx-error-circle'></i> <?php echo $error; ?>
+            <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($error); ?>
         </div>
     <?php endif; ?>
 

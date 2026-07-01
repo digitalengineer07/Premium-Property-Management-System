@@ -1,4 +1,12 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: admin/login.php");
+    exit;
+}
+
+// WARNING: Hardcoded database credentials below are a security risk.
+// TODO: Move database credentials to a config file and remove this file in production.
 $conn = mysqli_connect("localhost", "root", "", "renter_system");
 
 $tables = array();

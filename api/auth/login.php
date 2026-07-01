@@ -37,13 +37,16 @@ if ($stmt) {
                 @mysqli_query($conn, "UPDATE users SET last_login = NOW() WHERE id = $user_id");
             }
             
-            // Generate a simple token (for Phase 1 simulation)
-            $token = base64_encode(json_encode([
+            // Generate a signed token with HMAC
+            $token_data = json_encode([
                 "id" => $user['id'],
                 "username" => $user['username'],
                 "role" => $role,
                 "time" => time()
-            ]));
+            ]);
+            $secret_key = defined('TOKEN_SECRET') ? TOKEN_SECRET : 'change-this-secret-key-in-production';
+            $signature = hash_hmac('sha256', $token_data, $secret_key);
+            $token = base64_encode($token_data . '.' . $signature);
 
             http_response_code(200);
             echo json_encode([

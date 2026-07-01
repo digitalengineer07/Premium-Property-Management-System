@@ -1,8 +1,13 @@
 <?php
+session_start();
+if (!isset($_SESSION['admin_id'])) {
+    http_response_code(401);
+    echo json_encode(["error" => "Unauthorized"]);
+    exit;
+}
+
 require_once "../config/database.php";
 
-// Allow CORS
-header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

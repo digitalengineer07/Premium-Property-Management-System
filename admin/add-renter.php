@@ -52,7 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
-                    $success = "Resident profile created successfully! <a href='../onboarding-guide.php?id=$new_id&pass=" . urlencode($password) . "' target='_blank' style='color: #10B981; text-decoration: underline; margin-left:10px;'>Print Onboarding Guide</a>";
+                    // Store password in session flash for one-time display instead of URL exposure
+                    $_SESSION['flash_new_user_id'] = $new_id;
+                    $_SESSION['flash_username'] = $username;
+                    $_SESSION['flash_password'] = $password;
+                    $success = "Resident profile created successfully! The login credentials are displayed below. <a href='../onboarding-guide.php?id=$new_id' target='_blank' style='color: #10B981; text-decoration: underline; margin-left:10px;'>Print Onboarding Guide</a>";
 
                     // Welcome Email Logic
                     require_once "utils_mailer.php";
@@ -121,6 +125,25 @@ $admin_user = s($_SESSION['admin']);
                         <i class='bx bx-check-circle' style="font-size: 24px;"></i>
                         <span style="font-weight: 600;"><?php echo $success; ?></span>
                     </div>
+                    <?php if (isset($_SESSION['flash_username']) && isset($_SESSION['flash_password'])): ?>
+                    <div class="animate-up" style="background: #EFF6FF; color: #1E40AF; padding: 20px; border-radius: 14px; margin-bottom: 30px; border: 1px solid #BFDBFE;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class='bx bx-lock-open' style="font-size: 24px;"></i>
+                            <span style="font-weight: 700; font-size: 16px;">Login Credentials (One-Time Display)</span>
+                        </div>
+                        <div style="background: white; border-radius: 10px; padding: 16px; font-family: monospace; font-size: 14px; line-height: 1.8;">
+                            <strong>Username:</strong> <?php echo s($_SESSION['flash_username']); ?><br>
+                            <strong>Password:</strong> <?php echo s($_SESSION['flash_password']); ?>
+                        </div>
+                        <p style="font-size: 12px; margin-top: 10px; margin-bottom: 0; opacity: 0.8;"><i class='bx bx-info-circle'></i> These credentials will not be shown again. Please copy them now.</p>
+                    </div>
+                    <?php
+                        // Clear flash data after one-time display
+                        unset($_SESSION['flash_username']);
+                        unset($_SESSION['flash_password']);
+                        unset($_SESSION['flash_new_user_id']);
+                    ?>
+                    <?php endif; ?>
                 <?php endif; ?>
 
                 <?php if ($error): ?>

@@ -1,7 +1,6 @@
 <?php
 require_once "../config/database.php";
 
-header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {

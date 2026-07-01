@@ -5,10 +5,9 @@ require_once __DIR__ . "/config.php";
 // Apply session ini settings only if no session is active.
 if (session_status() === PHP_SESSION_NONE) {
     // Hardening session settings for 30 minutes
-    // Simplified session settings for better compatibility
-    // ini_set('session.use_only_cookies', 1);
-    // ini_set('session.use_strict_mode', 1);
-    // ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_httponly', 1);
     // ini_set('session.cookie_path', '/');
     ini_set('session.cookie_lifetime', 3600); // 1 hour
     ini_set('session.gc_maxlifetime', 3600);  // 1 hour

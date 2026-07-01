@@ -48,7 +48,7 @@ if (isset($_POST['save'])) {
     exit;
 }
 
-$elec = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
+$elec = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = " . (int)$user_id . " ORDER BY id DESC LIMIT 5");
 $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
