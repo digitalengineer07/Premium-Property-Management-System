@@ -1,7 +1,11 @@
 <?php
 require_once "../../db.php";
 
-header("Access-Control-Allow-Origin: *");
+$allowed_origins = ['https://yourdomain.com'];
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowed_origins)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type");

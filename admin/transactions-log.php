@@ -9,77 +9,113 @@ if (!isset($_SESSION['admin'])) {
 }
 $admin_user = s($_SESSION['admin'] ?? 'Admin');
 
-// Filter Inputs
-$f_search = mysqli_real_escape_string($conn, trim($_GET['search'] ?? ''));
-$f_type = mysqli_real_escape_string($conn, $_GET['type'] ?? 'All');
-$f_source = mysqli_real_escape_string($conn, $_GET['source'] ?? 'All');
-$f_start = mysqli_real_escape_string($conn, $_GET['start_date'] ?? '');
-$f_end = mysqli_real_escape_string($conn, $_GET['end_date'] ?? '');
+// Filter Inputs - raw values (prepared statements handle escaping)
+$f_search_raw = trim($_GET['search'] ?? '');
+$f_type_raw = $_GET['type'] ?? 'All';
+$f_source_raw = $_GET['source'] ?? 'All';
+$f_start_raw = $_GET['start_date'] ?? '';
+$f_end_raw = $_GET['end_date'] ?? '';
 
-$where = ["1=1"];
+// Values for HTML output (original var names kept for minimal template changes)
+$f_search = $f_search_raw;
+$f_type = $f_type_raw;
+$f_source = $f_source_raw;
+$f_start = $f_start_raw;
+$f_end = $f_end_raw;
 
-if ($f_search !== '') {
-    $where[] = "(u.name LIKE '%$f_search%' OR combined_tx.id LIKE '%$f_search%')";
+// Build WHERE clause with prepared statement placeholders
+$where_conditions = ["1=1"];
+$params = [];
+$types = '';
+
+if ($f_search_raw !== '') {
+    $where_conditions[] = "(u.name LIKE ? OR combined_tx.id LIKE ?)";
+    $search_like = "%{$f_search_raw}%";
+    $params[] = $search_like;
+    $params[] = $search_like;
+    $types .= 'ss';
 }
-if ($f_type !== 'All') {
-    $where[] = "combined_tx.type = '$f_type'";
+if ($f_type_raw !== 'All') {
+    $where_conditions[] = "combined_tx.type = ?";
+    $params[] = $f_type_raw;
+    $types .= 's';
 }
-if ($f_source !== 'All') {
-    $where[] = "combined_tx.source = '$f_source'";
+if ($f_source_raw !== 'All') {
+    $where_conditions[] = "combined_tx.source = ?";
+    $params[] = $f_source_raw;
+    $types .= 's';
 }
-if ($f_start !== '') {
-    $where[] = "combined_tx.payment_date >= '$f_start'";
+if ($f_start_raw !== '') {
+    $where_conditions[] = "combined_tx.payment_date >= ?";
+    $params[] = $f_start_raw;
+    $types .= 's';
 }
-if ($f_end !== '') {
-    $where[] = "combined_tx.payment_date <= '$f_end'";
+if ($f_end_raw !== '') {
+    $where_conditions[] = "combined_tx.payment_date <= ?";
+    $params[] = $f_end_raw;
+    $types .= 's';
 }
 
-$where_clause = implode(" AND ", $where);
+$where_clause = implode(" AND ", $where_conditions);
 
 // Pagination
 $page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
 $limit = 50;
 $offset = ($page - 1) * $limit;
 
-$unified_tx_sql = "
-    SELECT combined_tx.*, u.name as renter_name, u.room_no 
+// Shared subquery (no WHERE clause - conditions are applied in outer query)
+$base_from_subquery = "
     FROM (
-        SELECT 
-            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
+        SELECT id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode,
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
-        SELECT 
-            id, user_id, bill_type as type, bill_id, amount, payment_method as mode, 
+        SELECT id, user_id, bill_type as type, bill_id, amount, payment_method as mode,
             DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
         FROM payment_notifications
     ) as combined_tx
     JOIN users u ON combined_tx.user_id = u.id
-    WHERE $where_clause
-    ORDER BY payment_date DESC, payment_time DESC
-    LIMIT $limit OFFSET $offset
 ";
 
-$transactions = mysqli_query($conn, $unified_tx_sql);
-
-$count_sql = "
-    SELECT COUNT(*) as total 
-    FROM (
-        SELECT 
-            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
-            payment_date, payment_time, 'Success' as status, 'admin' as source
-        FROM payments
-        UNION ALL
-        SELECT 
-            id, user_id, bill_type as type, bill_id, amount, payment_method as mode, 
-            DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
-        FROM payment_notifications
-    ) as combined_tx
-    JOIN users u ON combined_tx.user_id = u.id
-    WHERE $where_clause
-";
-$total_rows = mysqli_fetch_assoc(mysqli_query($conn, $count_sql))['total'];
+// Count query with prepared statement
+$count_sql = "SELECT COUNT(*) as total $base_from_subquery WHERE $where_clause";
+$stmt_count = mysqli_prepare($conn, $count_sql);
+if ($stmt_count) {
+    if (!empty($params)) {
+        $bind_refs = [$stmt_count, $types];
+        foreach ($params as $k => $v) {
+            $bind_refs[] = &$params[$k];
+        }
+        call_user_func_array('mysqli_stmt_bind_param', $bind_refs);
+    }
+    mysqli_stmt_execute($stmt_count);
+    $count_res = mysqli_stmt_get_result($stmt_count);
+    $total_rows = mysqli_fetch_assoc($count_res)['total'] ?? 0;
+    mysqli_stmt_close($stmt_count);
+} else {
+    $total_rows = 0;
+}
 $total_pages = ceil($total_rows / $limit);
+
+// Data query with prepared statement (add LIMIT/OFFSET as bound params)
+$data_sql = "SELECT combined_tx.*, u.name as renter_name, u.room_no $base_from_subquery WHERE $where_clause ORDER BY payment_date DESC, payment_time DESC LIMIT ? OFFSET ?";
+$stmt_data = mysqli_prepare($conn, $data_sql);
+if ($stmt_data) {
+    $data_types = $types . 'ii';
+    $data_params = $params;
+    $data_params[] = $limit;
+    $data_params[] = $offset;
+    $bind_refs2 = [$stmt_data, $data_types];
+    foreach ($data_params as $k => $v) {
+        $bind_refs2[] = &$data_params[$k];
+    }
+    call_user_func_array('mysqli_stmt_bind_param', $bind_refs2);
+    mysqli_stmt_execute($stmt_data);
+    $transactions = mysqli_stmt_get_result($stmt_data);
+    mysqli_stmt_close($stmt_data);
+} else {
+    $transactions = false;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
