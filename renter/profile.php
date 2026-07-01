@@ -799,7 +799,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="info-value">••••••••</div>
-                            <button class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="alert('Password change modal')">Change</button>
+                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="openChangePasswordModal()">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
@@ -988,6 +988,97 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
     <!-- Cropper Modal -->
     <div id="cropperModal">
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="no-scrollbar" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto; box-sizing: border-box; position: relative;">
+            
+            <!-- Decorative Top Gradient Line -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; margin-top: 8px;">
+                <h3 style="margin: 0; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 40px; height: 40px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class='bx bx-edit-alt' style="color: var(--primary-purple); font-size: 24px;"></i>
+                    </div>
+                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Profile</span>
+                </h3>
+                <button type="button" onclick="document.getElementById('editProfileModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
+            </div>
+            <form method="POST" action="">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+                <input type="hidden" name="save_profile" value="1">
+                <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
+                <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about'] ?? ''); ?>">
+                
+                <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-user'></i> Basic Information</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Full Name</label>
+                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" required>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Email Address</label>
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
+                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Alternate Number</label>
+                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Date of Birth</label>
+                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Gender</label>
+                        <select name="gender" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                            <option value="">Select Gender</option>
+                            <option value="Male" <?php echo ($user['gender'] ?? '') === 'Male' ? 'selected' : ''; ?>>Male</option>
+                            <option value="Female" <?php echo ($user['gender'] ?? '') === 'Female' ? 'selected' : ''; ?>>Female</option>
+                            <option value="Other" <?php echo ($user['gender'] ?? '') === 'Other' ? 'selected' : ''; ?>>Other</option>
+                        </select>
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Address</label>
+                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <div style="width: 100%; height: 1px; background: var(--border); margin: 24px 0;"></div>
+
+                <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-plus-medical'></i> Emergency Contact</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Name</label>
+                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Relationship</label>
+                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
+                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                    <div style="grid-column: span 2;">
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
+                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Cropper Modal -->
+    <div id="cropperModal">
         <div class="cropper-content animate-up">
             <h3 style="margin-bottom: 15px; font-weight: 700; color: var(--text-dark);">Crop Your Image</h3>
             <div class="img-container">
@@ -997,6 +1088,63 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <button type="button" class="btn-outline" onclick="closeCropper()" style="padding: 10px 20px;">Cancel</button>
                 <button type="button" class="btn-primary" onclick="applyCrop()" style="padding: 10px 20px; background: var(--primary-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Crop & Set</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="changePasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative;">
+            
+            <!-- Decorative Top Gradient Line -->
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class='bx bx-lock-alt' style="color: var(--primary-purple); font-size: 26px;"></i>
+                    </div>
+                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Change Password</span>
+                </h3>
+                <button type="button" onclick="closeChangePasswordModal()" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
+            </div>
+
+            <!-- Alert Box for Modal -->
+            <div id="pwdModalAlert" style="display: none; padding: 14px 16px; border-radius: 14px; margin-bottom: 20px; font-size: 14px; font-weight: 600; align-items: center; gap: 10px;"></div>
+
+            <form id="changePasswordForm" onsubmit="submitChangePassword(event)">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+                
+                <div style="margin-bottom: 18px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
+                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 18px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">New Password <span style="color: #EF4444;">*</span></label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 26px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Confirm New Password <span style="color: #EF4444;">*</span></label>
+                    <div style="position: relative; display: flex; align-items: center;">
+                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn-outline" onclick="closeChangePasswordModal()" style="padding: 12px 22px; font-weight: 600; border-radius: 14px;">Cancel</button>
+                    <button type="submit" id="btnChangePwdSubmit" style="padding: 12px 24px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 10px 20px rgba(98, 75, 255, 0.25); display: flex; align-items: center; gap: 8px; transition: 0.3s;">
+                        <i class='bx bx-check-shield'></i> Update Password
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </main>
@@ -1107,6 +1255,18 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
     }
     
+    // Check for flash success message from sessionStorage
+    const flashMsg = sessionStorage.getItem('pwdSuccess');
+    if (flashMsg) {
+        sessionStorage.removeItem('pwdSuccess');
+        const alertHtml = `
+            <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                <i class='bx bx-check-circle' style='font-size: 20px;'></i> \${flashMsg}
+            </div>`;
+        const mainEl = document.querySelector('main');
+        if (mainEl) mainEl.insertAdjacentHTML('afterbegin', alertHtml);
+    }
+
     // Auto-dismiss the status alert
     const statusAlert = document.getElementById('statusAlert');
     if (statusAlert) {
@@ -1146,6 +1306,83 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             }
         });
     });
+
+    function openChangePasswordModal() {
+        document.getElementById('changePasswordModal').style.display = 'flex';
+        document.getElementById('pwdModalAlert').style.display = 'none';
+        document.getElementById('changePasswordForm').reset();
+        setTimeout(() => {
+            document.getElementById('current_password').focus();
+        }, 100);
+    }
+
+    function closeChangePasswordModal() {
+        document.getElementById('changePasswordModal').style.display = 'none';
+        document.getElementById('changePasswordForm').reset();
+    }
+
+    async function submitChangePassword(event) {
+        event.preventDefault();
+        const alertBox = document.getElementById('pwdModalAlert');
+        const btn = document.getElementById('btnChangePwdSubmit');
+        const form = document.getElementById('changePasswordForm');
+        
+        const newPwd = document.getElementById('new_password').value;
+        const confirmPwd = document.getElementById('confirm_password').value;
+        
+        if (newPwd !== confirmPwd) {
+            alertBox.style.display = 'flex';
+            alertBox.style.background = '#FEF2F2';
+            alertBox.style.color = '#EF4444';
+            alertBox.style.border = '1px solid #FEE2E2';
+            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> New passwords do not match!";
+            return;
+        }
+
+        const originalBtnHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Updating...";
+        alertBox.style.display = 'none';
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch('change-password.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                alertBox.style.display = 'flex';
+                alertBox.style.background = '#F0FDF4';
+                alertBox.style.color = '#10B981';
+                alertBox.style.border = '1px solid #DCFCE7';
+                alertBox.innerHTML = "<i class='bx bx-check-circle' style='font-size: 20px;'></i> " + data.message;
+                form.reset();
+                sessionStorage.setItem('pwdSuccess', data.message);
+                setTimeout(() => {
+                    closeChangePasswordModal();
+                    window.location.reload();
+                }, 1400);
+            } else {
+                alertBox.style.display = 'flex';
+                alertBox.style.background = '#FEF2F2';
+                alertBox.style.color = '#EF4444';
+                alertBox.style.border = '1px solid #FEE2E2';
+                alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> " + (data.message || 'Error updating password');
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+            }
+        } catch (e) {
+            alertBox.style.display = 'flex';
+            alertBox.style.background = '#FEF2F2';
+            alertBox.style.color = '#EF4444';
+            alertBox.style.border = '1px solid #FEE2E2';
+            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> Network error occurred. Please try again.";
+            btn.disabled = false;
+            btn.innerHTML = originalBtnHTML;
+        }
+    }
 </script>
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 </body>
