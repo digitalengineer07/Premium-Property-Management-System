@@ -1164,21 +1164,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
 
 <script>
-    const themeToggle = document.getElementById('themeToggle');
-    
-    // Sync initial icon state
-    
 
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        
-        if (isDark) {
-            themeToggle.classList.replace('bx-moon', 'bx-sun');
-        } else {
-            themeToggle.classList.replace('bx-sun', 'bx-moon');
-        }
-    });
 
     // Cropper Logic
     let cropper = null;
