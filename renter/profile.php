@@ -582,22 +582,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                               </div>
                           <?php else: ?>
                               <?php foreach ($unread_notifications as $notif): ?>
-                                  <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
-                                      <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
-                                          <i class='bx bx-trash'></i>
-                                      </div>
-                                      <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
-                                          <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
-                                              <i class='bx <?php echo $notif['icon']; ?>'></i>
-    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-<?php else: ?>
-    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
-<?php endif; ?>
-</div>
-                      <div class="user-info">
-                          <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
-                          <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
-                      </div>
                       <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                   </div>
                   
