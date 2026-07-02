@@ -540,21 +540,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
                 </div>
             </div>
-            <a href="#" class="btn-download"><i class='bx bx-download'></i> Download App</a>
-        </div>
-    </aside>
-
-<main class="main-content">
-    <header class="header-renter">
-        <div class="header-greeting">
-            <div class="header-icon-wrapper">
-                <i class='bx bx-user-circle' style="font-size: 24px; color: var(--primary-purple);"></i>
-            </div>
-    <?php endif; ?>
-
-    <div class="profile-grid animate-up">
-        <!-- LEFT COLUMN -->
-        <div class="grid-col-left">
             <!-- Avatar Card -->
             <div class="panel avatar-card">
                 <div class="avatar-wrapper">
