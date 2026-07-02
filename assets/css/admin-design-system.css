@@ -22,11 +22,11 @@
 
 :root.dark-theme {
     color-scheme: dark;
-    --bg-main: #0A192F;
-    --white: #112240;
-    --text-dark: #E6F1FF;
-    --text-gray: #93C5FD;
-    --border: #233554;
+    --bg-main: #0B0F19;
+    --white: #111827;
+    --text-dark: #F8FAFC;
+    --text-gray: #94A3B8;
+    --border: #1E293B;
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -73,12 +73,12 @@ body {
 
 /* Sidebar Dark Adjustments */
 :root.dark-theme .nav-item:hover {
-    background: #172A45;
+    background: #1E293B;
     border-left-color: transparent;
 }
 
 :root.dark-theme .nav-item.active {
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(98, 75, 255, 0.12);
     border-left: 3px solid var(--primary-purple);
     color: var(--primary-purple) !important;
 }
@@ -102,7 +102,7 @@ body {
 
 :root.dark-theme th {
     background: rgba(255, 255, 255, 0.03);
-    color: #CBD5E1;
+    color: #E2E8F0;
 }
 
 :root.dark-theme tr:hover td {
@@ -193,7 +193,7 @@ body {
     overflow-y: auto;
     padding-right: 4px;
     scrollbar-width: thin;
-    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-color: #E2E8F0 transparent;
     /* Firefox */
     overscroll-behavior: contain;
 }
@@ -205,7 +205,7 @@ body {
     background: transparent;
 }
 .nav::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: #E2E8F0;
     border-radius: 4px;
 }
 
@@ -243,7 +243,7 @@ body {
 }
 
 body.dark-theme .nav-item.active {
-    background: rgba(59, 130, 246, 0.1);
+    background: rgba(98, 75, 255, 0.12);
     color: var(--primary-purple) !important;
 }
 
@@ -1199,26 +1199,26 @@ tr:hover td {
 :root.dark-theme,
 body.dark-theme {
     color-scheme: dark;
-    --bg-main: #070F2B !important;
-    --sidebar-bg: #0B1536 !important;
-    --white: #0E1A3D !important;
+    --bg-main: #0B0F19 !important;
+    --sidebar-bg: #111827 !important;
+    --white: #111827 !important;
     --text-dark: #F8FAFC !important;
     --text-gray: #94A3B8 !important;
-    --border: #1E2A54 !important;
+    --border: #1E293B !important;
     --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
 }
 
 :root.dark-theme body,
 body.dark-theme {
-    background-color: #070F2B !important;
+    background-color: #0B0F19 !important;
     color: #F8FAFC !important;
 }
 
 /* Sidebar & Navigation */
 :root.dark-theme .sidebar,
 body.dark-theme .sidebar {
-    background: #0B1536 !important;
-    border-right: 1px solid #1E2A54 !important;
+    background: #111827 !important;
+    border-right: 1px solid #1E293B !important;
 }
 
 :root.dark-theme .nav-item,
@@ -1270,7 +1270,7 @@ body.dark-theme .btn-filter,
 body.dark-theme .page-btn,
 :root.dark-theme .btn-table-action,
 body.dark-theme .btn-table-action {
-    background: #111E44 !important;
+    background: #1E293B !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
     color: #F8FAFC !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
@@ -1290,7 +1290,7 @@ body.dark-theme .btn-outline-support:hover {
 
 :root.dark-theme .user-profile-pill,
 body.dark-theme .user-profile-pill {
-    border-left: 1px solid #1E2A54 !important;
+    border-left: 1px solid #1E293B !important;
 }
 
 :root.dark-theme .user-info h4,
@@ -1315,8 +1315,8 @@ body.dark-theme .footer-widget,
 body.dark-theme .widget-card,
 :root.dark-theme .card,
 body.dark-theme .card {
-    background: #0E1A3D !important;
-    border: 1px solid #1E2A54 !important;
+    background: #111827 !important;
+    border: 1px solid #1E293B !important;
     box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35) !important;
 }
 
@@ -1339,7 +1339,7 @@ body.dark-theme .cmd-item,
 :root.dark-theme .notif-item,
 body.dark-theme .notif-item {
     background: rgba(255, 255, 255, 0.035) !important;
-    border: 1px solid #1E2A54 !important;
+    border: 1px solid #1E293B !important;
     color: #F8FAFC !important;
 }
 
@@ -1384,13 +1384,13 @@ body.dark-theme .btn-fw:hover {
 /* Tabs & Transactions */
 :root.dark-theme .tabs-header,
 body.dark-theme .tabs-header {
-    background: #0E1A3D !important;
-    border-bottom: 1px solid #1E2A54 !important;
+    background: #111827 !important;
+    border-bottom: 1px solid #1E293B !important;
 }
 
 :root.dark-theme .transaction-item,
 body.dark-theme .transaction-item {
-    border-bottom: 1px solid #1E2A54 !important;
+    border-bottom: 1px solid #1E293B !important;
 }
 
 /* Dropdowns & Modals */
@@ -1402,8 +1402,8 @@ body.dark-theme #profileDropdown,
 body.dark-theme #paymentModalPanel,
 :root.dark-theme #scannerModalPanel,
 body.dark-theme #scannerModalPanel {
-    background: #0E1A3D !important;
-    border: 1px solid #1E2A54 !important;
+    background: #111827 !important;
+    border: 1px solid #1E293B !important;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65) !important;
     color: #F8FAFC !important;
 }
@@ -1413,7 +1413,7 @@ body.dark-theme #notifDropdown > div:first-child,
 :root.dark-theme #profileDropdown a,
 body.dark-theme #profileDropdown a {
     background: rgba(255, 255, 255, 0.04) !important;
-    border-color: #1E2A54 !important;
+    border-color: #1E293B !important;
     color: #F8FAFC !important;
 }
 
@@ -1433,12 +1433,12 @@ body.dark-theme table {
 body.dark-theme thead th {
     background: rgba(255, 255, 255, 0.04) !important;
     color: #94A3B8 !important;
-    border-bottom: 1px solid #1E2A54 !important;
+    border-bottom: 1px solid #1E293B !important;
 }
 
 :root.dark-theme tbody tr,
 body.dark-theme tbody tr {
-    border-bottom: 1px solid #1E2A54 !important;
+    border-bottom: 1px solid #1E293B !important;
 }
 
 :root.dark-theme tbody tr:hover,
@@ -1457,8 +1457,8 @@ body.dark-theme select,
 body.dark-theme input,
 :root.dark-theme textarea,
 body.dark-theme textarea {
-    background-color: #0B1536 !important;
-    border: 1px solid #1E2A54 !important;
+    background-color: #111827 !important;
+    border: 1px solid #1E293B !important;
     color: #F8FAFC !important;
 }
 
