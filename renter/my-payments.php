@@ -291,6 +291,16 @@ $show_banner = ($is_late && !empty($overdue_list));
             --accent-green: #10B981;
         }
 
+        .dark-theme {
+            --bg-main: #0B0F19;
+            --sidebar-bg: #111827;
+            --text-dark: #F8FAFC;
+            --text-gray: #94A3B8;
+            --border: #1E293B;
+            --white: #111827;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+        }
+
         body {
             font-family: 'Outfit', sans-serif !important;
             background-color: var(--bg-main);
@@ -612,6 +622,41 @@ $show_banner = ($is_late && !empty($overdue_list));
         text-align: left;
     }
 
+
+        /* Dark Theme Specific Overrides for My Payments */
+        .dark-theme .kpi-card-minimal,
+        .dark-theme .payments-container,
+        .dark-theme .tabs-header,
+        .dark-theme .footer-widget,
+        .dark-theme #notifDropdown,
+        .dark-theme .page-btn {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .filter-select,
+        .dark-theme .bill-item {
+            background: var(--bg-main) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .payments-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+        .dark-theme .btn-filter,
+        .dark-theme .btn-action-pay {
+            background: var(--white) !important;
+        }
+        .dark-theme .month-divider td {
+            background: rgba(255, 255, 255, 0.035) !important;
+            color: var(--text-gray) !important;
+            border-bottom-color: var(--border) !important;
+        }
+        .dark-theme .bottom-info-bar {
+            background: rgba(98, 75, 255, 0.08) !important;
+            border-color: rgba(98, 75, 255, 0.2) !important;
+        }
+
 </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
@@ -731,11 +776,11 @@ $show_banner = ($is_late && !empty($overdue_list));
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
-                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
                                         <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
                                             <i class='bx bx-trash'></i>
                                         </div>
-                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: var(--white); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                                             <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                                 <i class='bx <?php echo $notif['icon']; ?>'></i>
                                             </div>
@@ -791,7 +836,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
                     
-                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
                         <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
@@ -998,7 +1043,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                         foreach($all_bills as $bill): 
                             if ($bill['period'] != $current_month) {
                                 $current_month = $bill['period'];
-                                echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month' style='background: #f8fafc;'><td colspan='7' style='padding: 12px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
+                                echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month'><td colspan='7' style='padding: 14px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border); background: var(--bg-main);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
                             }
                         ?>
                             <tr data-filter-type="<?php echo $bill['filter_type']; ?>" data-period="<?php echo htmlspecialchars($bill['period']); ?>" class="data-row">

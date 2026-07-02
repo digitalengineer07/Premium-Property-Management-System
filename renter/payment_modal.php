@@ -22,6 +22,14 @@
                   .pm-col-left { order: 2; }
                   .pm-col-right { order: 1; }
               }
+          
+              /* Dark Mode Overrides for Payment Modal */
+              .dark-theme #paymentModalPanel { background: var(--white, #111827) !important; color: var(--text-dark, #F8FAFC) !important; border: 1px solid var(--border, #1E293B) !important; }
+              .dark-theme .pm-qr-section { background: rgba(255, 255, 255, 0.03) !important; border-color: var(--border, #1E293B) !important; }
+              .dark-theme .pm-header div { background: rgba(255, 255, 255, 0.05) !important; }
+              .dark-theme #paymentNotifyForm input { background: var(--bg-main, #0B0F19) !important; color: var(--text-dark, #F8FAFC) !important; border-color: var(--border, #1E293B) !important; }
+              .dark-theme .pm-qr-section button { background: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark, #F8FAFC) !important; border-color: var(--border, #1E293B) !important; }
+
           </style>
           <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
               <div class="pm-header">
