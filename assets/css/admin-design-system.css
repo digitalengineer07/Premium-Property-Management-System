@@ -1481,3 +1481,70 @@ body.dark-theme thead th:last-child {
     border-top-right-radius: 14px !important;
     border-bottom-right-radius: 14px !important;
 }
+
+
+/* EXCLUSIVE MOBILE SIDEBAR DRAWER CSS - ZERO IMPACT ON DESKTOP */
+.mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    z-index: 99998;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar.mobile-drawer-open {
+        display: flex !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 270px !important;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        flex-direction: column !important;
+        background: var(--white, #FFFFFF) !important;
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.4) !important;
+        padding: 24px 16px !important;
+        overflow-y: auto !important;
+        animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+    .dark-theme .sidebar.mobile-drawer-open {
+        background: #111827 !important;
+        border-right: 1px solid #1E293B !important;
+    }
+    
+    /* Ensure all text labels, brand, and items are clearly visible when drawer is open! */
+    .sidebar.mobile-drawer-open .sidebar-brand p,
+    .sidebar.mobile-drawer-open .sidebar-brand h2,
+    .sidebar.mobile-drawer-open .nav-item span,
+    .sidebar.mobile-drawer-open .go-mobile-widget {
+        display: block !important;
+    }
+    .sidebar.mobile-drawer-open .nav-item span {
+        display: inline-block !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+    }
+    .sidebar.mobile-drawer-open .nav-item {
+        justify-content: flex-start !important;
+        padding: 12px 16px !important;
+        gap: 14px !important;
+        width: 100% !important;
+        border-radius: 12px !important;
+    }
+    .sidebar.mobile-drawer-open .sidebar-brand {
+        display: block !important;
+        margin-bottom: 20px !important;
+    }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}

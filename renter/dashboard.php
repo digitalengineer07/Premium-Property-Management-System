@@ -711,7 +711,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
 <!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
 <header class="mobile-only-header">
-    <div class="m-header-left" onclick="const sb = document.querySelector('.sidebar'); if(sb){ sb.style.setProperty('display', 'flex', 'important'); sb.style.setProperty('position', 'fixed', 'important'); sb.style.setProperty('z-index', '100000', 'important'); sb.style.setProperty('top', '0', 'important'); sb.style.setProperty('left', '0', 'important'); sb.style.setProperty('height', '100vh', 'important'); sb.style.setProperty('width', '240px', 'important'); }">
+    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu'></i>
     </div>
     <div class="m-header-brand">
