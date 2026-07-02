@@ -561,19 +561,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                       <i class='bx bx-bell'></i>
                       <?php if ($unread_count > 0): ?>
                           <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
-                              <?php echo $unread_count; ?>
-                          </span>
-                      <?php endif; ?>
-                  </div>
-                  
-                  <!-- Notification Dropdown -->
-                  <div id="notifDropdown" style="display: none;">
-          </div>
-      </header>
-
-    <?php if ($errmsg): ?>
-        <div id="statusAlert" class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #FEE2E2; transition: opacity 0.5s ease;">
-            <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($errmsg); ?>
         </div>
     <?php elseif ($success): ?>
         <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease;">
