@@ -11,10 +11,12 @@ installBtn.innerHTML = `
     Install App
 `;
 installBtn.style.cssText = `
+    
     display: none;
     position: fixed;
-    bottom: 20px;
+    bottom: ${window.innerWidth <= 768 ? '88px' : '20px'};
     right: 20px;
+
     z-index: 9999;
     background: #624BFF;
     color: white;
@@ -64,4 +66,9 @@ window.addEventListener('appinstalled', () => {
     // Clear the deferredPrompt so it can be garbage collected
     deferredPrompt = null;
     console.log('PWA was installed');
+});
+
+
+window.addEventListener('resize', () => {
+    installBtn.style.bottom = window.innerWidth <= 768 ? '88px' : '20px';
 });
