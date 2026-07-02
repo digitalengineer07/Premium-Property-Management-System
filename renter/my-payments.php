@@ -770,6 +770,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
 
         /* EXCLUSIVE MOBILE PAYMENTS VIEW MODE CSS - ZERO IMPACT ON DESKTOP */
+        .mobile-only-header,
         .mobile-only-payments {
             display: none !important;
         }
@@ -1123,6 +1124,16 @@ $show_banner = ($is_late && !empty($overdue_list));
                 box-shadow: 0 4px 15px rgba(98, 75, 255, 0.35);
                 cursor: pointer;
             }
+        }
+
+
+        /* GLOBAL DESKTOP RESTRICTION - ZERO DESKTOP IMPACT */
+        .mobile-only-header,
+        .mobile-only-dashboard,
+        .mobile-only-payments,
+        .mobile-only-view,
+        .mobile-bottom-nav {
+            display: none !important;
         }
 
 </style>

@@ -1548,3 +1548,22 @@ body.dark-theme thead th:last-child {
     from { transform: translateX(-100%); }
     to { transform: translateX(0); }
 }
+
+
+/* ==========================================================================
+   GLOBAL DESKTOP PROTECTION RULE (Guarantees Mobile-Only UI is hidden on Desktop > 768px)
+   ========================================================================== */
+.mobile-only-header,
+.mobile-only-dashboard,
+.mobile-only-payments,
+.mobile-only-view,
+.mobile-bottom-nav {
+    display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-only-header { display: flex !important; }
+    .mobile-only-dashboard { display: block !important; }
+    .mobile-only-payments { display: block !important; }
+    .mobile-bottom-nav { display: flex !important; }
+}

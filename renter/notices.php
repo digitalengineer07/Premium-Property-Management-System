@@ -477,6 +477,16 @@ if (isset($_GET['ajax_id'])) {
             border-color: #111827;
         }
 
+
+        /* GLOBAL DESKTOP RESTRICTION - ZERO DESKTOP IMPACT */
+        .mobile-only-header,
+        .mobile-only-dashboard,
+        .mobile-only-payments,
+        .mobile-only-view,
+        .mobile-bottom-nav {
+            display: none !important;
+        }
+
 </style>
 </head>
 <body style="display: block;">
