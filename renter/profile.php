@@ -589,17 +589,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                                       <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                                           <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                               <i class='bx <?php echo $notif['icon']; ?>'></i>
-                                          </div>
-                                          <div style="flex: 1; padding-right: 36px;">
-                                              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                  <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
-                                                  <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
-                                              </div>
-    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
-    
-    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
-?>
-<?php if (!empty($real_pic)): ?>
     <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
 <?php else: ?>
     <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
