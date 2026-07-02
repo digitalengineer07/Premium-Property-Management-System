@@ -550,22 +550,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <div class="header-icon-wrapper">
                 <i class='bx bx-user-circle' style="font-size: 24px; color: var(--primary-purple);"></i>
             </div>
-            <div class="header-title-area">
-                <h1>Profile Settings</h1>
-                <p>View and update your personal information and preferences.</p>
-            </div>
-        </div>
-          <div class="header-actions">
-              <div class="notification-wrapper">
-                  <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
-                      <i class='bx bx-bell'></i>
-                      <?php if ($unread_count > 0): ?>
-                          <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
-        </div>
-    <?php elseif ($success): ?>
-        <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease;">
-            <i class='bx bx-check-circle'></i> <?php echo htmlspecialchars($success); ?>
-        </div>
     <?php endif; ?>
 
     <div class="profile-grid animate-up">
