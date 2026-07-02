@@ -1192,3 +1192,283 @@ tr:hover td {
     }
 }
 .btn-primary:active, .btn-outline:active { transform: scale(0.96); transition: transform 0.1s; }
+
+/* ==========================================================================
+   ULTRA-PREMIUM SAAS DARK MODE SYNC (Renter & Admin UI)
+   ========================================================================== */
+:root.dark-theme,
+body.dark-theme {
+    color-scheme: dark;
+    --bg-main: #070F2B !important;
+    --sidebar-bg: #0B1536 !important;
+    --white: #0E1A3D !important;
+    --text-dark: #F8FAFC !important;
+    --text-gray: #94A3B8 !important;
+    --border: #1E2A54 !important;
+    --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.45) !important;
+}
+
+:root.dark-theme body,
+body.dark-theme {
+    background-color: #070F2B !important;
+    color: #F8FAFC !important;
+}
+
+/* Sidebar & Navigation */
+:root.dark-theme .sidebar,
+body.dark-theme .sidebar {
+    background: #0B1536 !important;
+    border-right: 1px solid #1E2A54 !important;
+}
+
+:root.dark-theme .nav-item,
+body.dark-theme .nav-item {
+    color: #94A3B8 !important;
+}
+
+:root.dark-theme .nav-item:hover,
+body.dark-theme .nav-item:hover {
+    background: rgba(98, 75, 255, 0.12) !important;
+    color: #C4B5FD !important;
+}
+
+:root.dark-theme .nav-item.active,
+body.dark-theme .nav-item.active {
+    background: #624BFF !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 18px rgba(98, 75, 255, 0.4) !important;
+}
+
+:root.dark-theme .go-mobile-widget,
+body.dark-theme .go-mobile-widget {
+    background: rgba(98, 75, 255, 0.08) !important;
+    border: 1px solid rgba(98, 75, 255, 0.2) !important;
+}
+
+:root.dark-theme .go-mobile-widget h4,
+body.dark-theme .go-mobile-widget h4 {
+    color: #F8FAFC !important;
+}
+
+/* Top Header & Action Buttons */
+:root.dark-theme .header-greeting h1,
+body.dark-theme .header-greeting h1,
+:root.dark-theme .header-title-area h1,
+body.dark-theme .header-title-area h1 {
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme .header-actions .icon-btn,
+body.dark-theme .header-actions .icon-btn,
+:root.dark-theme .header-icon,
+body.dark-theme .header-icon,
+:root.dark-theme .btn-outline-support,
+body.dark-theme .btn-outline-support,
+:root.dark-theme .btn-filter,
+body.dark-theme .btn-filter,
+:root.dark-theme .page-btn,
+body.dark-theme .page-btn,
+:root.dark-theme .btn-table-action,
+body.dark-theme .btn-table-action {
+    background: #111E44 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #F8FAFC !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+}
+
+:root.dark-theme .header-actions .icon-btn:hover,
+body.dark-theme .header-actions .icon-btn:hover,
+:root.dark-theme .header-icon:hover,
+body.dark-theme .header-icon:hover,
+:root.dark-theme .btn-outline-support:hover,
+body.dark-theme .btn-outline-support:hover {
+    background: rgba(98, 75, 255, 0.22) !important;
+    border-color: #624BFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(98, 75, 255, 0.3) !important;
+}
+
+:root.dark-theme .user-profile-pill,
+body.dark-theme .user-profile-pill {
+    border-left: 1px solid #1E2A54 !important;
+}
+
+:root.dark-theme .user-info h4,
+body.dark-theme .user-info h4 {
+    color: #F8FAFC !important;
+}
+
+/* Main Dashboard Panels & Cards */
+:root.dark-theme .dash-panel,
+body.dark-theme .dash-panel,
+:root.dark-theme .panel,
+body.dark-theme .panel,
+:root.dark-theme .kpi-card,
+body.dark-theme .kpi-card,
+:root.dark-theme .kpi-card-minimal,
+body.dark-theme .kpi-card-minimal,
+:root.dark-theme .payments-container,
+body.dark-theme .payments-container,
+:root.dark-theme .footer-widget,
+body.dark-theme .footer-widget,
+:root.dark-theme .widget-card,
+body.dark-theme .widget-card,
+:root.dark-theme .card,
+body.dark-theme .card {
+    background: #0E1A3D !important;
+    border: 1px solid #1E2A54 !important;
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35) !important;
+}
+
+:root.dark-theme .panel-title,
+body.dark-theme .panel-title,
+:root.dark-theme .kpi-amount,
+body.dark-theme .kpi-amount,
+:root.dark-theme .fw-info h4,
+body.dark-theme .fw-info h4 {
+    color: #F8FAFC !important;
+}
+
+/* Internal Items (Upcoming Bills, Quick Actions, Cmd List) */
+:root.dark-theme .bill-item,
+body.dark-theme .bill-item,
+:root.dark-theme .action-card,
+body.dark-theme .action-card,
+:root.dark-theme .cmd-item,
+body.dark-theme .cmd-item,
+:root.dark-theme .notif-item,
+body.dark-theme .notif-item {
+    background: rgba(255, 255, 255, 0.035) !important;
+    border: 1px solid #1E2A54 !important;
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme .bill-info h4,
+body.dark-theme .bill-info h4,
+:root.dark-theme .action-card h4,
+body.dark-theme .action-card h4,
+:root.dark-theme .tx-info h4,
+body.dark-theme .tx-info h4 {
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme .bill-item:hover,
+body.dark-theme .bill-item:hover,
+:root.dark-theme .action-card:hover,
+body.dark-theme .action-card:hover {
+    background: rgba(98, 75, 255, 0.14) !important;
+    border-color: #624BFF !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(98, 75, 255, 0.25) !important;
+}
+
+/* View All & Footer Buttons */
+:root.dark-theme .btn-view-all,
+body.dark-theme .btn-view-all,
+:root.dark-theme .btn-fw,
+body.dark-theme .btn-fw {
+    background: rgba(98, 75, 255, 0.12) !important;
+    border: 1px solid rgba(98, 75, 255, 0.35) !important;
+    color: #C4B5FD !important;
+}
+
+:root.dark-theme .btn-view-all:hover,
+body.dark-theme .btn-view-all:hover,
+:root.dark-theme .btn-fw:hover,
+body.dark-theme .btn-fw:hover {
+    background: rgba(98, 75, 255, 0.25) !important;
+    border-color: #624BFF !important;
+    color: #FFFFFF !important;
+}
+
+/* Tabs & Transactions */
+:root.dark-theme .tabs-header,
+body.dark-theme .tabs-header {
+    background: #0E1A3D !important;
+    border-bottom: 1px solid #1E2A54 !important;
+}
+
+:root.dark-theme .transaction-item,
+body.dark-theme .transaction-item {
+    border-bottom: 1px solid #1E2A54 !important;
+}
+
+/* Dropdowns & Modals */
+:root.dark-theme #notifDropdown,
+body.dark-theme #notifDropdown,
+:root.dark-theme #profileDropdown,
+body.dark-theme #profileDropdown,
+:root.dark-theme #paymentModalPanel,
+body.dark-theme #paymentModalPanel,
+:root.dark-theme #scannerModalPanel,
+body.dark-theme #scannerModalPanel {
+    background: #0E1A3D !important;
+    border: 1px solid #1E2A54 !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65) !important;
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme #notifDropdown > div:first-child,
+body.dark-theme #notifDropdown > div:first-child,
+:root.dark-theme #profileDropdown a,
+body.dark-theme #profileDropdown a {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-color: #1E2A54 !important;
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme #profileDropdown a:hover,
+body.dark-theme #profileDropdown a:hover {
+    background: rgba(98, 75, 255, 0.15) !important;
+    color: #624BFF !important;
+}
+
+/* Tables & Forms */
+:root.dark-theme table,
+body.dark-theme table {
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme thead th,
+body.dark-theme thead th {
+    background: rgba(255, 255, 255, 0.04) !important;
+    color: #94A3B8 !important;
+    border-bottom: 1px solid #1E2A54 !important;
+}
+
+:root.dark-theme tbody tr,
+body.dark-theme tbody tr {
+    border-bottom: 1px solid #1E2A54 !important;
+}
+
+:root.dark-theme tbody tr:hover,
+body.dark-theme tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+:root.dark-theme tbody td,
+body.dark-theme tbody td {
+    color: #E2E8F0 !important;
+}
+
+:root.dark-theme select,
+body.dark-theme select,
+:root.dark-theme input,
+body.dark-theme input,
+:root.dark-theme textarea,
+body.dark-theme textarea {
+    background-color: #0B1536 !important;
+    border: 1px solid #1E2A54 !important;
+    color: #F8FAFC !important;
+}
+
+:root.dark-theme select:focus,
+body.dark-theme select:focus,
+:root.dark-theme input:focus,
+body.dark-theme input:focus,
+:root.dark-theme textarea:focus,
+body.dark-theme textarea:focus {
+    border-color: #624BFF !important;
+    box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.25) !important;
+}
+
