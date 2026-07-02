@@ -484,6 +484,47 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         text-align: left;
     }
 
+
+        /* Comprehensive Dark Mode Overrides for profile.php */
+        .dark-theme .pref-item,
+        .dark-theme .doc-item {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border-color: var(--border) !important;
+            transition: all 0.2s ease;
+        }
+        .dark-theme .pref-item:hover,
+        .dark-theme .doc-item:hover {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+        .dark-theme .avatar-card {
+            background: rgba(98, 75, 255, 0.05) !important;
+            border: 1px solid var(--border);
+        }
+        .dark-theme .btn-edit-avatar {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--primary-purple) !important;
+        }
+        .dark-theme .doc-actions a {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border-color: var(--border) !important;
+            color: var(--text-gray) !important;
+        }
+        .dark-theme .doc-actions a:hover {
+            background: rgba(98, 75, 255, 0.15) !important;
+            color: var(--primary-purple) !important;
+            border-color: var(--primary-purple) !important;
+        }
+        .dark-theme .panel {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+        }
+        .dark-theme input, .dark-theme select, .dark-theme textarea {
+            background-color: var(--bg-main) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border) !important;
+        }
+
 </style>
 </head>
 <body>
