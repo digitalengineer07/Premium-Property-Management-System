@@ -531,21 +531,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         <div class="go-mobile-widget">
             <h4>Go Mobile!</h4>
-            <p>Manage your payments on the go.</p>
-            <div class="go-mobile-imgs">
-                <div class="mock-phone">
-                    <i class='bx bx-wallet' style="color: white; font-size: 20px;"></i>
-                </div>
-                <div class="mock-qr">
-                    <img src="../assets/img/qr-placeholder.png" alt="QR" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlMGUwZTAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTBweCIgZmlsbD0iIzY2NiIgZG1pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5RUjwvdGV4dD48L3N2Zz4='">
-                </div>
-            </div>
-            <!-- Avatar Card -->
-            <div class="panel avatar-card">
-                <div class="avatar-wrapper">
-                    <?php if (!empty($profile_pic) && file_exists("../" . $profile_pic)): ?>
-                        <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge" id="profileAvatarImg">
-                    <?php else: ?>
                         <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); box-shadow: 0 10px 25px rgba(98, 75, 255, 0.25); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                             <?php echo strtoupper(substr($display_name, 0, 2)); ?>
                         </div>
