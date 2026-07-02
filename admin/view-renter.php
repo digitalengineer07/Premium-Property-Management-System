@@ -380,10 +380,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <tr style="border-bottom: 1px solid var(--border);">
                                 <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($e['month']); ?></td>
                                 <td style="padding: 12px 8px; font-size: 12px; color: var(--text-gray);"><?php echo htmlspecialchars($e['units_consumed'] ?? ($e['current_reading'] - $e['previous_reading'])); ?> Units</td>
-                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['total_amount'], 2); ?></td>
+                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['amount'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['total_amount'] - $e['total_paid']); ?>
+                                    <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
                                         <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
                                     <?php else: ?>
                                         <a href="slip.php?elec_id=<?php echo $e['id']; ?>" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
