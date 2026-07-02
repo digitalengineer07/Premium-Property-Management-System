@@ -665,11 +665,14 @@ function money($val) {
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav class="mobile-bottom-nav">
-    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
+    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home-alt'></i><span>Dashboard</span></a>
     <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
-    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
-        <i class='bx bx-plus'></i>
-    </div>
+    <a href="queries.php" class="mb-nav-item-center ">
+        <div class="mb-nav-center">
+            <i class='bx bx-plus'></i>
+        </div>
+        <span>Raise Query</span>
+    </a>
     <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
     <a href="profile.php" class="mb-nav-item "><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>

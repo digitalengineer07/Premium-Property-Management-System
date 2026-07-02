@@ -627,5 +627,17 @@ if (isset($_GET['ajax_id'])) {
 <script>
 document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
 </script>
+<nav class="mobile-bottom-nav">
+    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home-alt'></i><span>Dashboard</span></a>
+    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
+    <a href="queries.php" class="mb-nav-item-center ">
+        <div class="mb-nav-center">
+            <i class='bx bx-plus'></i>
+        </div>
+        <span>Raise Query</span>
+    </a>
+    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
+    <a href="profile.php" class="mb-nav-item "><i class='bx bx-user'></i><span>Profile</span></a>
+</nav>
 </body>
 </html>
