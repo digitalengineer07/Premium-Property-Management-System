@@ -568,19 +568,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                   
                   <!-- Notification Dropdown -->
                   <div id="notifDropdown" style="display: none;">
-                      <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
-                          <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
-                          <?php if($unread_count > 0): ?>
-                              <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
-                          <?php endif; ?>
-                      </div>
-                      <div style="max-height: 350px; overflow-y: auto;">
-                      </a>
-                      <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
-                          <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
-                      </a>
-                  </div>
-              </div>
           </div>
       </header>
 
