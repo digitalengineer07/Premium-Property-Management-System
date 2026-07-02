@@ -522,20 +522,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="profile.php" class="nav-item active">
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
-            </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
-                <i class='bx bx-log-out'></i>
-                <span>Logout</span>
-            </a>
-        </nav>
-        
-        <div class="go-mobile-widget">
-            <h4>Go Mobile!</h4>
-                        <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); box-shadow: 0 10px 25px rgba(98, 75, 255, 0.25); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            <?php echo strtoupper(substr($display_name, 0, 2)); ?>
-                        </div>
-                        <img src="" alt="profile" class="avatar-huge" id="profileAvatarImg" style="display: none;">
-                    <?php endif; ?>
                     <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
                         <i class='bx bx-camera'></i>
                     </button>
