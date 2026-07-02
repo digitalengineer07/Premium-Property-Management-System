@@ -490,25 +490,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             </div>
         </div>
         
-        <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-item">
-                <i class='bx bx-grid-alt'></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="my-payments.php" class="nav-item">
-                <i class='bx bx-wallet'></i>
-                <span>My Payments</span>
-            </a>
-            <a href="electricity-record.php" class="nav-item">
-                <i class='bx bx-bolt-circle'></i>
-                <span>Electricity Record</span>
-                        <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>">
-                        <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about']); ?>">
-                        <input type="file" id="profilePicInput" accept="image/*">
-                        <input type="hidden" name="cropped_image" id="croppedImageInput">
-                        <button type="submit" name="save_profile" id="saveProfileBtn"></button>
-                    </form>
-                </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
                 <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
             </div>
