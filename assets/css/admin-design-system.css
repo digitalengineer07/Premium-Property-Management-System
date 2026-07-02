@@ -1587,3 +1587,56 @@ body.dark-theme thead th:last-child {
         display: none !important;
     }
 }
+
+
+/* ==========================================================================
+   MOBILE FOOTER WIDGETS & APP FOOTER (Graceful Stacking on Mobile)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    /* Stack footer widgets vertically */
+    .footer-widgets {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+        margin-bottom: 24px !important;
+    }
+    
+    /* Ensure the widget items themselves adapt perfectly to narrow screens */
+    .footer-widgets > div {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+        gap: 12px !important;
+    }
+    
+    /* Ensure action buttons inside widgets stretch or align well */
+    .footer-widgets > div > .widget-btn,
+    .footer-widgets > div > a.widget-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px !important;
+    }
+
+    /* Stack app footer copyright and last updated text */
+    .app-footer {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        /* Add massive padding to the bottom so it clears the sticky 68px bottom nav bar AND the floating Install App button! */
+        padding-bottom: 90px !important; 
+        border-top: 1px solid var(--border) !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+
+    /* Adjust font size to prevent any horizontal overflow */
+    .app-footer p {
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+    }
+}
