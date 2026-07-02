@@ -502,23 +502,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
-            </a>
-            <a href="my-bills.php" class="nav-item">
-                <i class='bx bx-receipt'></i>
-                <span>My Bills</span>
-            </a>
-            <a href="queries.php" class="nav-item">
-                <i class='bx bx-message-square-dots'></i>
-                <span>Raise Query</span>
-            </a>
-            <a href="notices.php" class="nav-item">
-                <i class='bx bx-bell'></i>
-                <span>Notices</span>
-                        <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-                        <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
-                        <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
-                        <input type="hidden" name="email" value="<?php echo htmlspecialchars($user['email']); ?>">
-                        <input type="hidden" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp']); ?>">
                         <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>">
                         <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about']); ?>">
                         <input type="file" id="profilePicInput" accept="image/*">
