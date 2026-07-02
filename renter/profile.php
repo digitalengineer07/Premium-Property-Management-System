@@ -799,7 +799,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="info-value">••••••••</div>
-                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="openChangePasswordModal()">Change</button>
+                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="if(window.openChangePasswordModal) window.openChangePasswordModal(); return false;">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
@@ -896,6 +896,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             </div>
         </div>
     </div>
+</main>
+</div>
 
     <!-- Edit Profile Modal -->
     <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
@@ -1054,8 +1056,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             </form>
         </div>
     </div>
-</main>
-</div>
 
 
 
@@ -1214,19 +1214,47 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
     });
 
-    function openChangePasswordModal() {
-        document.getElementById('changePasswordModal').style.display = 'flex';
-        document.getElementById('pwdModalAlert').style.display = 'none';
-        document.getElementById('changePasswordForm').reset();
-        setTimeout(() => {
-            document.getElementById('current_password').focus();
-        }, 100);
-    }
+    window.openChangePasswordModal = function() {
+        const modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            const alertBox = document.getElementById('pwdModalAlert');
+            if (alertBox) alertBox.style.display = 'none';
+            const form = document.getElementById('changePasswordForm');
+            if (form) form.reset();
+            setTimeout(() => {
+                const currPwd = document.getElementById('current_password');
+                if (currPwd) currPwd.focus();
+            }, 100);
+        }
+    };
 
-    function closeChangePasswordModal() {
-        document.getElementById('changePasswordModal').style.display = 'none';
-        document.getElementById('changePasswordForm').reset();
-    }
+    window.closeChangePasswordModal = function() {
+        const modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.display = 'none';
+            const form = document.getElementById('changePasswordForm');
+            if (form) form.reset();
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const pwdBtn = document.getElementById('btnOpenChangePwdModal');
+        if (pwdBtn) {
+            pwdBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.openChangePasswordModal();
+            });
+        }
+        const modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    window.closeChangePasswordModal();
+                }
+            });
+        }
+    });
 
     async function submitChangePassword(event) {
         event.preventDefault();
