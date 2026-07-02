@@ -811,7 +811,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         ?>
                         <div style="display: flex; align-items: center; gap: 12px; max-width: 70%;">
                             <div class="info-value" style="font-size: <?php echo $fs_login; ?>; max-width: 100%; white-space: nowrap;"><?php echo htmlspecialchars($login_email); ?></div>
-                            <button class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;">Change</button>
+                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="document.getElementById('editProfileModal').style.display='flex'">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
@@ -976,100 +976,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
                         <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
-                </div>
-
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
-                    <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Cropper Modal -->
-    <div id="cropperModal">
-    <!-- Edit Profile Modal -->
-    <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
-        <div class="no-scrollbar" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto; box-sizing: border-box; position: relative;">
-            
-            <!-- Decorative Top Gradient Line -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; margin-top: 8px;">
-                <h3 style="margin: 0; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 40px; height: 40px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
-                        <i class='bx bx-edit-alt' style="color: var(--primary-purple); font-size: 24px;"></i>
-                    </div>
-                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Profile</span>
-                </h3>
-                <button type="button" onclick="document.getElementById('editProfileModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
-            </div>
-            <form method="POST" action="">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
-                <input type="hidden" name="save_profile" value="1">
-                <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
-                <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about'] ?? ''); ?>">
-                
-                <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-user'></i> Basic Information</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" required>
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Email Address</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Alternate Number</label>
-                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Date of Birth</label>
-                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Gender</label>
-                        <select name="gender" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                            <option value="">Select Gender</option>
-                            <option value="Male" <?php echo ($user['gender'] ?? '') === 'Male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo ($user['gender'] ?? '') === 'Female' ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo ($user['gender'] ?? '') === 'Other' ? 'selected' : ''; ?>>Other</option>
-                        </select>
-                    </div>
-                    <div style="grid-column: span 2;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Address</label>
-                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                </div>
-
-                <div style="width: 100%; height: 1px; background: var(--border); margin: 24px 0;"></div>
-
-                <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-plus-medical'></i> Emergency Contact</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Name</label>
-                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Relationship</label>
-                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div>
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                    <div style="grid-column: span 2;">
-                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
-                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                      <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
                     <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
                 </div>

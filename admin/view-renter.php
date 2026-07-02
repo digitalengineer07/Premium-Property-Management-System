@@ -447,7 +447,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- 4. Documents Section -->
     <div class="panel animate-up" style="margin-bottom: 24px;">
-        <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h4 style="font-size: 14px; color: var(--text-dark); margin: 0; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-file'></i></div> Documents</h4>
+            <button type="button" onclick="document.getElementById('uploadElecModal').style.display='flex'" style="background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: all 0.2s ease;"><i class='bx bx-upload'></i> Upload Electricity Bill Copy</button>
+        </div>
         
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
             <?php if (!empty($user['aadhaar_file'])): ?>
@@ -513,6 +516,30 @@ $admin_user = s($_SESSION['admin'] ?? '');
         </div>
     </div>
 </main>
+    <!-- Upload Electricity Bill Modal -->
+    <div id="uploadElecModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="panel animate-up" style="max-width: 460px; width: 100%; padding: 36px; background: var(--white); border-radius: 24px; box-shadow: 0 25px 60px rgba(0,0,0,0.3); position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-bolt-circle'></i></div>
+                    Upload Electricity Bill
+                </h3>
+                <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="background: none; border: none; font-size: 24px; color: var(--text-gray); cursor: pointer;"><i class='bx bx-x'></i></button>
+            </div>
+            <form action="upload-electricity-doc.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Select Electricity Bill Copy (PDF, PNG, JPG)</label>
+                    <input type="file" name="electricity_file" accept=".pdf,.png,.jpg,.jpeg" required style="width: 100%; padding: 14px; border: 1px dashed var(--border); border-radius: 14px; background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 8px; display: flex; align-items: center; gap: 6px;"><i class='bx bx-shield-check' style="color: #10B981; font-size: 16px;"></i> Secure encrypted upload channel (Max 200MB)</div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                    <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="padding: 12px 20px; background: #F1F5F9; color: var(--text-dark); border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="submit" style="padding: 12px 24px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);"><i class='bx bx-upload'></i> Upload Document</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <!-- Password Reset Modal -->
     <div id="passwordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
         <div class="panel animate-up" style="max-width: 400px; width: 100%; padding: 32px; background: var(--white);">
