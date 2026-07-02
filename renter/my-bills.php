@@ -609,7 +609,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 </style>
 
         <style>
-            .bill-row td { padding: 10px 8px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+            .bill-row td { padding: 10px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding-left: 12px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; padding-right: 12px; }
@@ -1048,7 +1048,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     </div>
                 </div>
                 
-                <div style="padding: 0 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
+                <div style="padding: 0 12px 12px; overflow-x: hidden;"><table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
                             <th style="text-align: left; padding: 12px 10px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 26%;">BILL FOR</th>
