@@ -602,7 +602,11 @@ $show_banner = ($is_late && !empty($overdue_list));
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-    </style>
+    
+        .dark-theme thead th:first-child { border-top-left-radius: 14px !important; border-bottom-left-radius: 14px !important; }
+        .dark-theme thead th:last-child { border-top-right-radius: 14px !important; border-bottom-right-radius: 14px !important; }
+
+</style>
 
         <style>
             .bill-row td { padding: 8px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
@@ -1047,12 +1051,12 @@ $show_banner = ($is_late && !empty($overdue_list));
                 <div style="padding: 0 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 12px 10px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL FOR</th>
-                            <th style="text-align: left; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">AMOUNT</th>
-                            <th style="text-align: center; padding: 12px 4px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">STATUS</th>
-                            <th style="text-align: center; padding: 12px 10px; font-size: 10px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap;">ACTION</th>
+                            <th style="text-align: left; padding: 14px 18px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 14px; border-bottom-left-radius: 14px; min-width: 170px;">BILL FOR</th>
+                            <th style="text-align: left; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 120px;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 110px;">DUE DATE</th>
+                            <th style="text-align: right; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 110px;">AMOUNT</th>
+                            <th style="text-align: center; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 100px;">STATUS</th>
+                            <th style="text-align: center; padding: 14px 18px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 14px; border-bottom-right-radius: 14px; min-width: 90px;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
