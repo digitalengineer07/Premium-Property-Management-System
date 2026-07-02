@@ -1,7 +1,7 @@
 <?php
 // EXCLUSIVE MOBILE VIEW FOR PROFILE.PHP
 ?>
-<header class="mobile-only-header">
+<header class="">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu'></i>
     </div>

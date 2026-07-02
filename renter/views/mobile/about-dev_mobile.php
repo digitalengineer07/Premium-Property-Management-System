@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR ABOUT-DEV
 ?>
 <!-- EXCLUSIVE MOBILE VIEW FOR ABOUT-DEV -->
-<header class="mobile-only-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 18px 4px;">
+<header class="" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 4px 18px 4px;">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark);"></i>
     </div>

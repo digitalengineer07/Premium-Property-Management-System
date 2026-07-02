@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR DASHBOARD
 ?>
 <!-- Mobile Top Header -->
-<header class="mobile-only-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: transparent;">
+<header class="" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: transparent;">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark); cursor: pointer;"></i>
     </div>
@@ -21,7 +21,7 @@
     </div>
 </header>
 
-<div class="mobile-only-dashboard animate-up" style="padding: 0 16px 90px 16px;">
+<div class="animate-up" style="padding: 0 16px 90px 16px;">
     
     <!-- Greeting Banner -->
     <div class="m-greeting-banner" style="position: relative; background: var(--white); border-radius: 24px; padding: 24px 20px; margin-bottom: 24px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">

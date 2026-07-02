@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR MY-PAYMENTS.PHP
 ?>
 <!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
-<header class="mobile-only-header">
+<header class="">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu'></i>
     </div>

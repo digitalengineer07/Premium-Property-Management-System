@@ -662,15 +662,6 @@ $show_banner = ($is_late && !empty($overdue_list));
         }
 
 
-        /* GLOBAL DESKTOP RESTRICTION - ZERO DESKTOP IMPACT */
-        .mobile-only-header,
-        .mobile-only-dashboard,
-        .mobile-only-payments,
-        .mobile-only-view,
-        .mobile-bottom-nav {
-            display: none !important;
-        }
-
 </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
