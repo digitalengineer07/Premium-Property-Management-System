@@ -29,4 +29,25 @@
         background: #f1f5f9;
         color: #0f172a !important;
     }
+
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
+
 </style>

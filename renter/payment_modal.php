@@ -30,7 +30,28 @@
               .dark-theme #paymentNotifyForm input { background: var(--bg-main, #0B0F19) !important; color: var(--text-dark, #F8FAFC) !important; border-color: var(--border, #1E293B) !important; }
               .dark-theme .pm-qr-section button { background: rgba(255, 255, 255, 0.05) !important; color: var(--text-dark, #F8FAFC) !important; border-color: var(--border, #1E293B) !important; }
 
-          </style>
+          
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
+
+</style>
           <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
               <div class="pm-header">
                   <h2 style="font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--primary-purple), #FF4B6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -0.5px;">Make Payment</h2>

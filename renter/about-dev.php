@@ -215,7 +215,28 @@ if (!isset($_SESSION['user_id'])) {
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-    </style>
+    
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
+
+</style>
 </head>
 <body style="display: block;">
 

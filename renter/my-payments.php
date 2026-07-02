@@ -747,6 +747,27 @@ $show_banner = ($is_late && !empty($overdue_list));
             color: var(--primary-purple, #624BFF);
         }
 
+
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
+
 </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
@@ -1434,12 +1455,15 @@ $show_banner = ($is_late && !empty($overdue_list));
 </script>
 
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
+<!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav class="mobile-bottom-nav">
-    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-grid-alt'></i><span>Home</span></a>
-    <a href="my-payments.php" class="mb-nav-item active"><i class='bx bx-wallet'></i><span>Payments</span></a>
-    <a href="electricity-record.php" class="mb-nav-item "><i class='bx bx-bolt-circle'></i><span>Electricity</span></a>
-    <a href="my-bills.php" class="mb-nav-item"><i class='bx bx-receipt'></i><span>Bills</span></a>
-    <a href="profile.php" class="mb-nav-item"><i class='bx bx-user-circle'></i><span>Profile</span></a>
+    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
+    <a href="my-payments.php" class="mb-nav-item active"><i class='bx bx-credit-card'></i><span>Payments</span></a>
+    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
+        <i class='bx bx-plus'></i>
+    </div>
+    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
+    <a href="profile.php" class="mb-nav-item "><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>
 
 </body>

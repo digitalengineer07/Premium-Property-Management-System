@@ -708,6 +708,168 @@ $show_banner = ($is_late && !empty($overdue_list));
 
     <!-- Main Content -->
     <main class="main-content">
+
+<!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
+<header class="mobile-only-header">
+    <div class="m-header-left" onclick="const sb = document.querySelector('.sidebar'); if(sb){ sb.style.setProperty('display', 'flex', 'important'); sb.style.setProperty('position', 'fixed', 'important'); sb.style.setProperty('z-index', '100000', 'important'); sb.style.setProperty('top', '0', 'important'); sb.style.setProperty('left', '0', 'important'); sb.style.setProperty('height', '100vh', 'important'); sb.style.setProperty('width', '240px', 'important'); }">
+        <i class='bx bx-menu'></i>
+    </div>
+    <div class="m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span>Madhav Kunj</span>
+    </div>
+    <div class="m-header-right">
+        <div class="icon-btn m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if ($unread_count > 0): ?>
+                <span class="m-notif-badge"><?php echo $unread_count; ?></span>
+            <?php endif; ?>
+        </div>
+    </div>
+</header>
+
+<!-- EXCLUSIVE MOBILE-ONLY DASHBOARD CONTENT (<= 768px) -->
+<div class="mobile-only-dashboard animate-up">
+    <!-- Greeting Banner -->
+    <div class="m-greeting-banner">
+        <div class="m-greeting-text">
+            <h2>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> Jii 👋</h2>
+            <p>Welcome back! You are assigned to</p>
+            <div class="m-room-pill">Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? '201'); ?></div>
+        </div>
+        <div class="m-greeting-img">
+            <img src="../assets/img/login_building.png" alt="Building">
+        </div>
+    </div>
+
+    <!-- Payment Reminder Card -->
+    <?php if ($show_banner || $total_due > 0): ?>
+    <div class="m-reminder-card">
+        <div class="m-reminder-left">
+            <div class="m-remind-icon">
+                <i class='bx bxs-bell-ring'></i>
+            </div>
+        </div>
+        <div class="m-reminder-body">
+            <h4>Payment Reminder!</h4>
+            <p>It's the <?php echo date('jS'); ?> of the month. Your bills for <strong><?php echo date('F Y'); ?></strong> are still pending. Please clear them to avoid service interruptions.</p>
+        </div>
+        <div class="m-reminder-action">
+            <button onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total')" class="m-pay-btn">
+                Pay Now <i class='bx bx-right-arrow-alt'></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Overview Section -->
+    <div class="m-section-header">
+        <h3>Overview</h3>
+        <a href="my-bills.php">View All</a>
+    </div>
+
+    <div class="m-overview-list">
+        <!-- Total Outstanding Card -->
+        <div class="m-overview-card">
+            <div class="m-oc-top">
+                <div class="m-oc-icon red"><i class='bx bx-credit-card-alt'></i></div>
+                <div class="m-oc-title">
+                    <span>Total Outstanding</span>
+                    <h4>₹<?php echo number_format((float)$total_due, 2); ?></h4>
+                </div>
+                <div class="m-oc-badge red"><i class='bx bx-error-circle'></i> Payment Due</div>
+            </div>
+            <div class="m-oc-bottom">
+                <div class="m-oc-date"><i class='bx bx-calendar'></i> Due Date: <?php echo date('d M Y'); ?></div>
+                <div class="m-oc-sparkline">
+                    <svg viewBox="0 0 100 30" width="80" height="24">
+                        <path d="M0 25 Q15 28, 25 20 T50 15 T75 8 T100 4" fill="none" stroke="#FF4B6B" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M0 25 Q15 28, 25 20 T50 15 T75 8 T100 4 L100 30 L0 30 Z" fill="rgba(255, 75, 107, 0.15)"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Electricity Due Card -->
+        <div class="m-overview-card">
+            <div class="m-oc-top">
+                <div class="m-oc-icon yellow"><i class='bx bx-bolt-circle'></i></div>
+                <div class="m-oc-title">
+                    <span>Electricity Due</span>
+                    <h4>₹<?php echo number_format((float)($electricity_due ?? 8.00), 2); ?></h4>
+                </div>
+            </div>
+            <div class="m-oc-bottom">
+                <div class="m-oc-date"><i class='bx bx-calendar'></i> Due Date: <?php echo date('t M Y'); ?></div>
+                <div class="m-oc-sparkline">
+                    <svg viewBox="0 0 100 30" width="80" height="24">
+                        <path d="M0 26 Q20 22, 35 20 T65 14 T100 5" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M0 26 Q20 22, 35 20 T65 14 T100 5 L100 30 L0 30 Z" fill="rgba(245, 158, 11, 0.15)"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rent Due Card -->
+        <div class="m-overview-card">
+            <div class="m-oc-top">
+                <div class="m-oc-icon purple"><i class='bx bx-home-alt'></i></div>
+                <div class="m-oc-title">
+                    <span>Rent Due</span>
+                    <h4>₹<?php echo number_format((float)($rent_due ?? 8000.00), 2); ?></h4>
+                </div>
+            </div>
+            <div class="m-oc-bottom">
+                <div class="m-oc-date"><i class='bx bx-calendar'></i> Due Date: 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
+                <div class="m-oc-sparkline">
+                    <svg viewBox="0 0 100 30" width="80" height="24">
+                        <path d="M0 27 Q25 25, 45 18 T80 12 T100 6" fill="none" stroke="#624BFF" stroke-width="2.5" stroke-linecap="round"/>
+                        <path d="M0 27 Q25 25, 45 18 T80 12 T100 6 L100 30 L0 30 Z" fill="rgba(98, 75, 255, 0.15)"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="m-section-header" style="margin-top: 24px;">
+        <h3>Quick Actions</h3>
+    </div>
+
+    <div class="m-quick-actions-grid">
+        <div class="m-qa-card" onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total')">
+            <div class="m-qa-icon purple"><i class='bx bx-credit-card'></i></div>
+            <h4>Pay Dues</h4>
+            <p>Make payments instantly</p>
+        </div>
+        <a href="payment-history.php" class="m-qa-card">
+            <div class="m-qa-icon green"><i class='bx bx-file'></i></div>
+            <h4>Payment History</h4>
+            <p>View all transactions</p>
+        </a>
+        <a href="electricity-record.php" class="m-qa-card">
+            <div class="m-qa-icon blue"><i class='bx bx-shield-quarter'></i></div>
+            <h4>Electricity Record</h4>
+            <p>Meter readings and bills</p>
+        </a>
+        <a href="my-bills.php" class="m-qa-card">
+            <div class="m-qa-icon orange"><i class='bx bx-message-square-dots'></i></div>
+            <h4>My Bills</h4>
+            <p>View all your bills</p>
+        </a>
+        <a href="queries.php" class="m-qa-card">
+            <div class="m-qa-icon pink"><i class='bx bx-support'></i></div>
+            <h4>Raise Query</h4>
+            <p>Ask or report any issue</p>
+        </a>
+        <a href="documents.php" class="m-qa-card">
+            <div class="m-qa-icon teal"><i class='bx bx-folder'></i></div>
+            <h4>Documents</h4>
+            <p>View important documents</p>
+        </a>
+    </div>
+</div>
+
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting">
@@ -1210,6 +1372,362 @@ $show_banner = ($is_late && !empty($overdue_list));
         text-align: left;
     }
 
+
+        /* EXCLUSIVE MOBILE VIEW MODE CSS - ZERO IMPACT ON DESKTOP */
+        .mobile-only-header,
+        .mobile-only-dashboard {
+            display: none !important;
+        }
+
+        @media screen and (max-width: 768px) {
+            /* Hide desktop dashboard sections on mobile */
+            .top-header,
+            .reminder-banner,
+            .kpi-grid,
+            .dashboard-3col {
+                display: none !important;
+            }
+
+            /* Show mobile header and dashboard */
+            .mobile-only-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 4px 18px 4px;
+                background: transparent;
+            }
+            .m-header-left {
+                font-size: 28px;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+            .m-header-brand {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 800;
+                font-size: 18px;
+                color: var(--text-dark);
+            }
+            .m-header-brand img {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+            }
+            .m-bell-icon {
+                position: relative;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: var(--white);
+                border: 1px solid var(--border);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+            .m-notif-badge {
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                background: #FF4B6B;
+                color: white;
+                font-size: 10px;
+                font-weight: 800;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid white;
+            }
+
+            .mobile-only-dashboard {
+                display: block !important;
+            }
+
+            /* Greeting Banner */
+            .m-greeting-banner {
+                position: relative;
+                background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+                border-radius: 20px;
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                overflow: hidden;
+                margin-bottom: 20px;
+                border: 1px solid rgba(98, 75, 255, 0.08);
+            }
+            .dark-theme .m-greeting-banner {
+                background: linear-gradient(135deg, #1E293B 0%, #111827 100%);
+                border-color: rgba(255, 255, 255, 0.05);
+            }
+            .m-greeting-text h2 {
+                font-size: 20px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0 0 6px 0;
+            }
+            .m-greeting-text p {
+                font-size: 12px;
+                color: var(--text-gray);
+                margin: 0 0 10px 0;
+            }
+            .m-room-pill {
+                display: inline-block;
+                background: #ECE9FF;
+                color: #624BFF;
+                font-size: 11px;
+                font-weight: 700;
+                padding: 4px 12px;
+                border-radius: 20px;
+            }
+            .dark-theme .m-room-pill {
+                background: rgba(98, 75, 255, 0.2);
+                color: #A594FF;
+            }
+            .m-greeting-img {
+                position: absolute;
+                right: -10px;
+                bottom: 0;
+                width: 135px;
+                pointer-events: none;
+            }
+            .m-greeting-img img {
+                width: 100%;
+                object-fit: contain;
+            }
+
+            /* Reminder Card */
+            .m-reminder-card {
+                background: linear-gradient(135deg, #FF6B6B 0%, #FF3D77 50%, #FF5E3A 100%);
+                border-radius: 20px;
+                padding: 20px;
+                color: white;
+                box-shadow: 0 10px 25px rgba(255, 61, 119, 0.3);
+                margin-bottom: 24px;
+                position: relative;
+                overflow: hidden;
+            }
+            .m-reminder-left {
+                float: left;
+                margin-right: 14px;
+            }
+            .m-remind-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                background: white;
+                color: #FF3D77;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+            .m-reminder-body h4 {
+                margin: 0 0 6px 0;
+                font-size: 16px;
+                font-weight: 800;
+            }
+            .m-reminder-body p {
+                margin: 0 0 16px 0;
+                font-size: 12px;
+                line-height: 1.5;
+                opacity: 0.95;
+            }
+            .m-reminder-action {
+                text-align: right;
+                clear: both;
+            }
+            .m-pay-btn {
+                background: white;
+                color: #FF3D77;
+                border: none;
+                padding: 8px 18px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 800;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                cursor: pointer;
+            }
+
+            /* Section Headers */
+            .m-section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 14px;
+            }
+            .m-section-header h3 {
+                font-size: 16px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0;
+            }
+            .m-section-header a {
+                font-size: 12px;
+                font-weight: 700;
+                color: var(--primary-purple);
+                text-decoration: none;
+            }
+
+            /* Overview Cards */
+            .m-overview-list {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+            }
+            .m-overview-card {
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 16px 18px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            }
+            .m-oc-top {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 16px;
+            }
+            .m-oc-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                margin-right: 12px;
+            }
+            .m-oc-icon.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
+            .m-oc-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+            .m-oc-icon.purple { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
+            
+            .m-oc-title {
+                flex: 1;
+            }
+            .m-oc-title span {
+                font-size: 12px;
+                color: var(--text-gray);
+                font-weight: 600;
+                display: block;
+                margin-bottom: 2px;
+            }
+            .m-oc-title h4 {
+                font-size: 20px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0;
+            }
+            .m-oc-badge {
+                font-size: 10px;
+                font-weight: 700;
+                padding: 4px 10px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .m-oc-badge.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; border: 1px solid rgba(255, 75, 107, 0.2); }
+            
+            .m-oc-bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 12px;
+                border-top: 1px dashed var(--border);
+            }
+            .m-oc-date {
+                font-size: 11px;
+                color: var(--text-gray);
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            /* Quick Actions Grid */
+            .m-quick-actions-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            .m-qa-card {
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 16px 10px;
+                text-align: center;
+                text-decoration: none;
+                color: var(--text-dark);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: transform 0.2s;
+                cursor: pointer;
+            }
+            .m-qa-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+            .m-qa-icon.purple { background: #624BFF; color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
+            .m-qa-icon.green { background: #10B981; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+            .m-qa-icon.blue { background: #3B82F6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+            .m-qa-icon.orange { background: #F97316; color: white; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
+            .m-qa-icon.pink { background: #EC4899; color: white; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); }
+            .m-qa-icon.teal { background: #14B8A6; color: white; box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3); }
+            
+            .m-qa-card h4 {
+                font-size: 12px;
+                font-weight: 700;
+                margin: 0 0 4px 0;
+                color: var(--text-dark);
+            }
+            .m-qa-card p {
+                font-size: 10px;
+                color: var(--text-gray);
+                margin: 0;
+                line-height: 1.2;
+            }
+        }
+
+
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
+
 </style>
 
     <?php include 'payment_modal.php'; ?>
@@ -1358,12 +1876,15 @@ $show_banner = ($is_late && !empty($overdue_list));
 </script>
 
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
+<!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav class="mobile-bottom-nav">
-    <a href="dashboard.php" class="mb-nav-item active"><i class='bx bx-grid-alt'></i><span>Home</span></a>
-    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-wallet'></i><span>Payments</span></a>
-    <a href="electricity-record.php" class="mb-nav-item "><i class='bx bx-bolt-circle'></i><span>Electricity</span></a>
-    <a href="my-bills.php" class="mb-nav-item"><i class='bx bx-receipt'></i><span>Bills</span></a>
-    <a href="profile.php" class="mb-nav-item"><i class='bx bx-user-circle'></i><span>Profile</span></a>
+    <a href="dashboard.php" class="mb-nav-item active"><i class='bx bx-home'></i><span>Dashboard</span></a>
+    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
+    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
+        <i class='bx bx-plus'></i>
+    </div>
+    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
+    <a href="profile.php" class="mb-nav-item "><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>
 
 </body>
