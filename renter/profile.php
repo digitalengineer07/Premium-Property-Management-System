@@ -602,18 +602,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                                           </button>
                                       </div>
                                   </div>
-                              <?php endforeach; ?>
-                          <?php endif; ?>
-                      </div>
-                  </div>
-              </div>
-              <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
-                  <i class='bx bx-moon'></i>
-              </div>
-              <a href="queries.php" class="btn-outline-support"><i class='bx bx-help-circle'></i> Help & Support</a>
-            
-            <div style="position: relative;">
-                  <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                       <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
 <?php 
     $real_pic = '';
