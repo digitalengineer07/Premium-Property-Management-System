@@ -92,6 +92,16 @@ function money($val) {
             --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
         }
 
+        .dark-theme {
+            --bg-main: #0B0F19;
+            --sidebar-bg: #111827;
+            --text-dark: #F8FAFC;
+            --text-gray: #94A3B8;
+            --border: #1E293B;
+            --white: #111827;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+        }
+
 
         body {
             font-family: 'Outfit', sans-serif !important;
@@ -167,7 +177,7 @@ function money($val) {
         }
         .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
-        .main-content { flex: 1; margin-left: 230px; padding: 32px 40px; min-height: 100vh; background: #FAFBFC; max-width: calc(100% - 230px); box-sizing: border-box; }
+        .main-content { flex: 1; margin-left: 230px; padding: 32px 40px; min-height: 100vh; background: var(--bg-main); max-width: calc(100% - 230px); box-sizing: border-box; }
         
         /* Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
@@ -266,7 +276,55 @@ function money($val) {
         text-align: left;
     }
 
-</style>
+
+        /* Dark Theme Specific Overrides for Electricity Record */
+        .dark-theme .main-content {
+            background: var(--bg-main) !important;
+        }
+        .dark-theme .kpi-card,
+        .dark-theme .panel,
+        .dark-theme .icon-btn,
+        .dark-theme .btn-outline-support,
+        .dark-theme #notifDropdown {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .header-title h1,
+        .dark-theme .panel-header h3,
+        .dark-theme .cmd-value,
+        .dark-theme .kpi-info h2 {
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .cmd-panel {
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+        .dark-theme .cmd-item {
+            border-bottom-color: var(--border) !important;
+        }
+        .dark-theme .filter-select {
+            background: var(--bg-main) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .btn-filter-small {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .er-table tr:hover td {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+        .dark-theme .btn-table-action {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .btn-table-action.pay {
+            background: rgba(139, 92, 246, 0.15) !important;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -377,11 +435,11 @@ function money($val) {
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
-                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
                                         <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
                                             <i class='bx bx-trash'></i>
                                         </div>
-                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: var(--white); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                                             <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                                 <i class='bx <?php echo $notif['icon']; ?>'></i>
                                             </div>
@@ -432,7 +490,7 @@ function money($val) {
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
                     
-                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
                         <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>

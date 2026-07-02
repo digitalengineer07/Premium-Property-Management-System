@@ -288,6 +288,16 @@ $show_banner = ($is_late && !empty($overdue_list));
             --accent-green: #10B981;
         }
 
+        .dark-theme {
+            --bg-main: #0B0F19;
+            --sidebar-bg: #111827;
+            --text-dark: #F8FAFC;
+            --text-gray: #94A3B8;
+            --border: #1E293B;
+            --white: #111827;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+        }
+
         body {
             font-family: 'Outfit', sans-serif !important;
             background-color: var(--bg-main);
@@ -719,11 +729,11 @@ $show_banner = ($is_late && !empty($overdue_list));
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
-                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: white; cursor: default;">
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
                                         <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
                                             <i class='bx bx-trash'></i>
                                         </div>
-                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: white; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: var(--white); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
                                             <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                                                 <i class='bx <?php echo $notif['icon']; ?>'></i>
                                             </div>
@@ -776,7 +786,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>
                     
-                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
                         <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
