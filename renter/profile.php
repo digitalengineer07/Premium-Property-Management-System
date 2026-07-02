@@ -811,7 +811,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         ?>
                         <div style="display: flex; align-items: center; gap: 12px; max-width: 70%;">
                             <div class="info-value" style="font-size: <?php echo $fs_login; ?>; max-width: 100%; white-space: nowrap;"><?php echo htmlspecialchars($login_email); ?></div>
-                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="document.getElementById('editProfileModal').style.display='flex'">Change</button>
+                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="var ep = document.getElementById('editProfileModal'); if(ep) { ep.style.display='flex'; setTimeout(function(){ var ei = ep.querySelector('input[name=\'email\']'); if(ei) { ei.focus(); ei.select(); } }, 100); } return false;">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
