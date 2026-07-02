@@ -226,7 +226,7 @@ if (!isset($_SESSION['user_id'])) {
             <span><?php echo HOUSE_NAME; ?></span>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
-            <i class='bx bx-moon' id="themeToggle" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
+            <i class='bx bx-moon' id="themeToggle" style="font-size: 24px; cursor: pointer; color: var(--text-gray);" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"></i>
             <a href="dashboard.php" class="btn-outline">Back to Dashboard</a>
         </div>
     </header>

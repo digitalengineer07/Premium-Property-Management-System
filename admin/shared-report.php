@@ -99,7 +99,7 @@ if (!$shared_info) {
                 <div style="font-size: 12px; color: var(--text-gray);">Shared by: <?php echo htmlspecialchars($shared_info['created_by']); ?></div>
                 <div style="font-size: 12px; color: #EF4444;">Expires: <?php echo date('M d, Y', strtotime($shared_info['expires_at'])); ?></div>
             </div>
-            <i class='bx bx-moon' id="themeToggle" style="margin-left: 20px; cursor: pointer;"></i>
+            <i class='bx bx-moon' id="themeToggle" style="margin-left: 20px; cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"></i>
         </div>
     </header>
 
