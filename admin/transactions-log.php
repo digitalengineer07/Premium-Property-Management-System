@@ -273,12 +273,7 @@ $total_pages = ceil($total_rows / $limit);
         document.documentElement.classList.add('dark-theme');
         themeToggle?.classList.replace('bx-moon', 'bx-sun');
     }
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        if (isDark) themeToggle.classList.replace('bx-moon', 'bx-sun');
-        else themeToggle.classList.replace('bx-sun', 'bx-moon');
-    });
+    
 </script>
 
 </body>

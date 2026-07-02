@@ -532,14 +532,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         document.documentElement.classList.add('dark-theme');
         themeToggle?.classList.replace('bx-moon', 'bx-sun');
     }
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        if (isDark) themeToggle.classList.replace('bx-moon', 'bx-sun');
-        else themeToggle.classList.replace('bx-sun', 'bx-moon');
-        // Sync with sidebar
-        document.getElementById('themeToggleSidebar')?.click();
-    });
+    
 
     document.querySelector('.search-bar input')?.addEventListener('keyup', function(e) {
         let term = e.target.value.toLowerCase();

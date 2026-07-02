@@ -64,9 +64,9 @@
         </div>
         <div class="user-profile">
             <!-- Theme Toggle -->
-            <div class="icon-btn" id="themeToggle">
-                <i class='bx bx-moon'></i>
-            </div>
+            <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+                    <i class='bx bx-moon'></i>
+                </div>
             
             <!-- Notifications -->
             <div class="icon-btn">

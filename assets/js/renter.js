@@ -1,7 +1,8 @@
 /**
  * Resident Dashboard functionalities
  */
-window.toggleTheme = function() {
+window.toggleTheme = function(e) {
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
     const isDark = !document.documentElement.classList.contains('dark-theme');
     document.documentElement.classList.toggle('dark-theme', isDark);
     if (document.body) document.body.classList.toggle('dark-theme', isDark);

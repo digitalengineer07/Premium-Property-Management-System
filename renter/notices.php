@@ -593,7 +593,7 @@ if (isset($_GET['ajax_id'])) {
                 </div>
 
 
-                <div class="icon-btn" onclick="document.documentElement.classList.toggle('dark-theme');" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-dark); font-size: 20px;">
+                <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
                     <i class='bx bx-moon'></i>
                 </div>
                 <a href="#" class="btn-outline" style="border-radius: 20px;"><i class='bx bx-help-circle'></i> Help & Support</a>
