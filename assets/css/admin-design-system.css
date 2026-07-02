@@ -1567,3 +1567,23 @@ body.dark-theme thead th:last-child {
     .mobile-only-payments { display: block !important; }
     .mobile-bottom-nav { display: flex !important; }
 }
+
+
+/* ==========================================================================
+   STRICT ARCHITECTURAL SEPARATION: MOBILE VS DESKTOP VIEW WRAPPERS
+   ========================================================================== */
+.mobile-view-wrapper {
+    display: none !important;
+}
+.desktop-view-wrapper {
+    display: block !important;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-view-wrapper {
+        display: block !important;
+    }
+    .desktop-view-wrapper {
+        display: none !important;
+    }
+}
