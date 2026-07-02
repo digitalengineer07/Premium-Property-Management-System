@@ -768,6 +768,363 @@ $show_banner = ($is_late && !empty($overdue_list));
             border-color: #111827;
         }
 
+
+        /* EXCLUSIVE MOBILE PAYMENTS VIEW MODE CSS - ZERO IMPACT ON DESKTOP */
+        .mobile-only-payments {
+            display: none !important;
+        }
+
+        @media screen and (max-width: 768px) {
+            /* Hide desktop layout sections on mobile */
+            .top-header,
+            .kpi-grid,
+            .payments-container {
+                display: none !important;
+            }
+
+            /* Show mobile header and payments view */
+            .mobile-only-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 4px 18px 4px;
+                background: transparent;
+            }
+            .m-header-left {
+                font-size: 28px;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+            .m-header-center {
+                text-align: left;
+                flex: 1;
+                margin-left: 12px;
+            }
+            .m-header-center h2 {
+                font-size: 20px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0;
+            }
+            .m-header-center p {
+                font-size: 11px;
+                color: var(--text-gray);
+                margin: 2px 0 0 0;
+            }
+            .m-header-brand {
+                display: none !important;
+            }
+            .m-user-avatar {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: #624BFF;
+                color: white;
+                font-size: 13px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-only-payments {
+                display: block !important;
+            }
+
+            /* 2x2 Summary Grid */
+            .m-pay-summary-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            .m-sum-card {
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 16px 14px;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            }
+            .m-sum-top {
+                margin-bottom: 10px;
+            }
+            .m-sum-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+            }
+            .m-sum-icon.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
+            .m-sum-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+            .m-sum-icon.purple { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
+            .m-sum-icon.green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+
+            .m-sum-card span {
+                font-size: 11px;
+                color: var(--text-gray);
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+            .m-sum-card h3 {
+                font-size: 18px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0 0 10px 0;
+            }
+            .m-sum-card h3.amount-red {
+                color: #FF4B6B;
+            }
+            .m-sum-pill {
+                font-size: 10px;
+                font-weight: 700;
+                padding: 4px 10px;
+                border-radius: 12px;
+                width: 100%;
+                text-align: center;
+            }
+            .m-sum-pill.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
+            .m-sum-pill.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+            .m-sum-pill.purple { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
+            .m-sum-pill.green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+
+            /* Category Tabs */
+            .m-pay-tabs {
+                display: flex;
+                justify-content: space-around;
+                border-bottom: 2px solid var(--border);
+                margin-bottom: 16px;
+            }
+            .m-ptab {
+                background: none;
+                border: none;
+                padding: 10px 12px;
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--text-gray);
+                cursor: pointer;
+                position: relative;
+            }
+            .m-ptab.active {
+                color: #624BFF;
+            }
+            .m-ptab.active::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: #624BFF;
+            }
+
+            /* Filter Bar Row */
+            .m-pay-filter-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            .m-year-select-box {
+                flex: 1;
+                position: relative;
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                padding: 0 12px;
+                height: 44px;
+            }
+            .m-year-select-box i {
+                font-size: 18px;
+                color: var(--text-gray);
+                margin-right: 8px;
+            }
+            .m-year-select-box select {
+                background: transparent;
+                border: none;
+                width: 100%;
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--text-dark);
+                outline: none;
+                appearance: none;
+            }
+            .m-year-select-box .arrow {
+                margin-left: auto;
+                margin-right: 0;
+            }
+            .m-filter-action-btn {
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 0 16px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 13px;
+                font-weight: 700;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+
+            /* Transaction Items List */
+            .m-pay-items-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+            .m-pay-card-item {
+                background: var(--white);
+                border: 1px solid var(--border);
+                border-radius: 18px;
+                padding: 14px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            }
+            .m-pci-icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                flex-shrink: 0;
+            }
+            .m-pci-icon.purple { background: rgba(98, 75, 255, 0.1); color: #624BFF; }
+            .m-pci-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+            .m-pci-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+            .m-pci-icon.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
+
+            .m-pci-body {
+                flex: 1;
+                min-width: 0;
+            }
+            .m-pci-body h4 {
+                font-size: 13px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin: 0 0 3px 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .m-pci-body p {
+                font-size: 11px;
+                color: var(--text-gray);
+                font-weight: 500;
+                margin: 0;
+            }
+            .m-pci-center {
+                flex-shrink: 0;
+            }
+            .m-status-pill {
+                font-size: 11px;
+                font-weight: 700;
+                padding: 3px 10px;
+                border-radius: 12px;
+            }
+            .m-status-pill.paid { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+            .m-status-pill.pending { background: rgba(245, 158, 11, 0.15); color: #D97706; }
+
+            .m-pci-right {
+                text-align: right;
+                flex-shrink: 0;
+            }
+            .m-pci-amt {
+                font-size: 13px;
+                font-weight: 800;
+                color: var(--text-dark);
+                margin-bottom: 4px;
+            }
+            .m-pci-date {
+                font-size: 10px;
+                color: var(--text-gray);
+            }
+            .m-pci-pay-btn {
+                background: white;
+                border: 1px solid #FF4B6B;
+                color: #FF4B6B;
+                padding: 4px 10px;
+                border-radius: 14px;
+                font-size: 11px;
+                font-weight: 700;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                cursor: pointer;
+            }
+            .m-pci-dl-btn {
+                background: none;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--primary-purple);
+                font-size: 16px;
+                cursor: pointer;
+                flex-shrink: 0;
+            }
+
+            /* Notice & Bottom Pay Button */
+            .m-pay-notice-card {
+                background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+                border: 1px solid rgba(98, 75, 255, 0.15);
+                border-radius: 20px;
+                padding: 16px;
+                margin-bottom: 24px;
+            }
+            .dark-theme .m-pay-notice-card {
+                background: #1E293B;
+                border-color: rgba(255,255,255,0.05);
+            }
+            .m-pn-note {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                font-size: 11px;
+                color: var(--text-dark);
+                line-height: 1.4;
+                margin-bottom: 14px;
+            }
+            .m-pn-note i {
+                font-size: 18px;
+                color: #624BFF;
+                flex-shrink: 0;
+            }
+            .m-pn-pay-btn {
+                width: 100%;
+                background: #624BFF;
+                color: white;
+                border: none;
+                border-radius: 14px;
+                padding: 14px;
+                font-size: 14px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                box-shadow: 0 4px 15px rgba(98, 75, 255, 0.35);
+                cursor: pointer;
+            }
+        }
+
 </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
@@ -847,16 +1204,24 @@ $show_banner = ($is_late && !empty($overdue_list));
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
         <i class='bx bx-menu'></i>
     </div>
-    <div class="m-header-brand">
-        <img src="../assets/img/logo.png" alt="Logo">
-        <span>My Payments</span>
+    <div class="m-header-center">
+        <h2>My Payments</h2>
+        <p>View and manage all your bills & payments</p>
     </div>
     <div class="m-header-right" style="display: flex; align-items: center; gap: 8px;">
+        <div class="icon-btn m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if ($unread_count > 0): ?>
+                <span class="m-notif-badge"><?php echo $unread_count; ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="m-user-avatar">
+            <?php echo strtoupper(substr(trim($display_name ?? $user['name'] ?? 'User'), 0, 2)); ?>
+        </div>
         <div class="icon-btn" id="themeToggle" style="width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; flex-shrink: 0;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"><i class='bx bx-moon'></i></div>
-        
-        <a href="dashboard.php" style="color: var(--text-dark); font-size: 22px; text-decoration: none; display: flex; align-items: center;"><i class='bx bx-home'></i></a>
     </div>
 </header>
+
 
         <!-- Top Header -->
         <header class="top-header" style="padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); margin-bottom: 24px;">
@@ -1133,7 +1498,153 @@ $show_banner = ($is_late && !empty($overdue_list));
             </div>
         </div>
 
-        <!-- Payments Table Section -->
+        
+<!-- EXCLUSIVE MOBILE PAYMENTS DESIGN (<= 768px) -->
+<div class="mobile-only-payments animate-up">
+    <!-- 2x2 Summary Grid -->
+    <div class="m-pay-summary-grid">
+        <!-- Total Outstanding -->
+        <div class="m-sum-card red">
+            <div class="m-sum-top">
+                <div class="m-sum-icon red"><i class='bx bx-credit-card-alt'></i></div>
+            </div>
+            <span>Total Outstanding</span>
+            <h3 class="amount-red">₹<?php echo number_format((float)$total_due, 2); ?></h3>
+            <div class="m-sum-pill red">Payment Due</div>
+        </div>
+
+        <!-- Electricity Due -->
+        <div class="m-sum-card yellow">
+            <div class="m-sum-top">
+                <div class="m-sum-icon yellow"><i class='bx bx-bolt-circle'></i></div>
+            </div>
+            <span>Electricity Due</span>
+            <h3>₹<?php echo number_format((float)($elec_due ?? 8.00), 2); ?></h3>
+            <div class="m-sum-pill yellow">Due on 31 <?php echo date('M Y'); ?></div>
+        </div>
+
+        <!-- Rent Due -->
+        <div class="m-sum-card purple">
+            <div class="m-sum-top">
+                <div class="m-sum-icon purple"><i class='bx bx-home-alt'></i></div>
+            </div>
+            <span>Rent Due</span>
+            <h3>₹<?php echo number_format((float)($rent_due ?? 8000.00), 2); ?></h3>
+            <div class="m-sum-pill purple">Due on 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
+        </div>
+
+        <!-- Last Payment -->
+        <div class="m-sum-card green">
+            <div class="m-sum-top">
+                <div class="m-sum-icon green"><i class='bx bx-check-circle'></i></div>
+            </div>
+            <span>Last Payment</span>
+            <h3>₹<?php echo $last_payment ? number_format((float)$last_payment['total_amount'], 2) : '8,000.00'; ?></h3>
+            <div class="m-sum-pill green">Paid on <?php echo $last_payment ? date('d M Y', strtotime($last_payment['payment_date'])) : '05 Dec 2025'; ?></div>
+        </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="m-pay-tabs">
+        <button class="m-ptab active" onclick="filterMobilePayments('all', this)">All Payments</button>
+        <button class="m-ptab" onclick="filterMobilePayments('rent', this)">Rent</button>
+        <button class="m-ptab" onclick="filterMobilePayments('electricity', this)">Electricity</button>
+        <button class="m-ptab" onclick="filterMobilePayments('other', this)">Other</button>
+    </div>
+
+    <!-- Filter Bar Row -->
+    <div class="m-pay-filter-bar">
+        <div class="m-year-select-box">
+            <i class='bx bx-calendar'></i>
+            <select id="mYearFilterSelect" onchange="filterMobileByYear(this.value)">
+                <option value="all">All Years</option>
+                <option value="2026">2026</option>
+                <option value="2025">2025</option>
+            </select>
+            <i class='bx bx-chevron-down arrow'></i>
+        </div>
+        <button class="m-filter-action-btn" onclick="alert('Filtering applied!')">
+            <i class='bx bx-filter-alt'></i> Filter
+        </button>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="m-pay-items-list" id="mPayList">
+        <?php foreach ($all_bills as $bill): 
+            $title_disp = $bill['title'] == 'Rent' ? 'Rent Payment' : ($bill['title'] == 'Electricity' ? 'Electricity Payment' : $bill['title']);
+            $sub_disp = date('M Y', strtotime($bill['period'])) . ' • ' . ($bill['type']=='rent' ? 'Room '.$room_no : ($bill['type']=='electricity' ? $bill['subtitle'] : $bill['period']));
+            $year_val = date('Y', strtotime($bill['period']));
+        ?>
+            <div class="m-pay-card-item" data-type="<?php echo $bill['filter_type']; ?>" data-year="<?php echo $year_val; ?>">
+                <div class="m-pci-icon <?php echo $bill['color']; ?>">
+                    <i class='bx <?php echo $bill['icon']; ?>'></i>
+                </div>
+                <div class="m-pci-body">
+                    <h4><?php echo htmlspecialchars($title_disp); ?></h4>
+                    <p><?php echo htmlspecialchars($sub_disp); ?></p>
+                </div>
+                <div class="m-pci-center">
+                    <span class="m-status-pill <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span>
+                </div>
+                <div class="m-pci-right">
+                    <div class="m-pci-amt">₹<?php echo number_format((float)$bill['amount'], 2); ?></div>
+                    <?php if ($bill['status'] == 'Paid'): ?>
+                        <div class="m-pci-date"><?php echo $bill['paid_on']; ?></div>
+                    <?php else: ?>
+                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                            <i class='bx bx-credit-card'></i> Pay Now
+                        </button>
+                    <?php endif; ?>
+                </div>
+                <?php if ($bill['status'] == 'Paid'): ?>
+                    <button class="m-pci-dl-btn" title="Download Receipt"><i class='bx bx-download'></i></button>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Bottom Note & Pay Pending Button -->
+    <?php if ($total_due > 0 || true): ?>
+    <div class="m-pay-notice-card">
+        <div class="m-pn-note">
+            <i class='bx bx-info-circle'></i>
+            <span><strong>Note:</strong> Please clear your pending payments before the due date to avoid service interruptions.</span>
+        </div>
+        <button class="m-pn-pay-btn" onclick="openPaymentModal(<?php echo max(0, (float)$total_due); ?>, 'Total Outstanding Balance', 'total')">
+            <i class='bx bx-credit-card'></i> Pay Pending Amount
+        </button>
+    </div>
+    <?php endif; ?>
+</div>
+
+<script>
+function filterMobilePayments(type, btn) {
+    document.querySelectorAll('.m-ptab').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    
+    const items = document.querySelectorAll('.m-pay-card-item');
+    items.forEach(it => {
+        if (type === 'all' || it.getAttribute('data-type') === type) {
+            it.style.display = 'flex';
+        } else {
+            it.style.display = 'none';
+        }
+    });
+}
+
+function filterMobileByYear(year) {
+    const items = document.querySelectorAll('.m-pay-card-item');
+    items.forEach(it => {
+        if (year === 'all' || it.getAttribute('data-year') === year) {
+            it.style.display = 'flex';
+        } else {
+            it.style.display = 'none';
+        }
+    });
+}
+</script>
+
+<!-- Payments Table Section -->
         <div class="payments-container animate-up" style="animation-delay: 0.1s;">
             <div class="tabs-header">
                 <button type="button" class="tab-btn active" data-filter="all">All Payments</button>
