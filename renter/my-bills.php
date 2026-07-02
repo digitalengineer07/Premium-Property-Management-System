@@ -235,32 +235,86 @@ $show_banner = ($is_late && !empty($overdue_list));
 
 
 
+
 // Build $all_bills for Desktop JS
 $all_bills = [];
+$current_time = time();
 foreach ($merged_rents as $t) {
-    $title = "Rent Payment";
-    $subtitle = date('M Y', strtotime($t['month'] . '-01')) . " • Room " . htmlspecialchars($room_no);
+    $title = "Rent for " . date('F Y', strtotime($t['month'] . '-01'));
+    $subtitle = "Room " . htmlspecialchars($room_no);
     $type = 'rent';
-    if ($t['source'] === 'advance') { $title = "Advance Payment"; $type = 'maintenance'; }
+    $period = date('M Y', strtotime($t['month'] . '-01')) . " Rent";
+    
+    if ($t['source'] === 'advance') { 
+        $title = "Advance Payment"; 
+        $type = 'maintenance'; 
+        $period = date('M Y', strtotime($t['month'] . '-01')) . " Advance";
+    } elseif ($t['source'] === 'elec_table') {
+        $type = 'elec_rent';
+    }
+    
+    $due_timestamp = strtotime($t['month'] . '-05');
+    $due_date_str = date('d M Y', $due_timestamp);
+    $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
+    
+    $filter_type = strtolower($status);
+    if ($status === 'Unpaid' && $due_timestamp < $current_time) {
+        $filter_type = 'overdue';
+    }
+
+    $summary = [];
+    if ($t['source'] === 'rent_table' || $t['source'] === 'elec_table') {
+        $summary['Base Rent'] = (float)$t['amount'];
+        if (isset($t['adjustment_amount']) && $t['adjustment_amount'] > 0) {
+            $summary['Adjustment (' . $t['adjustment_type'] . ')'] = (float)$t['adjustment_amount'];
+        }
+    } else {
+        $summary['Payment Amount'] = (float)$t['amount'];
+    }
+
     $all_bills[] = [
         'id' => $t['id'],
         'type' => $type,
+        'filter_type' => $filter_type,
+        'period' => $period,
         'title' => $title,
         'subtitle' => $subtitle,
-        'due_date' => date('d M Y', strtotime($t['month'] . '-05')),
+        'due_date' => $due_date_str,
         'amount' => (float)$t['amount'],
-        'status' => ($t['status'] === 'Due') ? 'Unpaid' : 'Paid'
+        'status' => $status,
+        'summary' => $summary
     ];
 }
+
 foreach ($elecs as $t) {
+    $title = "Electricity Bill " . date('F Y', strtotime($t['month'] . '-01'));
+    $subtitle = "Units Consumed: " . $t['units_consumed'];
+    $period = date('M Y', strtotime($t['month'] . '-01')) . " Elec";
+    
+    $due_timestamp = strtotime($t['month'] . '-05');
+    $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
+    
+    $filter_type = strtolower($status);
+    if ($status === 'Unpaid' && $due_timestamp < $current_time) {
+        $filter_type = 'overdue';
+    }
+    
+    $summary = [
+        'Units Consumed' => (float)$t['units_consumed'],
+        'Total Amount' => (float)$t['amount']
+    ];
+
     $all_bills[] = [
         'id' => $t['id'],
         'type' => 'electricity',
-        'title' => "Electricity Payment",
-        'subtitle' => date('M Y', strtotime($t['month'] . '-01')) . " • Units: " . $t['units_consumed'],
-        'due_date' => date('d M Y', strtotime($t['month'] . '-03')),
+        'filter_type' => $filter_type,
+        'period' => $period,
+        'title' => $title,
+        'subtitle' => $subtitle,
+        'due_date' => date('d M Y', $due_timestamp),
         'amount' => (float)$t['amount'],
-        'status' => ($t['status'] === 'Due') ? 'Unpaid' : 'Paid'
+        'status' => $status,
+        'summary' => $summary
     ];
 }
 ?>
