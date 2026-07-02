@@ -351,7 +351,8 @@ $pending_count = 3 - $verified_count;
         .dark-theme .panel,
         .dark-theme .page-btn,
         .dark-theme .btn-outline,
-        .dark-theme .header-actions .icon-btn {
+        .dark-theme .header-actions .icon-btn,
+        .dark-theme .side-widget {
             background: var(--white) !important;
             border-color: var(--border) !important;
             color: var(--text-dark) !important;
@@ -363,6 +364,20 @@ $pending_count = 3 - $verified_count;
         }
         .dark-theme tr:hover td, .dark-theme .item:hover {
             background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+
+        .dark-theme .side-widget {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .tips-list li {
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .upload-area {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border-color: var(--border) !important;
         }
 
 </style>
@@ -706,7 +721,7 @@ $pending_count = 3 - $verified_count;
         </div>
 
         <!-- Full Width Tips Widget -->
-        <div class="side-widget" style="background: #FAFBFC; margin-top: 24px;">
+        <div class="side-widget" style="background: var(--white); margin-top: 24px;">
             <h3 style="margin: 0 0 16px 0; font-size: 15px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
                 <i class='bx bx-bulb' style="color: #F59E0B; font-size: 20px;"></i> Important Tips
             </h3>
