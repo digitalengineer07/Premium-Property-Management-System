@@ -758,7 +758,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 </div>
 
 
-                <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
+                <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme();}else{document.documentElement.classList.toggle('dark-theme');document.body.classList.toggle('dark-theme');}">
                     <i class='bx bx-moon'></i>
                 </div>
                 <a href="payment-history.php" class="btn-outline-support" style="border-color: rgba(16, 185, 129, 0.2); color: #10B981; background: rgba(16, 185, 129, 0.05);">
