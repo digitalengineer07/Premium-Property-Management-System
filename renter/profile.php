@@ -475,26 +475,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     }
 
 </style>
-</head>
-<body style="display: block;">
-
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class='bx bx-home-heart'></i>
-            </div>
-            <div class="sidebar-brand">
-                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
-                <p>Resident Dashboard</p>
-            </div>
-        </div>
-        
-                <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
-                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
-            </div>
-
-            <!-- Basic Information -->
             <div class="panel">
                   <div class="panel-header">
                       <h3>Basic Information</h3>
