@@ -533,21 +533,21 @@ function money($val) {
     const unitsData = <?php echo json_encode($chart_data); ?>;
     const amountData = <?php echo json_encode($chart_amounts); ?>;
 
-    // Initialize Chart
-    const ctx = document.getElementById('usageChart').getContext('2d');
-    
-    // Create gradients for fill
-    let unitsGradient = ctx.createLinearGradient(0, 0, 0, 250);
-    unitsGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
-    unitsGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
-
-    let amountGradient = ctx.createLinearGradient(0, 0, 0, 250);
-    amountGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
-    amountGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
-
     let currentMetric = 'units';
+    let usageCharts = [];
 
-    let usageChart = new Chart(ctx, {
+    document.querySelectorAll('#usageChart').forEach((canvas, index) => {
+        const ctx = canvas.getContext('2d');
+        
+        let unitsGradient = ctx.createLinearGradient(0, 0, 0, 250);
+        unitsGradient.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+        unitsGradient.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+
+        let amountGradient = ctx.createLinearGradient(0, 0, 0, 250);
+        amountGradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)');
+        amountGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+        let usageChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -612,32 +612,35 @@ function money($val) {
                 mode: 'index',
             },
         }
+        });
+        usageCharts.push({chart: usageChart, unitsGrad: unitsGradient, amountGrad: amountGradient});
     });
 
-    const metricSelect = document.getElementById('chartMetricSelect');
-    const titleText = document.getElementById('chartTitleText');
-
-    if (metricSelect && titleText) {
-        metricSelect.addEventListener('change', function() {
-            currentMetric = this.value;
-            if (currentMetric === 'amount') {
-                titleText.textContent = 'Usage Overview (Amount)';
-                usageChart.data.datasets[0].label = 'Electricity Amount';
-                usageChart.data.datasets[0].data = amountData;
-                usageChart.data.datasets[0].borderColor = '#10B981';
-                usageChart.data.datasets[0].backgroundColor = amountGradient;
-                usageChart.data.datasets[0].pointBackgroundColor = '#10B981';
-            } else {
-                titleText.textContent = 'Usage Overview (Units)';
-                usageChart.data.datasets[0].label = 'Units Consumed';
-                usageChart.data.datasets[0].data = unitsData;
-                usageChart.data.datasets[0].borderColor = '#8B5CF6';
-                usageChart.data.datasets[0].backgroundColor = unitsGradient;
-                usageChart.data.datasets[0].pointBackgroundColor = '#8B5CF6';
-            }
-            usageChart.update();
-        });
-    }
+    document.querySelectorAll('#chartMetricSelect').forEach((metricSelect, idx) => {
+        const titleText = document.querySelectorAll('#chartTitleText')[idx];
+        if (metricSelect && titleText && usageCharts[idx]) {
+            metricSelect.addEventListener('change', function() {
+                currentMetric = this.value;
+                let c = usageCharts[idx];
+                if (currentMetric === 'amount') {
+                    titleText.textContent = 'Usage Overview (Amount)';
+                    c.chart.data.datasets[0].label = 'Electricity Amount';
+                    c.chart.data.datasets[0].data = amountData;
+                    c.chart.data.datasets[0].borderColor = '#10B981';
+                    c.chart.data.datasets[0].backgroundColor = c.amountGrad;
+                    c.chart.data.datasets[0].pointBackgroundColor = '#10B981';
+                } else {
+                    titleText.textContent = 'Usage Overview (Units)';
+                    c.chart.data.datasets[0].label = 'Units Consumed';
+                    c.chart.data.datasets[0].data = unitsData;
+                    c.chart.data.datasets[0].borderColor = '#8B5CF6';
+                    c.chart.data.datasets[0].backgroundColor = c.unitsGrad;
+                    c.chart.data.datasets[0].pointBackgroundColor = '#8B5CF6';
+                }
+                c.chart.update();
+            });
+        }
+    });
 
     // Simple View More logic
     const allRows = document.querySelectorAll('.rec-row');

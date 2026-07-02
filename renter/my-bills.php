@@ -234,6 +234,35 @@ if ($total_due > 0) {
 $show_banner = ($is_late && !empty($overdue_list));
 
 
+
+// Build $all_bills for Desktop JS
+$all_bills = [];
+foreach ($merged_rents as $t) {
+    $title = "Rent Payment";
+    $subtitle = date('M Y', strtotime($t['month'] . '-01')) . " • Room " . htmlspecialchars($room_no);
+    $type = 'rent';
+    if ($t['source'] === 'advance') { $title = "Advance Payment"; $type = 'maintenance'; }
+    $all_bills[] = [
+        'id' => $t['id'],
+        'type' => $type,
+        'title' => $title,
+        'subtitle' => $subtitle,
+        'due_date' => date('d M Y', strtotime($t['month'] . '-05')),
+        'amount' => (float)$t['amount'],
+        'status' => ($t['status'] === 'Due') ? 'Unpaid' : 'Paid'
+    ];
+}
+foreach ($elecs as $t) {
+    $all_bills[] = [
+        'id' => $t['id'],
+        'type' => 'electricity',
+        'title' => "Electricity Payment",
+        'subtitle' => date('M Y', strtotime($t['month'] . '-01')) . " • Units: " . $t['units_consumed'],
+        'due_date' => date('d M Y', strtotime($t['month'] . '-03')),
+        'amount' => (float)$t['amount'],
+        'status' => ($t['status'] === 'Due') ? 'Unpaid' : 'Paid'
+    ];
+}
 ?>
 <!doctype html>
 <html lang="en">

@@ -388,14 +388,14 @@
                 const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
                 const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                 
-                document.getElementById('bdStatus').textContent = bill.status;
-                document.getElementById('bdStatus').style.color = statusColor;
-                document.getElementById('bdStatus').style.background = statusBg;
+                document.querySelectorAll('#bdStatus').forEach(el => el.textContent = bill.status);
+                document.querySelectorAll('#bdStatus').forEach(el => el.style.color = statusColor);
+                document.querySelectorAll('#bdStatus').forEach(el => el.style.background = statusBg);
 
-                document.getElementById('bdTitle').textContent = bill.title;
-                document.getElementById('bdSubtitle').textContent = bill.subtitle;
-                document.getElementById('bdDueDate').textContent = bill.due_date;
-                document.getElementById('bdDueDate').style.color = bill.status === 'Unpaid' ? '#FF4B6B' : 'var(--text-gray)';
+                document.querySelectorAll('#bdTitle').forEach(el => el.textContent = bill.title);
+                document.querySelectorAll('#bdSubtitle').forEach(el => el.textContent = bill.subtitle);
+                document.querySelectorAll('#bdDueDate').forEach(el => el.textContent = bill.due_date);
+                document.querySelectorAll('#bdDueDate').forEach(el => el.style.color = bill.status === 'Unpaid' ? '#FF4B6B' : 'var(--text-gray)');
 
                 const iconMap = {'rent': 'bx-home', 'elec_rent': 'bx-home', 'electricity': 'bx-bulb', 'maintenance': 'bx-wrench'};
                 const colorMap = {'rent': ['rgba(255, 75, 107, 0.1)', '#FF4B6B'], 'elec_rent': ['rgba(98, 75, 255, 0.1)', 'var(--primary-purple)'], 'electricity': ['rgba(245, 158, 11, 0.1)', '#F59E0B']};
@@ -407,9 +407,9 @@
                 document.getElementById('bdIcon').style.background = colors[0];
                 document.getElementById('bdIcon').style.color = colors[1];
 
-                document.getElementById('bdAmount').textContent = formatMoney(bill.amount);
+                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.amount));
                 document.getElementById('bdAmount').style.color = statusColor;
-                document.getElementById('bdTotalAmount2').textContent = formatMoney(bill.amount);
+                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.amount));
                 document.getElementById('bdTotalAmount2').style.color = statusColor;
 
                 // Summary List
@@ -422,7 +422,7 @@
                         </div>
                     `;
                 }
-                document.getElementById('bdSummaryList').innerHTML = summaryHtml;
+                document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
                 const btnPay = document.getElementById('bdBtnPay');
@@ -441,7 +441,7 @@
             }
 
             function renderTable() {
-                const tbody = document.getElementById('billsTableBody');
+                const tbodies = document.querySelectorAll('#billsTableBody');
                 tbody.innerHTML = '';
                 
                 // Filter bills
@@ -511,10 +511,10 @@
                             </td>
                         </tr>
                     `;
-                    tbody.innerHTML += rowHtml;
+                    tbodies.forEach(tb => tb.innerHTML += rowHtml);
                 });
                 
-                document.getElementById('showingText').textContent = totalItems > 0 ? `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} bills` : `Showing 0 bills`;
+                document.querySelectorAll('#showingText').forEach(el => el.textContent = totalItems > 0 ? `Showing ${startIndex + 1} to ${endIndex} of ${totalItems} bills` : `Showing 0 bills`);
                 
                 let pagHtml = '';
                 if (totalPages > 1) {
@@ -524,7 +524,7 @@
                     }
                     pagHtml += `<a href="#" onclick="goToPage(${currentPage < totalPages ? currentPage + 1 : totalPages}, event)" class="pagination-purple"><i class='bx bx-chevron-right'></i></a>`;
                 }
-                document.getElementById('paginationControls').innerHTML = pagHtml;
+                document.querySelectorAll('#paginationControls').forEach(el => el.innerHTML = pagHtml);
                 
                 if (totalItems > 0 && activeBillId === null) {
                     selectBill(allBills.indexOf(currentBills[0]));
