@@ -402,7 +402,7 @@ function money($val) {
                         </div>
                     </div>
                 </div>
-                <div class="icon-btn">
+                <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme();}else{document.documentElement.classList.toggle('dark-theme');document.body.classList.toggle('dark-theme');}">
                     <i class='bx bx-moon'></i>
                 </div>
                 <a href="#" class="btn-outline-support">
