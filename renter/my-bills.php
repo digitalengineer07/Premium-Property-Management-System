@@ -609,7 +609,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 </style>
 
         <style>
-            .bill-row td { padding: 8px 6px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
+            .bill-row td { padding: 10px 8px; transition: 0.2s; border-bottom: 1px solid rgba(0,0,0,0.05); white-space: nowrap; }
             .bill-row:last-child td { border-bottom: none; }
             .bill-row td:first-child { border-top-left-radius: 16px; border-bottom-left-radius: 16px; padding-left: 12px; }
             .bill-row td:last-child { border-top-right-radius: 16px; border-bottom-right-radius: 16px; padding-right: 12px; }
@@ -1028,7 +1028,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             </div>
         </div>
 
-        <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: stretch;">
+        <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(310px, 1fr); gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
@@ -1051,12 +1051,12 @@ $show_banner = ($is_late && !empty($overdue_list));
                 <div style="padding: 0 12px 12px; overflow-x: auto;"><table style="width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 14px 18px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 14px; border-bottom-left-radius: 14px; min-width: 170px;">BILL FOR</th>
-                            <th style="text-align: left; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 120px;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 110px;">DUE DATE</th>
-                            <th style="text-align: right; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 110px;">AMOUNT</th>
-                            <th style="text-align: center; padding: 14px 16px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; min-width: 100px;">STATUS</th>
-                            <th style="text-align: center; padding: 14px 18px; font-size: 11px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 14px; border-bottom-right-radius: 14px; min-width: 90px;">ACTION</th>
+                            <th style="text-align: left; padding: 12px 10px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 26%;">BILL FOR</th>
+                            <th style="text-align: left; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">DUE DATE</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">AMOUNT</th>
+                            <th style="text-align: center; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 13%;">STATUS</th>
+                            <th style="text-align: center; padding: 12px 14px 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 9%;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
