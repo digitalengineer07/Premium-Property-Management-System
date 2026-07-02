@@ -514,19 +514,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="notices.php" class="nav-item">
                 <i class='bx bx-bell'></i>
                 <span>Notices</span>
-            </a>
-            <a href="documents.php" class="nav-item">
-                <i class='bx bx-folder'></i>
-                <span>Documents</span>
-            </a>
-            <a href="profile.php" class="nav-item active">
-                <i class='bx bx-user-circle'></i>
-                <span>Profile Settings</span>
-                    <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
-                        <i class='bx bx-camera'></i>
-                    </button>
-                    <!-- Hidden form for profile pic -->
-                    <form method="POST" id="hiddenProfileForm" class="hidden-form">
                         <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
                         <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name']); ?>">
                         <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>">
