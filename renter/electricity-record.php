@@ -300,7 +300,13 @@ function money($val) {
             background: rgba(255, 255, 255, 0.02) !important;
         }
         .dark-theme .cmd-item {
-            border-bottom-color: var(--border) !important;
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            box-shadow: none !important;
+        }
+        .dark-theme .cmd-item:last-child {
+            border-bottom: none !important;
         }
         .dark-theme .filter-select {
             background: var(--bg-main) !important;

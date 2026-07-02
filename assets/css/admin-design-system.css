@@ -1334,8 +1334,6 @@ body.dark-theme .fw-info h4 {
 body.dark-theme .bill-item,
 :root.dark-theme .action-card,
 body.dark-theme .action-card,
-:root.dark-theme .cmd-item,
-body.dark-theme .cmd-item,
 :root.dark-theme .notif-item,
 body.dark-theme .notif-item {
     background: rgba(255, 255, 255, 0.035) !important;
