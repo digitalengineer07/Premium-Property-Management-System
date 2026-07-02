@@ -799,7 +799,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="info-value">••••••••</div>
-                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="var m = document.getElementById('changePasswordModal'); if(m) { m.style.setProperty('display', 'flex', 'important'); var box = m.querySelector('.no-scrollbar'); if(box) { box.style.opacity='1'; box.style.transform='none'; } } if(window.openChangePasswordModal) window.openChangePasswordModal(); return false;">Change</button>
+                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="document.getElementById('changePasswordModal').style.display='flex'; return false;">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
