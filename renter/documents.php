@@ -227,7 +227,7 @@ $pending_count = 3 - $verified_count;
         .go-mobile-widget p { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; line-height: 1.4; }
         .go-mobile-imgs { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
-        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: var(--white); padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
             width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
@@ -245,14 +245,14 @@ $pending_count = 3 - $verified_count;
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--white);
             display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
             position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         
         .btn-outline {
-            border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
+            border: 1px solid rgba(98, 75, 255, 0.15); background: var(--white); color: var(--primary-purple);
             padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap; cursor: pointer;
         }
@@ -307,7 +307,7 @@ $pending_count = 3 - $verified_count;
         .status-Pending { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .status-Rejected { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
 
-        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--primary-purple); cursor: pointer; background: white; transition: 0.2s; margin-right: 4px; }
+        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--primary-purple); cursor: pointer; background: var(--white); transition: 0.2s; margin-right: 4px; }
         .action-btn:hover { background: rgba(98, 75, 255, 0.05); border-color: var(--primary-purple); }
 
         .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -333,7 +333,7 @@ $pending_count = 3 - $verified_count;
         top: 110%; 
         right: 0; 
         width: 340px; 
-        background: white; 
+        background: var(--white); 
         border-radius: 16px; 
         box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
         border: 1px solid var(--border); 
@@ -341,6 +341,29 @@ $pending_count = 3 - $verified_count;
         overflow: hidden; 
         text-align: left;
     }
+
+
+        /* Comprehensive Dark Mode Overrides for documents.php */
+        .dark-theme .kpi-card,
+        .dark-theme .list-card,
+        .dark-theme .detail-card,
+        .dark-theme .card,
+        .dark-theme .panel,
+        .dark-theme .page-btn,
+        .dark-theme .btn-outline,
+        .dark-theme .header-actions .icon-btn {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme select, .dark-theme input, .dark-theme textarea {
+            background-color: var(--bg-main) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border) !important;
+        }
+        .dark-theme tr:hover td, .dark-theme .item:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
 
 </style>
 </head>

@@ -364,7 +364,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .go-mobile-widget p { font-size: 12px; color: var(--text-gray); margin-bottom: 12px; line-height: 1.4; }
         .go-mobile-imgs { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
-        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: var(--white); padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
             width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
@@ -391,13 +391,13 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--white);
             display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
             position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         .btn-outline-support {
-            border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
+            border: 1px solid rgba(98, 75, 255, 0.15); background: var(--white); color: var(--primary-purple);
             padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
@@ -414,13 +414,13 @@ $show_banner = ($is_late && !empty($overdue_list));
         .reminder-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.3); }
         .reminder-text h3 { font-size: 18px; font-weight: 800; margin: 0 0 4px 0; }
         .reminder-text p { font-size: 14px; opacity: 0.95; margin: 0; font-weight: 500; }
-        .reminder-banner .btn-pay-now { background: white; color: #FF4B6B; padding: 12px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 2; transition: all 0.2s; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+        .reminder-banner .btn-pay-now { background: var(--white); color: #FF4B6B; padding: 12px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 2; transition: all 0.2s; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         .reminder-banner .btn-pay-now:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .reminder-bg-art { position: absolute; right: 15%; top: 50%; transform: translateY(-50%); opacity: 0.1; font-size: 160px; z-index: 1; pointer-events: none; }
 
         /* 3-Col KPI Cards */
         .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
-        .kpi-card { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; position: relative; overflow: hidden; transition: all 0.3s ease; }
+        .kpi-card { background: var(--white); border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; position: relative; overflow: hidden; transition: all 0.3s ease; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
         .kpi-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .kpi-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
@@ -441,7 +441,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         /* 3-Col Main Grid */
         .dashboard-3col { display: grid; grid-template-columns: 1.2fr 1.1fr 1.5fr; gap: 24px; margin-bottom: 32px; align-items: stretch; }
-        .dash-panel { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; }
+        .dash-panel { background: var(--white); border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; }
         .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .panel-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; margin: 0; color: var(--text-dark); }
         .panel-link { font-size: 13px; font-weight: 700; color: var(--primary-purple); text-decoration: none; transition: 0.2s; }
@@ -449,7 +449,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         /* Upcoming Bills List */
         .bill-item { border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; background: #FAFBFC; transition: 0.2s; }
-        .bill-item:hover { border-color: rgba(98,75,255,0.2); background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .bill-item:hover { border-color: rgba(98,75,255,0.2); background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         .bill-left { display: flex; align-items: center; gap: 14px; }
         .bill-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 75, 107, 0.08); color: #FF4B6B; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink:0; }
         .bill-icon.yellow { background: rgba(245, 158, 11, 0.08); color: #F59E0B; }
@@ -459,12 +459,12 @@ $show_banner = ($is_late && !empty($overdue_list));
         .bill-right { text-align: right; }
         .bill-right h4 { font-size: 15px; font-weight: 800; color: #FF4B6B; margin: 0 0 6px 0; }
         .bill-right p { font-size: 11px; font-weight: 700; color: #FF4B6B; margin: 0; background: rgba(255,75,107,0.08); padding: 4px 8px; border-radius: 10px; display: inline-block;}
-        .btn-view-all { width: 100%; padding: 12px; background: white; border: 1px solid rgba(98,75,255,0.3); color: var(--primary-purple); border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: auto; text-decoration: none; display: flex; justify-content: center; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.05); }
+        .btn-view-all { width: 100%; padding: 12px; background: var(--white); border: 1px solid rgba(98,75,255,0.3); color: var(--primary-purple); border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: auto; text-decoration: none; display: flex; justify-content: center; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.05); }
         .btn-view-all:hover { background: rgba(98,75,255,0.02); border-color: var(--primary-purple); }
 
         /* Quick Actions */
         .quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; }
-        .action-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px 16px; text-align: center; text-decoration: none; color: var(--text-dark); transition: all 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; background: white; }
+        .action-card { border: 1px solid var(--border); border-radius: 16px; padding: 20px 16px; text-align: center; text-decoration: none; color: var(--text-dark); transition: all 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--white); }
         .action-card:hover { border-color: rgba(98,75,255,0.2); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.03); }
         .action-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; }
         .action-card:nth-child(1) .action-icon { background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); }
@@ -497,7 +497,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         /* Footer Widgets */
         .footer-widgets { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-        .footer-widget { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--card-shadow); transition: 0.2s; }
+        .footer-widget { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--card-shadow); transition: 0.2s; }
         .footer-widget:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
         .fw-left { display: flex; align-items: center; gap: 16px; }
         .fw-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; background: rgba(98, 75, 255, 0.08); }
@@ -543,7 +543,7 @@ $show_banner = ($is_late && !empty($overdue_list));
     
         /* My Payments V2 CSS */
         .kpi-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
-        .kpi-card-minimal { background: white; border-radius: 16px; padding: 20px 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+        .kpi-card-minimal { background: var(--white); border-radius: 16px; padding: 20px 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 12px; transition: 0.2s; }
         .kpi-card-minimal:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
         .kpi-min-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
         .kpi-min-info { overflow: hidden; }
@@ -551,16 +551,16 @@ $show_banner = ($is_late && !empty($overdue_list));
         .kpi-min-info h2 { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; letter-spacing: -0.5px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
         .kpi-min-tag { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; white-space: nowrap; }
         
-        .payments-container { background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--card-shadow); overflow: hidden; margin-bottom: 24px; }
+        .payments-container { background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--card-shadow); overflow: hidden; margin-bottom: 24px; }
         
-        .tabs-header { display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); gap: 32px; background: white; }
+        .tabs-header { display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); gap: 32px; background: var(--white); }
         .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 20px 0; font-size: 14px; font-weight: 600; color: var(--text-gray); cursor: pointer; transition: 0.2s; }
         .tab-btn:hover { color: var(--primary-purple); }
         .tab-btn.active { color: var(--primary-purple); border-bottom-color: var(--primary-purple); }
         
         .tab-actions { margin-left: auto; display: flex; gap: 12px; align-items: center; }
         .filter-select { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text-dark); outline: none; background: #FAFBFC; font-family: 'Outfit', sans-serif; cursor: pointer; }
-        .btn-filter { background: white; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .btn-filter { background: var(--white); border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 6px; }
         
         .payments-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
         .payments-table th { text-align: left; padding: 16px 12px; font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -583,7 +583,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         
         .btn-view-receipt { background: none; border: none; color: var(--primary-purple); font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; transition: 0.2s; text-decoration: none;}
         .btn-view-receipt:hover { background: rgba(98, 75, 255, 0.05); }
-        .btn-action-pay { background: white; border: 1px solid #FF4B6B; color: #FF4B6B; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 8px; transition: 0.2s; }
+        .btn-action-pay { background: var(--white); border: 1px solid #FF4B6B; color: #FF4B6B; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 8px; transition: 0.2s; }
         .btn-action-pay:hover { background: rgba(255, 75, 107, 0.05); }
         
         .bottom-info-bar { background: rgba(98, 75, 255, 0.04); border: 1px solid rgba(98, 75, 255, 0.1); border-radius: 16px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
@@ -593,7 +593,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .btn-pay-pending:hover { background: var(--primary-hover); transform: translateY(-1px); }
         
         .pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 24px; border-top: 1px solid var(--border); }
-        .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
+        .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--white); border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
         .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
@@ -608,7 +608,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         top: 110%; 
         right: 0; 
         width: 340px; 
-        background: white; 
+        background: var(--white); 
         border-radius: 16px; 
         box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
         border: 1px solid var(--border); 
@@ -616,6 +616,29 @@ $show_banner = ($is_late && !empty($overdue_list));
         overflow: hidden; 
         text-align: left;
     }
+
+
+        /* Comprehensive Dark Mode Overrides for payment-history.php */
+        .dark-theme .kpi-card,
+        .dark-theme .list-card,
+        .dark-theme .detail-card,
+        .dark-theme .card,
+        .dark-theme .panel,
+        .dark-theme .page-btn,
+        .dark-theme .btn-outline,
+        .dark-theme .header-actions .icon-btn {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme select, .dark-theme input, .dark-theme textarea {
+            background-color: var(--bg-main) !important;
+            color: var(--text-dark) !important;
+            border-color: var(--border) !important;
+        }
+        .dark-theme tr:hover td, .dark-theme .item:hover {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
 
 </style>
 </head>
@@ -1112,7 +1135,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             <div class="tabs-header" style="flex-wrap: wrap; gap: 16px; padding: 24px;">
                 <div class="filter-group">
                     <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Date Range</label>
-                    <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; background: white; min-width: 200px;">
+                    <div style="display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; background: var(--white); min-width: 200px;">
                         <i class='bx bx-calendar' style="color: var(--text-gray); margin-right: 8px;"></i>
                         <span style="font-size: 13px; font-weight: 500;">All Time</span>
                         <i class='bx bx-chevron-down' style="margin-left: auto; color: var(--text-gray);"></i>
