@@ -735,7 +735,7 @@ $show_banner = ($is_late && !empty($overdue_list));
     <!-- Greeting Banner -->
     <div class="m-greeting-banner">
         <div class="m-greeting-text">
-            <h2>Hello, <?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?> Jii 👋</h2>
+            <h2>Hello, <?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?> Jii 👋</h2>
             <p>Welcome back! You are assigned to</p>
             <div class="m-room-pill">Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? '201'); ?></div>
         </div>
@@ -955,7 +955,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 <?php endif; ?>
 </div>
                         <div class="user-info">
-                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
+                            <h4><?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?></h4>
                             <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
                         </div>
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
@@ -1492,16 +1492,29 @@ $show_banner = ($is_late && !empty($overdue_list));
                 background: rgba(98, 75, 255, 0.2);
                 color: #A594FF;
             }
+            .m-greeting-text {
+                position: relative;
+                z-index: 2;
+                max-width: 58%;
+            }
             .m-greeting-img {
                 position: absolute;
-                right: -10px;
-                bottom: 0;
-                width: 135px;
+                right: -6px;
+                bottom: -5px;
+                width: 180px;
+                height: 115%;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-end;
                 pointer-events: none;
+                z-index: 1;
             }
             .m-greeting-img img {
                 width: 100%;
+                max-height: 150px;
                 object-fit: contain;
+                object-position: bottom right;
+                filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25));
             }
 
             /* Reminder Card */
