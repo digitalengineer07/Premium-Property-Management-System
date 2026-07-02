@@ -784,6 +784,20 @@ $show_banner = ($is_late && !empty($overdue_list));
     <!-- Main Content -->
     
         <main class="main-content">
+<!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
+<header class="mobile-only-header">
+    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu'></i>
+    </div>
+    <div class="m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span>My Bills</span>
+    </div>
+    <div class="m-header-right">
+        <a href="dashboard.php" style="color: var(--text-dark); font-size: 22px; text-decoration: none; display: flex; align-items: center;"><i class='bx bx-home'></i></a>
+    </div>
+</header>
+
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
