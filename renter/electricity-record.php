@@ -330,7 +330,97 @@ function money($val) {
             background: rgba(139, 92, 246, 0.15) !important;
         }
 
-    </style>
+    
+        /* EXCLUSIVE MOBILE VIEW MODE STYLES - ZERO IMPACT ON DESKTOP */
+        @media screen and (max-width: 991px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
+            .grid-2-1, .dashboard-3col { grid-template-columns: 1fr !important; gap: 20px !important; }
+            .sidebar { width: 80px !important; padding: 24px 10px !important; }
+            .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none !important; }
+            .nav-item { justify-content: center !important; padding: 12px !important; }
+            .nav-item i { font-size: 24px !important; }
+            .main-content { margin-left: 80px !important; max-width: calc(100% - 80px) !important; }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar { display: none !important; }
+            .main-content { 
+                margin-left: 0 !important; 
+                max-width: 100% !important; 
+                padding: 16px !important; 
+                padding-bottom: 86px !important; /* Space for bottom nav */
+            }
+            .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+            .grid-2-1, .dashboard-3col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+            .header-renter, .top-header { 
+                flex-direction: column !important; 
+                align-items: flex-start !important; 
+                gap: 16px !important; 
+            }
+            .header-actions { width: 100% !important; justify-content: space-between !important; }
+            .table-responsive { 
+                overflow-x: auto !important; 
+                -webkit-overflow-scrolling: touch !important; 
+                width: 100% !important;
+            }
+            .payment-tabs { 
+                display: flex !important; 
+                overflow-x: auto !important; 
+                padding-bottom: 6px !important; 
+                gap: 8px !important; 
+            }
+            .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
+            .table-header { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
+            .table-header > div { width: 100% !important; justify-content: space-between !important; }
+            .footer-widgets { grid-template-columns: 1fr !important; gap: 16px !important; }
+            .tx-right { gap: 12px !important; }
+            .tx-date { display: none !important; }
+            
+            /* Show Universal Mobile Bottom Navigation */
+            .mobile-bottom-nav { display: flex !important; }
+        }
+
+        /* Mobile Bottom Nav Bar Default (Hidden on Desktop) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: var(--white, #FFFFFF);
+            border-top: 1px solid var(--border, #F1F5F9);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            z-index: 9999;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 8px;
+        }
+        .dark-theme .mobile-bottom-nav {
+            background: #111827;
+            border-top-color: #1E293B;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .mb-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-gray, #64748B);
+            font-size: 11px;
+            font-weight: 600;
+            gap: 4px;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .mb-nav-item i { font-size: 22px; }
+        .mb-nav-item.active {
+            color: var(--primary-purple, #624BFF);
+        }
+
+</style>
 </head>
 <body>
 
@@ -811,5 +901,15 @@ function money($val) {
     }
 </script>
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+
+<!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
+<nav class="mobile-bottom-nav">
+    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-grid-alt'></i><span>Home</span></a>
+    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-wallet'></i><span>Payments</span></a>
+    <a href="electricity-record.php" class="mb-nav-item active"><i class='bx bx-bolt-circle'></i><span>Electricity</span></a>
+    <a href="my-bills.php" class="mb-nav-item"><i class='bx bx-receipt'></i><span>Bills</span></a>
+    <a href="profile.php" class="mb-nav-item"><i class='bx bx-user-circle'></i><span>Profile</span></a>
+</nav>
+
 </body>
 </html>
