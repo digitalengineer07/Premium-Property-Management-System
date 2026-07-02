@@ -799,7 +799,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div class="info-value">••••••••</div>
-                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="if(window.openChangePasswordModal) window.openChangePasswordModal(); return false;">Change</button>
+                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="var m = document.getElementById('changePasswordModal'); if(m) m.style.display='flex'; if(window.openChangePasswordModal) window.openChangePasswordModal(); return false;">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
@@ -1057,6 +1057,55 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         </div>
     </div>
 
+<script>
+(function() {
+    function openChangePasswordModal() {
+        var modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.display = 'flex';
+            var alertBox = document.getElementById('pwdModalAlert');
+            if (alertBox) alertBox.style.display = 'none';
+            var form = document.getElementById('changePasswordForm');
+            if (form) form.reset();
+            setTimeout(function() {
+                var currPwd = document.getElementById('current_password');
+                if (currPwd) currPwd.focus();
+            }, 100);
+        }
+    }
+
+    function closeChangePasswordModal() {
+        var modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.display = 'none';
+            var form = document.getElementById('changePasswordForm');
+            if (form) form.reset();
+        }
+    }
+
+    window.openChangePasswordModal = openChangePasswordModal;
+    window.closeChangePasswordModal = closeChangePasswordModal;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var pwdBtn = document.getElementById('btnOpenChangePwdModal');
+        if (pwdBtn) {
+            pwdBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openChangePasswordModal();
+            });
+        }
+        var modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeChangePasswordModal();
+                }
+            });
+        }
+    });
+})();
+</script>
+
 
 
 <script>
@@ -1086,7 +1135,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     const croppedImageInput = document.getElementById('croppedImageInput');
     const avatarPreview = document.getElementById('profileAvatarImg');
 
-    profilePicInput.onchange = function(e) {
+    if (profilePicInput) {
+        profilePicInput.onchange = function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -1111,6 +1161,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             reader.readAsDataURL(file);
         }
     };
+    }
 
     function closeCropper() {
         cropperModal.style.display = 'none';
@@ -1188,7 +1239,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         const profileDropdown = document.getElementById('profileDropdown');
         const profileToggle = document.querySelector('.user-profile-pill');
         if (profileDropdown && profileDropdown.style.display === 'block') {
-            if (!profileDropdown.contains(event.target) && !profileToggle.contains(event.target)) {
+            if (!profileDropdown.contains(event.target) && (!profileToggle || !profileToggle.contains(event.target))) {
                 profileDropdown.style.display = 'none';
             }
         }
@@ -1214,47 +1265,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
     });
 
-    window.openChangePasswordModal = function() {
-        const modal = document.getElementById('changePasswordModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            const alertBox = document.getElementById('pwdModalAlert');
-            if (alertBox) alertBox.style.display = 'none';
-            const form = document.getElementById('changePasswordForm');
-            if (form) form.reset();
-            setTimeout(() => {
-                const currPwd = document.getElementById('current_password');
-                if (currPwd) currPwd.focus();
-            }, 100);
-        }
-    };
-
-    window.closeChangePasswordModal = function() {
-        const modal = document.getElementById('changePasswordModal');
-        if (modal) {
-            modal.style.display = 'none';
-            const form = document.getElementById('changePasswordForm');
-            if (form) form.reset();
-        }
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const pwdBtn = document.getElementById('btnOpenChangePwdModal');
-        if (pwdBtn) {
-            pwdBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                window.openChangePasswordModal();
-            });
-        }
-        const modal = document.getElementById('changePasswordModal');
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    window.closeChangePasswordModal();
-                }
-            });
-        }
-    });
 
     async function submitChangePassword(event) {
         event.preventDefault();
