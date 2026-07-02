@@ -3,28 +3,27 @@
  * Handles theme toggling and common UI interactions
  */
 (function () {
-    // 1. Theme Toggling
-    const themeToggle = document.getElementById('themeToggle');
-
-    // Sync UI with state
-    if (localStorage.getItem('theme') !== 'light') {
-        document.documentElement.classList.add('dark-theme');
-        if (themeToggle) {
-            themeToggle.classList.replace('bx-moon', 'bx-sun');
-        }
+if (typeof window.toggleTheme !== 'function') {
+        window.toggleTheme = function() {
+            const isDark = !document.documentElement.classList.contains('dark-theme');
+            document.documentElement.classList.toggle('dark-theme', isDark);
+            if (document.body) document.body.classList.toggle('dark-theme', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.querySelectorAll('.bx-moon, .bx-sun').forEach(icon => {
+                if (icon.closest('#themeToggle') || icon.closest('.icon-btn') || icon.id === 'themeToggle') {
+                    icon.className = isDark ? 'bx bx-sun' : 'bx bx-moon';
+                }
+            });
+        };
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.toggle('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const isDark = localStorage.getItem('theme') === 'dark';
+    document.documentElement.classList.toggle('dark-theme', isDark);
+    if (document.body) document.body.classList.toggle('dark-theme', isDark);
 
-            if (isDark) {
-                themeToggle.classList.replace('bx-moon', 'bx-sun');
-            } else {
-                themeToggle.classList.replace('bx-sun', 'bx-moon');
-            }
-        });
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle && !themeToggle.getAttribute('onclick')) {
+        themeToggle.addEventListener('click', window.toggleTheme);
     }
 
     // 2. Animate elements on scroll if needed (placeholder for future use)

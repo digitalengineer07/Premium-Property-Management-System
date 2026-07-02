@@ -1,21 +1,32 @@
 /**
  * Resident Dashboard functionalities
  */
-document.addEventListener('DOMContentLoaded', function () {
-    const themeToggle = document.getElementById('themeToggle');
-
-    // Sync initial state
-    if (localStorage.getItem('theme') !== 'light') {
-        document.documentElement.classList.add('dark-theme');
-        themeToggle?.classList.replace('bx-moon', 'bx-sun');
-    }
-
-    themeToggle?.addEventListener('click', () => {
-        const isDark = document.documentElement.classList.toggle('dark-theme');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        if (isDark) themeToggle.classList.replace('bx-moon', 'bx-sun');
-        else themeToggle.classList.replace('bx-sun', 'bx-moon');
+window.toggleTheme = function() {
+    const isDark = !document.documentElement.classList.contains('dark-theme');
+    document.documentElement.classList.toggle('dark-theme', isDark);
+    if (document.body) document.body.classList.toggle('dark-theme', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    document.querySelectorAll('.bx-moon, .bx-sun').forEach(icon => {
+        if (icon.closest('#themeToggle') || icon.closest('.icon-btn') || icon.id === 'themeToggle') {
+            icon.className = isDark ? 'bx bx-sun' : 'bx bx-moon';
+        }
     });
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+    const isDark = localStorage.getItem('theme') === 'dark';
+    document.documentElement.classList.toggle('dark-theme', isDark);
+    if (document.body) document.body.classList.toggle('dark-theme', isDark);
+    document.querySelectorAll('.bx-moon, .bx-sun').forEach(icon => {
+        if (icon.closest('#themeToggle') || icon.closest('.icon-btn') || icon.id === 'themeToggle') {
+            icon.className = isDark ? 'bx bx-sun' : 'bx bx-moon';
+        }
+    });
+
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle && !themeToggle.getAttribute('onclick')) {
+        themeToggle.addEventListener('click', window.toggleTheme);
+    }
 
     // Intro.js Tour logic (only if element exists)
     const startTour = () => {
