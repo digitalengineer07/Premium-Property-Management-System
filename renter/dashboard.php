@@ -667,7 +667,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                     </div>
                 </div>
 
-                <div class="icon-btn" id="themeToggle" onclick="document.body.classList.toggle('dark-theme')">
+                <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme();}else{document.documentElement.classList.toggle('dark-theme');document.body.classList.toggle('dark-theme');}">
                     <i class='bx bx-moon'></i>
                 </div>
                 <a href="queries.php" class="btn-outline-support">
