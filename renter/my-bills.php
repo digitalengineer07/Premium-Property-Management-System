@@ -636,6 +636,55 @@ $show_banner = ($is_late && !empty($overdue_list));
         text-align: left;
     }
 
+
+        /* Comprehensive Dark Mode Overrides for My Bills */
+        .dark-theme .kpi-card-minimal,
+        .dark-theme .bills-list-panel,
+        .dark-theme .bill-details-panel,
+        .dark-theme .btn-filter,
+        .dark-theme .page-btn,
+        .dark-theme .pagination-purple {
+            background: var(--white) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme .bd-total-box {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border-color: var(--border) !important;
+        }
+        .dark-theme .bill-row:hover td {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+        .dark-theme .bill-row.active td {
+            background: rgba(139, 92, 246, 0.12) !important;
+        }
+        .dark-theme #bdBtnDownload {
+            background: var(--white) !important;
+            color: var(--primary-purple) !important;
+            border-color: rgba(139, 92, 246, 0.4) !important;
+        }
+        .dark-theme #bdBtnDownload:hover {
+            background: rgba(139, 92, 246, 0.1) !important;
+        }
+        .dark-theme .filter-select {
+            background: var(--bg-main) !important;
+            border-color: var(--border) !important;
+            color: var(--text-dark) !important;
+        }
+        .dark-theme #bdWarning {
+            background: rgba(245, 158, 11, 0.1) !important;
+            border-color: rgba(245, 158, 11, 0.3) !important;
+        }
+        .dark-theme #bdWarning p {
+            color: #FBBF24 !important;
+        }
+        .dark-theme .tab-btn {
+            color: var(--text-gray);
+        }
+        .dark-theme .tab-btn.active {
+            color: var(--primary-purple) !important;
+        }
+
 </style>
 </head>
 <body style="display: block;"> <!-- Overriding body:flex from design-system -->
@@ -938,7 +987,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         <!-- 4-Col KPI Grid -->
         <div class="kpi-grid-4 animate-up" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px;">
-            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Total Outstanding</h4>
@@ -947,7 +996,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 </div>
             </div>
             
-            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-calendar-event'></i></div>
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Due This Month</h4>
@@ -956,7 +1005,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 </div>
             </div>
 
-            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-check-circle'></i></div>
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Paid This Year</h4>
@@ -965,7 +1014,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 </div>
             </div>
             
-            <div class="kpi-card-minimal" style="background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Total Bills</h4>
@@ -977,7 +1026,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: stretch;">
             <!-- Left Column: Bills List -->
-            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+            <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
                         <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
@@ -991,7 +1040,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                             <option>2025</option>
                             <option>2026</option>
                         </select>
-                        <button class="btn-filter" style="padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--primary-purple); background: white; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class='bx bx-filter'></i> Filter</button>
+                        <button class="btn-filter" style="padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--primary-purple); background: var(--white); cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class='bx bx-filter'></i> Filter</button>
                     </div>
                 </div>
                 
@@ -1017,7 +1066,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             </div>
 
             <!-- Right Column: Bill Details -->
-            <div class="bill-details-panel" style="background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
+            <div class="bill-details-panel" style="background: var(--white); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
                     <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
@@ -1037,14 +1086,14 @@ $show_banner = ($is_late && !empty($overdue_list));
                     </div>
                 </div>
 
-                <div style="background: #F8F9FA; border-radius: 16px; padding: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid rgba(0,0,0,0.03);">
+                <div class="bd-total-box" style="background: var(--bg-main); border-radius: 16px; padding: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--border);">
                     <div style="min-width: 0;">
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Total Amount</p>
                         <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: #FF4B6B; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹8,000.00</h2>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
                         <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
-                        <button id="bdBtnDownload" style="background: white; color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
+                        <button id="bdBtnDownload" style="background: var(--white); color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
 
@@ -1181,9 +1230,9 @@ $show_banner = ($is_late && !empty($overdue_list));
                     
                     let actionBtn = '';
                     if (bill.status === 'Unpaid') {
-                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
+                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
                     } else {
-                        actionBtn = `<button style="background:white; border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:14px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
+                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:14px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
 
                     const displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
