@@ -575,19 +575,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                           <?php endif; ?>
                       </div>
                       <div style="max-height: 350px; overflow-y: auto;">
-                          <?php if (empty($unread_notifications)): ?>
-                              <div style="padding: 30px; text-align: center; color: var(--text-gray);">
-                                  <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                  <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
-                              </div>
-                          <?php else: ?>
-                              <?php foreach ($unread_notifications as $notif): ?>
-                      <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
-                  </div>
-                  
-                  <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                      <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
-                          <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                       </a>
                       <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
                           <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
