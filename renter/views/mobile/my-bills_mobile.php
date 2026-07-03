@@ -132,17 +132,22 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
 
-    .m-bottom-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 99; border-top: 1px solid var(--border); }
-    .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; color: var(--text-dark); font-weight: 600; }
-    .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 20px; }
-    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    /* Bottom Sheet UI for Bill Summary */
+    .m-panel-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 98; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(2px); }
+    .m-panel-overlay.show { opacity: 1; pointer-events: auto; }
     
-    /* Hide global mobile bottom nav to make room for the sticky summary panel */
+    .m-bottom-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); z-index: 99; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .m-bottom-panel.show { transform: translateY(0); }
+    
+    .m-panel-drag-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: -10px auto 20px auto; }
+    
+    .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-dark); font-weight: 500; }
+    .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px; }
+    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
+    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    
+    /* Hide global mobile bottom nav to make room for the UI */
     .mobile-bottom-nav { display: none !important; }
-    
-    /* Push the PWA install button above the sticky summary panel */
-    #pwaInstallBtn { bottom: 230px !important; }
 </style>
 
 <div class="m-bills-container animate-up">
