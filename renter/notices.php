@@ -636,6 +636,12 @@ if (isset($_GET['ajax_id'])) {
 <script>
 document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
 </script>
+</div> <!-- End of desktop-view-wrapper -->
+
+<div class="mobile-view-wrapper">
+    <?php include "views/mobile/notices_mobile.php"; ?>
+</div>
+
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
