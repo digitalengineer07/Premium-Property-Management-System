@@ -131,6 +131,22 @@ function money($val) {
             left: 0;
             top: 0;
             z-index: 100;
+            overflow-y: auto;
+        }
+
+        /* Custom sleek scrollbar for the sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(98, 75, 255, 0.2);
+            border-radius: 10px;
+        }
+        .sidebar:hover::-webkit-scrollbar-thumb {
+            background: rgba(98, 75, 255, 0.5);
         }
 
         .sidebar-header {
