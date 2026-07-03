@@ -611,8 +611,9 @@ foreach ($elecs as $t) {
             .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
         }
         @media (max-width: 768px) {
+            .desktop-view-wrapper { display: none !important; }
             .sidebar { display: none; }
-            .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
+            .main-content { margin-left: 0; max-width: 100%; padding: 0px; }
             .kpi-grid { grid-template-columns: 1fr; }
             .dashboard-3col { grid-template-columns: 1fr; }
             .dash-panel:nth-child(3) { grid-column: auto; }
@@ -621,6 +622,9 @@ foreach ($elecs as $t) {
             .tx-date { display: none; }
             .top-header { flex-direction: column; align-items: flex-start; gap: 16px; }
             .header-actions { width: 100%; justify-content: space-between; }
+        }
+        @media (min-width: 769px) {
+            .mobile-view-wrapper { display: none !important; }
         }
         
         
