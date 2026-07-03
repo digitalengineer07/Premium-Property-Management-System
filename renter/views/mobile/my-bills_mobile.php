@@ -15,8 +15,8 @@ while($r = mysqli_fetch_assoc($rent_q)) {
         'real_title' => date('F Y', strtotime($r['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $r['month'],
-        'bill_date' => date('01 M Y', strtotime($r['month'])),
-        'due_date' => date('d M Y', strtotime($r['month'] . '-05')),
+        'bill_date' => date('01 F Y', strtotime($r['month'])),
+        'due_date' => date('d F Y', strtotime($r['month'] . '-05')),
         'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
         'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
         'icon' => 'bx-home', 'icon_bg' => 'rgba(139, 92, 246, 0.1)', 'icon_color' => '#8B5CF6',
@@ -39,8 +39,8 @@ while($e = mysqli_fetch_assoc($elec_q)) {
         'real_title' => date('F Y', strtotime($e['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $e['month'],
-        'bill_date' => date('01 M Y', strtotime($e['month'])),
-        'due_date' => date('d M Y', strtotime('+1 month', strtotime($e['month'] . '-05'))),
+        'bill_date' => date('01 F Y', strtotime($e['month'])),
+        'due_date' => date('d F Y', strtotime('+1 month', strtotime($e['month'] . '-05'))),
         'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
         'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
         'icon' => 'bx-bolt-circle', 'icon_bg' => 'rgba(245, 158, 11, 0.1)', 'icon_color' => '#F59E0B',
@@ -63,8 +63,8 @@ while($m = mysqli_fetch_assoc($maint_q)) {
         'real_title' => date('F Y', strtotime($m['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $m['month'],
-        'bill_date' => date('01 M Y', strtotime($m['month'])),
-        'due_date' => date('d M Y', strtotime($m['month'] . '-05')),
+        'bill_date' => date('01 F Y', strtotime($m['month'])),
+        'due_date' => date('d F Y', strtotime($m['month'] . '-05')),
         'amount' => $m['combined_amount'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
         'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
         'icon' => 'bx-wrench', 'icon_bg' => 'rgba(59, 130, 246, 0.1)', 'icon_color' => '#3B82F6',
@@ -116,20 +116,20 @@ $total_bills_count = count($mobile_all_bills);
     .m-filter-btn-purple { color: #624BFF; border-color: rgba(98, 75, 255, 0.2); }
 
     .m-bill-list { display: flex; flex-direction: column; gap: 12px; padding: 0 16px; }
-    .m-bill-item { background: var(--white); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+    .m-bill-item { background: var(--white); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); position: relative; }
     .m-bill-left { display: flex; align-items: center; gap: 12px; flex: 1; }
     .m-bill-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
     .m-bill-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; }
     .m-bill-info p { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; white-space: nowrap; }
     .m-bill-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
     
-    .m-bill-mid { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; flex: 1; }
+    .m-bill-mid { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; text-align: center; }
     .m-bill-mid h4 { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; }
     .m-bill-mid p { font-size: 10px; color: #FF4B6B; margin: 0; font-weight: 600; }
 
-    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex: 1; text-align: right; }
+    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; flex: 1; text-align: right; }
     .m-bill-right-info h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
-    .m-bill-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+    .m-bill-status { position: absolute; top: 16px; right: 16px; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
     .m-download-btn-mini { width: 26px; height: 26px; background: rgba(98, 75, 255, 0.1); color: #624BFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; margin-left: 6px; }
     .m-download-btn-mini:active { background: rgba(98, 75, 255, 0.2); }
