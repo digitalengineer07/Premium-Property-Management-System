@@ -34,7 +34,7 @@ foreach ($notices as $n) {
     .m-filters { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 16px; }
     .m-select-wrap { position: relative; }
     .m-select-wrap select { appearance: none; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 32px 8px 12px; font-size: 12px; font-weight: 600; color: var(--text-dark); font-family: 'Outfit', sans-serif; outline: none; }
-    .m-select-wrap::after { content: '\eb1e'; font-family: 'boxicons'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; font-size: 16px; font-weight: normal; font-style: normal; }
+    .m-select-wrap::after { content: '▼'; font-family: sans-serif; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; font-size: 10px; }
     .m-filter-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; background: transparent; font-size: 12px; font-weight: 600; color: #624BFF; }
 
     /* Notice List */
