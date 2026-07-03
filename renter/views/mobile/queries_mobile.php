@@ -54,16 +54,41 @@
 </style>
 
 <div class="m-bills-container">
-    <header class="m-header-custom">
-        <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
-            <i class='bx bx-menu' style="font-size: 24px; color: var(--text-dark);"></i>
+    <header class="m-header-custom" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer; flex-shrink: 0;">
+                <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark);"></i>
+            </div>
+            <div>
+                <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark);">Queries</h2>
+                <p style="margin: 0; font-size: 12px; font-weight: 500; color: var(--text-gray);">Help & Support</p>
+            </div>
         </div>
-        <div style="text-align: center;">
-            <h2 style="margin: 0; font-size: 18px; font-weight: 800; color: var(--text-dark);">Queries</h2>
-            <p style="margin: 0; font-size: 12px; font-weight: 500; color: var(--text-gray);">Help & Support</p>
-        </div>
-        <div class="m-header-right">
-            <a href="dashboard.php" style="color: var(--text-dark); font-size: 22px; text-decoration: none;"><i class='bx bx-home-alt-2'></i></a>
+        <div class="m-header-right" style="display: flex; align-items: center; gap: 8px;">
+            <div class="icon-btn" id="themeToggle" style="width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; flex-shrink: 0;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"><i class='bx bx-moon'></i></div>
+            
+            <div class="icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';" style="position: relative; width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-dark); cursor: pointer; flex-shrink: 0;">
+                <i class='bx bx-bell'></i>
+                <?php if (isset($unread_count) && $unread_count > 0): ?>
+                    <span style="position: absolute; top: 0px; right: 2px; width: 8px; height: 8px; background: #FF4B6B; border-radius: 50%; border: 2px solid var(--bg-main);"></span>
+                <?php endif; ?>
+            </div>
+            
+            <div onclick="const pd = document.getElementById('profileDropdown'); if(pd) pd.style.display = pd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: #E0E7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid var(--border); flex-shrink: 0;">
+                <?php 
+                    $real_pic = '';
+                    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+                    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
+                    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
+                    
+                    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
+                ?>
+                <?php if (!empty($real_pic)): ?>
+                    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                <?php else: ?>
+                    <span style="font-weight: 700; font-size: 14px;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
+                <?php endif; ?>
+            </div>
         </div>
     </header>
 
