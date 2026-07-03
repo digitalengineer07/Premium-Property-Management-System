@@ -426,6 +426,69 @@ if (isset($_GET['ajax_id'])) {
     }
 
 
+        /* Mobile Bottom Nav Bar Default (Hidden on Desktop) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .mb-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-gray);
+            font-size: 10px;
+            font-weight: 600;
+            gap: 4px;
+            flex: 1;
+            transition: all 0.2s ease;
+        }
+        .mb-nav-item i {
+            font-size: 22px;
+            transition: transform 0.2s ease;
+        }
+        .mb-nav-item.active {
+            color: #624BFF;
+        }
+        .mb-nav-item.active i {
+            transform: translateY(-2px);
+        }
+        .mb-nav-center {
+            width: 50px;
+            height: 50px;
+            background: #624BFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(98, 75, 255, 0.4);
+            transform: translateY(-15px);
+            cursor: pointer;
+            border: 4px solid var(--bg-main);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .mb-nav-center:hover {
+            transform: translateY(-18px);
+            box-shadow: 0 6px 20px rgba(98, 75, 255, 0.6);
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #0F172A; /* Match dark theme body bg */
+        }
+
         /* Comprehensive Dark Mode Overrides for Notices Page */
         @media (max-width: 768px) {
             .desktop-view-wrapper { display: none !important; }
