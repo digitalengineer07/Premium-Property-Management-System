@@ -622,12 +622,70 @@ foreach ($elecs as $t) {
             .tx-date { display: none; }
             .top-header { flex-direction: column; align-items: flex-start; gap: 16px; }
             .header-actions { width: 100%; justify-content: space-between; }
+            .mobile-bottom-nav { display: flex !important; }
         }
         @media (min-width: 769px) {
             .mobile-view-wrapper { display: none !important; }
         }
-        
-        
+
+        /* Mobile Bottom Nav Bar Default (Hidden on Desktop) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: var(--white, #FFFFFF);
+            border-top: 1px solid var(--border, #F1F5F9);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            z-index: 9999;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 8px;
+        }
+        .dark-theme .mobile-bottom-nav {
+            background: #111827;
+            border-top-color: #1E293B;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .mb-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-gray, #64748B);
+            font-size: 11px;
+            font-weight: 600;
+            gap: 4px;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .mb-nav-item i { font-size: 22px; }
+        .mb-nav-item.active {
+            color: var(--primary-purple, #624BFF);
+        }
+        .mb-nav-center {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #624BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer;
+            margin-top: -24px;
+            border: 4px solid var(--white, #FFFFFF);
+            transition: transform 0.2s;
+        }
+        .dark-theme .mb-nav-center {
+            border-color: #111827;
+        }
         
     
         /* My Payments V2 CSS */
