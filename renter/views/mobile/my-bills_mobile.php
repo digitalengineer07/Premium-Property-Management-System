@@ -95,7 +95,7 @@ $total_bills_count = count($mobile_all_bills);
 ?>
 
 <style>
-    .m-bills-container { background: var(--bg-main); padding-bottom: 8px; font-family: 'Outfit', sans-serif; }
+    .m-bills-container { background: var(--bg-main); padding-bottom: 90px; font-family: 'Outfit', sans-serif; }
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
     .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
@@ -144,8 +144,6 @@ $total_bills_count = count($mobile_all_bills);
     .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
     .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; }
     
-    /* Hide global mobile bottom nav to make room for the UI */
-    .mobile-bottom-nav { display: none !important; }
 </style>
 
 <div class="m-bills-container animate-up">
