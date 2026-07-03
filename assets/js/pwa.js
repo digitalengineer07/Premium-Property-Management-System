@@ -38,13 +38,32 @@ installBtn.onmouseout = () => { installBtn.style.transform = 'translateY(0)'; in
 
 document.body.appendChild(installBtn);
 
+// Track session start time to hide button after 2 minutes
+let pwaStartTime = sessionStorage.getItem('pwa_start_time');
+if (!pwaStartTime) {
+    pwaStartTime = Date.now();
+    sessionStorage.setItem('pwa_start_time', pwaStartTime);
+}
+
 window.addEventListener('beforeinstallprompt', (e) => {
     // Prevent the mini-infobar from appearing on mobile
     e.preventDefault();
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
-    // Update UI notify the user they can install the PWA
-    installBtn.style.display = 'flex';
+    
+    // Only show if 2 minutes haven't passed since session start
+    const elapsed = Date.now() - parseInt(pwaStartTime);
+    const twoMinutes = 120000; // 2 minutes in ms
+    
+    if (elapsed < twoMinutes) {
+        // Update UI notify the user they can install the PWA
+        installBtn.style.display = 'flex';
+        
+        // Set timeout to hide it when exactly 2 minutes have passed
+        setTimeout(() => {
+            installBtn.style.display = 'none';
+        }, twoMinutes - elapsed);
+    }
 });
 
 installBtn.addEventListener('click', async () => {
