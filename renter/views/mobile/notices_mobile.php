@@ -38,17 +38,46 @@ foreach ($notices as $n) {
     .m-select-wrap::after { content: '▼'; font-family: sans-serif; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; font-size: 10px; }
     .m-filter-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; background: transparent; font-size: 12px; font-weight: 600; color: #624BFF; }
 
-    /* Notice List */
-    .m-notice-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-    .m-notice-item { background: var(--white); padding: 16px; display: flex; gap: 12px; position: relative; }
-    .m-notice-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .m-notice-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    /* Premium Notice List */
+    .m-notice-list { display: flex; flex-direction: column; gap: 14px; padding: 0 16px; margin-bottom: 24px; }
+    .m-notice-item { 
+        background: var(--white); 
+        padding: 18px; 
+        display: flex; 
+        gap: 14px; 
+        position: relative; 
+        border-radius: 20px; 
+        border: 1px solid var(--border); 
+        box-shadow: 0 8px 24px rgba(0,0,0,0.04); 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        cursor: pointer; 
+        overflow: hidden;
+    }
+    .m-notice-item:active { transform: scale(0.98); }
+    
+    /* Premium Dark Theme Overrides */
+    body.dark-theme .m-notice-item {
+        background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid rgba(255,255,255,0.06);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+        backdrop-filter: blur(12px);
+    }
+    body.dark-theme .m-notice-item.expanded {
+        border-color: rgba(98, 75, 255, 0.4);
+        box-shadow: 0 10px 40px rgba(98, 75, 255, 0.15);
+        background: linear-gradient(145deg, rgba(98,75,255,0.08) 0%, rgba(255,255,255,0.01) 100%);
+    }
+    
+    .m-notice-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; transition: transform 0.3s ease; }
+    .m-notice-item:hover .m-notice-icon { transform: scale(1.1) rotate(-5deg); }
+    
+    .m-notice-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
     .m-notice-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .m-notice-title-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .m-notice-title { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0; }
-    .m-notice-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block; line-height: 1; }
-    .m-notice-desc { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.2s ease; }
-    .m-notice-item.expanded .m-notice-desc { -webkit-line-clamp: unset; display: block; }
+    .m-notice-title-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .m-notice-title { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.2px; }
+    .m-notice-badge { font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 6px; display: inline-block; line-height: 1; text-transform: uppercase; letter-spacing: 0.5px; }
+    .m-notice-desc { font-size: 12px; font-weight: 500; color: var(--text-gray); margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.3s ease; opacity: 0.9; }
+    .m-notice-item.expanded .m-notice-desc { -webkit-line-clamp: unset; display: block; opacity: 1; margin-top: 4px; }
     .m-notice-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
     .m-notice-date { font-size: 10px; color: var(--text-dark); font-weight: 600; }
     .m-notice-time { font-size: 10px; color: var(--text-gray); font-weight: 500; }
