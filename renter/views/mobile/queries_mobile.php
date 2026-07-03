@@ -13,9 +13,9 @@
     .m-kpi-value { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; }
     .m-kpi-pill { font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: inline-block; white-space: nowrap; margin-top: auto; align-self: center; }
 
-    .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-    .m-tab { font-size: 14px; font-weight: 600; color: var(--text-gray); padding-bottom: 12px; cursor: pointer; white-space: nowrap; flex: 1; text-align: center; }
-    .m-tab.active { color: #624BFF; border-bottom: 2px solid #624BFF; }
+    .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
+    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 4px; cursor: pointer; white-space: nowrap; }
+    .m-tab.active { font-weight: 700; color: #624BFF; border-bottom: 2px solid #624BFF; }
 
     .m-form-container { padding: 0 16px; display: none; }
     .m-form-container.active { display: block; animation: fadeIn 0.3s ease; }
