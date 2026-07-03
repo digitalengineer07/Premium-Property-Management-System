@@ -2,17 +2,24 @@
 // EXCLUSIVE MOBILE VIEW FOR ELECTRICITY-RECORD
 ?>
 
-<header class="" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: transparent;">
-    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
-        <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark); cursor: pointer;"></i>
+<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); box-shadow: none; border-bottom: none; position: sticky; top: 0; z-index: 100;">
+    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
+        <i class='bx bx-menu-alt-left' style="font-size: 28px; color: var(--text-dark);"></i>
     </div>
-    <div class="m-header-brand" style="display: flex; align-items: center; gap: 10px;">
-        <img src="../assets/img/logo.png" alt="Logo" style="width: 28px; height: 28px; border-radius: 8px;">
-        <span style="font-size: 18px; font-weight: 800; color: var(--text-dark);">Electricity Record</span>
+    <div class="m-header-brand" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.2; margin-left: 16px;">
+        <span style="font-size: 17px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.3px;">Electricity Record</span>
+        <span style="font-size: 11px; font-weight: 500; color: var(--text-gray);">Track your usage and billing details</span>
     </div>
-    <div class="m-header-right" style="display: flex; align-items: center; gap: 8px;">
-        <div class="icon-btn" id="themeToggleMobile" style="width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; flex-shrink: 0;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"><i class='bx bx-moon'></i></div>
-        <a href="dashboard.php" style="color: var(--text-dark); font-size: 22px; text-decoration: none; display: flex; align-items: center; width: 38px; height: 38px; justify-content: center;"><i class='bx bx-home'></i></a>
+    <div class="m-header-right" style="display: flex; align-items: center; gap: 14px;">
+        <!-- notification bell -->
+        <div style="position: relative; cursor: pointer;">
+            <i class='bx bx-bell' style="font-size: 22px; color: var(--text-dark);"></i>
+            <span style="position: absolute; top: -1px; right: 0px; background: #FF4B6B; width: 14px; height: 14px; border-radius: 50%; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white);">1</span>
+        </div>
+        <!-- avatar -->
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; cursor: pointer;">
+            <?php echo strtoupper(substr($user['name'] ?? 'U', 0, 2)); ?>
+        </div>
     </div>
 </header>
 
