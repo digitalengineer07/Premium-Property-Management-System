@@ -265,12 +265,5 @@ foreach ($notices as $n) {
 
     <!-- Important Notice Widget (Removed to prevent duplication) -->
 
-    <!-- Enable Notifications CTA -->
-    <div class="m-notify-cta">
-        <div class="m-notify-text">
-            <i class='bx bx-bell'></i> Don't miss any important updates!
-        </div>
-        <button class="m-notify-btn">Enable Notifications</button>
-        <i class='bx bx-x' style="color: var(--text-gray); font-size: 18px; cursor: pointer;"></i>
-    </div>
+    <!-- Enable Notifications CTA (Removed per user request) -->
 </div>
