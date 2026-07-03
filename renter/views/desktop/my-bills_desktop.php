@@ -314,30 +314,30 @@
             <div class="bill-details-panel" style="background: var(--white); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
-                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
+                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(16, 185, 129, 0.1); color: #10B981;">Paid</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
                     <div id="bdIcon" style="width: 40px; height: 40px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-                        <i class='bx bx-home'></i>
+                        <i class='bx bx-receipt'></i>
                     </div>
                     <div style="flex: 1; min-width: 0;">
-                        <h4 id="bdTitle" style="margin: 0 0 2px 0; font-size: 12px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rent for February 2026</h4>
-                        <p id="bdSubtitle" style="margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room 201</p>
+                        <h4 id="bdTitle" style="margin: 0 0 2px 0; font-size: 12px; font-weight: 700; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">No Bill Selected</h4>
+                        <p id="bdSubtitle" style="margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">-</p>
                     </div>
                     <div style="margin-left: auto; text-align: right; flex-shrink: 0;">
                         <p style="margin: 0 0 2px 0; font-size: 10px; color: var(--text-gray);">Due Date</p>
-                        <h4 id="bdDueDate" style="margin: 0; font-size: 12px; font-weight: 700; color: #FF4B6B;">05 Feb 2026</h4>
+                        <h4 id="bdDueDate" style="margin: 0; font-size: 12px; font-weight: 700; color: var(--text-gray);">-</h4>
                     </div>
                 </div>
 
                 <div class="bd-total-box" style="background: var(--bg-main); border-radius: 16px; padding: 16px; margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid var(--border);">
                     <div style="min-width: 0;">
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Total Amount</p>
-                        <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: #FF4B6B; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹8,000.00</h2>
+                        <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹0.00</h2>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
-                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
+                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
                         <button id="bdBtnDownload" style="background: var(--white); color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
@@ -349,7 +349,7 @@
 
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px dashed var(--border); margin-bottom: 24px;">
                     <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-dark);">Total Amount</h4>
-                    <h4 id="bdTotalAmount2" style="margin: 0; font-size: 15px; font-weight: 800; color: #FF4B6B;">₹8,000.00</h4>
+                    <h4 id="bdTotalAmount2" style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">₹0.00</h4>
                 </div>
 
                 <div id="bdWarning" style="background: #FFF7ED; border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 16px; display: flex; gap: 12px; align-items: center; margin-top: auto;">
