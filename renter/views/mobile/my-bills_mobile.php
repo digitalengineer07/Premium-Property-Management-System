@@ -280,13 +280,13 @@ $total_bills_count = count($mobile_all_bills);
                 <div class="m-bill-info">
                     <h4><?php echo $bill['real_title']; ?></h4>
                     <p><?php echo $bill['subtitle']; ?></p>
-                    <span class="m-bill-badge" style="background: <?php echo $bill['badge_bg']; ?>; color: <?php echo $bill['badge_color']; ?>;"><?php echo $bill['badge']; ?></span>
                 </div>
             </div>
             <div class="m-bill-mid">
                 <h4><?php echo $bill['due_date']; ?></h4>
+                <span class="m-bill-badge" style="background: <?php echo $bill['badge_bg']; ?>; color: <?php echo $bill['badge_color']; ?>;"><?php echo $bill['badge']; ?></span>
                 <?php if($bill['status'] === 'Unpaid'): ?>
-                    <p>Due Today</p>
+                    <p style="margin-top: 4px;">Due Today</p>
                 <?php endif; ?>
             </div>
             <div class="m-bill-right">
