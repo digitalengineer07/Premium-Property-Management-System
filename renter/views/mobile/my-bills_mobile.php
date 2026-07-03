@@ -137,6 +137,9 @@ $total_bills_count = count($mobile_all_bills);
     .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 20px; }
     .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
     .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    
+    /* Hide global mobile bottom nav to make room for the sticky summary panel */
+    .mobile-bottom-nav { display: none !important; }
 </style>
 
 <div class="m-bills-container animate-up">
