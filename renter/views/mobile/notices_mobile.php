@@ -234,11 +234,11 @@ foreach ($notices as $n) {
 
     <!-- Tabs -->
     <div class="m-tabs-scroll">
-        <div class="m-tab active">All</div>
-        <div class="m-tab">Important</div>
-        <div class="m-tab">General</div>
-        <div class="m-tab">Maintenance</div>
-        <div class="m-tab">Events</div>
+        <a href="?category=all" class="m-tab <?php echo $current_category === 'all' ? 'active' : ''; ?>" style="text-decoration: none;">All</a>
+        <a href="?category=important" class="m-tab <?php echo $current_category === 'important' ? 'active' : ''; ?>" style="text-decoration: none;">Important</a>
+        <a href="?category=general" class="m-tab <?php echo $current_category === 'general' ? 'active' : ''; ?>" style="text-decoration: none;">General</a>
+        <a href="?category=maintenance" class="m-tab <?php echo $current_category === 'maintenance' ? 'active' : ''; ?>" style="text-decoration: none;">Maintenance</a>
+        <a href="?category=events" class="m-tab <?php echo $current_category === 'events' ? 'active' : ''; ?>" style="text-decoration: none;">Events</a>
     </div>
 
     <!-- Filters -->
@@ -253,56 +253,58 @@ foreach ($notices as $n) {
 
     <!-- Notices List -->
     <div class="m-notice-list">
-        <?php foreach(array_slice($notices, 0, 7) as $idx => $n): ?>
-            <?php 
-                $icon = 'bx-info-circle'; $icon_bg = 'rgba(98, 75, 255, 0.1)'; $icon_color = '#624BFF';
-                $badge = 'General'; $badge_bg = 'rgba(16, 185, 129, 0.1)'; $badge_color = '#10B981';
-                
-                if (stripos($n['title'], 'Maintenance') !== false || stripos($n['category'], 'Maintenance') !== false) {
-                    if (stripos($n['title'], 'Water') !== false) {
-                        $icon = 'bx-calendar-event';
-                        $icon_bg = 'rgba(98, 75, 255, 0.1)';
-                        $icon_color = '#624BFF';
-                    } else {
-                        $icon = 'bx-bolt-circle';
-                        $icon_bg = 'rgba(245, 158, 11, 0.1)';
-                        $icon_color = '#F59E0B';
-                    }
-                    $badge = 'Maintenance';
-                    $badge_bg = 'rgba(245, 158, 11, 0.1)';
-                    $badge_color = '#D97706';
-                }
-                if ($n['category'] === 'Important' || stripos($n['title'], 'Rules') !== false) {
-                    $icon = 'bx-error-circle';
-                    $icon_bg = 'rgba(255, 75, 107, 0.1)';
-                    $icon_color = '#FF4B6B';
-                    $badge = 'Important';
-                    $badge_bg = 'rgba(255, 75, 107, 0.1)';
-                    $badge_color = '#FF4B6B';
+        <?php if ($total_filtered === 0): ?>
+            <div style="text-align: center; padding: 40px 20px; color: var(--text-gray); font-size: 14px; font-weight: 500;">
+                <i class='bx bx-ghost' style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
+                <p>No notices found in this category.</p>
+            </div>
+        <?php else: ?>
+            <?php foreach($paged_notices as $idx => $n): ?>
+                <?php 
+                    $icon = 'bx-info-circle'; $icon_bg = 'rgba(98, 75, 255, 0.1)'; $icon_color = '#624BFF';
+                    $badge = $n['computed_badge']; $badge_bg = 'rgba(16, 185, 129, 0.1)'; $badge_color = '#10B981';
                     
-                    if (stripos($n['title'], 'Maintenance') !== false) {
-                        $icon = 'bxs-megaphone';
-                        $icon_bg = 'rgba(98, 75, 255, 0.1)';
-                        $icon_color = '#624BFF';
+                    if ($badge === 'Maintenance') {
+                        if (stripos($n['title'], 'Water') !== false) {
+                            $icon = 'bx-calendar-event';
+                            $icon_bg = 'rgba(98, 75, 255, 0.1)';
+                            $icon_color = '#624BFF';
+                        } else {
+                            $icon = 'bx-bolt-circle';
+                            $icon_bg = 'rgba(245, 158, 11, 0.1)';
+                            $icon_color = '#F59E0B';
+                        }
+                        $badge_bg = 'rgba(245, 158, 11, 0.1)';
+                        $badge_color = '#D97706';
                     }
-                }
-                if (stripos($n['title'], 'Event') !== false) {
-                    $icon = 'bx-gift';
-                    $icon_bg = 'rgba(59, 130, 246, 0.1)';
-                    $icon_color = '#3B82F6';
-                    $badge = 'Events';
-                    $badge_bg = 'rgba(59, 130, 246, 0.1)';
-                    $badge_color = '#3B82F6';
-                }
-                if (stripos($n['title'], 'Society') !== false || stripos($n['title'], 'Garbage') !== false) {
-                    $icon = stripos($n['title'], 'Garbage') !== false ? 'bx-trash' : 'bx-building-house';
-                    $icon_bg = stripos($n['title'], 'Garbage') !== false ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)';
-                    $icon_color = stripos($n['title'], 'Garbage') !== false ? '#F59E0B' : '#10B981';
-                    $badge = 'General';
-                    $badge_bg = 'rgba(16, 185, 129, 0.1)';
-                    $badge_color = '#10B981';
-                }
-            ?>
+                    if ($badge === 'Important') {
+                        $icon = 'bx-error-circle';
+                        $icon_bg = 'rgba(255, 75, 107, 0.1)';
+                        $icon_color = '#FF4B6B';
+                        $badge_bg = 'rgba(255, 75, 107, 0.1)';
+                        $badge_color = '#FF4B6B';
+                        
+                        if (stripos($n['title'], 'Maintenance') !== false) {
+                            $icon = 'bxs-megaphone';
+                            $icon_bg = 'rgba(98, 75, 255, 0.1)';
+                            $icon_color = '#624BFF';
+                        }
+                    }
+                    if ($badge === 'Events') {
+                        $icon = 'bx-gift';
+                        $icon_bg = 'rgba(59, 130, 246, 0.1)';
+                        $icon_color = '#3B82F6';
+                        $badge_bg = 'rgba(59, 130, 246, 0.1)';
+                        $badge_color = '#3B82F6';
+                    }
+                    if ($badge === 'General') {
+                        $icon = stripos($n['title'], 'Garbage') !== false ? 'bx-trash' : 'bx-building-house';
+                        $icon_bg = stripos($n['title'], 'Garbage') !== false ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)';
+                        $icon_color = stripos($n['title'], 'Garbage') !== false ? '#F59E0B' : '#10B981';
+                        $badge_bg = 'rgba(16, 185, 129, 0.1)';
+                        $badge_color = '#10B981';
+                    }
+                ?>
             <div class="m-notice-item" style="cursor: pointer;" onclick="this.classList.toggle('expanded'); const b = this.querySelector('.m-new-tag'); if(b) b.style.display='none';">
                 <div class="m-notice-icon" style="background: <?php echo $icon_bg; ?>; color: <?php echo $icon_color; ?>;">
                     <i class='bx <?php echo $icon; ?>'></i>
@@ -325,19 +327,20 @@ foreach ($notices as $n) {
                 </div>
             </div>
         <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <!-- Pagination -->
-    <?php if ($total_notices > 0): ?>
-    <div class="m-pagination-info">Showing <?php echo min(($page - 1) * 7 + 1, $total_notices); ?> to <?php echo min($page * 7, $total_notices); ?> of <?php echo $total_notices; ?> notice<?php echo $total_notices == 1 ? '' : 's'; ?></div>
-    <?php if ($total_notices > 7): ?>
+    <?php if ($total_filtered > 0): ?>
+    <div class="m-pagination-info">Showing <?php echo min(($page - 1) * 7 + 1, $total_filtered); ?> to <?php echo min($page * 7, $total_filtered); ?> of <?php echo $total_filtered; ?> notice<?php echo $total_filtered == 1 ? '' : 's'; ?></div>
+    <?php if ($total_filtered > 7): ?>
     <div class="m-pagination">
-        <a href="?page=<?php echo max(1, $page - 1); ?>" class="m-page-btn"><i class='bx bx-chevron-left'></i></a>
+        <a href="?category=<?php echo urlencode($current_category); ?>&page=<?php echo max(1, $page - 1); ?>" class="m-page-btn"><i class='bx bx-chevron-left'></i></a>
         <a href="#" class="m-page-btn active"><?php echo $page; ?></a>
-        <?php if ($page * 7 < $total_notices): ?>
-            <a href="?page=<?php echo $page + 1; ?>" class="m-page-btn"><?php echo $page + 1; ?></a>
+        <?php if ($page * 7 < $total_filtered): ?>
+            <a href="?category=<?php echo urlencode($current_category); ?>&page=<?php echo $page + 1; ?>" class="m-page-btn"><?php echo $page + 1; ?></a>
         <?php endif; ?>
-        <a href="?page=<?php echo min(ceil($total_notices / 7), $page + 1); ?>" class="m-page-btn"><i class='bx bx-chevron-right'></i></a>
+        <a href="?category=<?php echo urlencode($current_category); ?>&page=<?php echo min(ceil($total_filtered / 7), $page + 1); ?>" class="m-page-btn"><i class='bx bx-chevron-right'></i></a>
     </div>
     <?php endif; ?>
     <?php endif; ?>
