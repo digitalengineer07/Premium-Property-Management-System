@@ -132,19 +132,14 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
 
-    /* Bottom Sheet UI for Bill Summary */
-    .m-panel-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 98; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(2px); }
-    .m-panel-overlay.show { opacity: 1; pointer-events: auto; }
-    
-    .m-bottom-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); z-index: 99; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .m-bottom-panel.show { transform: translateY(0); }
-    
-    .m-panel-drag-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--border); margin: -10px auto 20px auto; }
+    /* In-flow UI for Bill Summary */
+    .m-bottom-panel { background: var(--white); border-radius: 24px; margin: 0 16px 24px 16px; padding: 24px 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: none; }
+    .m-bottom-panel.show { display: block; }
     
     .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-dark); font-weight: 500; }
     .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px; }
-    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); }
-    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
+    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; }
     
     /* Hide global mobile bottom nav to make room for the UI */
     .mobile-bottom-nav { display: none !important; }
@@ -248,6 +243,30 @@ $total_bills_count = count($mobile_all_bills);
         </div>
     </div>
 
+    <!-- In-flow Bill Summary Panel -->
+    <div class="m-bottom-panel" id="mBillSummaryPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Bill Summary</h3>
+            <span id="mSummaryStatus" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
+        </div>
+        
+        <div id="mSummaryDetails">
+            <!-- Dynamically populated -->
+        </div>
+
+        <div class="m-panel-total">
+            <span>Total Amount</span>
+            <span id="mSummaryTotal" style="color: #FF4B6B;">₹0.00</span>
+        </div>
+
+        <button class="m-btn-primary" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
+            <i class='bx bx-credit-card-front'></i> Pay Now
+        </button>
+        <button class="m-btn-outline" onclick="window.location.href='#'">
+            <i class='bx bx-download'></i> Download Bill
+        </button>
+    </div>
+
     <!-- Bill List -->
     <div class="m-bill-list">
         <?php foreach(array_slice($mobile_all_bills, 0, 10) as $bill): ?>
@@ -301,47 +320,18 @@ $total_bills_count = count($mobile_all_bills);
         </div>
     </div>
 
-    <!-- Bottom Sheet UI -->
-    <div class="m-panel-overlay" id="mPanelOverlay" onclick="closeMobileBillSummary()"></div>
-    <div class="m-bottom-panel" id="mBillSummaryPanel">
-        <div class="m-panel-drag-handle" onclick="closeMobileBillSummary()"></div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Bill Summary</h3>
-            <span id="mSummaryStatus" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
         </div>
-        
-        <div id="mSummaryDetails">
-            <!-- Dynamically populated -->
-        </div>
-
-        <div class="m-panel-total">
-            <span>Total Amount</span>
-            <span id="mSummaryTotal" style="color: #FF4B6B;">₹0.00</span>
-        </div>
-
-        <button class="m-btn-primary" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
-            <i class='bx bx-credit-card-front'></i> Pay Now
-        </button>
-        <button class="m-btn-outline" onclick="closeMobileBillSummary()">
-            <i class='bx bx-download'></i> Download Bill
-        </button>
     </div>
 </div>
 
 <script>
-    // Bottom Sheet Logic
+    // In-flow UI Logic
     const mobileBills = <?php echo json_encode($mobile_all_bills); ?>;
     
-    function openMobileBillSummary() {
-        document.getElementById('mPanelOverlay').classList.add('show');
+    function showMobileBillSummary() {
         document.getElementById('mBillSummaryPanel').classList.add('show');
-        document.body.classList.add('sheet-open');
-    }
-    
-    function closeMobileBillSummary() {
-        document.getElementById('mPanelOverlay').classList.remove('show');
-        document.getElementById('mBillSummaryPanel').classList.remove('show');
-        document.body.classList.remove('sheet-open');
+        // Scroll to summary nicely if needed
+        document.getElementById('mBillSummaryPanel').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     
     function selectMobileBill(bill) {
@@ -369,7 +359,16 @@ $total_bills_count = count($mobile_all_bills);
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
         }
         
-        openMobileBillSummary();
+        showMobileBillSummary();
+    }
+    
+    // Auto-select the first unpaid bill on page load
+    if (mobileBills && mobileBills.length > 0) {
+        let firstBill = mobileBills.find(b => b.status === 'Unpaid') || mobileBills[0];
+        // We select it, but we can instantly show it without scrolling animation
+        selectMobileBill(firstBill);
+        // Reset scroll position to top after auto-selecting to avoid jumping down
+        setTimeout(() => { window.scrollTo(0, 0); }, 10);
     }
 
 </script>
