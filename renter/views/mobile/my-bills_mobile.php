@@ -301,8 +301,10 @@ $total_bills_count = count($mobile_all_bills);
         </div>
     </div>
 
-    <!-- Bottom Summary Panel -->
+    <!-- Bottom Sheet UI -->
+    <div class="m-panel-overlay" id="mPanelOverlay" onclick="closeMobileBillSummary()"></div>
     <div class="m-bottom-panel" id="mBillSummaryPanel">
+        <div class="m-panel-drag-handle" onclick="closeMobileBillSummary()"></div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Bill Summary</h3>
             <span id="mSummaryStatus" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
@@ -310,9 +312,6 @@ $total_bills_count = count($mobile_all_bills);
         
         <div id="mSummaryDetails">
             <!-- Dynamically populated -->
-            <div class="m-panel-row"><span>Monthly Rent</span><span>₹0.00</span></div>
-            <div class="m-panel-row"><span>Maintenance Charge</span><span>₹0.00</span></div>
-            <div class="m-panel-row"><span>Other Charges</span><span>₹0.00</span></div>
         </div>
 
         <div class="m-panel-total">
@@ -323,15 +322,27 @@ $total_bills_count = count($mobile_all_bills);
         <button class="m-btn-primary" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
             <i class='bx bx-credit-card-front'></i> Pay Now
         </button>
-        <button class="m-btn-outline">
+        <button class="m-btn-outline" onclick="closeMobileBillSummary()">
             <i class='bx bx-download'></i> Download Bill
         </button>
     </div>
 </div>
 
 <script>
-    // Set initial bill summary if bills exist
+    // Bottom Sheet Logic
     const mobileBills = <?php echo json_encode($mobile_all_bills); ?>;
+    
+    function openMobileBillSummary() {
+        document.getElementById('mPanelOverlay').classList.add('show');
+        document.getElementById('mBillSummaryPanel').classList.add('show');
+        document.body.classList.add('sheet-open');
+    }
+    
+    function closeMobileBillSummary() {
+        document.getElementById('mPanelOverlay').classList.remove('show');
+        document.getElementById('mBillSummaryPanel').classList.remove('show');
+        document.body.classList.remove('sheet-open');
+    }
     
     function selectMobileBill(bill) {
         if(!bill) return;
@@ -357,11 +368,8 @@ $total_bills_count = count($mobile_all_bills);
             statusBadge.innerText = 'Unpaid';
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
         }
+        
+        openMobileBillSummary();
     }
 
-    if (mobileBills && mobileBills.length > 0) {
-        // Find first unpaid bill, else first bill
-        let firstBill = mobileBills.find(b => b.status === 'Unpaid') || mobileBills[0];
-        selectMobileBill(firstBill);
-    }
 </script>
