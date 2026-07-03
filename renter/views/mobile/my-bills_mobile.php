@@ -140,6 +140,9 @@ $total_bills_count = count($mobile_all_bills);
     
     /* Hide global mobile bottom nav to make room for the sticky summary panel */
     .mobile-bottom-nav { display: none !important; }
+    
+    /* Push the PWA install button above the sticky summary panel */
+    #pwaInstallBtn { bottom: 230px !important; }
 </style>
 
 <div class="m-bills-container animate-up">
