@@ -10,7 +10,7 @@ $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.
                                 WHERE r.user_id=$user_id");
 while($r = mysqli_fetch_assoc($rent_q)) {
     $mobile_all_bills[] = [
-        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : 'unpaid'),
+        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['month'].'-05') < time() ? 'overdue' : 'unpaid')),
         'title' => 'February 2026', // Mocking based on month for UI matching
         'real_title' => date('F Y', strtotime($r['month'])),
         'subtitle' => 'Room ' . $room_no,
@@ -35,7 +35,7 @@ $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount,
                                 WHERE e.user_id=$user_id AND e.amount > 0");
 while($e = mysqli_fetch_assoc($elec_q)) {
     $mobile_all_bills[] = [
-        'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : 'unpaid'),
+        'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : (strtotime('+1 month', strtotime($e['month'].'-05')) < time() ? 'overdue' : 'unpaid')),
         'real_title' => date('F Y', strtotime($e['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $e['month'],
@@ -59,7 +59,7 @@ $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenan
                                 WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
 while($m = mysqli_fetch_assoc($maint_q)) {
     $mobile_all_bills[] = [
-        'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : 'unpaid'),
+        'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : (strtotime($m['month'].'-05') < time() ? 'overdue' : 'unpaid')),
         'real_title' => date('F Y', strtotime($m['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $m['month'],
@@ -227,10 +227,10 @@ $total_bills_count = count($mobile_all_bills);
 
     <!-- Tabs -->
     <div class="m-tabs">
-        <div class="m-tab active">All Bills</div>
-        <div class="m-tab">Unpaid</div>
-        <div class="m-tab">Paid</div>
-        <div class="m-tab">Overdue</div>
+        <div class="m-tab active" onclick="filterMobileBills('all', this)">All Bills</div>
+        <div class="m-tab" onclick="filterMobileBills('unpaid', this)">Unpaid</div>
+        <div class="m-tab" onclick="filterMobileBills('paid', this)">Paid</div>
+        <div class="m-tab" onclick="filterMobileBills('overdue', this)">Overdue</div>
     </div>
 
     <!-- Filters -->
@@ -268,9 +268,9 @@ $total_bills_count = count($mobile_all_bills);
     </div>
 
     <!-- Bill List -->
-    <div class="m-bill-list">
+    <div class="m-bill-list" id="mBillListContainer">
         <?php foreach(array_slice($mobile_all_bills, 0, 10) as $bill): ?>
-        <div class="m-bill-item" onclick="selectMobileBill(<?php echo htmlspecialchars(json_encode($bill)); ?>)">
+        <div class="m-bill-item" data-status="<?php echo $bill['filter_type']; ?>" onclick="selectMobileBill(<?php echo htmlspecialchars(json_encode($bill)); ?>)">
             <div class="m-bill-left">
                 <div class="m-bill-icon" style="background: <?php echo $bill['icon_bg']; ?>; color: <?php echo $bill['icon_color']; ?>;">
                     <i class='bx <?php echo $bill['icon']; ?>'></i>
@@ -327,6 +327,33 @@ $total_bills_count = count($mobile_all_bills);
 <script>
     // In-flow UI Logic
     const mobileBills = <?php echo json_encode($mobile_all_bills); ?>;
+    
+    function filterMobileBills(status, tabElement) {
+        // Update active tab styling
+        const tabs = document.querySelectorAll('.m-tabs .m-tab');
+        tabs.forEach(t => t.classList.remove('active'));
+        tabElement.classList.add('active');
+        
+        // Filter items
+        const items = document.querySelectorAll('.m-bill-item');
+        let visibleCount = 0;
+        
+        items.forEach(item => {
+            const itemStatus = item.getAttribute('data-status');
+            if (status === 'all' || itemStatus === status) {
+                item.style.display = 'flex';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Update pagination text
+        const paginationText = document.querySelector('.m-bill-list + div span');
+        if (paginationText) {
+            paginationText.innerText = `Showing ${visibleCount} bill${visibleCount !== 1 ? 's' : ''}`;
+        }
+    }
     
     function showMobileBillSummary() {
         document.getElementById('mBillSummaryPanel').classList.add('show');
