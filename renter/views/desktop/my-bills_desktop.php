@@ -442,7 +442,7 @@
 
             function renderTable() {
                 const tbodies = document.querySelectorAll('#billsTableBody');
-                tbody.innerHTML = '';
+                tbodies.forEach(tb => tb.innerHTML = '');
                 
                 // Filter bills
                 const filteredBills = allBills.filter(bill => currentFilter === 'all' || bill.filter_type === currentFilter);
