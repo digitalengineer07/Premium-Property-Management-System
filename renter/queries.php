@@ -408,6 +408,45 @@ mysqli_stmt_close($stmt);
             background: rgba(255, 255, 255, 0.03) !important;
         }
 
+        /* Mobile Bottom Nav Bar Default (Hidden on Desktop) */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px;
+            background: var(--white, #FFFFFF);
+            border-top: 1px solid var(--border, #F1F5F9);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            z-index: 9999;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 8px;
+        }
+        .dark-theme .mobile-bottom-nav {
+            background: #111827;
+            border-top-color: #1E293B;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .mb-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-gray, #64748B);
+            font-size: 11px;
+            font-weight: 600;
+            gap: 4px;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 12px;
+        }
+        .mb-nav-item i { font-size: 22px; }
+        .mb-nav-item.active {
+            color: var(--primary-purple, #624BFF);
+        }
 
         .mb-nav-center {
             width: 52px;
