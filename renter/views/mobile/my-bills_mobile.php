@@ -177,10 +177,12 @@ $total_bills_count = count($mobile_all_bills);
                 <div class="m-kpi-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">
                     <i class='bx bx-receipt'></i>
                 </div>
-                <h4 class="m-kpi-title">Total Outstanding</h4>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Total Outstanding</h4>
+                    <h2 class="m-kpi-value" style="color: #FF4B6B; margin: 4px 0 0 0; font-size: 16px;"><?php echo money($total_due ?? 0); ?></h2>
+                </div>
             </div>
-            <div>
-                <h2 class="m-kpi-value" style="color: #FF4B6B;"><?php echo money($total_due ?? 0); ?></h2>
+            <div style="margin-top: auto;">
                 <span class="m-kpi-pill" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Payment Due</span>
             </div>
         </div>
@@ -191,10 +193,12 @@ $total_bills_count = count($mobile_all_bills);
                 <div class="m-kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
                     <i class='bx bx-calendar'></i>
                 </div>
-                <h4 class="m-kpi-title">Due This Month</h4>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Due This Month</h4>
+                    <h2 class="m-kpi-value" style="color: var(--text-dark); margin: 4px 0 0 0; font-size: 16px;"><?php echo money($due_this_month); ?></h2>
+                </div>
             </div>
-            <div>
-                <h2 class="m-kpi-value" style="color: var(--text-dark);"><?php echo money($due_this_month); ?></h2>
+            <div style="margin-top: auto;">
                 <span class="m-kpi-pill" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Due on 05 <?php echo date('M Y'); ?></span>
             </div>
         </div>
@@ -205,10 +209,12 @@ $total_bills_count = count($mobile_all_bills);
                 <div class="m-kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
                     <i class='bx bx-check-circle'></i>
                 </div>
-                <h4 class="m-kpi-title">Paid This Year</h4>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Paid This Year</h4>
+                    <h2 class="m-kpi-value" style="color: var(--text-dark); margin: 4px 0 0 0; font-size: 16px;"><?php echo money($paid_this_year); ?></h2>
+                </div>
             </div>
-            <div>
-                <h2 class="m-kpi-value" style="color: var(--text-dark);"><?php echo money($paid_this_year); ?></h2>
+            <div style="margin-top: auto;">
                 <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Bills Paid</span>
             </div>
         </div>
@@ -219,10 +225,12 @@ $total_bills_count = count($mobile_all_bills);
                 <div class="m-kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: #624BFF;">
                     <i class='bx bx-file'></i>
                 </div>
-                <h4 class="m-kpi-title">Total Bills</h4>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Total Bills</h4>
+                    <h2 class="m-kpi-value" style="color: var(--text-dark); margin: 4px 0 0 0; font-size: 16px;"><?php echo $total_bills_count; ?></h2>
+                </div>
             </div>
-            <div>
-                <h2 class="m-kpi-value" style="color: var(--text-dark);"><?php echo $total_bills_count; ?></h2>
+            <div style="margin-top: auto;">
                 <span class="m-kpi-pill" style="background: rgba(98, 75, 255, 0.1); color: #624BFF;">All Time</span>
             </div>
         </div>
