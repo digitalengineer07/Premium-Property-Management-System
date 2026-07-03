@@ -132,7 +132,7 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
 
-    .m-bottom-panel { position: fixed; bottom: 65px; left: 0; right: 0; background: var(--white); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 99; border-top: 1px solid var(--border); }
+    .m-bottom-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px 20px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 99; border-top: 1px solid var(--border); }
     .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; color: var(--text-dark); font-weight: 600; }
     .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 20px; }
     .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
