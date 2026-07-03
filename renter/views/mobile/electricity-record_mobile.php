@@ -14,7 +14,7 @@
         <!-- notification bell -->
         <div style="position: relative; cursor: pointer;">
             <i class='bx bx-bell' style="font-size: 22px; color: var(--text-dark);"></i>
-            <span style="position: absolute; top: -1px; right: 0px; background: #FF4B6B; width: 14px; height: 14px; border-radius: 50%; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white);">1</span>
+            <span style="position: absolute; top: -1px; right: 0px; background: #FF4B6B; width: 14px; height: 14px; border-radius: 50%; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-main);">1</span>
         </div>
         <!-- avatar -->
         <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; cursor: pointer;">
