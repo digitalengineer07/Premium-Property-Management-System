@@ -1,7 +1,35 @@
 <?php
 // EXCLUSIVE MOBILE VIEW FOR NOTICES.PHP
 
-// Get latest important notice for the bottom banner
+// Determine current category filter
+$current_category = strtolower($_GET['category'] ?? 'all');
+$filtered_notices = [];
+
+foreach ($notices as $n) {
+    // Determine the badge/category of the notice
+    $badge = 'General';
+    if (stripos($n['title'], 'Maintenance') !== false || stripos($n['category'], 'Maintenance') !== false) {
+        $badge = 'Maintenance';
+    }
+    if ($n['category'] === 'Important' || stripos($n['title'], 'Rules') !== false) {
+        $badge = 'Important';
+    }
+    if (stripos($n['title'], 'Event') !== false) {
+        $badge = 'Events';
+    }
+    
+    if ($current_category === 'all' || strtolower($badge) === $current_category) {
+        $n['computed_badge'] = $badge;
+        $filtered_notices[] = $n;
+    }
+}
+
+$total_filtered = count($filtered_notices);
+$page = max(1, (int)($_GET['page'] ?? 1));
+$per_page = 7;
+$paged_notices = array_slice($filtered_notices, ($page - 1) * $per_page, $per_page);
+
+// Get latest important notice for the bottom banner (from ALL notices, not just filtered)
 $latest_important = null;
 foreach ($notices as $n) {
     if ($n['category'] === 'Important') {
