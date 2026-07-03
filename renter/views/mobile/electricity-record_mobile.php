@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR ELECTRICITY-RECORD
 ?>
 
-<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;">
+<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); box-shadow: none; border-bottom: none; position: sticky; top: 0; z-index: 100;">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
         <i class='bx bx-menu-alt-left' style="font-size: 28px; color: var(--text-dark);"></i>
     </div>
