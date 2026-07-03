@@ -199,7 +199,7 @@ foreach ($notices as $n) {
                     $badge_color = '#10B981';
                 }
             ?>
-            <div class="m-notice-item" style="cursor: pointer;" onclick="this.classList.toggle('expanded');">
+            <div class="m-notice-item" style="cursor: pointer;" onclick="this.classList.toggle('expanded'); const b = this.querySelector('.m-new-tag'); if(b) b.style.display='none';">
                 <div class="m-notice-icon" style="background: <?php echo $icon_bg; ?>; color: <?php echo $icon_color; ?>;">
                     <i class='bx <?php echo $icon; ?>'></i>
                 </div>
