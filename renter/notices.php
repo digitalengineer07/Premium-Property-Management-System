@@ -427,6 +427,14 @@ if (isset($_GET['ajax_id'])) {
 
 
         /* Comprehensive Dark Mode Overrides for Notices Page */
+        @media (max-width: 768px) {
+            .desktop-view-wrapper { display: none !important; }
+            .mobile-bottom-nav { display: flex !important; }
+        }
+        @media (min-width: 769px) {
+            .mobile-view-wrapper { display: none !important; }
+        }
+
         .dark-theme .kpi-card,
         .dark-theme .list-card,
         .dark-theme .detail-card,
@@ -481,6 +489,7 @@ if (isset($_GET['ajax_id'])) {
 </style>
 </head>
 <body style="display: block;">
+<div class="desktop-view-wrapper">
 <div class="app-container">
     
     <!-- Sidebar -->
