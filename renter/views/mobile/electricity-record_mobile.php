@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR ELECTRICITY-RECORD
 ?>
 
-<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: white; position: sticky; top: 0; z-index: 100;">
+<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;">
     <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
         <i class='bx bx-menu-alt-left' style="font-size: 28px; color: var(--text-dark);"></i>
     </div>
@@ -23,12 +23,12 @@
     </div>
 </header>
 
-<div class="m-dashboard-content" style="padding: 16px 16px 120px 16px; background: #FAFBFC;">
+<div class="m-dashboard-content" style="padding: 16px 16px 120px 16px; background: var(--bg-main);">
     
     <!-- KPI Grid -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
         <!-- Total Units -->
-        <div style="background: white; border-radius: 16px; padding: 14px; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: var(--white); border-radius: 16px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(98, 75, 255, 0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-credit-card-front' style="color: var(--primary-purple); font-size: 18px;"></i>
@@ -44,7 +44,7 @@
         </div>
         
         <!-- Amount Paid -->
-        <div style="background: white; border-radius: 16px; padding: 14px; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: var(--white); border-radius: 16px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(16, 185, 129, 0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="#10B981" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -66,7 +66,7 @@
         </div>
         
         <!-- Pending Amount -->
-        <div style="background: white; border-radius: 16px; padding: 14px; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: var(--white); border-radius: 16px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(245, 158, 11, 0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-time-five' style="color: #F59E0B; font-size: 18px;"></i>
@@ -86,7 +86,7 @@
         </div>
         
         <!-- Last Recorded Reading -->
-        <div style="background: white; border-radius: 16px; padding: 14px; border: 1px solid rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;">
+        <div style="background: var(--white); border-radius: 16px; padding: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 10px; background: rgba(59, 130, 246, 0.08); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-bolt-circle' style="color: #3B82F6; font-size: 20px;"></i>
@@ -103,11 +103,11 @@
     </div>
 
     <!-- Usage Overview Chart Panel -->
-    <div style="background: white; border-radius: 16px; border: 1px solid rgba(0,0,0,0.04); padding: 16px; margin-bottom: 24px;">
+    <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 16px; margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 id="chartTitleText" style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-dark);">Usage Overview (Units)</h3>
             <div style="position: relative;">
-                <select id="chartMetricSelect" style="background: white; border: 1px solid rgba(98, 75, 255, 0.15); border-radius: 6px; color: var(--primary-purple); font-weight: 700; font-size: 11px; padding: 4px 24px 4px 10px; appearance: none; outline: none; cursor: pointer;">
+                <select id="chartMetricSelect" style="background: var(--bg-main); border: 1px solid rgba(98, 75, 255, 0.15); border-radius: 6px; color: var(--primary-purple); font-weight: 700; font-size: 11px; padding: 4px 24px 4px 10px; appearance: none; outline: none; cursor: pointer;">
                     <option value="units">Units</option>
                     <option value="amount">Amount</option>
                 </select>
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Current Month Details -->
-    <div style="background: #F9F5FF; border-radius: 16px; padding: 16px; margin-bottom: 24px;">
+    <div style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
             <i class='bx bx-bolt-circle' style="color: var(--primary-purple); font-size: 18px;"></i>
             <h3 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--primary-purple);">Current Month Details</h3>
@@ -158,26 +158,26 @@
     </div>
 
     <!-- Electricity Record Table -->
-    <div style="background: white; border-radius: 16px; border: 1px solid rgba(0,0,0,0.04); padding: 16px; margin-bottom: 24px;">
+    <div style="background: var(--white); border-radius: 16px; border: 1px solid var(--border); padding: 16px; margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-dark);">Electricity Record</h3>
             <div style="display: flex; gap: 8px;">
                 <div style="position: relative;">
-                    <select style="background: white; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; color: var(--text-dark); font-weight: 700; font-size: 10px; padding: 4px 22px 4px 22px; appearance: none; outline: none;">
+                    <select style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--text-dark); font-weight: 700; font-size: 10px; padding: 4px 22px 4px 22px; appearance: none; outline: none;">
                         <option>All Years</option>
                         <option><?php echo date("Y"); ?></option>
                     </select>
                     <i class='bx bx-calendar' style="position: absolute; left: 6px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 12px; pointer-events: none;"></i>
                     <i class='bx bx-chevron-down' style="position: absolute; right: 6px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 14px; pointer-events: none;"></i>
                 </div>
-                <button style="background: white; border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; color: var(--primary-purple); font-weight: 700; font-size: 10px; padding: 4px 10px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-filter-alt'></i> Filter</button>
+                <button style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 6px; color: var(--primary-purple); font-weight: 700; font-size: 10px; padding: 4px 10px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-filter-alt'></i> Filter</button>
             </div>
         </div>
 
         <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px;">
             <table style="width: 100%; min-width: 420px; border-collapse: collapse;">
                 <thead>
-                    <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                    <tr style="border-bottom: 1px solid var(--border);">
                         <th style="text-align: left; padding: 0 0 12px 0; font-size: 10px; font-weight: 600; color: var(--text-gray); white-space: nowrap;">Month / Year</th>
                         <th style="text-align: center; padding: 0 12px 12px 12px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Units</th>
                         <th style="text-align: right; padding: 0 12px 12px 12px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Amount</th>
@@ -196,7 +196,7 @@
                         $status_text = ucfirst($status_class);
                         if ($status_text == 'Due') $status_text = 'Unpaid';
                     ?>
-                    <tr style="border-bottom: 1px solid rgba(0,0,0,0.03);">
+                    <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 14px 0;">
                             <div style="display: flex; align-items: center; gap: 6px;">
                                 <span style="font-size: 11px; font-weight: <?php echo $is_current ? '800' : '700'; ?>; color: var(--text-dark); white-space: nowrap;"><?php echo htmlspecialchars($rec['month']); ?></span>
@@ -216,11 +216,11 @@
                         </td>
                         <td style="padding: 14px 0 14px 12px; text-align: right;">
                             <?php if($status_text === 'Unpaid'): ?>
-                                <button style="background: white; border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                <button style="background: var(--bg-main); border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
                                     <i class='bx bx-credit-card' style="font-size: 12px;"></i> Pay Now
                                 </button>
                             <?php else: ?>
-                                <button style="background: white; border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
+                                <button style="background: var(--bg-main); border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;">
                                     <i class='bx bx-receipt' style="font-size: 12px;"></i> View Bill
                                 </button>
                             <?php endif; ?>
@@ -238,7 +238,7 @@
     </div>
 
     <!-- Tips to Save Electricity -->
-    <div style="background: #F8FAFC; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+    <div style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
         <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
             <svg viewBox="0 0 48 48" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
                 <path d="M24 8a12 12 0 0 0-12 12c0 4.1 2 7.7 5 10v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4c3-2.3 5-5.9 5-10A12 12 0 0 0 24 8zm0 2a10 10 0 0 1 10 10c0 3.5-1.9 6.7-4.7 8.5a1 1 0 0 0-.3.7v3.8H19v-3.8a1 1 0 0 0-.3-.7C15.9 26.7 14 23.5 14 20a10 10 0 0 1 10-10zm-3 27v1a3 3 0 0 0 6 0v-1h-6z" fill="#F59E0B"/>
@@ -253,4 +253,4 @@
         </div>
         <i class='bx bx-chevron-right' style="color: var(--text-gray); font-size: 20px;"></i>
     </div>
-</div>
+</div>
