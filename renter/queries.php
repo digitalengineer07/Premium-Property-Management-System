@@ -429,6 +429,22 @@ mysqli_stmt_close($stmt);
             border-color: #111827;
         }
 
+        /* Responsive Overrides */
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; padding: 24px 10px; }
+            .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none; }
+            .nav-item { justify-content: center; padding: 12px; }
+            .nav-item i { font-size: 24px; }
+            .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
+        }
+        @media (max-width: 768px) {
+            .desktop-view-wrapper { display: none !important; }
+            .sidebar { display: none !important; }
+            .main-content { margin-left: 0; max-width: 100%; padding: 0px; }
+        }
+        @media (min-width: 769px) {
+            .mobile-view-wrapper { display: none !important; }
+        }
 
 </style>
 </head>
