@@ -12,11 +12,10 @@ installBtn.innerHTML = `
     Install App
 `;
 installBtn.style.cssText = `
-    
     display: none;
     position: fixed;
-    bottom: ${window.innerWidth <= 768 ? '88px' : '20px'};
-    right: 20px;
+    bottom: ${window.innerWidth <= 768 ? '12px' : '20px'};
+    right: 12px;
 
     z-index: 9999;
     background: #624BFF;
@@ -90,5 +89,5 @@ window.addEventListener('appinstalled', () => {
 
 
 window.addEventListener('resize', () => {
-    installBtn.style.bottom = window.innerWidth <= 768 ? '88px' : '20px';
+    installBtn.style.bottom = window.innerWidth <= 768 ? '12px' : '20px';
 });
