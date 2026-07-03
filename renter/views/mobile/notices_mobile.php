@@ -34,7 +34,7 @@ foreach ($notices as $n) {
     .m-filters { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 16px; }
     .m-select-wrap { position: relative; }
     .m-select-wrap select { appearance: none; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 32px 8px 12px; font-size: 12px; font-weight: 600; color: var(--text-dark); font-family: 'Outfit', sans-serif; outline: none; }
-    .m-select-wrap::after { content: '\ea3a'; font-family: boxicons; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; font-size: 14px; }
+    .m-select-wrap::after { content: '\eb1e'; font-family: 'boxicons'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; font-size: 16px; font-weight: normal; font-style: normal; }
     .m-filter-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; background: transparent; font-size: 12px; font-weight: 600; color: #624BFF; }
 
     /* Notice List */
@@ -46,7 +46,8 @@ foreach ($notices as $n) {
     .m-notice-title-wrap { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .m-notice-title { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0; }
     .m-notice-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; display: inline-block; line-height: 1; }
-    .m-notice-desc { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .m-notice-desc { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.2s ease; }
+    .m-notice-item.expanded .m-notice-desc { -webkit-line-clamp: unset; display: block; }
     .m-notice-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
     .m-notice-date { font-size: 10px; color: var(--text-dark); font-weight: 600; }
     .m-notice-time { font-size: 10px; color: var(--text-gray); font-weight: 500; }
@@ -168,7 +169,7 @@ foreach ($notices as $n) {
                     $badge_color = '#D97706';
                 }
                 if ($n['category'] === 'Important' || stripos($n['title'], 'Rules') !== false) {
-                    $icon = 'bx-parking';
+                    $icon = 'bx-error-circle';
                     $icon_bg = 'rgba(255, 75, 107, 0.1)';
                     $icon_color = '#FF4B6B';
                     $badge = 'Important';
@@ -176,7 +177,7 @@ foreach ($notices as $n) {
                     $badge_color = '#FF4B6B';
                     
                     if (stripos($n['title'], 'Maintenance') !== false) {
-                        $icon = 'bx-megaphone';
+                        $icon = 'bxs-megaphone';
                         $icon_bg = 'rgba(98, 75, 255, 0.1)';
                         $icon_color = '#624BFF';
                     }
@@ -198,7 +199,7 @@ foreach ($notices as $n) {
                     $badge_color = '#10B981';
                 }
             ?>
-            <div class="m-notice-item">
+            <div class="m-notice-item" style="cursor: pointer;" onclick="this.classList.toggle('expanded');">
                 <div class="m-notice-icon" style="background: <?php echo $icon_bg; ?>; color: <?php echo $icon_color; ?>;">
                     <i class='bx <?php echo $icon; ?>'></i>
                 </div>
@@ -216,7 +217,7 @@ foreach ($notices as $n) {
                             <?php endif; ?>
                         </div>
                     </div>
-                    <p class="m-notice-desc"><?php echo htmlspecialchars($n['desc']); ?></p>
+                    <p class="m-notice-desc"><?php echo htmlspecialchars($n['full_desc']); ?></p>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -237,7 +238,7 @@ foreach ($notices as $n) {
     <div class="m-important-banner">
         <div class="m-important-tag"><i class='bx bx-star'></i> Important Notice</div>
         <div class="m-important-content">
-            <div class="m-important-icon"><i class='bx bx-megaphone'></i></div>
+            <div class="m-important-icon"><i class='bx bxs-megaphone'></i></div>
             <div class="m-important-text">
                 <h4 class="m-important-title"><?php echo htmlspecialchars($latest_important['title']); ?></h4>
                 <p class="m-important-meta"><?php echo htmlspecialchars($latest_important['date']); ?> &bull; <?php echo htmlspecialchars($latest_important['time']); ?></p>
