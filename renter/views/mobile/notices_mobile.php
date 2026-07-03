@@ -17,12 +17,13 @@ foreach ($notices as $n) {
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
     /* KPI Grid */
-    .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 20px; }
-    .m-kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-    .m-kpi-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 4px; }
-    .m-kpi-title { font-size: 11px; font-weight: 700; color: var(--text-dark); margin: 0; }
-    .m-kpi-value { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; line-height: 1; }
-    .m-kpi-pill { font-size: 9px; font-weight: 700; padding: 4px 12px; border-radius: 12px; display: inline-block; white-space: nowrap; margin-top: 4px; }
+    .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
+    .m-kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .m-kpi-top { display: flex; align-items: center; gap: 12px; }
+    .m-kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .m-kpi-title { font-size: 11px; font-weight: 600; color: var(--text-gray); margin: 0; }
+    .m-kpi-value { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; }
+    .m-kpi-pill { font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: inline-block; white-space: nowrap; margin-top: auto; align-self: flex-start; }
 
     /* Tabs */
     .m-tabs-scroll { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
@@ -103,27 +104,51 @@ foreach ($notices as $n) {
     <!-- KPI Grid -->
     <div class="m-kpi-grid">
         <div class="m-kpi-card">
-            <div class="m-kpi-icon" style="background: rgba(98, 75, 255, 0.05); color: #624BFF;"><i class='bx bx-megaphone'></i></div>
-            <h4 class="m-kpi-title">Total Notices</h4>
-            <h2 class="m-kpi-value"><?php echo $total_notices; ?></h2>
+            <div class="m-kpi-top">
+                <div class="m-kpi-icon" style="background: rgba(98, 75, 255, 0.1); color: #624BFF;">
+                    <i class='bx bx-megaphone'></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Total Notices</h4>
+                    <h2 class="m-kpi-value"><?php echo $total_notices; ?></h2>
+                </div>
+            </div>
             <span class="m-kpi-pill" style="background: rgba(98, 75, 255, 0.1); color: #624BFF;">All time</span>
         </div>
         <div class="m-kpi-card">
-            <div class="m-kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-file-blank'></i></div>
-            <h4 class="m-kpi-title">New Notices</h4>
-            <h2 class="m-kpi-value"><?php echo $new_notices; ?></h2>
+            <div class="m-kpi-top">
+                <div class="m-kpi-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
+                    <i class='bx bx-file-blank'></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">New Notices</h4>
+                    <h2 class="m-kpi-value"><?php echo $new_notices; ?></h2>
+                </div>
+            </div>
             <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Unread</span>
         </div>
         <div class="m-kpi-card">
-            <div class="m-kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-calendar-event'></i></div>
-            <h4 class="m-kpi-title">This Month</h4>
-            <h2 class="m-kpi-value"><?php echo $this_month_notices; ?></h2>
+            <div class="m-kpi-top">
+                <div class="m-kpi-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
+                    <i class='bx bx-calendar-event'></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">This Month</h4>
+                    <h2 class="m-kpi-value"><?php echo $this_month_notices; ?></h2>
+                </div>
+            </div>
             <span class="m-kpi-pill" style="background: rgba(245, 158, 11, 0.1); color: #D97706;"><?php echo $current_month_name; ?></span>
         </div>
         <div class="m-kpi-card">
-            <div class="m-kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;"><i class='bx bx-map-pin'></i></div>
-            <h4 class="m-kpi-title">Important</h4>
-            <h2 class="m-kpi-value"><?php echo $important_notices; ?></h2>
+            <div class="m-kpi-top">
+                <div class="m-kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
+                    <i class='bx bx-map-pin'></i>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <h4 class="m-kpi-title">Important</h4>
+                    <h2 class="m-kpi-value"><?php echo $important_notices; ?></h2>
+                </div>
+            </div>
             <span class="m-kpi-pill" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">High Priority</span>
         </div>
     </div>
