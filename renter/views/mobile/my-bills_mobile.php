@@ -259,7 +259,7 @@ $total_bills_count = count($mobile_all_bills);
             <span id="mSummaryTotal" style="color: #FF4B6B;">₹0.00</span>
         </div>
 
-        <button class="m-btn-primary" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
+        <button class="m-btn-primary" id="mPayNowBtn" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
             <i class='bx bx-credit-card-front'></i> Pay Now
         </button>
         <button class="m-btn-outline" onclick="window.location.href='#'">
@@ -371,16 +371,20 @@ $total_bills_count = count($mobile_all_bills);
         document.getElementById('mSummaryTotal').innerText = '₹' + parseFloat(bill.amount).toFixed(2);
         
         const statusBadge = document.getElementById('mSummaryStatus');
+        const payNowBtn = document.getElementById('mPayNowBtn');
+        
         if (bill.status === 'Paid') {
             statusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
             statusBadge.style.color = '#10B981';
             statusBadge.innerText = 'Paid';
             document.getElementById('mSummaryTotal').style.color = 'var(--text-dark)';
+            payNowBtn.style.display = 'none';
         } else {
             statusBadge.style.background = 'rgba(255, 75, 107, 0.1)';
             statusBadge.style.color = '#FF4B6B';
             statusBadge.innerText = 'Unpaid';
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
+            payNowBtn.style.display = 'flex';
         }
         
         showMobileBillSummary();
