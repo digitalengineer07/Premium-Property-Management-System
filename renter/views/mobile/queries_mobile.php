@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR QUERIES.PHP
 ?>
 <style>
-    .m-queries-container { background: var(--bg-main); padding-bottom: 24px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+    .m-queries-container { background: var(--bg-main); padding-bottom: 90px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
     .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
@@ -20,20 +20,20 @@
     .m-form-container { padding: 0 16px; display: none; }
     .m-form-container.active { display: block; animation: fadeIn 0.3s ease; }
     
-    .m-form-group { margin-bottom: 16px; }
-    .m-form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
-    .m-form-control { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s; font-family: 'Outfit', sans-serif; }
+    .m-form-group { margin-bottom: 12px; }
+    .m-form-label { display: block; font-size: 12px; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+    .m-form-control { width: 100%; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s; font-family: 'Outfit', sans-serif; }
     .m-form-control:focus { border-color: #624BFF; box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.1); }
     .m-select-wrapper { position: relative; }
-    .m-select-wrapper::after { content: '\ea3a'; font-family: boxicons; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; }
-    .m-select { appearance: none; padding-right: 40px; }
+    .m-select-wrapper::after { content: '\ea3a'; font-family: boxicons; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); pointer-events: none; }
+    .m-select { appearance: none; padding-right: 36px; }
     
-    .m-upload-box { background: rgba(98, 75, 255, 0.03); border: 1px dashed rgba(98, 75, 255, 0.3); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; }
-    .m-upload-box i { font-size: 24px; color: #624BFF; margin-bottom: 8px; }
-    .m-upload-box h5 { font-size: 14px; font-weight: 600; color: var(--text-dark); margin: 0 0 4px 0; }
+    .m-upload-box { background: rgba(98, 75, 255, 0.03); border: 1px dashed rgba(98, 75, 255, 0.3); border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; }
+    .m-upload-box i { font-size: 22px; color: #624BFF; margin-bottom: 6px; }
+    .m-upload-box h5 { font-size: 13px; font-weight: 600; color: var(--text-dark); margin: 0 0 4px 0; }
     .m-upload-box p { font-size: 11px; color: var(--text-gray); margin: 0; }
     
-    .m-btn-submit { width: 100%; background: #624BFF; color: white; border: none; border-radius: 12px; padding: 16px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 24px; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); cursor: pointer; }
+    .m-btn-submit { width: 100%; background: #624BFF; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); cursor: pointer; }
 
     .m-list-container { padding: 0 16px; display: none; }
     .m-list-container.active { display: block; animation: fadeIn 0.3s ease; }
