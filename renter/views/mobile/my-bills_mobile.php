@@ -295,7 +295,7 @@ $total_bills_count = count($mobile_all_bills);
                         <?php echo money($bill['amount']); ?>
                         <div class="m-bill-action">
                             <?php if($bill['status'] === 'Paid'): ?>
-                                <i class='bx bx-download' style="color: #624BFF; font-size: 16px;"></i>
+                                <i class='bx bx-download m-download-btn-mini' onclick="event.stopPropagation(); window.location.href='#'"></i>
                             <?php else: ?>
                                 <i class='bx bx-chevron-right' style="font-size: 16px;"></i>
                             <?php endif; ?>
