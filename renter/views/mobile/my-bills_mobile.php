@@ -116,7 +116,8 @@ $total_bills_count = count($mobile_all_bills);
     .m-filter-btn-purple { color: #624BFF; border-color: rgba(98, 75, 255, 0.2); }
 
     .m-bill-list { display: flex; flex-direction: column; gap: 12px; padding: 0 16px; }
-    .m-bill-item { background: var(--white); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); position: relative; }
+    .m-bill-item { background: var(--white); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); position: relative; cursor: pointer; transition: all 0.2s ease; }
+    .m-bill-item.selected { border-color: #624BFF; background: rgba(98, 75, 255, 0.03); box-shadow: 0 4px 20px rgba(98, 75, 255, 0.08); }
     .m-bill-left { display: flex; align-items: center; gap: 12px; flex: 1; }
     .m-bill-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
     .m-bill-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; }
@@ -272,7 +273,7 @@ $total_bills_count = count($mobile_all_bills);
     <!-- Bill List -->
     <div class="m-bill-list" id="mBillListContainer">
         <?php foreach(array_slice($mobile_all_bills, 0, 10) as $bill): ?>
-        <div class="m-bill-item" data-status="<?php echo $bill['filter_type']; ?>" onclick="selectMobileBill(<?php echo htmlspecialchars(json_encode($bill)); ?>)">
+        <div class="m-bill-item" data-bill-id="<?php echo $bill['type'] . '-' . $bill['id']; ?>" data-status="<?php echo $bill['filter_type']; ?>" onclick="selectMobileBill(<?php echo htmlspecialchars(json_encode($bill)); ?>)">
             <div class="m-bill-left">
                 <div class="m-bill-icon" style="background: <?php echo $bill['icon_bg']; ?>; color: <?php echo $bill['icon_color']; ?>;">
                     <i class='bx <?php echo $bill['icon']; ?>'></i>
@@ -362,6 +363,13 @@ $total_bills_count = count($mobile_all_bills);
     
     function selectMobileBill(bill) {
         if(!bill) return;
+        
+        // Highlight selected card
+        document.querySelectorAll('.m-bill-item').forEach(el => el.classList.remove('selected'));
+        const activeItem = document.querySelector(`.m-bill-item[data-bill-id="${bill.type}-${bill.id}"]`);
+        if (activeItem) {
+            activeItem.classList.add('selected');
+        }
         
         const detailsContainer = document.getElementById('mSummaryDetails');
         detailsContainer.innerHTML = '';
