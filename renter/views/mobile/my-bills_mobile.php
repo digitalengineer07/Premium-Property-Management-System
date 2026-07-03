@@ -319,9 +319,6 @@ $total_bills_count = count($mobile_all_bills);
             </div>
         </div>
     </div>
-
-        </div>
-    </div>
 </div>
 
 <script>
