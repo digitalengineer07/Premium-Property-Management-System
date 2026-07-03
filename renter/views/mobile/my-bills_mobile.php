@@ -131,6 +131,8 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-right-info h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
     .m-bill-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
+    .m-download-btn-mini { width: 26px; height: 26px; background: rgba(98, 75, 255, 0.1); color: #624BFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; margin-left: 6px; }
+    .m-download-btn-mini:active { background: rgba(98, 75, 255, 0.2); }
 
     /* In-flow UI for Bill Summary */
     .m-bottom-panel { background: var(--white); border-radius: 24px; margin: 0 16px 24px 16px; padding: 24px 20px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); display: none; }
