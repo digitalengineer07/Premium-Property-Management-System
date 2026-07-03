@@ -16,14 +16,36 @@ foreach ($notices as $n) {
     /* Header */
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
-    /* KPI Grid */
     .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
-    .m-kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .m-kpi-card { 
+        background: var(--white); 
+        border: 1px solid var(--border); 
+        border-radius: 20px; 
+        padding: 16px; 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .m-kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    
+    body.dark-theme .m-kpi-card {
+        background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        backdrop-filter: blur(10px);
+    }
+    body.dark-theme .m-kpi-card:hover {
+        border-color: rgba(255,255,255,0.1);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+
     .m-kpi-top { display: flex; align-items: center; gap: 12px; }
-    .m-kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .m-kpi-title { font-size: 11px; font-weight: 600; color: var(--text-gray); margin: 0; }
-    .m-kpi-value { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; }
-    .m-kpi-pill { font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: inline-block; white-space: nowrap; margin-top: auto; align-self: flex-start; }
+    .m-kpi-icon { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+    .m-kpi-title { font-size: 11px; font-weight: 600; color: var(--text-gray); margin: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .m-kpi-value { font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; }
+    .m-kpi-pill { font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 8px; display: inline-block; white-space: nowrap; margin-top: auto; align-self: flex-start; text-transform: uppercase; letter-spacing: 0.5px; }
 
     /* Tabs */
     .m-tabs-scroll { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
