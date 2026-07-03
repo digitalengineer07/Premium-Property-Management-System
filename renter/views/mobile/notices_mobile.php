@@ -224,29 +224,21 @@ foreach ($notices as $n) {
     </div>
 
     <!-- Pagination -->
-    <div class="m-pagination-info">Showing 1 to 7 of 24 notices</div>
+    <?php if ($total_notices > 0): ?>
+    <div class="m-pagination-info">Showing <?php echo min(($page - 1) * 7 + 1, $total_notices); ?> to <?php echo min($page * 7, $total_notices); ?> of <?php echo $total_notices; ?> notice<?php echo $total_notices == 1 ? '' : 's'; ?></div>
+    <?php if ($total_notices > 7): ?>
     <div class="m-pagination">
-        <a href="#" class="m-page-btn"><i class='bx bx-chevron-left'></i></a>
-        <a href="#" class="m-page-btn active">1</a>
-        <a href="#" class="m-page-btn">2</a>
-        <a href="#" class="m-page-btn">3</a>
-        <a href="#" class="m-page-btn"><i class='bx bx-chevron-right'></i></a>
-    </div>
-
-    <!-- Important Notice Widget -->
-    <?php if ($latest_important): ?>
-    <div class="m-important-banner">
-        <div class="m-important-tag"><i class='bx bx-star'></i> Important Notice</div>
-        <div class="m-important-content">
-            <div class="m-important-icon"><i class='bx bxs-megaphone'></i></div>
-            <div class="m-important-text">
-                <h4 class="m-important-title"><?php echo htmlspecialchars($latest_important['title']); ?></h4>
-                <p class="m-important-meta"><?php echo htmlspecialchars($latest_important['date']); ?> &bull; <?php echo htmlspecialchars($latest_important['time']); ?></p>
-            </div>
-            <i class='bx bx-chevron-right' style="color: #624BFF; font-size: 24px;"></i>
-        </div>
+        <a href="?page=<?php echo max(1, $page - 1); ?>" class="m-page-btn"><i class='bx bx-chevron-left'></i></a>
+        <a href="#" class="m-page-btn active"><?php echo $page; ?></a>
+        <?php if ($page * 7 < $total_notices): ?>
+            <a href="?page=<?php echo $page + 1; ?>" class="m-page-btn"><?php echo $page + 1; ?></a>
+        <?php endif; ?>
+        <a href="?page=<?php echo min(ceil($total_notices / 7), $page + 1); ?>" class="m-page-btn"><i class='bx bx-chevron-right'></i></a>
     </div>
     <?php endif; ?>
+    <?php endif; ?>
+
+    <!-- Important Notice Widget (Removed to prevent duplication) -->
 
     <!-- Enable Notifications CTA -->
     <div class="m-notify-cta">
