@@ -493,6 +493,24 @@ if (isset($_GET['ajax_id'])) {
         @media (max-width: 768px) {
             .desktop-view-wrapper { display: none !important; }
             .mobile-bottom-nav { display: flex !important; }
+            
+            /* Mobile Sidebar Drawer */
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: none;
+                z-index: 10000;
+                width: 260px; /* Slightly wider for mobile */
+            }
+            .sidebar.mobile-drawer-open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+            }
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 0;
+            }
         }
         @media (min-width: 769px) {
             .mobile-view-wrapper { display: none !important; }
@@ -552,7 +570,6 @@ if (isset($_GET['ajax_id'])) {
 </style>
 </head>
 <body style="display: block;">
-<div class="desktop-view-wrapper">
 <div class="app-container">
     
     <!-- Sidebar -->
@@ -699,11 +716,22 @@ if (isset($_GET['ajax_id'])) {
 <script>
 document.addEventListener('click', function(event) { const dropdown = document.getElementById('notifDropdown'); const bell = document.querySelector('.bell-icon'); if (dropdown && dropdown.style.display === 'block') { if (!dropdown.contains(event.target) && !bell.contains(event.target)) { dropdown.style.display = 'none'; } } });
 </script>
-</div> <!-- End of desktop-view-wrapper -->
+</div> <!-- End of app-container -->
 
-<div class="mobile-view-wrapper">
-    <?php include "views/mobile/notices_mobile.php"; ?>
-</div>
+<script>
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(e) {
+    const sidebar = document.querySelector('.sidebar');
+    const headerLeft = document.querySelector('.m-header-left');
+    
+    if (sidebar && sidebar.classList.contains('mobile-drawer-open')) {
+        // If click is not inside sidebar and not on the menu button
+        if (!sidebar.contains(e.target) && (!headerLeft || !headerLeft.contains(e.target))) {
+            sidebar.classList.remove('mobile-drawer-open');
+        }
+    }
+});
+</script>
 
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav class="mobile-bottom-nav">
