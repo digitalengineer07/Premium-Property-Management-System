@@ -239,6 +239,22 @@ $pending_count = 3 - $verified_count;
             flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box;
         }
         
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+            .sidebar.mobile-drawer-open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+        
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
         .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
         .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
