@@ -1740,32 +1740,33 @@ body.dark-theme thead th:last-child {
 }
 
 /* ==========================================================================
-   VIBRANT CURVED GRADIENT HEADER
+   MINIMALIST PREMIUM GLASS HEADER
    ========================================================================== */
 .premium-header-pill {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 16px 20px 24px 20px !important;
+    padding: 12px 20px !important;
     margin: 0 !important;
-    background: linear-gradient(135deg, #4F39F6 0%, #7645E8 50%, #FF4B6B 100%) !important;
+    background: rgba(250, 251, 252, 0.8) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     border: none !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
-    border-bottom-left-radius: 32px !important;
-    border-bottom-right-radius: 32px !important;
-    box-shadow: 0 12px 36px rgba(118, 69, 232, 0.35), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
     z-index: 1000 !important;
-    backdrop-filter: none !important;
 }
 
 .dark-theme .premium-header-pill {
-    background: linear-gradient(135deg, #3728A3 0%, #4F39F6 50%, #B82C4A 100%) !important;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
+    background: rgba(11, 15, 25, 0.85) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: none !important;
 }
 
 .m-header-module {
@@ -1780,65 +1781,70 @@ body.dark-theme thead th:last-child {
 }
 
 .m-header-left {
-    width: 40px !important;
-    height: 40px !important;
+    width: auto !important;
+    height: auto !important;
     cursor: pointer !important;
     font-size: 28px !important;
-    color: #ffffff !important;
-    transition: all 0.2s ease !important;
+    color: var(--text-dark) !important;
+    transition: color 0.2s ease !important;
 }
 .m-header-left:active {
-    transform: scale(0.9) !important;
+    color: var(--primary-purple) !important;
+    transform: none !important;
 }
 
 .m-header-brand {
-    gap: 8px !important;
+    gap: 10px !important;
 }
 .m-header-brand img {
-    width: 32px !important;
-    height: 32px !important;
-    border-radius: 50% !important;
-    border: 2px solid rgba(255, 255, 255, 0.4) !important;
-    background: #fff !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    background: transparent !important;
 }
 .m-header-brand span {
-    font-size: 18px !important;
-    font-weight: 800 !important;
-    color: #ffffff !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: var(--text-dark) !important;
     letter-spacing: -0.2px !important;
 }
 
 .m-header-right {
-    gap: 12px !important;
+    gap: 18px !important;
 }
 .header-icon-btn {
-    width: 38px !important;
-    height: 38px !important;
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-radius: 50% !important;
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    border-radius: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 20px !important;
-    color: #ffffff !important;
+    font-size: 24px !important;
+    color: var(--text-gray) !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: color 0.2s ease !important;
     position: relative !important;
 }
-.header-icon-btn:active {
-    transform: scale(0.85) !important;
-    background: rgba(255, 255, 255, 0.3) !important;
+.header-icon-btn:hover, .header-icon-btn:active {
+    color: var(--primary-purple) !important;
+    transform: none !important;
+    background: transparent !important;
 }
 .header-divider {
-    display: none !important; /* Hide divider for this design */
+    display: none !important;
 }
 .m-notif-badge {
     position: absolute !important;
-    top: 4px !important;
-    right: 4px !important;
-    width: 10px !important;
-    height: 10px !important;
+    top: -2px !important;
+    right: -2px !important;
+    width: 8px !important;
+    height: 8px !important;
     background: #FF4B6B !important;
     border-radius: 50% !important;
-    border: 2px solid #8B5CF6 !important;
+    border: 2px solid var(--white) !important;
+}
+.dark-theme .m-notif-badge {
+    border-color: #0B0F19 !important;
 }
