@@ -1098,10 +1098,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <nav class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
     <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
-    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
-        <i class='bx bx-plus'></i>
-    </div>
-    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
+    
+    <a href="queries.php" class="mb-nav-item" style="padding-top: 0; position: relative;">
+        <div class="mb-nav-center" style="margin-top: -18px; margin-bottom: 2px;">
+            <i class='bx bx-plus'></i>
+        </div>
+        <span>Raise Query</span>
+    </a>
+
+    <a href="notices.php" class="mb-nav-item " style="position: relative;">
+        <i class='bx bx-bell'></i>
+        <span style="position: absolute; top: 4px; right: 18px; background: #EF4444; color: white; font-size: 9px; font-weight: 800; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--white, #fff);">2</span>
+        <span>Notices</span>
+    </a>
     <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>
 </body>
