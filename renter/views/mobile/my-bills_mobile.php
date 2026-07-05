@@ -153,8 +153,8 @@ $total_bills_count = count($mobile_all_bills);
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
-            <i class='bx bx-receipt' style="font-size: 24px; color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.15); padding: 4px; border-radius: 8px;"></i>
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+            <i class='bx bx-receipt' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             My Bills
         </h1>
     </div>
