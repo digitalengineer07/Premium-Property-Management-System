@@ -200,7 +200,7 @@
         background: var(--white, #fff);
         border: 1px solid var(--border, #F1F5F9);
         border-radius: 14px;
-        padding: 14px;
+        padding: 16px 14px;
         display: flex;
         align-items: center;
         gap: 12px;
@@ -249,7 +249,7 @@
         right: 0;
         font-size: 10px;
         font-weight: 700;
-        padding: 4px 12px;
+        padding: 3px 12px;
         border-radius: 0 0 0 12px;
     }
     .m-doc-date {
