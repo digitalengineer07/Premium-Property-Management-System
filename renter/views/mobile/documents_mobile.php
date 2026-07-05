@@ -536,8 +536,9 @@
 
 
     <!-- Upload New Document -->
+    <?php if (empty($user_docs['aadhaar_file'])): ?>
     <div class="m-section-card">
-        <div class="m-section-title">Upload New Document</div>
+        <div class="m-section-title">Upload Aadhar Card</div>
         <div class="m-upload-zone" onclick="document.getElementById('aadhar-upload')?.click();">
             <i class='bx bx-cloud-upload'></i>
             <h4>Drag & drop your file here<br>or click to browse</h4>
@@ -545,6 +546,7 @@
             <button class="m-btn-primary">Choose File</button>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Document Categories -->
     <div class="m-section-card">
