@@ -287,7 +287,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 22px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.5px;">Profile</h1>
+        <h1 class="m-page-title" style="font-size: 22px; font-weight: 800; margin: 0; letter-spacing: -0.5px; background: linear-gradient(90deg, #ffffff 0%, #e0c8ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));">Profile</h1>
     </div>
     
     <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
