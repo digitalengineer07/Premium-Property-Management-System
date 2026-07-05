@@ -555,48 +555,36 @@
             <a href="#" style="font-size: 13px; color: var(--primary-purple); text-decoration: none; font-weight: 700;">View All</a>
         </div>
         <div class="m-categories-grid">
+            <?php 
+            $dynamic_categories = [];
+            foreach ($documents as $doc) {
+                $cat_key = $doc['category'];
+                if (!isset($dynamic_categories[$cat_key])) {
+                    $dynamic_categories[$cat_key] = [
+                        'name' => $cat_key === 'Identity' ? 'Identity Proof' : ($cat_key === 'Utility' ? 'Utility Bills' : $cat_key),
+                        'icon' => $doc['icon'],
+                        'color' => $doc['cat_color'],
+                        'bg' => $doc['cat_bg'],
+                        'count' => 0
+                    ];
+                }
+                if ($doc['status'] === 'Verified') {
+                    $dynamic_categories[$cat_key]['count']++;
+                }
+            }
+            
+            foreach ($dynamic_categories as $cat):
+            ?>
             <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-id-card'></i></div>
+                <div class="m-cat-icon" style="background: <?php echo htmlspecialchars($cat['bg']); ?>; color: <?php echo htmlspecialchars($cat['color']); ?>;">
+                    <i class='bx <?php echo htmlspecialchars($cat['icon']); ?>'></i>
+                </div>
                 <div class="m-cat-info">
-                    <div class="m-cat-name">Identity Proof</div>
-                    <div class="m-cat-count">4 <i class='bx bx-chevron-right'></i></div>
+                    <div class="m-cat-name"><?php echo htmlspecialchars($cat['name']); ?></div>
+                    <div class="m-cat-count"><?php echo $cat['count']; ?> <i class='bx bx-chevron-right'></i></div>
                 </div>
             </div>
-            <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class='bx bx-receipt'></i></div>
-                <div class="m-cat-info">
-                    <div class="m-cat-name">Receipts</div>
-                    <div class="m-cat-count">4 <i class='bx bx-chevron-right'></i></div>
-                </div>
-            </div>
-            <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;"><i class='bx bx-file'></i></div>
-                <div class="m-cat-info">
-                    <div class="m-cat-name">Agreement</div>
-                    <div class="m-cat-count">2 <i class='bx bx-chevron-right'></i></div>
-                </div>
-            </div>
-            <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;"><i class='bx bx-bolt-circle'></i></div>
-                <div class="m-cat-info">
-                    <div class="m-cat-name">Utility Bills</div>
-                    <div class="m-cat-count">3 <i class='bx bx-chevron-right'></i></div>
-                </div>
-            </div>
-            <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bxs-bank'></i></div>
-                <div class="m-cat-info">
-                    <div class="m-cat-name">Bank Documents</div>
-                    <div class="m-cat-count">3 <i class='bx bx-chevron-right'></i></div>
-                </div>
-            </div>
-            <div class="m-cat-item">
-                <div class="m-cat-icon" style="background: rgba(100, 116, 139, 0.1); color: #64748B;"><i class='bx bx-dots-horizontal-rounded'></i></div>
-                <div class="m-cat-info">
-                    <div class="m-cat-name">Other Documents</div>
-                    <div class="m-cat-count">2 <i class='bx bx-chevron-right'></i></div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </div>
 
