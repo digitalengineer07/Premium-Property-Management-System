@@ -1735,6 +1735,10 @@ body.dark-theme thead th:last-child {
     text-shadow: 0 8px 16px rgba(98, 75, 255, 0.4) !important;
 }
 
+.dark-theme .mb-nav-item.active i {
+    text-shadow: 0 8px 16px rgba(129, 140, 248, 0.4) !important;
+}
+
 /* ==========================================================================
    ULTRA-PREMIUM FLOATING HEADER PILL
    ========================================================================== */
