@@ -83,31 +83,21 @@
 
     /* KPI Grid */
     .m-kpi-scroll {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
-        overflow-x: auto;
-        padding-bottom: 12px;
-        margin-bottom: 16px;
-        scrollbar-width: none; 
-    }
-    .m-kpi-scroll::-webkit-scrollbar {
-        display: none; 
+        margin-bottom: 20px;
     }
     .m-kpi-card {
         background: var(--white, #fff);
         border: 1px solid var(--border, #F1F5F9);
         border-radius: 16px;
-        padding: 16px;
-        min-width: 140px;
+        padding: 16px 12px;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        flex-shrink: 0;
         box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-    }
-    .m-kpi-card-wide {
-        min-width: 170px;
     }
     .m-kpi-icon {
         width: 44px;
