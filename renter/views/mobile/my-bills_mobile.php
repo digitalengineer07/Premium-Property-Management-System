@@ -108,7 +108,7 @@ $total_bills_count = count($mobile_all_bills);
 
     .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
     .m-tabs::-webkit-scrollbar { display: none; }
-    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 12px; cursor: pointer; white-space: nowrap; }
+    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 96px; cursor: pointer; white-space: nowrap; }
     .m-tab.active { color: #624BFF; border-bottom: 2px solid #624BFF; }
 
     .m-filters { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 16px; }

@@ -37,7 +37,7 @@
 <div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
 
 
-<div class="m-dashboard-content" style="padding: 16px 16px 120px 16px; background: var(--bg-main);">
+<div class="m-dashboard-content" style="padding: 16px 16px 96px 16px; background: var(--bg-main);">
     
     <!-- KPI Grid -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;">
