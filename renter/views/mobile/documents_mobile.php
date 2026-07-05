@@ -77,7 +77,7 @@
 
     .m-container {
         padding: 16px;
-        padding-bottom: 80px;
+        padding-bottom: 130px;
         background: var(--bg-main, #FAFBFC);
     }
 

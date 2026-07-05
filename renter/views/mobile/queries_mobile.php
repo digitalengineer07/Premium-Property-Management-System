@@ -2,7 +2,7 @@
 // EXCLUSIVE MOBILE VIEW FOR QUERIES.PHP
 ?>
 <style>
-    .m-queries-container { background: var(--bg-main); padding-bottom: 90px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+    .m-queries-container { background: var(--bg-main); padding-bottom: 130px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
     .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
