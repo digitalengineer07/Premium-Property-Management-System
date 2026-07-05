@@ -1,23 +1,26 @@
 <?php
 // EXCLUSIVE MOBILE VIEW FOR DASHBOARD
 ?>
-<!-- Mobile Top Header (Premium Floating Pill) -->
+<!-- Mobile Top Header (Spatial Floating Modules) -->
 <header class="premium-header-pill">
-    <div class="premium-header-icon" style="background: transparent;" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
-        <i class='bx bx-menu' style="font-size: 28px;"></i>
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
     </div>
-    <div class="m-header-brand" style="display: flex; align-items: center; gap: 8px;">
-        <img src="../assets/img/logo.png" alt="Logo" style="width: 28px; height: 28px; border-radius: 8px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);">
-        <span style="font-size: 16px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.2px;"><?php echo htmlspecialchars(HOUSE_NAME); ?></span>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(HOUSE_NAME); ?></span>
     </div>
-    <div class="m-header-right" style="display: flex; align-items: center; gap: 8px;">
-        <div class="premium-header-icon" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
-        <div class="premium-header-icon m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';" style="position: relative;">
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
             <i class='bx bx-bell'></i>
             <?php if ($unread_count > 0): ?>
-                <span class="m-notif-badge" style="position: absolute; top: 0px; right: 2px; width: 10px; height: 10px; background: #FF4B6B; border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 2px 6px rgba(255, 75, 107, 0.4);"></span>
+                <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
     </div>
