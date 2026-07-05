@@ -1740,7 +1740,7 @@ body.dark-theme thead th:last-child {
 }
 
 /* ==========================================================================
-   ULTRA-PREMIUM EDGE-TO-EDGE GLASS HEADER
+   SPATIAL UI FLOATING MODULES HEADER
    ========================================================================== */
 .premium-header-pill {
     display: flex !important;
@@ -1748,44 +1748,108 @@ body.dark-theme thead th:last-child {
     align-items: center !important;
     padding: 16px 20px !important;
     margin: 0 !important;
-    background: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
-    border-radius: 0 !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03) !important;
+    box-shadow: none !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 1000 !important;
+    backdrop-filter: none !important;
 }
 
-.dark-theme .premium-header-pill {
-    background: rgba(11, 15, 25, 0.75) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
-}
-
-.premium-header-icon {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 12px !important;
-    background: transparent !important;
-    border: none !important;
+.m-header-module {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+}
+
+.dark-theme .m-header-module {
+    background: rgba(20, 25, 35, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.m-header-left {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
     font-size: 26px !important;
+    color: var(--text-dark) !important;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.m-header-left:active {
+    transform: scale(0.9) !important;
+}
+
+.m-header-brand {
+    padding: 6px 16px 6px 6px !important;
+    border-radius: 40px !important;
+    gap: 8px !important;
+}
+.m-header-brand img {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2) !important;
+}
+.m-header-brand span {
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    color: var(--text-dark) !important;
+    letter-spacing: -0.2px !important;
+}
+
+.m-header-right {
+    padding: 4px !important;
+    border-radius: 40px !important;
+    gap: 2px !important;
+}
+.header-icon-btn {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 22px !important;
     color: var(--text-dark) !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
+    position: relative !important;
 }
-
-.premium-header-icon:active {
+.header-icon-btn:active {
     transform: scale(0.85) !important;
     background: rgba(0, 0, 0, 0.05) !important;
 }
-
-.dark-theme .premium-header-icon:active {
-    background: rgba(255, 255, 255, 0.08) !important;
+.dark-theme .header-icon-btn:active {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+.header-divider {
+    width: 1px !important;
+    height: 20px !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    margin: 0 2px !important;
+}
+.dark-theme .header-divider {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+.m-notif-badge {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    width: 8px !important;
+    height: 8px !important;
+    background: #FF4B6B !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.8) !important;
+}
+.dark-theme .m-notif-badge {
+    box-shadow: 0 0 0 2px rgba(20, 25, 35, 1) !important;
 }
