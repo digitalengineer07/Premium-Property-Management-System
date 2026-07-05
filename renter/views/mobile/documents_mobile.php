@@ -491,119 +491,44 @@
 
     <!-- Document List -->
     <div class="m-doc-list">
-        <!-- Aadhar Card -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">
-                <i class='bx bx-id-card'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Aadhar Card</div>
-                <div class="m-doc-subtitle">Identity Proof</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                    <span class="m-doc-date">12 May 2026<br>10:30 AM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
+        <?php 
+        $has_available = false;
+        if (!empty($documents)) {
+            foreach ($documents as $doc) {
+                if ($doc['status'] === 'Verified') {
+                    $has_available = true;
+                    ?>
+                    <div class="m-doc-item">
+                        <div class="m-doc-icon" style="background: <?php echo htmlspecialchars($doc['cat_bg']); ?>; color: <?php echo htmlspecialchars($doc['cat_color']); ?>;">
+                            <i class='bx <?php echo htmlspecialchars($doc['icon']); ?>'></i>
+                        </div>
+                        <div class="m-doc-info">
+                            <div class="m-doc-title"><?php echo htmlspecialchars($doc['name']); ?></div>
+                            <div class="m-doc-subtitle"><?php echo htmlspecialchars($doc['desc']); ?></div>
+                            <div class="m-doc-status-date">
+                                <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
+                                <span class="m-doc-date"><?php echo htmlspecialchars($doc['date']); ?></span>
+                            </div>
+                        </div>
+                        <div class="m-doc-actions">
+                            <?php if (!empty($doc['url'])): ?>
+                            <a href="<?php echo htmlspecialchars($doc['url']); ?>" target="_blank" class="m-action-btn"><i class='bx bx-show'></i></a>
+                            <a href="<?php echo htmlspecialchars($doc['url']); ?>" download class="m-action-btn"><i class='bx bx-download'></i></a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+        }
+        
+        if (!$has_available):
+        ?>
+        <div style="text-align: center; padding: 30px 20px; color: var(--text-gray); font-size: 13px; font-weight: 500; background: var(--white); border: 1px solid var(--border); border-radius: 14px;">
+            <i class='bx bx-folder-open' style="font-size: 32px; color: var(--border); margin-bottom: 8px; display: block;"></i>
+            No available documents found.
         </div>
-
-        <!-- Agreement Copy -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                <i class='bx bx-file'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Agreement Copy</div>
-                <div class="m-doc-subtitle">Rental Agreement</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                    <span class="m-doc-date">05 May 2026<br>04:15 PM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
-        </div>
-
-        <!-- Bank Passbook -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">
-                <i class='bx bxs-bank'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Bank Passbook</div>
-                <div class="m-doc-subtitle">Bank Details</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                    <span class="m-doc-date">28 Apr 2026<br>11:20 AM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
-        </div>
-
-        <!-- Rent Receipt -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;">
-                <i class='bx bx-receipt'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Rent Receipt - Apr 2026</div>
-                <div class="m-doc-subtitle">Payment Receipt</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                    <span class="m-doc-date">05 Apr 2026<br>09:45 AM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
-        </div>
-
-        <!-- Electricity Bill -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                <i class='bx bx-bolt-circle'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Electricity Bill - Apr 2026</div>
-                <div class="m-doc-subtitle">Utility Bill</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</span>
-                    <span class="m-doc-date">03 Apr 2026<br>02:30 PM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
-        </div>
-
-        <!-- Police Verification -->
-        <div class="m-doc-item">
-            <div class="m-doc-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;">
-                <i class='bx bx-check-shield'></i>
-            </div>
-            <div class="m-doc-info">
-                <div class="m-doc-title">Police Verification</div>
-                <div class="m-doc-subtitle">Verification Document</div>
-                <div class="m-doc-status-date">
-                    <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                    <span class="m-doc-date">15 Mar 2026<br>10:00 AM</span>
-                </div>
-            </div>
-            <div class="m-doc-actions">
-                <a href="#" class="m-action-btn"><i class='bx bx-show'></i></a>
-                <a href="#" class="m-action-btn"><i class='bx bx-download'></i></a>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
 
     <div class="m-view-all">
