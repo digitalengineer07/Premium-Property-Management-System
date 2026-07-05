@@ -534,9 +534,6 @@
         <?php endif; ?>
     </div>
 
-    <div class="m-view-all">
-        View All Documents <i class='bx bx-chevron-down'></i>
-    </div>
 
     <!-- Upload New Document -->
     <div class="m-section-card">
