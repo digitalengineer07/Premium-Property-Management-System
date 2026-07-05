@@ -586,6 +586,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .mb-nav-item.active {
             color: var(--primary-purple, #624BFF);
         }
+        
+        @media (max-width: 768px) {
+            .mobile-bottom-nav { display: flex !important; }
+        }
 
 </style>
 </head>
