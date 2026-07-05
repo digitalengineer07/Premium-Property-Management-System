@@ -1,0 +1,8 @@
+/* Fix for extra spacing above the bottom dock */
+.m-queries-container > *:last-child,
+.m-dashboard-content > *:last-child,
+.animate-up > *:last-child,
+.m-notices-container > *:last-child,
+.m-profile-wrapper > *:last-child {
+    margin-bottom: 0 !important;
+}
