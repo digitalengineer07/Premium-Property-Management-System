@@ -37,7 +37,7 @@
 <div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
 
 
-<div class="animate-up" style="padding: 0 16px 130px 16px;">
+<div class="animate-up" style="padding: 0 16px 96px 16px;">
     
     <!-- KPI Grid -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; margin-top: 8px;">
