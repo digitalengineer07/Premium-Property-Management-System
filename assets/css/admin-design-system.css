@@ -1764,8 +1764,8 @@ body.dark-theme thead th:last-child {
 }
 
 .dark-theme .premium-header-pill {
-    background: linear-gradient(135deg, #4F39F6 0%, #7645E8 100%) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    background: linear-gradient(135deg, #3728A3 0%, #4F39F6 50%, #B82C4A 100%) !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
 }
 
 .m-header-module {
