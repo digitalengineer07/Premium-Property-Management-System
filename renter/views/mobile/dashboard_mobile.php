@@ -26,7 +26,7 @@
     </div>
 </header>
 
-<div class="animate-up" style="padding: 0 16px 90px 16px;">
+<div class="animate-up" style="padding: 100px 16px 90px 16px;">
     
     <!-- Greeting Banner -->
     <div class="m-greeting-banner" style="position: relative; background: var(--white); border-radius: 24px; padding: 24px 20px; margin-bottom: 24px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
