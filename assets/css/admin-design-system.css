@@ -1748,11 +1748,12 @@ body.dark-theme thead th:last-child {
     align-items: center !important;
     padding: 16px 20px 24px 20px !important;
     margin: 0 !important;
-    background: linear-gradient(135deg, #624BFF 0%, #8B5CF6 100%) !important;
+    background: linear-gradient(135deg, #4F39F6 0%, #7645E8 50%, #FF4B6B 100%) !important;
     border: none !important;
-    border-bottom-left-radius: 28px !important;
-    border-bottom-right-radius: 28px !important;
-    box-shadow: 0 10px 30px rgba(98, 75, 255, 0.25) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom-left-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+    box-shadow: 0 12px 36px rgba(118, 69, 232, 0.35), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
