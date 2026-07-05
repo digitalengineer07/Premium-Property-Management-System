@@ -1,21 +1,23 @@
 <?php
 // EXCLUSIVE MOBILE VIEW FOR DASHBOARD
 ?>
-<!-- Mobile Top Header -->
-<header class="" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: transparent;">
-    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
-        <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark); cursor: pointer;"></i>
+<!-- Mobile Top Header (Premium Floating Pill) -->
+<header class="premium-header-pill">
+    <div class="premium-header-icon" style="background: transparent;" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu' style="font-size: 28px;"></i>
     </div>
-    <div class="m-header-brand" style="display: flex; align-items: center; gap: 10px;">
-        <img src="../assets/img/logo.png" alt="Logo" style="width: 28px; height: 28px; border-radius: 8px;">
-        <span style="font-size: 18px; font-weight: 800; color: var(--text-dark);"><?php echo htmlspecialchars(HOUSE_NAME); ?></span>
+    <div class="m-header-brand" style="display: flex; align-items: center; gap: 8px;">
+        <img src="../assets/img/logo.png" alt="Logo" style="width: 28px; height: 28px; border-radius: 8px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3);">
+        <span style="font-size: 16px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.2px;"><?php echo htmlspecialchars(HOUSE_NAME); ?></span>
     </div>
     <div class="m-header-right" style="display: flex; align-items: center; gap: 8px;">
-        <div class="icon-btn" id="themeToggleMobile" style="width: 38px; height: 38px; border-radius: 50%; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; flex-shrink: 0;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}"><i class='bx bx-moon'></i></div>
-        <div class="icon-btn m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-dark); cursor: pointer;">
+        <div class="premium-header-icon" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
+        </div>
+        <div class="premium-header-icon m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';" style="position: relative;">
             <i class='bx bx-bell'></i>
             <?php if ($unread_count > 0): ?>
-                <span class="m-notif-badge" style="position: absolute; top: 0px; right: 2px; width: 8px; height: 8px; background: #FF4B6B; border-radius: 50%; border: 2px solid var(--bg-main);"></span>
+                <span class="m-notif-badge" style="position: absolute; top: 0px; right: 2px; width: 10px; height: 10px; background: #FF4B6B; border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 2px 6px rgba(255, 75, 107, 0.4);"></span>
             <?php endif; ?>
         </div>
     </div>
