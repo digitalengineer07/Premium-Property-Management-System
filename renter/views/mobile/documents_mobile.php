@@ -455,7 +455,7 @@
                 <i class='bx bx-folder'></i>
             </div>
             <div class="m-kpi-title">Total Documents</div>
-            <div class="m-kpi-value">18</div>
+            <div class="m-kpi-value"><?php echo count($documents); ?></div>
             <div class="m-kpi-subtitle">All documents</div>
         </div>
         <div class="m-kpi-card">
@@ -463,7 +463,7 @@
                 <i class='bx bx-check-shield'></i>
             </div>
             <div class="m-kpi-title">Verified Documents</div>
-            <div class="m-kpi-value">12</div>
+            <div class="m-kpi-value"><?php echo $verified_count; ?></div>
             <div class="m-kpi-subtitle">Approved & verified</div>
         </div>
         <div class="m-kpi-card">
@@ -471,7 +471,7 @@
                 <i class='bx bx-time-five'></i>
             </div>
             <div class="m-kpi-title">Pending Documents</div>
-            <div class="m-kpi-value">3</div>
+            <div class="m-kpi-value"><?php echo $pending_count; ?></div>
             <div class="m-kpi-subtitle">Awaiting verification</div>
         </div>
     </div>
