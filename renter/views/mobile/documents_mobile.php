@@ -200,7 +200,7 @@
         background: var(--white, #fff);
         border: 1px solid var(--border, #F1F5F9);
         border-radius: 14px;
-        padding: 16px 14px;
+        padding: 20px 16px;
         display: flex;
         align-items: center;
         gap: 12px;
