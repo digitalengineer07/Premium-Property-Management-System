@@ -9,7 +9,7 @@
     
     <div class="m-header-module m-header-brand">
         <img src="../assets/img/logo.png" alt="Logo">
-        <span><?php echo htmlspecialchars(HOUSE_NAME); ?></span>
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
     </div>
     
     <div class="m-header-module m-header-right">
@@ -19,7 +19,7 @@
         <div class="header-divider"></div>
         <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
             <i class='bx bx-bell'></i>
-            <?php if ($unread_count > 0): ?>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>

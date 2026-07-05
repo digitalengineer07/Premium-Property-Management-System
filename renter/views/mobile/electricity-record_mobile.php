@@ -2,26 +2,31 @@
 // EXCLUSIVE MOBILE VIEW FOR ELECTRICITY-RECORD
 ?>
 
-<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; box-shadow: none; border-bottom: none; position: sticky; top: 0; z-index: 100;">
-    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
-        <i class='bx bx-menu-alt-left' style="font-size: 28px; color: var(--text-dark);"></i>
+<header class="premium-header-pill">
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
     </div>
-    <div class="m-header-brand" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.2; margin-left: 16px;">
-        <span style="font-size: 17px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.3px;">Electricity Record</span>
-        <span style="font-size: 11px; font-weight: 500; color: var(--text-gray);">Track your usage and billing details</span>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
     </div>
-    <div class="m-header-right" style="display: flex; align-items: center; gap: 14px;">
-        <!-- notification bell -->
-        <div style="position: relative; cursor: pointer;">
-            <i class='bx bx-bell' style="font-size: 22px; color: var(--text-dark);"></i>
-            <span style="position: absolute; top: -1px; right: 0px; background: #FF4B6B; width: 14px; height: 14px; border-radius: 50%; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-main);">1</span>
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
         </div>
-        <!-- avatar -->
-        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-purple); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 14px; cursor: pointer;">
-            <?php echo strtoupper(substr($user['name'] ?? 'U', 0, 2)); ?>
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="m-notif-badge"></span>
+            <?php endif; ?>
         </div>
     </div>
 </header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
 
 <div class="m-dashboard-content" style="padding: 16px 16px 120px 16px; background: var(--bg-main);">
     

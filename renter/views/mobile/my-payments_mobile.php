@@ -2,26 +2,31 @@
 // EXCLUSIVE MOBILE VIEW FOR MY-PAYMENTS
 ?>
 <!-- Mobile Header -->
-<header class="m-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: transparent;">
-    <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
-        <i class='bx bx-menu' style="font-size: 28px; color: var(--text-dark); cursor: pointer;"></i>
+<header class="premium-header-pill">
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
     </div>
-    <div class="m-header-center" style="text-align: left; flex: 1; margin-left: 12px;">
-        <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0;">My Payments</h2>
-        <p style="font-size: 11px; color: var(--text-gray); margin: 2px 0 0 0;">View and manage all your bills & payments</p>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
     </div>
-    <div class="m-header-right" style="display: flex; align-items: center; gap: 10px;">
-        <div class="icon-btn m-bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';" style="position: relative; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-dark); cursor: pointer;">
-            <i class='bx bx-bell'></i>
-            <?php if ($unread_count > 0): ?>
-                <span class="m-notif-badge" style="position: absolute; top: 0px; right: 2px; width: 8px; height: 8px; background: #FF4B6B; border-radius: 50%; border: 2px solid var(--bg-main);"></span>
-            <?php endif; ?>
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
         </div>
-        <div class="user-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: #624BFF; color: white; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;">
-            <?php echo strtoupper(substr($display_name ?? 'U', 0, 2)); ?>
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="m-notif-badge"></span>
+            <?php endif; ?>
         </div>
     </div>
 </header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
 
 <div class="animate-up" style="padding: 0 16px 90px 16px;">
     

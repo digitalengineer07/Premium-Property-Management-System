@@ -282,27 +282,31 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 </style>
 
 <div class="m-profile-wrapper animate-up">
-    <header class="mp-header">
-        <div class="mp-header-left">
-            <a href="dashboard.php" class="mp-back-btn">
-                <i class='bx bx-arrow-back'></i>
-            </a>
-            <div class="mp-title-group">
-                <h1>Profile Settings</h1>
-                <p>View and update your personal information</p>
-            </div>
+    <header class="premium-header-pill">
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
+    </div>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
+    </div>
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
         </div>
-        <div class="mp-header-right">
-            <div class="mp-bell" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
-                <i class='bx bx-bell'></i>
-                <span class="badge">2</span>
-            </div>
-            <!-- Theme Toggle attached to the mini avatar for now (matching screenshot, VJ is clickable) -->
-            <div class="mp-avatar-mini" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');}">
-                <?php echo $avatar_initials; ?>
-            </div>
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="m-notif-badge"></span>
+            <?php endif; ?>
         </div>
-    </header>
+    </div>
+</header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
 
     <div class="mp-container">
         <div class="mp-user-card">
@@ -403,4 +407,4 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             <i class='bx bx-log-out'></i> Logout
         </a>
     </div>
-</div>
+</div>

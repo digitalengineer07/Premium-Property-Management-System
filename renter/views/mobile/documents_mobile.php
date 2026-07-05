@@ -425,27 +425,31 @@
     .dark-theme .m-filter-btn, .dark-theme .m-action-btn { background: var(--white, #111827); border-color: var(--border, #1E293B); }
 </style>
 
-<header class="m-header">
-    <div class="m-header-left">
-        <i class='bx bx-menu m-header-menu' onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }"></i>
-        <div class="m-header-title">
-            <h1>Documents</h1>
-            <p>Manage and access all your documents</p>
-        </div>
+<header class="premium-header-pill">
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
     </div>
-    <div class="m-header-right">
-        <div class="m-header-bell" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
-            <i class='bx bx-bell'></i>
-            <span class="badge">2</span>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
+    </div>
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
         </div>
-        <div class="m-header-avatar">
-            <?php 
-                $d_name = $display_name ?? 'VJ';
-                echo strtoupper(substr(trim($d_name), 0, 2));
-            ?>
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="m-notif-badge"></span>
+            <?php endif; ?>
         </div>
     </div>
 </header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
 
 <div class="m-container animate-up">
     <!-- KPI Scroll -->
@@ -600,4 +604,4 @@
             <li><i class='bx bx-check'></i> Keep your documents up to date</li>
         </ul>
     </div>
-</div>
+</div>

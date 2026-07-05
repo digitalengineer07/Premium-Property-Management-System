@@ -148,24 +148,31 @@ $total_bills_count = count($mobile_all_bills);
 
 <div class="m-bills-container animate-up">
     <!-- Header -->
-    <header class="m-header-custom">
-        <div class="m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }" style="cursor: pointer;">
-            <i class='bx bx-menu-alt-left' style="font-size: 28px; color: var(--text-dark);"></i>
+    <header class="premium-header-pill">
+    <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+        <i class='bx bx-menu-alt-left'></i>
+    </div>
+    
+    <div class="m-header-module m-header-brand">
+        <img src="../assets/img/logo.png" alt="Logo">
+        <span><?php echo htmlspecialchars(defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'); ?></span>
+    </div>
+    
+    <div class="m-header-module m-header-right">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
         </div>
-        <div class="m-header-brand" style="flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; line-height: 1.2; margin-left: 16px;">
-            <span style="font-size: 18px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.3px;">My Bills</span>
-            <span style="font-size: 12px; font-weight: 500; color: var(--text-gray);">View and manage all your bills</span>
+        <div class="header-divider"></div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+            <?php if (isset($unread_count) && $unread_count > 0): ?>
+                <span class="m-notif-badge"></span>
+            <?php endif; ?>
         </div>
-        <div class="m-header-right" style="display: flex; align-items: center; gap: 14px;">
-            <div style="position: relative; cursor: pointer;" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
-                <i class='bx bx-bell' style="font-size: 24px; color: var(--text-dark);"></i>
-                <span style="position: absolute; top: 0px; right: 0px; background: #FF4B6B; width: 14px; height: 14px; border-radius: 50%; color: white; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-main);">1</span>
-            </div>
-            <div style="width: 36px; height: 36px; border-radius: 50%; background: #624BFF; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; cursor: pointer;">
-                <?php echo strtoupper(substr($user['name'] ?? 'U', 0, 2)); ?>
-            </div>
-        </div>
-    </header>
+    </div>
+</header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
 
     <!-- KPIs -->
     <div class="m-kpi-grid">
