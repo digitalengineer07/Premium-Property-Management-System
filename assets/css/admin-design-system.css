@@ -1740,50 +1740,52 @@ body.dark-theme thead th:last-child {
 }
 
 /* ==========================================================================
-   ULTRA-PREMIUM FLOATING HEADER PILL
+   ULTRA-PREMIUM EDGE-TO-EDGE GLASS HEADER
    ========================================================================== */
 .premium-header-pill {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
-    padding: 10px 16px !important;
-    margin: 16px 16px 24px 16px !important;
+    padding: 16px 20px !important;
+    margin: 0 !important;
     background: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(24px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    border-radius: 30px !important; /* Pill shape */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255,255,255,0.4) inset !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03) !important;
     position: sticky !important;
-    top: 16px !important;
+    top: 0 !important;
     z-index: 1000 !important;
 }
 
 .dark-theme .premium-header-pill {
-    background: rgba(20, 25, 35, 0.65) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
+    background: rgba(11, 15, 25, 0.75) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
 }
 
 .premium-header-icon {
     width: 40px !important;
     height: 40px !important;
-    border-radius: 50% !important;
-    background: rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    background: transparent !important;
     border: none !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 20px !important;
+    font-size: 26px !important;
     color: var(--text-dark) !important;
     cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    transition: all 0.2s ease !important;
 }
 
 .premium-header-icon:active {
-    transform: scale(0.9) !important;
+    transform: scale(0.85) !important;
+    background: rgba(0, 0, 0, 0.05) !important;
 }
 
-.dark-theme .premium-header-icon {
+.dark-theme .premium-header-icon:active {
     background: rgba(255, 255, 255, 0.08) !important;
 }
