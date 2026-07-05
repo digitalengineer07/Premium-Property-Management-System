@@ -1632,8 +1632,8 @@ body.dark-theme thead th:last-child {
         align-items: center !important;
         text-align: center !important;
         gap: 12px !important;
-        /* Add massive padding to the bottom so it clears the sticky 68px bottom nav bar AND the floating Install App button! */
-        padding-bottom: 90px !important; 
+        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
+        padding-bottom: 110px !important; 
         border-top: 1px solid var(--border) !important;
         margin-top: 20px !important;
         padding-top: 20px !important;
