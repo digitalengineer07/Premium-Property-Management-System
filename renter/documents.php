@@ -253,6 +253,7 @@ $pending_count = 3 - $verified_count;
                 padding: 0;
                 max-width: 100%;
             }
+            .mobile-bottom-nav { display: flex !important; }
         }
         
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
