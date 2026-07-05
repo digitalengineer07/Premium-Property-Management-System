@@ -95,7 +95,7 @@ $total_bills_count = count($mobile_all_bills);
 ?>
 
 <style>
-    .m-bills-container { background: var(--bg-main); padding-bottom: 96px; font-family: 'Outfit', sans-serif; }
+    .m-bills-container { background: var(--bg-main); padding-bottom: 85px; font-family: 'Outfit', sans-serif; }
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
     .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
@@ -108,7 +108,7 @@ $total_bills_count = count($mobile_all_bills);
 
     .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
     .m-tabs::-webkit-scrollbar { display: none; }
-    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 96px; cursor: pointer; white-space: nowrap; }
+    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 85px; cursor: pointer; white-space: nowrap; }
     .m-tab.active { color: #624BFF; border-bottom: 2px solid #624BFF; }
 
     .m-filters { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 16px; }

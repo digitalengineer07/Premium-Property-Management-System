@@ -39,7 +39,7 @@ foreach ($notices as $n) {
 }
 ?>
 <style>
-    .m-notices-container { background: var(--bg-main); padding-bottom: 96px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
+    .m-notices-container { background: var(--bg-main); padding-bottom: 85px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
     
     /* Header */
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
