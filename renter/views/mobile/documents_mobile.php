@@ -510,12 +510,9 @@
                         </div>
                         <div class="m-doc-info">
                             <div class="m-doc-title"><?php echo htmlspecialchars($doc['name']); ?></div>
-                            <div class="m-doc-subtitle"><?php echo htmlspecialchars($doc['desc']); ?></div>
-                            <div class="m-doc-status-date">
-                                <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
-                                <span class="m-doc-date"><?php echo htmlspecialchars($doc['date']); ?></span>
-                            </div>
+                            <div class="m-doc-subtitle" style="margin-bottom: 0;"><?php echo htmlspecialchars($doc['desc']); ?></div>
                         </div>
+                        <span class="m-status-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Verified</span>
                         <div class="m-doc-actions">
                             <?php if (!empty($doc['url'])): ?>
                             <a href="<?php echo htmlspecialchars($doc['url']); ?>" target="_blank" class="m-action-btn"><i class='bx bx-show'></i></a>
