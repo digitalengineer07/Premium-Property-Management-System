@@ -205,6 +205,8 @@
         align-items: center;
         gap: 12px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        position: relative;
+        overflow: hidden;
     }
     .m-doc-icon {
         width: 44px;
@@ -228,6 +230,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding-right: 20px; /* prevent text overlap with badge */
     }
     .m-doc-subtitle {
         font-size: 12px;
@@ -241,10 +244,13 @@
         flex-wrap: wrap;
     }
     .m-status-badge {
-        font-size: 11px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 10px;
         font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 20px;
+        padding: 4px 12px;
+        border-radius: 0 0 0 12px;
     }
     .m-doc-date {
         font-size: 11px;
