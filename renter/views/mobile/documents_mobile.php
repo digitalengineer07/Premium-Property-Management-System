@@ -84,7 +84,7 @@
     /* KPI Grid */
     .m-kpi-scroll {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 20px;
     }
@@ -125,25 +125,6 @@
         font-size: 11px;
         color: var(--text-gray, #64748B);
         font-weight: 500;
-    }
-    .m-progress-bar {
-        width: 100%;
-        height: 4px;
-        background: var(--border, #F1F5F9);
-        border-radius: 2px;
-        margin: 8px 0 4px 0;
-        overflow: hidden;
-    }
-    .m-progress-fill {
-        height: 100%;
-        background: var(--primary-purple, #624BFF);
-        border-radius: 2px;
-    }
-    .m-progress-text {
-        font-size: 10px;
-        color: var(--text-gray, #64748B);
-        align-self: flex-end;
-        font-weight: 600;
     }
 
     /* Filters */
@@ -486,18 +467,6 @@
             <div class="m-kpi-title">Pending Documents</div>
             <div class="m-kpi-value">3</div>
             <div class="m-kpi-subtitle">Awaiting verification</div>
-        </div>
-        <div class="m-kpi-card m-kpi-card-wide">
-            <div class="m-kpi-icon" style="background: rgba(59, 130, 246, 0.1); color: #3B82F6;">
-                <i class='bx bx-cloud-upload'></i>
-            </div>
-            <div class="m-kpi-title">Storage Used</div>
-            <div class="m-kpi-value" style="font-size: 20px;">245 MB</div>
-            <div class="m-kpi-subtitle">of 1 GB used</div>
-            <div class="m-progress-bar">
-                <div class="m-progress-fill" style="width: 24%;"></div>
-            </div>
-            <div class="m-progress-text">24%</div>
         </div>
     </div>
 
