@@ -2010,6 +2010,11 @@ body.dark-theme thead th:last-child {
 .header-icon-btn {
     width: 38px !important;
     height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    flex-shrink: 0 !important;
     background: rgba(255, 255, 255, 0.1) !important; /* Soft transparent white */
     border-radius: 50% !important;
     display: flex !important;
