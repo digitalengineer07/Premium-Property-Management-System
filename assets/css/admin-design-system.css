@@ -1825,6 +1825,201 @@ body.dark-theme thead th:last-child {
     cursor: pointer !important;
     transition: all 0.2s ease !important;
     position: relative !important;
+        text-align: center !important;
+        gap: 12px !important;
+        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
+        padding-bottom: 110px !important; 
+        border-top: 1px solid var(--border) !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+
+    /* Adjust font size to prevent any horizontal overflow */
+    .app-footer p {
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+/* ==========================================================================
+   ULTRA-PREMIUM FLOATING PILL DOCK OVERRIDE
+   ========================================================================== */
+.mobile-bottom-nav {
+    height: 72px !important;
+    bottom: 8px !important;
+    left: 16px !important;
+    right: 16px !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 40px !important; /* Pill shape */
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255,255,255,0.4) inset !important;
+    padding: 0 12px !important; 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.dark-theme .mobile-bottom-nav {
+    background: rgba(20, 25, 35, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
+}
+
+.mb-nav-center {
+    width: 54px !important;
+    height: 54px !important;
+    background: linear-gradient(135deg, #624BFF, #8B5CF6) !important;
+    box-shadow: 0 8px 24px rgba(98, 75, 255, 0.5), inset 0 2px 4px rgba(255,255,255,0.3) !important;
+    margin-top: -24px !important;
+    border: none !important; /* Removed thick ring for seamless float */
+    border-radius: 50% !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+}
+
+.mb-nav-center:active {
+    transform: scale(0.92) !important;
+}
+
+.dark-theme .mb-nav-center {
+    background: linear-gradient(135deg, #7C3AED, #4F46E5) !important;
+    box-shadow: 0 8px 24px rgba(124, 58, 237, 0.5), inset 0 2px 4px rgba(255,255,255,0.2) !important;
+}
+
+.mb-nav-item {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    color: #94A3B8 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    gap: 4px !important;
+}
+
+.mb-nav-item i {
+    font-size: 24px !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.mb-nav-item span {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px !important;
+    transition: all 0.3s ease !important;
+}
+
+.mb-nav-item.active {
+    color: #624BFF !important;
+}
+
+.dark-theme .mb-nav-item.active {
+    color: #818CF8 !important;
+}
+
+.mb-nav-item.active i {
+    transform: translateY(-4px) scale(1.1) !important;
+    text-shadow: 0 8px 16px rgba(98, 75, 255, 0.4) !important;
+}
+
+.dark-theme .mb-nav-item.active i {
+    text-shadow: 0 8px 16px rgba(129, 140, 248, 0.4) !important;
+}
+
+/* ==========================================================================
+   VIBRANT CURVED GRADIENT HEADER
+   ========================================================================== */
+.premium-header-pill {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 16px 20px 24px 20px !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #624BFF 0%, #8B5CF6 100%) !important;
+    border: none !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1) !important;
+    border-bottom-left-radius: 32px !important;
+    border-bottom-right-radius: 32px !important;
+    box-shadow: 0 12px 36px rgba(98, 75, 255, 0.25), 0 0 0 1px rgba(255,255,255,0.05) inset !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    backdrop-filter: none !important;
+}
+
+.dark-theme .premium-header-pill {
+    background: linear-gradient(135deg, #111827 0%, #1E1B4B 100%) !important; /* Deep Slate to Dark Indigo */
+    border-bottom: 1px solid rgba(98, 75, 255, 0.2) !important; /* Subtle purple glow on bottom edge */
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.02) inset !important;
+}
+
+.m-header-module {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.m-header-left {
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    font-size: 28px !important;
+    color: #ffffff !important;
+    transition: all 0.2s ease !important;
+}
+.m-header-left:active {
+    transform: scale(0.9) !important;
+}
+
+.m-header-brand {
+    gap: 8px !important;
+}
+.m-header-brand img {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    border: 2px solid rgba(255, 255, 255, 0.15) !important;
+    background: #fff !important;
+}
+.m-header-brand span {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.2px !important;
+}
+
+.m-header-right {
+    gap: 12px !important;
+}
+.header-icon-btn {
+    width: 38px !important;
+    height: 38px !important;
+    background: rgba(255, 255, 255, 0.1) !important; /* Soft transparent white */
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    color: #ffffff !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    position: relative !important;
 }
 .header-icon-btn:active {
     transform: scale(0.85) !important;
@@ -1833,6 +2028,7 @@ body.dark-theme thead th:last-child {
 .header-divider {
     display: none !important; /* Hide divider for this design */
 }
+
 .m-notif-badge {
     position: absolute !important;
     top: 4px !important;
@@ -1842,12 +2038,20 @@ body.dark-theme thead th:last-child {
     background: #FF4B6B !important;
     border-radius: 50% !important;
     border: 2px solid #8B5CF6 !important;
-}/ *   F i x   f o r   e x t r a   s p a c i n g   a b o v e   t h e   b o t t o m   d o c k   * /  
- . m - q u e r i e s - c o n t a i n e r   >   * : l a s t - c h i l d ,  
- . m - d a s h b o a r d - c o n t e n t   >   * : l a s t - c h i l d ,  
- . a n i m a t e - u p   >   * : l a s t - c h i l d ,  
- . m - n o t i c e s - c o n t a i n e r   >   * : l a s t - c h i l d ,  
- . m - p r o f i l e - w r a p p e r   >   * : l a s t - c h i l d   {  
-         m a r g i n - b o t t o m :   0   ! i m p o r t a n t ;  
- }  
- 
+}
+
+/* Fix for extra spacing above the bottom dock */
+.m-queries-container > *:last-child,
+.m-dashboard-content > *:last-child,
+.animate-up > *:last-child,
+.m-notices-container > *:last-child,
+.m-profile-wrapper > *:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Ensure mobile bottom navigation is strictly hidden on desktop */
+@media (min-width: 769px) {
+    .mobile-bottom-nav {
+        display: none !important;
+    }
+}
