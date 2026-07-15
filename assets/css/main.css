@@ -1078,3 +1078,10 @@ a:hover {
 .dark-theme .introjs-bullets ul li a.active {
   background: #818cf8 !important;
 }
+
+/* Ensure mobile bottom navigation is strictly hidden on desktop */
+@media (min-width: 769px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
