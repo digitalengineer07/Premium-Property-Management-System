@@ -1978,10 +1978,18 @@ body.dark-theme thead th:last-child {
 .m-header-left {
     width: 40px !important;
     height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    flex-shrink: 0 !important;
     cursor: pointer !important;
     font-size: 28px !important;
     color: #ffffff !important;
     transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 .m-header-left:active {
     transform: scale(0.9) !important;
