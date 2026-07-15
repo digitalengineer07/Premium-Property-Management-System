@@ -1819,12 +1819,11 @@ body.dark-theme thead th:last-child {
     border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
-    font-size: 20px !important;
-    color: #ffffff !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    position: relative !important;
+    /* Stack app footer copyright and last updated text */
+    .app-footer {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
         text-align: center !important;
         gap: 12px !important;
         /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
