@@ -934,3 +934,95 @@ a:hover {
     margin-right: 20px;
   }
 }
+
+/* Intro.js Premium Overrides */
+.introjs-tooltip {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
+  border: 1px solid var(--bg-border) !important;
+  font-family: inherit !important;
+}
+
+.introjs-tooltiptext {
+  font-family: inherit !important;
+}
+
+.introjs-tooltip-title {
+  color: var(--accent) !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important;
+}
+
+.introjs-button {
+  border-radius: var(--radius-md) !important;
+  background-color: var(--bg-subtle) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--bg-border) !important;
+  text-shadow: none !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.introjs-button:hover {
+  background-color: var(--bg-border) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+}
+
+.introjs-button.introjs-nextbutton, .introjs-button.introjs-donebutton {
+  background-color: var(--accent) !important;
+  color: var(--text-on-dark) !important;
+  border-color: var(--accent) !important;
+}
+
+.introjs-button.introjs-nextbutton:hover, .introjs-button.introjs-donebutton:hover {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+
+.introjs-bullets ul li a {
+  background: var(--bg-border) !important;
+}
+
+.introjs-bullets ul li a.active {
+  background: var(--accent) !important;
+}
+
+.introjs-progress {
+  background-color: var(--bg-border) !important;
+}
+
+.introjs-progressbar {
+  background-color: var(--accent) !important;
+}
+
+/* Dark mode compatibility */
+.dark-theme .introjs-tooltip {
+  background-color: var(--primary) !important;
+  border-color: var(--bg-surface) !important;
+}
+
+.dark-theme .introjs-tooltiptext {
+  color: var(--text-on-dark) !important;
+}
+
+.dark-theme .introjs-button {
+  background-color: var(--primary-hover) !important;
+  color: var(--text-on-dark) !important;
+  border-color: var(--text-muted) !important;
+}
+
+.dark-theme .introjs-button:hover {
+  background-color: #444 !important;
+}
+
+.dark-theme .introjs-button.introjs-nextbutton,
+.dark-theme .introjs-button.introjs-donebutton {
+  background-color: var(--accent) !important;
+  color: var(--primary) !important;
+  border-color: var(--accent) !important;
+}
