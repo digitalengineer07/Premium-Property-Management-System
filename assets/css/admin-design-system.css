@@ -1807,18 +1807,19 @@ body.dark-theme thead th:last-child {
     font-weight: 800 !important;
     color: #ffffff !important;
     letter-spacing: -0.2px !important;
-}
+padding: 16px !important;
+        border-radius: 16px !important;
+        gap: 12px !important;
+    }
+    
+    /* Ensure action buttons inside widgets stretch or align well */
+    .footer-widgets > div > .widget-btn,
+    .footer-widgets > div > a.widget-btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 12px !important;
+    }
 
-.m-header-right {
-    gap: 12px !important;
-}
-.header-icon-btn {
-    width: 38px !important;
-    height: 38px !important;
-    background: rgba(255, 255, 255, 0.1) !important; /* Soft transparent white */
-    border-radius: 50% !important;
-    display: flex !important;
-    align-items: center !important;
     /* Stack app footer copyright and last updated text */
     .app-footer {
         display: flex !important;
