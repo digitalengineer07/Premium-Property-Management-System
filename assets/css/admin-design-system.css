@@ -1817,7 +1817,7 @@ padding: 16px !important;
     .footer-widgets > div > a.widget-btn {
         width: 100% !important;
         justify-content: center !important;
-        padding: 12px !important;
+        align-items: center !important;
     }
 
     /* Stack app footer copyright and last updated text */
