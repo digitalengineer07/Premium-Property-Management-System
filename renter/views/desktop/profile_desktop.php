@@ -167,9 +167,9 @@
                       <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value" style="font-size: <?php echo $em_fs; ?>; max-width: 70%; white-space: nowrap;"><?php echo htmlspecialchars($email_val); ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['phone'] ?: '-'); ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value"><?php echo htmlspecialchars($user['whatsapp'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value"><?php echo $user['dob'] ? date('d M Y', strtotime($user['dob'])) : '-'; ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value"><?php echo htmlspecialchars($user['gender'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars($user['address'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value"><?php echo !empty($user['dob']) ? date('d M Y', strtotime($user['dob'])) : '-'; ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value"><?php echo htmlspecialchars(!empty($user['gender']) ? $user['gender'] : '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars(!empty($user['address']) ? $user['address'] : '-'); ?></div></div>
                   </div>
               </div>
 
@@ -293,10 +293,10 @@
                       <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
                   <div class="info-list">
-                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_name'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: '-'); ?></div></div>
-                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value"><?php echo htmlspecialchars(!empty($user['emergency_contact_name']) ? $user['emergency_contact_name'] : '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value"><?php echo htmlspecialchars(!empty($user['emergency_contact_relation']) ? $user['emergency_contact_relation'] : '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value"><?php echo htmlspecialchars(!empty($user['emergency_contact_phone']) ? $user['emergency_contact_phone'] : '-'); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;"><?php echo htmlspecialchars(!empty($user['emergency_contact_address']) ? $user['emergency_contact_address'] : '-'); ?></div></div>
                   </div>
               </div>
 
