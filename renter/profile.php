@@ -496,7 +496,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .dark-theme .doc-item:hover {
             background: rgba(255, 255, 255, 0.06) !important;
         }
-        .dark-theme .avatar-card {
+                .dark-theme .avatar-card {
             background: rgba(98, 75, 255, 0.05) !important;
             border: 1px solid var(--border);
         }
@@ -510,6 +510,38 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             border-color: var(--border) !important;
             color: var(--text-gray) !important;
         }
+    </style>
+</head>
+<body class="<?php echo $is_dark ? 'dark-theme' : ''; ?>">
+
+<div class="app-container">
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class='bx bx-home-heart'></i>
+            </div>
+            <div class="sidebar-brand">
+                <h2>Resident Dashboard</h2>
+                <p>Premium Renter Portal</p>
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.php" class="nav-item">
+                <i class='bx bx-home'></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="my-payments.php" class="nav-item">
+                <i class='bx bx-credit-card'></i>
+                <span>My Payments</span>
+            </a>
+            <a href="my-bills.php" class="nav-item">
+                <i class='bx bx-receipt'></i>
+                <span>My Bills</span>
+            </a>
+            <a href="queries.php" class="nav-item">
+                <i class='bx bx-message-square-dots'></i>
                 <span>Raise Query</span>
             </a>
             <a href="notices.php" class="nav-item">
