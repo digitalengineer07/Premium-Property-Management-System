@@ -237,6 +237,13 @@ window.openMobileSidebar = function(e) {
     
     sidebar.classList.add('mobile-drawer-open');
     
+    // Hide mobile bottom nav to prevent overlap
+    document.querySelectorAll('.mobile-bottom-nav').forEach(nav => {
+        nav.dataset.originalDisplay = nav.style.getPropertyValue('display');
+        nav.dataset.originalDisplayPriority = nav.style.getPropertyPriority('display');
+        nav.style.setProperty('display', 'none', 'important');
+    });
+    
     // Auto-close when any nav link is clicked inside the drawer
     sidebar.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
@@ -254,4 +261,13 @@ window.closeMobileSidebar = function(e) {
         overlay.style.opacity = '0';
         setTimeout(() => { overlay.style.display = 'none'; }, 300);
     }
+    
+    // Restore mobile bottom nav visibility
+    document.querySelectorAll('.mobile-bottom-nav').forEach(nav => {
+        if (nav.dataset.originalDisplayPriority) {
+            nav.style.setProperty('display', nav.dataset.originalDisplay || '', nav.dataset.originalDisplayPriority);
+        } else {
+            nav.style.setProperty('display', nav.dataset.originalDisplay || '');
+        }
+    });
 };
