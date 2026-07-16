@@ -998,219 +998,25 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 <script>
 // Mobile specific script if needed
-const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                imageToCrop.src = event.target.result;
-                cropperModal.style.display = 'flex';
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(imageToCrop, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    dragMode: 'move',
-                    autoCropArea: 1,
-                    restore: false,
-                    guides: false,
-                    center: true,
-                    highlight: false,
-                    cropBoxMovable: true,
-                    cropBoxResizable: true,
-                    toggleDragModeOnDblclick: false,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-    }
-
-    function closeCropper() {
-        cropperModal.style.display = 'none';
-        profilePicInput.value = '';
-        if (cropper) cropper.destroy();
-    }
-
-    function applyCrop() {
-        if (!cropper) return;
-        const canvas = cropper.getCroppedCanvas({
-            width: 400,
-            height: 400,
-            imageSmoothingQuality: 'high'
-        });
-        
-        const base64Image = canvas.toDataURL('image/jpeg', 0.9);
-        croppedImageInput.value = base64Image;
-        avatarPreview.src = base64Image;
-        avatarPreview.style.display = 'block';
-        if (document.getElementById('profileAvatarFallback')) {
-            document.getElementById('profileAvatarFallback').style.display = 'none';
-        }
-        
-        cropperModal.style.display = 'none';
-        if (cropper) cropper.destroy();
-        
-        // Auto submit form to save picture
-        document.getElementById('saveProfileBtn').click();
-    }
-
-    const aadhaarInput = document.querySelector('input[name="aadhaar"]');
-    if (aadhaarInput) {
-        aadhaarInput.addEventListener('change', function(e) {
-            const fileName = e.target.files[0] ? e.target.files[0].name : 'Upload Aadhaar';
-            const textElement = this.nextElementSibling.querySelector('div:nth-of-type(1)');
-            const subElement = this.nextElementSibling.querySelector('div:nth-of-type(2)');
-            const iconElement = this.nextElementSibling.querySelector('i');
-            if(e.target.files[0]) {
-                textElement.textContent = fileName;
-                textElement.style.color = 'var(--primary-purple)';
-                subElement.textContent = 'Ready to upload';
-                iconElement.className = 'bx bxs-check-circle';
-            } else {
-                textElement.textContent = 'Upload Aadhaar';
-                textElement.style.color = 'var(--text-dark)';
-                subElement.textContent = 'Drag & drop or click';
-                iconElement.className = 'bx bx-id-card';
-            }
-        });
-    }
-    
-    // Check for flash success message from sessionStorage
-    const flashMsg = sessionStorage.getItem('pwdSuccess');
-    if (flashMsg) {
-        sessionStorage.removeItem('pwdSuccess');
-        const alertHtml = `
-            <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease; display: flex; align-items: center; gap: 8px; font-weight: 600;">
-                <i class='bx bx-check-circle' style='font-size: 20px;'></i> \${flashMsg}
-            </div>`;
-        const mainEl = document.querySelector('main');
-        if (mainEl) mainEl.insertAdjacentHTML('afterbegin', alertHtml);
-    }
-
-    // Auto-dismiss the status alert
-    const statusAlert = document.getElementById('statusAlert');
-    if (statusAlert) {
-        setTimeout(() => {
-            statusAlert.style.opacity = '0';
-            setTimeout(() => statusAlert.remove(), 500);
-        }, 3000);
-    }
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(event) {
-        const profileDropdown = document.getElementById('profileDropdown');
-        const profileToggle = document.querySelector('.user-profile-pill');
-        if (profileDropdown && profileDropdown.style.display === 'block') {
-            if (!profileDropdown.contains(event.target) && (!profileToggle || !profileToggle.contains(event.target))) {
-                profileDropdown.style.display = 'none';
-            }
-        }
-        
-        const notifDropdown = document.getElementById('notifDropdown');
-        const notifToggle = document.querySelector('.icon-btn'); // The bell icon
-        if (notifDropdown && notifDropdown.style.display === 'block') {
-            if (!notifDropdown.contains(event.target) && !event.target.closest('.icon-btn')) {
-                notifDropdown.style.display = 'none';
-            }
-        }
-    });
-
-    document.querySelectorAll('.pwd-toggle').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const input = this.previousElementSibling;
-            if(input) {
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
-                this.classList.toggle('bx-show');
-                this.classList.toggle('bx-hide');
-            }
-        });
-    });
-
-
-    async function submitChangePassword(event) {
-        event.preventDefault();
-        const alertBox = document.getElementById('pwdModalAlert');
-        const btn = document.getElementById('btnChangePwdSubmit');
-        const form = document.getElementById('changePasswordForm');
-        
-        const newPwd = document.getElementById('new_password').value;
-        const confirmPwd = document.getElementById('confirm_password').value;
-        
-        if (newPwd !== confirmPwd) {
-            alertBox.style.display = 'flex';
-            alertBox.style.background = '#FEF2F2';
-            alertBox.style.color = '#EF4444';
-            alertBox.style.border = '1px solid #FEE2E2';
-            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> New passwords do not match!";
-            return;
-        }
-
-        const originalBtnHTML = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Updating...";
-        alertBox.style.display = 'none';
-
-        try {
-            const formData = new FormData(form);
-            const response = await fetch('change-password.php', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await response.json();
-
-            if (data.status === 'success') {
-                alertBox.style.display = 'flex';
-                alertBox.style.background = '#F0FDF4';
-                alertBox.style.color = '#10B981';
-                alertBox.style.border = '1px solid #DCFCE7';
-                alertBox.innerHTML = "<i class='bx bx-check-circle' style='font-size: 20px;'></i> " + data.message;
-                form.reset();
-                sessionStorage.setItem('pwdSuccess', data.message);
-                setTimeout(() => {
-                    closeChangePasswordModal();
-                    window.location.reload();
-                }, 1400);
-            } else {
-                alertBox.style.display = 'flex';
-                alertBox.style.background = '#FEF2F2';
-                alertBox.style.color = '#EF4444';
-                alertBox.style.border = '1px solid #FEE2E2';
-                alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> " + (data.message || 'Error updating password');
-                btn.disabled = false;
-                btn.innerHTML = originalBtnHTML;
-            }
-        } catch (e) {
-            alertBox.style.display = 'flex';
-            alertBox.style.background = '#FEF2F2';
-            alertBox.style.color = '#EF4444';
-            alertBox.style.border = '1px solid #FEE2E2';
-            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> Network error occurred. Please try again.";
-            btn.disabled = false;
-            btn.innerHTML = originalBtnHTML;
-        }
-    }
 </script>
-<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
 
 <style>
 /* Universal Mobile Bottom Navigation Bar CSS */
 @media screen and (max-width: 768px) {
+    .mobile-bottom-nav { display: flex !important; }
     .main-content {
         padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
     }
-    
-    /* Show Universal Mobile Bottom Navigation */
-    .mobile-bottom-nav { display: flex !important; }
 }
 
-/* Mobile Bottom Nav Bar Default (Hidden on Desktop) */
 .mobile-bottom-nav {
     display: none;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 68px;
+    height: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
     background: var(--white, #FFFFFF);
     border-top: 1px solid var(--border, #F1F5F9);
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
@@ -1267,16 +1073,23 @@ const file = e.target.files[0];
 }
 </style>
 
-<!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
-<nav class="mobile-bottom-nav">
-    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
-    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
-    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
-        <i class='bx bx-plus'></i>
-    </div>
-    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
-    <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
-</nav>
+<!-- Mobile Nav Moved to profile_mobile.php -->
 
+<style>
+/* BRUTEFORCE MOBILE NAV VISIBILITY (Restricted to mobile screens to protect desktop layout) */
+@media screen and (max-width: 768px) {
+    nav.mobile-bottom-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 2147483647 !important;
+        transform: none !important;
+    }
+    body {
+        padding-bottom: 120px !important;
+    }
+}
+</style>
 </body>
 </html>
