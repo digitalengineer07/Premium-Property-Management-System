@@ -238,22 +238,39 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         var modal = document.getElementById('editProfileModal');
         if (!modal) return;
         
+        var mainForm = document.getElementById('editProfileForm');
+        var passwordForm = document.getElementById('changePasswordForm');
+        var modalHeaderIcon = document.getElementById('editProfileModalHeaderIcon');
+        var modalHeaderTitle = document.getElementById('editProfileModalHeaderTitle');
+        
         var basicInfo = document.getElementById('modalBasicInfoSection');
         var emergencyInfo = document.getElementById('modalEmergencyContactSection');
         var divider = document.getElementById('modalSectionDivider');
         
-        if (section === 'basic') {
-            if(basicInfo) basicInfo.style.display = 'block';
-            if(emergencyInfo) emergencyInfo.style.display = 'none';
-            if(divider) divider.style.display = 'none';
-        } else if (section === 'emergency') {
-            if(basicInfo) basicInfo.style.display = 'none';
-            if(emergencyInfo) emergencyInfo.style.display = 'block';
-            if(divider) divider.style.display = 'none';
+        if (section === 'password') {
+            if(mainForm) mainForm.style.display = 'none';
+            if(passwordForm) passwordForm.style.display = 'block';
+            if(modalHeaderIcon) modalHeaderIcon.innerHTML = "<i class='bx bx-shield' style='color: var(--primary-purple); font-size: 24px;'></i>";
+            if(modalHeaderTitle) modalHeaderTitle.innerText = "Change Password";
         } else {
-            if(basicInfo) basicInfo.style.display = 'block';
-            if(emergencyInfo) emergencyInfo.style.display = 'block';
-            if(divider) divider.style.display = 'block';
+            if(mainForm) mainForm.style.display = 'block';
+            if(passwordForm) passwordForm.style.display = 'none';
+            if(modalHeaderIcon) modalHeaderIcon.innerHTML = "<i class='bx bx-edit-alt' style='color: var(--primary-purple); font-size: 24px;'></i>";
+            if(modalHeaderTitle) modalHeaderTitle.innerText = "Edit Profile";
+            
+            if (section === 'basic') {
+                if(basicInfo) basicInfo.style.display = 'block';
+                if(emergencyInfo) emergencyInfo.style.display = 'none';
+                if(divider) divider.style.display = 'none';
+            } else if (section === 'emergency') {
+                if(basicInfo) basicInfo.style.display = 'none';
+                if(emergencyInfo) emergencyInfo.style.display = 'block';
+                if(divider) divider.style.display = 'none';
+            } else {
+                if(basicInfo) basicInfo.style.display = 'block';
+                if(emergencyInfo) emergencyInfo.style.display = 'block';
+                if(divider) divider.style.display = 'block';
+            }
         }
         
         modal.style.setProperty('display', 'flex', 'important');
