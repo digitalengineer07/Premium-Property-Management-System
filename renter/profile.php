@@ -765,6 +765,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
                     <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
                 </div>
+                </div> <!-- ADDED MISSING CLOSING DIV FOR modalEmergencyContactSection -->
             </form>
 
             <form id="changePasswordForm" onsubmit="submitChangePassword(event)" style="display: none;">
