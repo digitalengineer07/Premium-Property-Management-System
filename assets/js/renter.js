@@ -65,6 +65,26 @@ const paymentTimer = document.getElementById('paymentTimer');
 let timerInterval = null;
 
 function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null) {
+    // Level 3 Security: Rate Limiting to prevent modal opening spam
+    const rateLimitKey = 'lastModalOpenTime';
+    const lastOpen = localStorage.getItem(rateLimitKey);
+    const cooldownMs = 2 * 60 * 1000; // 2 minutes cooldown
+    
+    if (lastOpen && (Date.now() - parseInt(lastOpen)) < cooldownMs) {
+        const remainingSecs = Math.ceil((cooldownMs - (Date.now() - parseInt(lastOpen))) / 1000);
+        const remainingMins = Math.ceil(remainingSecs / 60);
+        
+        if (typeof showToast === 'function') {
+            showToast(`Security Rate Limit: Please wait ${remainingMins} minute(s) before opening the payment scanner again.`, "error");
+        } else {
+            alert(`Security Rate Limit: Please wait ${remainingMins} minute(s) before opening the payment scanner again.`);
+        }
+        return;
+    }
+    
+    // Set timestamp for next modal open rate limit check
+    localStorage.setItem(rateLimitKey, Date.now());
+
     if (!amountSpan) return;
     
     // Format amount securely (strip commas, ensure 2 decimal places)
