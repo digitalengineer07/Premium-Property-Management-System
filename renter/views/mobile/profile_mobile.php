@@ -301,7 +301,6 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         font-size: 15px;
         font-weight: 700;
         text-decoration: none;
-        margin-top: auto;
     }
 
     /* Dark Theme Mobile Overrides */
