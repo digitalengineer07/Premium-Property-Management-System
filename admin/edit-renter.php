@@ -36,12 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $phone = trim($_POST['phone'] ?? '');
         $whatsapp = trim($_POST['whatsapp'] ?? '');
         $email = trim($_POST['email'] ?? '');
-        $whatsapp = trim($_POST['whatsapp'] ?? '');
         $about = trim($_POST['about'] ?? '');
         $joining_date = $_POST['joining_date'] ?? null;
         $advance_payment = (float)($_POST['advance_payment'] ?? 0);
         $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
         $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
+        
+        $emg_name = empty($_POST['emergency_contact_name']) ? null : $_POST['emergency_contact_name'];
+        $emg_rel = empty($_POST['emergency_contact_relation']) ? null : $_POST['emergency_contact_relation'];
+        $emg_phone = empty($_POST['emergency_contact_phone']) ? null : $_POST['emergency_contact_phone'];
+        $emg_addr = empty($_POST['emergency_contact_address']) ? null : $_POST['emergency_contact_address'];
         
         if (empty($name)) {
             $error = "Name is required.";
@@ -53,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $aadhaar_update = "";
             $agreement_update = "";
-            $types = "sssssssdddd";
-            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $advance_payment, $advance_payment, $fixed_rent, $fixed_maintenance];
+            $types = "sssssssddddssss";
+            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $advance_payment, $advance_payment, $fixed_rent, $fixed_maintenance, $emg_name, $emg_rel, $emg_phone, $emg_addr];
 
             // Handle Aadhaar Upload
             if (isset($_FILES['aadhaar_file']) && $_FILES['aadhaar_file']['error'] === UPLOAD_ERR_OK) {
