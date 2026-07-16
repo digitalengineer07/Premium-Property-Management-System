@@ -912,6 +912,11 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         var modal = document.getElementById('accountSecurityModal');
         if (modal) {
             modal.style.setProperty('display', 'flex', 'important');
+            var box = modal.querySelector('.no-scrollbar');
+            if (box) {
+                box.style.opacity = '1';
+                box.style.transform = 'none';
+            }
         }
     }
     </script>

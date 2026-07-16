@@ -411,7 +411,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="if(typeof openMobileAccountSecurity === 'function') { openMobileAccountSecurity(); } return false;">
+                onclick="var m = document.getElementById('changePasswordModal'); if(m){ m.style.setProperty('display', 'flex', 'important'); var b = m.querySelector('.no-scrollbar'); if(b){ b.style.opacity='1'; b.style.transform='none'; } } return false;">
                 <div class="mp-menu-icon"><i class='bx bx-shield'></i></div>
                 <div class="mp-menu-text">
                     <h3>Account & Security</h3>
