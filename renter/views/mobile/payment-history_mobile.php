@@ -269,6 +269,201 @@
         margin-bottom: 0 !important;
     }
     .mobile-page-body .payments-container > div:last-child > div:first-child {
+height: 32px !important;
+        border-radius: 8px !important;
+    }
+    .mobile-page-body .kpi-min-icon i {
+        font-size: 16px !important;
+    }
+    .mobile-page-body .kpi-card-minimal h4 {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        margin: 0 !important;
+        font-size: 10px !important;
+        white-space: normal !important;
+        text-align: left !important;
+    }
+    .mobile-page-body .kpi-card-minimal h2 {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        margin-top: 6px !important;
+        margin-bottom: 2px !important;
+    }
+    .mobile-page-body .kpi-card-minimal .kpi-min-tag {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        text-align: center !important;
+        font-size: 9px !important;
+        white-space: normal !important;
+    }
+
+    /* 3. Fix the Filter Section (Side-by-side for first 3 filters) */
+    .mobile-page-body .tabs-header {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 8px !important;
+        padding: 16px 12px !important;
+    }
+    .mobile-page-body .filter-group {
+        width: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+    }
+    .mobile-page-body .filter-group > label {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-bottom: 4px !important;
+    }
+    .mobile-page-body .filter-select, 
+    .mobile-page-body .filter-group > div {
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 8px 4px !important;
+        font-size: 11px !important;
+    }
+    .mobile-page-body .filter-group > div span {
+        font-size: 11px !important;
+    }
+    .mobile-page-body .filter-group > div i {
+        margin-right: 4px !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4),
+    .mobile-page-body .filter-group:nth-child(5) {
+        grid-column: 1 / -1 !important;
+    }
+    .mobile-page-body .btn-outline-support {
+        width: 100% !important;
+        justify-content: center !important;
+        margin-top: 4px;
+    }
+
+    /* 4. Fix Table Layout (Convert to Mobile Box Type) */
+    .mobile-page-body .payments-container {
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        margin-left: -16px;
+        margin-right: -16px;
+        width: calc(100% + 32px) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .mobile-page-body .payments-table, 
+    .mobile-page-body .payments-table tbody {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    
+    .mobile-page-body .payments-table thead {
+        display: none !important;
+    }
+    
+    .mobile-page-body .payments-table tr {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        margin: 0 16px 16px 16px !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+        background: var(--white) !important;
+        padding: 0 !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+        overflow: hidden !important;
+    }
+    
+    .mobile-page-body .payments-table td {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        padding: 12px 16px !important;
+        border: none !important;
+        border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+        text-align: left !important;
+        font-size: 13px !important;
+    }
+    
+    /* Hide the ID and Bill Date columns to save space */
+    .mobile-page-body .payments-table td:nth-child(1),
+    .mobile-page-body .payments-table td:nth-child(4) {
+        display: none !important;
+    }
+    
+    /* VERY IMPORTANT: Allow JS to hide rows for pagination by respecting inline display: none */
+    .mobile-page-body .payments-table tr[style*="display: none"],
+    .mobile-page-body .payments-table tr[style*="display: none;"] {
+        display: none !important;
+    }
+    
+    /* Style the Bill Type as a card header spanning both columns */
+    .mobile-page-body .payments-table td:nth-child(2) {
+        grid-column: 1 / span 2 !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        background: rgba(248, 250, 252, 0.8) !important;
+        border-bottom: 1px solid var(--border) !important;
+        padding: 16px !important;
+        order: 1;
+    }
+    
+    .mobile-page-body .td-bill-type {
+        text-align: left !important;
+    }
+    
+    /* Grid placement and borders for the rest of the cells */
+    .mobile-page-body .payments-table td:nth-child(6) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
+    .mobile-page-body .payments-table td:nth-child(7) { order: 3; } /* Status */
+    .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
+    .mobile-page-body .payments-table td:nth-child(5) { order: 5; } /* Due Date */
+    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
+    .mobile-page-body .payments-table td:nth-child(9) { order: 7; border-bottom: none !important; } /* Mode */
+    
+    /* Inject Labels on top of values */
+    .mobile-page-body .payments-table td::before {
+        display: block !important;
+        font-size: 9px !important;
+        font-weight: 700 !important;
+        color: var(--text-gray) !important;
+        letter-spacing: 0.5px !important;
+        margin-bottom: 4px !important;
+        text-transform: uppercase !important;
+    }
+    
+    /* Specific label texts */
+    .mobile-page-body .payments-table td:nth-child(3)::before { content: "FOR PERIOD"; }
+    .mobile-page-body .payments-table td:nth-child(5)::before { content: "DUE DATE"; }
+    .mobile-page-body .payments-table td:nth-child(6)::before { content: "AMOUNT"; }
+    .mobile-page-body .payments-table td:nth-child(7)::before { content: "STATUS"; }
+    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAID ON"; }
+    .mobile-page-body .payments-table td:nth-child(9)::before { content: "PAYMENT MODE"; }
+    
+    /* Fix UPI Logo size in mobile box */
+    .mobile-page-body .payments-table td img {
+        height: 14px !important;
+        width: auto !important;
+        max-width: 40px !important;
+        object-fit: contain !important;
+    }
+    .mobile-page-body .payments-table td:nth-child(9) div {
+        justify-content: flex-start !important;
+        margin-top: 2px !important;
+    }
+    
+    /* Fix Pagination for Mobile (< 1 > format) */
+    .mobile-page-body .payments-container > div:last-child {
+        justify-content: center !important;
+        padding: 16px 16px 4px 16px !important;
+        margin-bottom: 0 !important;
+    }
+    .mobile-page-body .payments-container > div:last-child > div:first-child {
         display: none !important; /* Hide 'Showing 1 to 5...' */
     }
     .mobile-page-body .pagination .page-btn {
@@ -280,19 +475,28 @@
         display: flex !important; /* Only show <, current active page, and > */
     }
 
-    /* FORCE NAVIGATION BAR TO BOTTOM VIEWPORT */
+    /* FORCE NAVIGATION BAR TO BOTTOM VIEWPORT (Premium Pill Design) */
     .mobile-bottom-nav {
         position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
+        bottom: 8px !important;
+        left: 16px !important;
+        right: 16px !important;
+        border-radius: 24px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.8) !important;
+        background: rgba(255,255,255,0.95) !important;
+        backdrop-filter: blur(12px) !important;
         z-index: 999999 !important;
         display: flex !important;
         transform: none !important;
+        padding: 0 16px !important;
+        height: 72px !important;
+        align-items: center !important;
+        justify-content: space-around !important;
     }
     
     body {
-        padding-bottom: 76px !important; /* Just enough for the nav bar */
+        padding-bottom: 100px !important; /* Just enough for the nav bar */
     }
 }
 </style>
