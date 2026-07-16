@@ -22,37 +22,67 @@
                   .pm-col-left { order: 2; width: 100%; }
                   .pm-col-right { order: 1; width: 100%; }
                   #paymentModalPanel { 
-                      padding: 12px !important; 
-                      width: 95% !important; 
-                      max-width: 380px !important; 
-                      max-height: 90vh !important; 
-                      border-radius: 16px !important; 
+                      padding: 20px 20px 24px 20px !important; 
+                      width: 92% !important; 
+                      max-width: 400px !important; 
+                      max-height: 92vh !important; 
+                      border-radius: 24px !important; 
                       display: flex;
                       flex-direction: column;
                   }
-                  .pm-layout { flex: 1; overflow-y: auto; padding-right: 4px; gap: 8px; }
+                  .pm-layout { flex: 1; overflow-y: auto; padding-right: 2px; }
                   
-                  .pm-header { margin-bottom: 8px !important; flex-shrink: 0; }
-                  .pm-header h2 { font-size: clamp(16px, 4.5vw, 20px) !important; }
+                  .pm-header { margin-bottom: 12px !important; flex-shrink: 0; }
+                  .pm-header h2 { font-size: 22px !important; }
                   
-                  .pm-qr-section { padding: 10px !important; margin-bottom: 12px !important; border-radius: 12px !important; }
-                  .pm-qr-section img { max-width: 120px !important; width: 40%; height: auto; }
-                  #pmQrText1 { font-size: clamp(9px, 2.8vw, 11px) !important; margin-bottom: 4px !important; }
-                  #pmQrText2 { font-size: clamp(11px, 3.2vw, 13px) !important; margin-bottom: 8px !important; }
-                  #upiDeepLinkBtn { padding: 8px !important; font-size: clamp(11px, 3.2vw, 13px) !important; margin-bottom: 8px !important; border-radius: 8px !important; }
-                  .pm-qr-section button { padding: 6px !important; font-size: clamp(9px, 2.6vw, 11px) !important; }
+                  /* Premium Horizontal QR Layout */
+                  .pm-qr-section { 
+                      display: grid;
+                      grid-template-columns: 85px 1fr;
+                      grid-template-rows: auto auto auto auto;
+                      gap: 4px 12px;
+                      padding: 12px !important; 
+                      margin-bottom: 16px !important; 
+                      border-radius: 16px !important; 
+                      text-align: left;
+                      align-items: center;
+                  }
+                  .pm-qr-section > div:first-child {
+                      grid-column: 1;
+                      grid-row: 1 / 4;
+                      margin-bottom: 0 !important;
+                      padding: 6px !important;
+                      border-radius: 12px !important;
+                      box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+                  }
+                  .pm-qr-section img { max-width: 100% !important; height: auto !important; }
+                  #pmQrText1 { grid-column: 2; grid-row: 1; margin: 0 !important; font-size: 11px !important; align-self: end; }
+                  #pmQrText2 { grid-column: 2; grid-row: 2; margin: 0 !important; font-size: 13px !important; }
+                  #upiDeepLinkBtn { grid-column: 2; grid-row: 3; margin: 0 !important; padding: 8px 12px !important; font-size: 12px !important; border-radius: 8px !important; width: fit-content !important; }
                   
-                  #pmAmountContainer { font-size: clamp(24px, 7vw, 32px) !important; margin-bottom: 2px !important; }
-                  #paymentDetails { margin-bottom: 8px !important; }
-                  #paymentTitle { font-size: clamp(11px, 3.2vw, 13px) !important; margin-bottom: 2px !important; }
+                  .pm-qr-section > div:last-child {
+                      grid-column: 1 / 3;
+                      grid-row: 4;
+                      margin-top: 8px;
+                      padding-top: 8px !important;
+                      border-top: 1px dashed rgba(0,0,0,0.08) !important;
+                  }
+                  .pm-qr-section > div:last-child p { display: none; } /* Hide the helper text, just show the button */
+                  .pm-qr-section button { padding: 8px !important; font-size: 11px !important; }
                   
-                  .pm-timer-container { font-size: clamp(10px, 3vw, 12px) !important; margin-bottom: 2px !important; }
-                  .pm-timer-container i { font-size: 14px !important; }
-                  .pm-timer-text { font-size: clamp(8px, 2.5vw, 10px) !important; }
+                  /* Amounts & Details */
+                  #pmAmountContainer { font-size: 32px !important; margin-bottom: 4px !important; }
+                  #paymentDetails { margin-bottom: 12px !important; text-align: center; }
+                  #paymentTitle { font-size: 13px !important; margin-bottom: 4px !important; }
                   
-                  #paymentNotifyForm label { font-size: clamp(10px, 3vw, 12px) !important; margin-bottom: 4px !important; }
-                  #paymentNotifyForm input { padding: 10px 12px !important; margin-bottom: 12px !important; border-radius: 8px !important; font-size: clamp(12px, 3.5vw, 14px) !important; }
-                  #submitPaymentBtn { padding: 12px !important; font-size: clamp(13px, 3.8vw, 15px) !important; border-radius: 10px !important; }
+                  .pm-col-left > div:nth-child(2) { padding: 10px !important; margin-bottom: 16px !important; border-radius: 10px !important; }
+                  .pm-timer-container { font-size: 12px !important; margin-bottom: 4px !important; }
+                  .pm-timer-container i { font-size: 16px !important; }
+                  .pm-timer-text { font-size: 10px !important; }
+                  
+                  #paymentNotifyForm label { font-size: 12px !important; margin-bottom: 6px !important; }
+                  #paymentNotifyForm input { padding: 12px 16px !important; margin-bottom: 12px !important; border-radius: 12px !important; font-size: 14px !important; }
+                  #submitPaymentBtn { padding: 14px !important; font-size: 15px !important; border-radius: 12px !important; }
               }
           
               /* Dark Mode Overrides for Payment Modal */
