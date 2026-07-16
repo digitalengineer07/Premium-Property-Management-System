@@ -1134,3 +1134,6 @@ a:hover {
         box-sizing: border-box !important;
     }
 }
+/* Notification Dropdown Positioning Fix */
+.notification-wrapper { position: relative; }
+
