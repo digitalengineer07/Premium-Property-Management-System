@@ -15,9 +15,9 @@ require_once "fetch_notifications.php";
 $stmt = mysqli_prepare($conn, "SELECT username, name, profile_pic, room_no FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
-$usr = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-$display_name = $usr['name'] ?: $usr['username'];
-$profile_pic = $usr['profile_pic'] ?: "assets/img/default-avatar.png";
+$user = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+$display_name = $user['name'] ?: $user['username'];
+$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
 mysqli_stmt_close($stmt);
 
 
