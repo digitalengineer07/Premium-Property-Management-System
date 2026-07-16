@@ -51,8 +51,8 @@
                     <p style="margin: 0; font-size: 10px; font-weight: 600; color: var(--text-gray); line-height: 1.2;">Total Units (This Year)</p>
                 </div>
             </div>
-            <div>
-                <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo number_format($total_units); ?> Units</h4>
+            <div style="text-align: center;">
+                <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo number_format($total_units); ?></h4>
                 <p style="margin: 0; font-size: 9px; font-weight: 500; color: var(--text-gray);">Total electricity consumed</p>
             </div>
         </div>
@@ -73,7 +73,7 @@
                     <p style="margin: 0; font-size: 10px; font-weight: 600; color: var(--text-gray); line-height: 1.2;">Amount Paid (This Year)</p>
                 </div>
             </div>
-            <div>
+            <div style="text-align: center;">
                 <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo money($amount_paid); ?></h4>
                 <p style="margin: 0; font-size: 9px; font-weight: 500; color: var(--text-gray);">Total paid for electricity</p>
             </div>
@@ -89,7 +89,7 @@
                     <p style="margin: 0; font-size: 10px; font-weight: 600; color: var(--text-gray); line-height: 1.2;">Pending Amount</p>
                 </div>
             </div>
-            <div>
+            <div style="text-align: center;">
                 <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo money($pending_amount); ?></h4>
                 <?php if($pending_amount > 0): ?>
                     <p style="margin: 0; font-size: 9px; font-weight: 700; color: #FF4B6B;">Outstanding dues</p>
@@ -109,8 +109,8 @@
                     <p style="margin: 0; font-size: 10px; font-weight: 600; color: var(--text-gray); line-height: 1.2;">Last Recorded Reading</p>
                 </div>
             </div>
-            <div>
-                <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo number_format($last_reading); ?> Units</h4>
+            <div style="text-align: center;">
+                <h4 style="margin: 0 0 4px 0; font-size: 17px; font-weight: 800; color: var(--text-dark);"><?php echo number_format($last_reading); ?></h4>
                 <p style="margin: 0; font-size: 9px; font-weight: 500; color: var(--text-gray);"><?php echo $last_reading_date; ?></p>
             </div>
         </div>
