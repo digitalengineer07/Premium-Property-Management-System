@@ -758,12 +758,11 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                 </div>
-                </div> <!-- END modalEmergencyContactSection -->
-                
-                <div style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px;">
+                      <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
                     <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
                 </div>
+                </div> <!-- ADDED MISSING CLOSING DIV FOR modalEmergencyContactSection -->
             </form>
 
             <form id="changePasswordForm" onsubmit="submitChangePassword(event)" style="display: none;">
