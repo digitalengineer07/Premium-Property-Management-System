@@ -892,7 +892,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-door-open' style="font-size: 16px; vertical-align: middle;"></i> Room Number</label>
-                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #ffffff; font-size: 14px; box-sizing: border-box; color: var(--text-dark); transition: all 0.2s;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='var(--border)'; this.style.boxShadow='none';">
                     </div>
                     
                     <div>
@@ -917,8 +917,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 </div>
                 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                    <button type="button" class="btn-primary" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 32px;">Close</button>
+                    <button type="button" class="btn-outline" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 24px; border: 1px solid var(--border); border-radius: 12px; background: transparent; cursor: pointer;">Close</button>
+                    <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px; background: var(--primary-purple); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;">Save Details</button>
                 </div>
+            </form>
         </div>
     </div>
 
