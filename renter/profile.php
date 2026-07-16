@@ -1117,26 +1117,46 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
     async function submitChangePassword(event) {
         event.preventDefault();
-        const alertBox = document.getElementById('pwdModalAlert');
-        const btn = document.getElementById('btnChangePwdSubmit');
-        const form = document.getElementById('changePasswordForm');
+        const form = event.target;
         
-        const newPwd = document.getElementById('new_password').value;
-        const confirmPwd = document.getElementById('confirm_password').value;
+        // Find alert box and submit button within the form context
+        let alertBox = form.querySelector('#changePasswordAlert');
+        if (!alertBox) alertBox = document.getElementById('pwdModalAlert');
+        
+        let btn = form.querySelector('button[type="submit"]');
+        if (!btn) btn = document.getElementById('btnChangePwdSubmit');
+        
+        const newPwdInput = form.querySelector('input[name="new_password"]') || document.getElementById('new_password');
+        const confirmPwdInput = form.querySelector('input[name="confirm_password"]') || document.getElementById('confirm_password');
+        
+        const newPwd = newPwdInput ? newPwdInput.value : '';
+        const confirmPwd = confirmPwdInput ? confirmPwdInput.value : '';
         
         if (newPwd !== confirmPwd) {
-            alertBox.style.display = 'flex';
-            alertBox.style.background = '#FEF2F2';
-            alertBox.style.color = '#EF4444';
-            alertBox.style.border = '1px solid #FEE2E2';
-            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> New passwords do not match!";
+            if (alertBox) {
+                alertBox.style.display = 'flex';
+                alertBox.style.background = '#FEF2F2';
+                alertBox.style.color = '#EF4444';
+                alertBox.style.border = '1px solid #FEE2E2';
+                alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> New passwords do not match!";
+                
+                alertBox.style.padding = '12px 16px';
+                alertBox.style.borderRadius = '12px';
+                alertBox.style.marginBottom = '20px';
+                alertBox.style.alignItems = 'center';
+                alertBox.style.gap = '8px';
+                alertBox.style.fontSize = '14px';
+                alertBox.style.fontWeight = '600';
+            }
             return;
         }
 
-        const originalBtnHTML = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Updating...";
-        alertBox.style.display = 'none';
+        const originalBtnHTML = btn ? btn.innerHTML : 'Update Password';
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Updating...";
+        }
+        if (alertBox) alertBox.style.display = 'none';
 
         try {
             const formData = new FormData(form);
@@ -1147,34 +1167,71 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             const data = await response.json();
 
             if (data.status === 'success') {
-                alertBox.style.display = 'flex';
-                alertBox.style.background = '#F0FDF4';
-                alertBox.style.color = '#10B981';
-                alertBox.style.border = '1px solid #DCFCE7';
-                alertBox.innerHTML = "<i class='bx bx-check-circle' style='font-size: 20px;'></i> " + data.message;
+                if (alertBox) {
+                    alertBox.style.display = 'flex';
+                    alertBox.style.background = '#F0FDF4';
+                    alertBox.style.color = '#10B981';
+                    alertBox.style.border = '1px solid #DCFCE7';
+                    alertBox.innerHTML = "<i class='bx bx-check-circle' style='font-size: 20px;'></i> " + data.message;
+                    
+                    alertBox.style.padding = '12px 16px';
+                    alertBox.style.borderRadius = '12px';
+                    alertBox.style.marginBottom = '20px';
+                    alertBox.style.alignItems = 'center';
+                    alertBox.style.gap = '8px';
+                    alertBox.style.fontSize = '14px';
+                    alertBox.style.fontWeight = '600';
+                }
                 form.reset();
                 sessionStorage.setItem('pwdSuccess', data.message);
                 setTimeout(() => {
-                    closeChangePasswordModal();
+                    const mobileModal = document.getElementById('editProfileModal');
+                    if (mobileModal) mobileModal.style.display = 'none';
+                    if (typeof closeChangePasswordModal === 'function') closeChangePasswordModal();
                     window.location.reload();
                 }, 1400);
             } else {
+                if (alertBox) {
+                    alertBox.style.display = 'flex';
+                    alertBox.style.background = '#FEF2F2';
+                    alertBox.style.color = '#EF4444';
+                    alertBox.style.border = '1px solid #FEE2E2';
+                    alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> " + (data.message || 'Error updating password');
+                    
+                    alertBox.style.padding = '12px 16px';
+                    alertBox.style.borderRadius = '12px';
+                    alertBox.style.marginBottom = '20px';
+                    alertBox.style.alignItems = 'center';
+                    alertBox.style.gap = '8px';
+                    alertBox.style.fontSize = '14px';
+                    alertBox.style.fontWeight = '600';
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnHTML;
+                }
+            }
+        } catch (e) {
+            console.error(e);
+            if (alertBox) {
                 alertBox.style.display = 'flex';
                 alertBox.style.background = '#FEF2F2';
                 alertBox.style.color = '#EF4444';
                 alertBox.style.border = '1px solid #FEE2E2';
-                alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> " + (data.message || 'Error updating password');
+                alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> Network error occurred. Please try again.";
+                
+                alertBox.style.padding = '12px 16px';
+                alertBox.style.borderRadius = '12px';
+                alertBox.style.marginBottom = '20px';
+                alertBox.style.alignItems = 'center';
+                alertBox.style.gap = '8px';
+                alertBox.style.fontSize = '14px';
+                alertBox.style.fontWeight = '600';
+            }
+            if (btn) {
                 btn.disabled = false;
                 btn.innerHTML = originalBtnHTML;
             }
-        } catch (e) {
-            alertBox.style.display = 'flex';
-            alertBox.style.background = '#FEF2F2';
-            alertBox.style.color = '#EF4444';
-            alertBox.style.border = '1px solid #FEE2E2';
-            alertBox.innerHTML = "<i class='bx bx-error-circle' style='font-size: 20px;'></i> Network error occurred. Please try again.";
-            btn.disabled = false;
-            btn.innerHTML = originalBtnHTML;
         }
     }
 </script>
