@@ -347,7 +347,7 @@
 
                 <div class="filter-group">
                     <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-gray); margin-bottom: 6px;">Bill Type</label>
-                    <select class="filter-select" style="width: 150px;" onchange="currentTab = this.value; currentPage = 1; renderTable();">
+                    <select class="filter-select type-filter" style="width: 150px;">
                         <option value="all">All Types</option>
                         <option value="rent">Rent</option>
                         <option value="electricity">Electricity</option>
@@ -439,99 +439,125 @@
             
             <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding: 0 12px;">
                 <div style="font-size: 13px; color: var(--text-gray); font-weight: 500;">
-                    Showing <span id="showingStart">1</span> to <span id="showingEnd">5</span> of <span id="totalRecords">14</span> transactions
+                    Showing <span class="showing-start">1</span> to <span class="showing-end">5</span> of <span class="total-records">14</span> transactions
                 </div>
-                <div class="pagination" id="paginationControls" style="margin-top: 0; padding: 0; border: none;">
+                <div class="pagination pagination-controls" style="margin-top: 0; padding: 0; border: none;">
                     <!-- JS will inject pagination buttons here -->
                 </div>
             </div>
         </div>
 
         <script>
-            let currentTab = 'all';
-            let currentPage = 1;
-            const recordsPerPage = 5;
+            (function() {
+                // Get the container for THIS specific instance
+                const containers = document.querySelectorAll('.payments-container');
+                const container = containers[containers.length - 1];
+                
+                let currentTab = 'all';
+                let currentPage = 1;
+                const recordsPerPage = 5;
 
-            function renderTable() {
-                const allDataRows = Array.from(document.querySelectorAll('#paymentsTableBody tr.data-row'));
-                
-                // 1. Filter rows by tab
-                const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
-                
-                // 2. Paginate rows
-                const totalRecords = filteredRows.length;
-                const totalPages = Math.ceil(totalRecords / recordsPerPage) || 1;
-                
-                if (currentPage > totalPages) currentPage = totalPages;
-                if (currentPage < 1) currentPage = 1;
-                
-                const startIndex = (currentPage - 1) * recordsPerPage;
-                const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
-                
-                // 3. Show/Hide data rows based on pagination
-                allDataRows.forEach(row => {
-                    row.style.display = 'none';
-                });
-                
-                for(let i = startIndex; i < endIndex; i++) {
-                    filteredRows[i].style.display = 'table-row';
-                    // Update counter dynamically for the filtered set
-                    filteredRows[i].querySelector('td:first-child').textContent = i + 1;
-                }
-                
-                // 4. Update showing text
-                document.getElementById('showingStart').textContent = totalRecords === 0 ? 0 : startIndex + 1;
-                document.getElementById('showingEnd').textContent = endIndex;
-                document.getElementById('totalRecords').textContent = totalRecords;
-                
-                // 5. Render Pagination controls
-                renderPaginationControls(totalPages);
-            }
-            
-            function renderPaginationControls(totalPages) {
-                const container = document.getElementById('paginationControls');
-                if (totalPages <= 1) {
-                    container.innerHTML = '';
-                    container.style.display = 'none';
-                    return;
-                }
-                
-                container.style.display = 'flex';
-                let html = '';
-                
-                // Prev btn
-                if (currentPage > 1) {
-                    html += `<a href="#" class="page-btn prev-btn" data-page="${currentPage - 1}"><i class='bx bx-chevron-left'></i></a>`;
-                } else {
-                    html += `<span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>`;
-                }
-                
-                // Pages
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `<a href="#" class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</a>`;
-                }
-                
-                // Next btn
-                if (currentPage < totalPages) {
-                    html += `<a href="#" class="page-btn next-btn" data-page="${currentPage + 1}"><i class='bx bx-chevron-right'></i></a>`;
-                } else {
-                    html += `<span class="page-btn" style="opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>`;
-                }
-                
-                container.innerHTML = html;
-                
-                // Attach events to dynamically created buttons
-                container.querySelectorAll('a.page-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        currentPage = parseInt(this.getAttribute('data-page'));
+                const typeFilter = container.querySelector('.type-filter');
+                if (typeFilter) {
+                    typeFilter.addEventListener('change', function() {
+                        currentTab = this.value;
+                        currentPage = 1;
                         renderTable();
                     });
-                });
-            }
+                }
 
-            // Initial render
-            document.addEventListener('DOMContentLoaded', () => {
-                renderTable();
-            });
+                function renderTable() {
+                    const allDataRows = Array.from(container.querySelectorAll('tbody tr.data-row'));
+                    
+                    // 1. Filter rows by tab
+                    const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                    
+                    // 2. Paginate rows
+                    const totalRecords = filteredRows.length;
+                    const totalPages = Math.ceil(totalRecords / recordsPerPage) || 1;
+                    
+                    if (currentPage > totalPages) currentPage = totalPages;
+                    if (currentPage < 1) currentPage = 1;
+                    
+                    const startIndex = (currentPage - 1) * recordsPerPage;
+                    const endIndex = Math.min(startIndex + recordsPerPage, totalRecords);
+                    
+                    // 3. Show/Hide data rows based on pagination
+                    allDataRows.forEach(row => {
+                        row.style.display = 'none';
+                    });
+                    
+                    for(let i = startIndex; i < endIndex; i++) {
+                        filteredRows[i].style.display = 'table-row';
+                        // Update counter dynamically for the filtered set
+                        filteredRows[i].querySelector('td:first-child').textContent = i + 1;
+                    }
+                    
+                    // 4. Update showing text
+                    const startEl = container.querySelector('.showing-start');
+                    if(startEl) startEl.textContent = totalRecords === 0 ? 0 : startIndex + 1;
+                    
+                    const endEl = container.querySelector('.showing-end');
+                    if(endEl) endEl.textContent = endIndex;
+                    
+                    const totalEl = container.querySelector('.total-records');
+                    if(totalEl) totalEl.textContent = totalRecords;
+                    
+                    // 5. Render Pagination controls
+                    renderPaginationControls(totalPages);
+                }
+                
+                function renderPaginationControls(totalPages) {
+                    const pagContainer = container.querySelector('.pagination-controls');
+                    if (!pagContainer) return;
+                    
+                    if (totalPages <= 1) {
+                        pagContainer.innerHTML = '';
+                        pagContainer.style.display = 'none';
+                        return;
+                    }
+                    
+                    pagContainer.style.display = 'flex';
+                    let html = '';
+                    
+                    // Prev Button
+                    if (currentPage > 1) {
+                        html += `<a href="#" class="page-btn" data-page="${currentPage - 1}"><i class='bx bx-chevron-left'></i></a>`;
+                    } else {
+                        html += `<span class="page-btn disabled"><i class='bx bx-chevron-left'></i></span>`;
+                    }
+                    
+                    // Page Numbers
+                    for (let i = 1; i <= totalPages; i++) {
+                        if (i === currentPage) {
+                            html += `<a href="#" class="page-btn active" data-page="${i}">${i}</a>`;
+                        } else {
+                            html += `<a href="#" class="page-btn" data-page="${i}">${i}</a>`;
+                        }
+                    }
+                    
+                    // Next Button
+                    if (currentPage < totalPages) {
+                        html += `<a href="#" class="page-btn" data-page="${currentPage + 1}"><i class='bx bx-chevron-right'></i></a>`;
+                    } else {
+                        html += `<span class="page-btn disabled"><i class='bx bx-chevron-right'></i></span>`;
+                    }
+                    
+                    pagContainer.innerHTML = html;
+                    
+                    // Attach events to dynamically created buttons
+                    pagContainer.querySelectorAll('a.page-btn').forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            currentPage = parseInt(this.getAttribute('data-page'));
+                            renderTable();
+                        });
+                    });
+                }
+
+                // Initial render
+                document.addEventListener('DOMContentLoaded', () => {
+                    renderTable();
+                });
+            })();
         </script>
