@@ -417,4 +417,14 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     </div>
 </div>
 
+<nav class="mobile-bottom-nav" style="display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; z-index: 2147483647 !important; transform: none !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 72px !important; background: var(--white, #fff) !important; border-top: 1px solid var(--border, #F1F5F9) !important; box-shadow: 0 -4px 20px rgba(0,0,0,0.06) !important; justify-content: space-around !important; align-items: center !important; padding: 0 8px !important;">
+    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
+    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
+    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
+        <i class='bx bx-plus'></i>
+    </div>
+    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
+    <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
+</nav>
+
 <?php include 'mobile_notifications.php'; ?>
