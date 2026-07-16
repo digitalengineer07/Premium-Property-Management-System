@@ -517,17 +517,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         }
         .dark-theme .panel {
             background: var(--white) !important;
-            border-color: var(--border) !important;
-        }
-        .dark-theme input, .dark-theme select, .dark-theme textarea {
-            background-color: var(--bg-main) !important;
-            color: var(--text-dark) !important;
-            border-color: var(--border) !important;
-            <a href="my-payments.php" class="nav-item">
-                <i class='bx bx-wallet'></i>
-                <span>My Payments</span>
-            </a>
-            <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
             </a>
