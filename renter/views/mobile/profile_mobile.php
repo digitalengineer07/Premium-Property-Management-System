@@ -8,11 +8,13 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 ?>
 <style>
     /* Reset & Base */
-    .m-profile-wrapper * { box-sizing: border-box; }
+    .m-profile-wrapper, .m-profile-wrapper * { box-sizing: border-box; }
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
         min-height: 100vh;
         padding-bottom: 85px; /* Space for bottom nav */
+        display: flex;
+        flex-direction: column;
     }
     
     /* Header */
