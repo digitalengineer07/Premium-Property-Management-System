@@ -1083,5 +1083,22 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
     <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>
+
+<style>
+/* BRUTEFORCE MOBILE NAV VISIBILITY (Restricted to mobile screens to protect desktop layout) */
+@media screen and (max-width: 768px) {
+    nav.mobile-bottom-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 2147483647 !important;
+        transform: none !important;
+    }
+    body {
+        padding-bottom: 120px !important;
+    }
+}
+</style>
 </body>
 </html>
