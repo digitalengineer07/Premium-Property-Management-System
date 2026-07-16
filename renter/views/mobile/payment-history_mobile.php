@@ -59,24 +59,47 @@
         overflow-x: hidden !important;
     }
     .mobile-page-body .kpi-card-minimal {
+        display: grid !important;
+        grid-template-columns: auto 1fr !important;
+        align-items: center !important;
+        gap: 4px 8px !important;
+        padding: 12px !important;
         min-width: unset !important;
-        flex: 1 1 0 !important;
         margin-bottom: 0 !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        gap: 10px !important;
-        padding: 14px !important;
+    }
+    .mobile-page-body .kpi-min-info {
+        display: contents !important;
+    }
+    .mobile-page-body .kpi-min-icon {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 8px !important;
+    }
+    .mobile-page-body .kpi-min-icon i {
+        font-size: 16px !important;
     }
     .mobile-page-body .kpi-card-minimal h4 {
-        font-size: 11px !important;
-        line-height: 1.3 !important;
-        margin-bottom: 2px !important;
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        margin: 0 !important;
+        font-size: 10px !important;
         white-space: normal !important;
+        text-align: left !important;
     }
     .mobile-page-body .kpi-card-minimal h2 {
-        font-size: 17px !important;
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        text-align: center !important;
+        font-size: 16px !important;
+        margin-top: 6px !important;
+        margin-bottom: 2px !important;
     }
     .mobile-page-body .kpi-card-minimal .kpi-min-tag {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        text-align: center !important;
         font-size: 9px !important;
         white-space: normal !important;
     }
