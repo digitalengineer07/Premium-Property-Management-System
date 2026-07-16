@@ -1856,7 +1856,6 @@ padding: 16px !important;
     border-radius: 40px !important; /* Pill shape */
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255,255,255,0.4) inset !important;
     padding: 0 12px !important; 
-    display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     position: fixed !important;

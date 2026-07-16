@@ -999,6 +999,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <script>
 // Mobile specific script if needed
 </script>
+
+<style>
+/* Explicit override to guarantee visibility on mobile view */
+@media screen and (max-width: 768px) {
+    #profile-bottom-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 99999 !important;
+    }
+}
+</style>
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav id="profile-bottom-nav" class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
