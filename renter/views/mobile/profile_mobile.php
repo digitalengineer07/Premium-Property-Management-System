@@ -409,7 +409,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <i class='bx bx-chevron-right mp-menu-arrow'></i>
             </a>
 
-            <a href="javascript:void(0);" class="mp-menu-item" onclick="var m = document.getElementById('changePasswordModal'); if(m){ m.style.display='flex'; m.style.setProperty('display', 'flex', 'important'); }">
+            <a href="javascript:void(0);" class="mp-menu-item" onclick="if(typeof openProfileSection === 'function') openProfileSection('password');">
                 <div class="mp-menu-icon"><i class='bx bx-shield'></i></div>
                 <div class="mp-menu-text">
                     <h3>Account & Security</h3>
