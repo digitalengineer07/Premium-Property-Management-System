@@ -686,6 +686,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <i class='bx bx-credit-card'></i>
                 <span>My Payments</span>
             </a>
+            <a href="electricity-record.php" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
+            </a>
             <a href="my-bills.php" class="nav-item">
                 <i class='bx bx-receipt'></i>
                 <span>My Bills</span>
