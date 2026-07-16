@@ -429,26 +429,4 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
 </nav>
 
-<!-- Hidden Profile Form for Mobile -->
-<form method="POST" id="hiddenProfileFormMobile" class="hidden-form" style="display: none;">
-    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
-    <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>">
-    <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
-    <input type="hidden" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>">
-    <input type="hidden" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>">
-    <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
-    <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about'] ?? ''); ?>">
-    <input type="hidden" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>">
-    <input type="hidden" name="gender" value="<?php echo htmlspecialchars($user['gender'] ?? ''); ?>">
-    <input type="hidden" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>">
-    <input type="hidden" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>">
-    <input type="hidden" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>">
-    <input type="hidden" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>">
-    <input type="hidden" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>">
-    <input type="file" id="profilePicInputMobile" accept="image/*">
-    <input type="hidden" name="cropped_image" id="croppedImageInputMobile">
-    <input type="hidden" name="save_profile" value="1">
-    <button type="submit" id="saveProfileBtnMobile"></button>
-</form>
-
 <?php include 'mobile_notifications.php'; ?>

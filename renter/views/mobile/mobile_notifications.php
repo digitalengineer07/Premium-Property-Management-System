@@ -67,6 +67,8 @@
     </div>
 </div>
 
+<?php include __DIR__ . '/global_profile_upload.php'; ?>
+
 <script>
 function openMobileNotif() {
     let dropdown = document.getElementById('mobileNotifDropdown');
