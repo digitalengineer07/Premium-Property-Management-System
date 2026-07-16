@@ -401,7 +401,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
         <div class="mp-menu-list">
             <a href="#" class="mp-menu-item"
-                onclick="if(typeof openProfileSection === 'function') { openProfileSection('basic'); } return false;">
+                onclick="if(typeof window.openProfileSection === 'function') { window.openProfileSection('basic'); } return false;">
                 <div class="mp-menu-icon"><i class='bx bx-user'></i></div>
                 <div class="mp-menu-text">
                     <h3>Basic Information</h3>
@@ -411,7 +411,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="var m = document.getElementById('changePasswordModal'); if(m){ m.style.setProperty('display', 'flex', 'important'); var b = m.querySelector('.no-scrollbar'); if(b){ b.style.opacity='1'; b.style.transform='none'; } } return false;">
+                onclick="if(typeof window.openChangePasswordModal === 'function') { window.openChangePasswordModal(); } return false;">
                 <div class="mp-menu-icon"><i class='bx bx-shield'></i></div>
                 <div class="mp-menu-text">
                     <h3>Account & Security</h3>
@@ -421,7 +421,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="if(typeof openProfileSection === 'function') { openProfileSection('emergency'); } return false;">
+                onclick="if(typeof window.openProfileSection === 'function') { window.openProfileSection('emergency'); } return false;">
                 <div class="mp-menu-icon"><i class='bx bx-phone-call'></i></div>
                 <div class="mp-menu-text">
                     <h3>Emergency Contact</h3>
@@ -431,7 +431,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="if(typeof openMobileResidence === 'function') { openMobileResidence(); } return false;">
+                onclick="if(typeof window.openMobileResidence === 'function') { window.openMobileResidence(); } return false;">
                 <div class="mp-menu-icon"><i class='bx bx-home'></i></div>
                 <div class="mp-menu-text">
                     <h3>Residence Details</h3>
