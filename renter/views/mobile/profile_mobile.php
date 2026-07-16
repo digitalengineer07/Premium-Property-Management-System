@@ -314,7 +314,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         </a>
     </div>
 </header>
-<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+<div style="height: 110px; width: 100%; display: block; flex-shrink: 0;"></div>
 
 
     <div class="mp-container">
