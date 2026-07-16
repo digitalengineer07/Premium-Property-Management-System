@@ -534,19 +534,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             color: white;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
-            cursor: pointer;
-            margin-top: -24px;
-            border: 4px solid var(--white, #FFFFFF);
-            transition: transform 0.2s;
-        }
-<div class="app-container">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class='bx bx-home-heart'></i>
             </div>
             <div class="sidebar-brand">
                 <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
