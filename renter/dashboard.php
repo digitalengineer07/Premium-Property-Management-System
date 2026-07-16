@@ -22,7 +22,7 @@ mysqli_stmt_close($stmt);
 
 $display_name = $user['name'] ?: $user['username'];
 $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
-$room_no = $user['room_no'] ?? 'N/A';
+$room_no = (!empty($user['room_no']) && $user['room_no'] !== '0') ? $user['room_no'] : 'Not Assigned';
 
 /* Calculate totals */
 // 1. Rent from pure 'rent' table
