@@ -2147,10 +2147,12 @@ padding: 16px !important;
     #editProfileModal {
         align-items: flex-end !important;
         padding: 0 !important;
+        padding-bottom: 85px !important; /* EXACTLY offset the mobile bottom nav height + spacing */
         z-index: 99999 !important;
         height: 100% !important;
         bottom: 0 !important;
         top: 0 !important;
+        box-sizing: border-box !important;
     }
     #editProfileModal > div {
         max-height: 90vh !important;
