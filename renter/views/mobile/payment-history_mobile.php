@@ -261,12 +261,9 @@
     }
     
     /* Fix Pagination for Mobile (< 1 > format) */
-    .mobile-page-body .payments-container {
-        margin-bottom: 4px !important; /* Remove large default margin */
-    }
     .mobile-page-body .payments-container > div:last-child {
         justify-content: center !important;
-        padding: 8px 16px 16px !important; /* Reduced padding from 24px */
+        padding: 24px 16px !important;
     }
     .mobile-page-body .payments-container > div:last-child > div:first-child {
         display: none !important; /* Hide 'Showing 1 to 5...' */
