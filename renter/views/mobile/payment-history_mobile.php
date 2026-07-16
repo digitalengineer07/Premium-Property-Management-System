@@ -104,23 +104,41 @@
         white-space: normal !important;
     }
 
-    /* 3. Fix the Filter Section (Stack vertically) */
+    /* 3. Fix the Filter Section (Side-by-side for first 3 filters) */
     .mobile-page-body .tabs-header {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 12px !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr !important;
+        gap: 8px !important;
         padding: 16px 12px !important;
     }
     .mobile-page-body .filter-group {
         width: 100% !important;
+        min-width: 0 !important;
         flex: none !important;
     }
-    .mobile-page-body .filter-select {
-        width: 100% !important;
-        min-width: 100% !important;
+    .mobile-page-body .filter-group > label {
+        font-size: 10px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin-bottom: 4px !important;
     }
+    .mobile-page-body .filter-select, 
     .mobile-page-body .filter-group > div {
-        min-width: 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        padding: 8px 4px !important;
+        font-size: 11px !important;
+    }
+    .mobile-page-body .filter-group > div span {
+        font-size: 11px !important;
+    }
+    .mobile-page-body .filter-group > div i {
+        margin-right: 4px !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4),
+    .mobile-page-body .filter-group:nth-child(5) {
+        grid-column: 1 / -1 !important;
     }
     .mobile-page-body .btn-outline-support {
         width: 100% !important;
