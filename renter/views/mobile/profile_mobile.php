@@ -302,7 +302,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInput').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInputMobile').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" id="headerProfileImgMobile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
@@ -319,7 +319,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
     <div class="mp-container">
         <div class="mp-user-card">
-            <div class="mp-avatar-container" onclick="document.getElementById('profilePicInput').click()" style="cursor: pointer;">
+            <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()" style="cursor: pointer;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                     <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile">
                 <?php else: ?>

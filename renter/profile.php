@@ -813,13 +813,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     // Cropper Logic
     let cropper = null;
     const profilePicInput = document.getElementById('profilePicInput');
+    const profilePicInputMobile = document.getElementById('profilePicInputMobile');
     const cropperModal = document.getElementById('cropperModal');
     const imageToCrop = document.getElementById('imageToCrop');
     const croppedImageInput = document.getElementById('croppedImageInput');
+    const croppedImageInputMobile = document.getElementById('croppedImageInputMobile');
     const avatarPreview = document.getElementById('profileAvatarImg');
 
-    if (profilePicInput) {
-        profilePicInput.onchange = function(e) {
+    function handleFileSelect(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -843,12 +844,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             };
             reader.readAsDataURL(file);
         }
-    };
+    }
+
+    if (profilePicInput) {
+        profilePicInput.onchange = handleFileSelect;
+    }
+    if (profilePicInputMobile) {
+        profilePicInputMobile.onchange = handleFileSelect;
     }
 
     function closeCropper() {
         cropperModal.style.display = 'none';
-        profilePicInput.value = '';
+        if (profilePicInput) profilePicInput.value = '';
+        if (profilePicInputMobile) profilePicInputMobile.value = '';
         if (cropper) cropper.destroy();
     }
 
@@ -861,7 +869,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
         
         const base64Image = canvas.toDataURL('image/jpeg', 0.9);
-        croppedImageInput.value = base64Image;
+        if (croppedImageInput) croppedImageInput.value = base64Image;
+        if (croppedImageInputMobile) croppedImageInputMobile.value = base64Image;
         
         if (avatarPreview) {
             avatarPreview.src = base64Image;
@@ -894,7 +903,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         // Auto submit form to save picture
         const hiddenForm = document.getElementById('hiddenProfileForm');
-        if (hiddenForm) {
+        const hiddenFormMobile = document.getElementById('hiddenProfileFormMobile');
+        if (hiddenFormMobile) {
+            hiddenFormMobile.submit();
+        } else if (hiddenForm) {
             hiddenForm.submit();
         } else {
             console.error('hiddenProfileForm not found!');

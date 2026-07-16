@@ -1,5 +1,4 @@
 <?php
 require 'db.php';
-$result = mysqli_query($conn, "SELECT id, name, profile_pic FROM users WHERE id=1");
-print_r(mysqli_fetch_assoc($result));
+mysqli_query($conn, "UPDATE users SET profile_pic = NULL WHERE id=1");
 ?>
