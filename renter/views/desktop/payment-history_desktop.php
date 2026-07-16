@@ -270,100 +270,13 @@
             ];
         }
 
-        // 2. Fallback: Include approved payment notifications not already processed
-        foreach ($notifs_list as $pn) {
-            if (!empty($processed_notif_ids[$pn['id']])) continue;
-            
-            $amt = (float)$pn['amount'];
-            $type = trim($pn['bill_type']);
-            $bid = (int)$pn['bill_id'];
-            if (isset($recorded_tx[$type . '_' . $bid . '_' . $amt]) || isset($recorded_tx['tx_' . $pn['transaction_id']])) continue;
-            
-            $pmode = !empty($pn['payment_method']) ? $pn['payment_method'] : 'UPI';
-            $pdate = date('d M Y', strtotime($pn['verified_at'] ? $pn['verified_at'] : $pn['created_at']));
-            $month = date('F Y', strtotime($pdate));
-            $slip_dt = null;
-            $has_elec_in_notif = false;
-            if ($bid > 0) {
-                if ($type == 'rent') {
-                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
-                    if ($mr) $month = $mr['month'];
-                } elseif ($type == 'electricity' || $type == 'elec_rent' || $type == 'total') {
-                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE id=$bid"));
-                    if ($mr) {
-                        if (!empty($mr['month'])) $month = $mr['month'];
-                        $slip_dt = !empty($mr['payment_date']) ? $mr['payment_date'] : $mr['created_at'];
-                        if (isset($mr['amount']) && (float)$mr['amount'] > 0 && $amt > ((float)$mr['rent_amount'] + (float)$mr['maintenance'] + (float)$mr['dues']) + 0.5) {
-                            $has_elec_in_notif = true;
-                        }
-                    }
-                }
-            } else {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND (total_amount=$amt OR (rent_amount+maintenance+dues)=$amt OR amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
-                if (!$bm) $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$user_id AND (rent_amount=$amt OR status='Paid') ORDER BY id DESC LIMIT 1"));
-                if ($bm) {
-                    if (!empty($bm['month'])) $month = $bm['month'];
-                    if (!empty($bm['payment_date'])) $slip_dt = $bm['payment_date'];
-                    elseif (!empty($bm['created_at'])) $slip_dt = $bm['created_at'];
-                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
-                        $has_elec_in_notif = true;
-                    }
-                }
-            }
-            if (!$slip_dt && !empty($month)) {
-                $bm = mysqli_fetch_assoc(mysqli_query($conn, "SELECT payment_date, created_at, amount, rent_amount, maintenance, dues, total_amount FROM electricity WHERE user_id=$user_id AND month='" . mysqli_real_escape_string($conn, $month) . "' ORDER BY id DESC LIMIT 1"));
-                if ($bm) {
-                    $slip_dt = !empty($bm['payment_date']) ? $bm['payment_date'] : $bm['created_at'];
-                    if (isset($bm['amount']) && (float)$bm['amount'] > 0 && $amt > ((float)$bm['rent_amount'] + (float)$bm['maintenance'] + (float)$bm['dues']) + 0.5) {
-                        $has_elec_in_notif = true;
-                    }
-                }
-            }
-            
-            $filter_type = ($type == 'rent') ? 'rent' : (($type == 'electricity') ? 'electricity' : 'other');
-            $title = ($type == 'total' || empty($type)) ? ($has_elec_in_notif ? 'Rent + Main. + Electricity' : 'Rent + Main.') : (ucfirst($type) . ' Payment');
-            $subtitle = 'Ref: ' . $pn['transaction_id'];
-
-            $icon = ($type == 'rent') ? 'bx-home' : (($type == 'electricity') ? 'bx-bulb' : 'bx-credit-card');
-            $color = ($type == 'rent') ? 'purple' : (($type == 'electricity') ? 'yellow' : 'blue');
-            if ($slip_dt) {
-                $bill_date = date('d M Y', strtotime($slip_dt));
-                $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
-            } else {
-                $ts = strtotime($month);
-                $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-                $due_date = $ts ? date('07 M Y', $ts) : $pdate;
-            }
-
-            $all_bills[] = [
-                'id' => $pn['id'],
-                'type' => $type,
-                'filter_type' => $filter_type,
-                'title' => $title,
-                'subtitle' => $subtitle,
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => $pmode,
-                'icon' => $icon,
-                'color' => $color
-            ];
-        }
+        // 2. Removed fallback loop that caused duplicate/inflated 'extra paid amount' KPIs
         
         $total_successful_amount = array_sum(array_column($all_bills, 'amount'));
         $total_successful_count = count($all_bills);
         $avg_payment = $total_successful_count > 0 ? $total_successful_amount / $total_successful_count : 0;
         
-        $pending_q = mysqli_query($conn, "
-            SELECT 
-                (SELECT COALESCE(SUM(rent_amount),0) FROM rent WHERE user_id=$user_id AND status='Pending') +
-                (SELECT COALESCE(SUM(amount + maintenance),0) FROM electricity WHERE user_id=$user_id AND status='Pending') as total_pending,
-                (SELECT COUNT(id) FROM rent WHERE user_id=$user_id AND status='Pending') +
-                (SELECT COUNT(id) FROM electricity WHERE user_id=$user_id AND status='Pending') as count_pending
-        ");
+        $pending_q = mysqli_query($conn, "SELECT COALESCE(SUM(amount),0) as total_pending, COUNT(id) as count_pending FROM payment_notifications WHERE user_id=$user_id AND status='Pending'");
         $pending_row = mysqli_fetch_assoc($pending_q);
         $total_pending_amount = $pending_row['total_pending'];
         $total_pending_count = $pending_row['count_pending'];
