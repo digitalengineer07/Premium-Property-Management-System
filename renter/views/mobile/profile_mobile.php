@@ -11,10 +11,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     .m-profile-wrapper, .m-profile-wrapper * { box-sizing: border-box; }
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
-        min-height: 100vh;
-        padding-bottom: 85px; /* Space for bottom nav */
-        display: flex;
-        flex-direction: column;
+        padding-bottom: 75px; /* Space for bottom nav */
     }
     
     /* Header */
@@ -272,8 +269,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         font-size: 15px;
         font-weight: 700;
         text-decoration: none;
-        margin-top: auto;
-        margin-bottom: 32px;
+        margin-bottom: 8px;
     }
 
     /* Dark Theme Mobile Overrides */
