@@ -308,9 +308,9 @@
             <div class="kpi-card-minimal">
                 <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-check-circle'></i></div>
                 <div class="kpi-min-info">
-                    <h4>Successful Payments</h4>
-                    <h2><?php echo money($total_successful_amount); ?></h2>
-                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo $total_successful_count; ?> Transactions</div>
+                    <h4>Latest Payment</h4>
+                    <h2><?php echo count($all_bills) > 0 ? money($all_bills[0]['amount']) : money(0); ?></h2>
+                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo count($all_bills) > 0 ? 'Paid on ' . $all_bills[0]['paid_on'] : 'No Transactions'; ?></div>
                 </div>
             </div>
 
