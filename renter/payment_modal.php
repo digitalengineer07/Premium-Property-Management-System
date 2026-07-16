@@ -38,9 +38,8 @@
                   /* Premium Horizontal QR Layout */
                   .pm-qr-section { 
                       display: grid;
-                      grid-template-columns: 110px 1fr;
-                      grid-template-rows: auto auto 1fr auto;
-                      gap: 8px 16px;
+                      grid-template-columns: 140px 1fr;
+                      gap: 8px 12px;
                       padding: 12px !important; 
                       margin-bottom: 12px !important; 
                       border-radius: 16px !important; 
@@ -49,12 +48,12 @@
                   }
                   .pm-qr-section > div:first-child {
                       grid-column: 1;
-                      grid-row: 1 / 4;
+                      grid-row: 1 / 5;
                       margin-bottom: 0 !important;
-                      padding: 6px !important;
-                      border-radius: 12px !important;
-                      box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
-                      align-self: start;
+                      padding: 10px !important;
+                      border-radius: 14px !important;
+                      box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+                      align-self: center;
                   }
                   .pm-qr-section img { max-width: 100% !important; height: auto !important; }
                   
@@ -63,17 +62,23 @@
                   #upiDeepLinkBtn { grid-column: 2; grid-row: 3; margin: 0 !important; padding: 8px 12px !important; font-size: 12px !important; border-radius: 8px !important; width: fit-content !important; align-self: start; }
                   
                   .pm-qr-section > div:nth-of-type(2) {
-                      grid-column: 1 / 3;
+                      grid-column: 2;
                       grid-row: 4;
                       margin-top: 4px;
-                      padding-top: 12px !important;
-                      border-top: 1px dashed rgba(0,0,0,0.08) !important;
+                      padding-top: 10px !important;
+                      border-top: 1px dashed rgba(0,0,0,0.1) !important;
                       display: flex;
-                      gap: 12px;
-                      align-items: center;
+                      flex-direction: column;
+                      gap: 6px;
+                      align-items: flex-start;
                   }
-                  .pm-qr-section > div:nth-of-type(2) p { display: none !important; } /* Hide the helper text completely */
-                  .pm-qr-section button { padding: 8px !important; font-size: 12px !important; width: 100% !important; border-radius: 8px !important; }
+                  .pm-qr-section > div:nth-of-type(2) p { 
+                      display: block !important; 
+                      font-size: 10px !important; 
+                      line-height: 1.2 !important; 
+                      margin: 0 !important; 
+                  }
+                  .pm-qr-section button { padding: 6px 12px !important; font-size: 11px !important; width: fit-content !important; border-radius: 8px !important; }
                   
                   /* Amounts & Details */
                   #pmAmountContainer { font-size: 32px !important; margin-bottom: 4px !important; }
