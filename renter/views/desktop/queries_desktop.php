@@ -91,8 +91,8 @@
 <?php endif; ?>
 </div>
                         <div class="user-info">
-                            <h4><?php echo htmlspecialchars(explode(' ', trim($display_name ?? $user['name'] ?? 'User'))[0]); ?></h4>
-                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $usr['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
+                            <h4><?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
                         </div>
                         <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
                     </div>

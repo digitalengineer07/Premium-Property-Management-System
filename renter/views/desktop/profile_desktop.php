@@ -122,7 +122,7 @@
         <div class="grid-col-left">
             <!-- Avatar Card -->
             <div class="panel avatar-card">
-                <div class="avatar-wrapper">
+                <div class="avatar-wrapper" onclick="document.getElementById('profilePicInput').click()" style="cursor: pointer;">
                     <?php if (!empty($profile_pic) && file_exists("../" . $profile_pic)): ?>
                         <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="profile" class="avatar-huge" id="profileAvatarImg">
                     <?php else: ?>
@@ -131,7 +131,7 @@
                         </div>
                         <img src="" alt="profile" class="avatar-huge" id="profileAvatarImg" style="display: none;">
                     <?php endif; ?>
-                    <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
+                    <button type="button" class="btn-edit-avatar">
                         <i class='bx bx-camera'></i>
                     </button>
                     <!-- Hidden form for profile pic -->
