@@ -862,6 +862,15 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         if (document.getElementById('profileAvatarFallbackMobile')) {
             document.getElementById('profileAvatarFallbackMobile').style.display = 'none';
         }
+
+        const headerPreviewMobile = document.getElementById('headerProfileImgMobile');
+        if (headerPreviewMobile) {
+            headerPreviewMobile.src = base64Image;
+            headerPreviewMobile.style.display = 'block';
+        }
+        if (document.getElementById('headerProfileFallbackMobile')) {
+            document.getElementById('headerProfileFallbackMobile').style.display = 'none';
+        }
         
         cropperModal.style.display = 'none';
         if (cropper) cropper.destroy();

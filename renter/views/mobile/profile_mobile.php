@@ -302,13 +302,14 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInput').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
-                <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" id="headerProfileImgMobile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
-                <div style="width: 100%; height: 100%; background: #624BFF; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 800;">
+                <div id="headerProfileFallbackMobile" style="width: 100%; height: 100%; background: #624BFF; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 800;">
                     <?php echo strtoupper(substr(trim($user['name'] ?? ($user['username'] ?? 'U')), 0, 1)); ?>
                 </div>
+                <img src="" alt="Profile" id="headerProfileImgMobile" style="width: 100%; height: 100%; object-fit: cover; display: none;">
             <?php endif; ?>
         </a>
     </div>
