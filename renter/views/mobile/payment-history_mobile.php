@@ -156,6 +156,8 @@
         width: calc(100% + 32px) !important;
         background: transparent !important;
         box-shadow: none !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
     }
     
     .mobile-page-body .payments-table, 
