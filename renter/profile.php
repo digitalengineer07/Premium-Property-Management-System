@@ -640,21 +640,22 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
     <!-- Edit Profile Modal -->
     <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
-        <div class="no-scrollbar" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto; box-sizing: border-box; position: relative;">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto; box-sizing: border-box; position: relative;">
             
             <!-- Decorative Top Gradient Line -->
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; margin-top: 8px;">
                 <h3 style="margin: 0; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-                    <div style="width: 40px; height: 40px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                    <div id="editProfileModalHeaderIcon" style="width: 40px; height: 40px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
                         <i class='bx bx-edit-alt' style="color: var(--primary-purple); font-size: 24px;"></i>
                     </div>
-                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Profile</span>
+                    <span id="editProfileModalHeaderTitle" style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Edit Profile</span>
                 </h3>
                 <button type="button" onclick="document.getElementById('editProfileModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
             </div>
-            <form method="POST" action="">
+            
+            <form id="editProfileForm" method="POST" action="">
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <input type="hidden" name="save_profile" value="1">
                 <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
@@ -726,6 +727,39 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
                 </div>
             </form>
+
+            <form id="changePasswordForm" onsubmit="submitChangePassword(event)" style="display: none;">
+                <div id="changePasswordAlert"></div>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 28px;">
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
+                        <div style="position: relative;">
+                            <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
+                            <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('current_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">New Password <span style="color: #EF4444;">*</span></label>
+                        <div style="position: relative;">
+                            <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('new_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Confirm New Password <span style="color: #EF4444;">*</span></label>
+                        <div style="position: relative;">
+                            <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('confirm_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="padding: 12px 22px; font-weight: 600; border-radius: 14px;">Cancel</button>
+                    <button type="submit" class="btn-primary" style="padding: 12px 26px; font-weight: 600; border-radius: 14px; display: flex; align-items: center; gap: 8px;">
+                        <i class='bx bx-check-shield'></i> Update Password
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -740,63 +774,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <button type="button" class="btn-outline" onclick="closeCropper()" style="padding: 10px 20px;">Cancel</button>
                 <button type="button" class="btn-primary" onclick="applyCrop()" style="padding: 10px 20px; background: var(--primary-purple); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Crop & Set</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Change Password Modal -->
-    <div id="changePasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
-        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative;">
-            
-            <!-- Decorative Top Gradient Line -->
-            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
-                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
-                        <i class='bx bx-lock-alt' style="color: var(--primary-purple); font-size: 26px;"></i>
-                    </div>
-                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Change Password</span>
-                </h3>
-                <button type="button" onclick="closeChangePasswordModal()" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
-            </div>
-
-            <!-- Alert Box for Modal -->
-            <div id="pwdModalAlert" style="display: none; padding: 14px 16px; border-radius: 14px; margin-bottom: 20px; font-size: 14px; font-weight: 600; align-items: center; gap: 10px;"></div>
-
-            <form id="changePasswordForm" onsubmit="submitChangePassword(event)">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
-                
-                <div style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
-                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">New Password <span style="color: #EF4444;">*</span></label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
-                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
-                    </div>
-                </div>
-
-                <div style="margin-bottom: 26px;">
-                    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Confirm New Password <span style="color: #EF4444;">*</span></label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
-                        <i class='bx bx-show pwd-toggle' style="position: absolute; right: 16px; font-size: 20px; color: var(--text-gray); cursor: pointer;"></i>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="btn-outline" onclick="closeChangePasswordModal()" style="padding: 12px 22px; font-weight: 600; border-radius: 14px;">Cancel</button>
-                    <button type="submit" id="btnChangePwdSubmit" style="padding: 12px 24px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); color: white; border: none; border-radius: 14px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 10px 20px rgba(98, 75, 255, 0.25); display: flex; align-items: center; gap: 8px; transition: 0.3s;">
-                        <i class='bx bx-check-shield'></i> Update Password
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 
