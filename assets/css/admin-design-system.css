@@ -2153,9 +2153,10 @@ padding: 16px !important;
         top: 0 !important;
     }
     #editProfileModal > div, #changePasswordModal > div {
-        max-height: 92vh !important;
-        border-radius: 36px 36px 0 0 !important;
-        padding: 36px 24px 40px 24px !important;
+        max-height: 90vh !important;
+        max-height: 90dvh !important;
+        border-radius: 32px 32px 0 0 !important;
+        padding: clamp(24px, 4vh, 36px) 24px calc(100px + env(safe-area-inset-bottom)) 24px !important;
         width: 100% !important;
         animation: slideUpSheet 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         box-shadow: 0 -10px 40px rgba(0,0,0,0.2) !important;
@@ -2165,7 +2166,7 @@ padding: 16px !important;
     #editProfileModal form > div[style*="grid-template-columns"],
     #changePasswordModal form > div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
-        gap: 16px !important;
+        gap: clamp(12px, 2vh, 16px) !important;
     }
     
     /* Ensure elements spanning 2 columns revert to 1 */
@@ -2174,12 +2175,12 @@ padding: 16px !important;
         grid-column: span 1 !important;
     }
 
-    /* Make input fields larger and more touch-friendly */
+    /* Make input fields automatically scale with screen ratio */
     #editProfileModal input, #editProfileModal select,
     #changePasswordModal input, #changePasswordModal select {
-        padding: 16px 20px !important;
-        font-size: 15px !important;
-        border-radius: 16px !important;
+        padding: clamp(12px, 2vh, 16px) 16px !important;
+        font-size: clamp(14px, 3.5vw, 15px) !important;
+        border-radius: 14px !important;
         background: #F1F5F9 !important;
         border: 2px solid transparent !important;
         transition: all 0.3s ease !important;
