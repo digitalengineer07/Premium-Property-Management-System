@@ -2148,6 +2148,9 @@ padding: 16px !important;
         align-items: flex-end !important;
         padding: 0 !important;
         z-index: 99999 !important;
+        height: auto !important;
+        bottom: 0 !important;
+        top: 0 !important;
     }
     #editProfileModal > div, #changePasswordModal > div {
         max-height: 92vh !important;
