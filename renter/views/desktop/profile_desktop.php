@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="header-actions">
-            <div class="notification-wrapper">
+            <div class="notification-wrapper" style="position: relative;">
                 <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                     <i class='bx bx-bell'></i>
                     <?php if ($unread_count > 0): ?>
