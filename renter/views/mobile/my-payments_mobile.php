@@ -115,7 +115,7 @@
                     $icon = "<i class='bx bx-home-alt'></i>";
                     $iconStyle = "background: rgba(98, 75, 255, 0.1); color: #624BFF;";
                     $title = "Rent Payment";
-                    $subtitle = date('M Y', strtotime($t['month'] . '-01')) . " • Room " . htmlspecialchars($room_no);
+                    $subtitle = date('M Y', strtotime($t['month'] . '-01'));
                 } else if ($t['source'] === 'advance') {
                     $icon = "<i class='bx bx-receipt'></i>";
                     $iconStyle = "background: rgba(59, 130, 246, 0.1); color: #3B82F6;";
