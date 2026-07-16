@@ -46,27 +46,39 @@
         display: none !important;
     }
 
-    /* 2. Fix the KPI Cards (Horizontal Scroll instead of squished grid) */
+    /* 2. Fix the KPI Cards (Side-by-side Grid) */
     .mobile-page-body .kpi-grid-4 {
-        display: flex !important;
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory;
-        gap: 16px !important;
-        padding-bottom: 12px !important;
-        margin-left: -8px;
-        margin-right: -8px;
-        padding-left: 8px;
-        padding-right: 8px;
-        -webkit-overflow-scrolling: touch;
-    }
-    .mobile-page-body .kpi-grid-4::-webkit-scrollbar {
-        display: none;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px !important;
+        padding-bottom: 0 !important;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        overflow-x: hidden !important;
     }
     .mobile-page-body .kpi-card-minimal {
-        min-width: 240px !important;
-        flex: 0 0 auto !important;
-        scroll-snap-align: center;
+        min-width: unset !important;
+        flex: 1 1 0 !important;
         margin-bottom: 0 !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding: 14px !important;
+    }
+    .mobile-page-body .kpi-card-minimal h4 {
+        font-size: 11px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 2px !important;
+        white-space: normal !important;
+    }
+    .mobile-page-body .kpi-card-minimal h2 {
+        font-size: 17px !important;
+    }
+    .mobile-page-body .kpi-card-minimal .kpi-min-tag {
+        font-size: 9px !important;
+        white-space: normal !important;
     }
 
     /* 3. Fix the Filter Section (Stack vertically) */
