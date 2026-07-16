@@ -33,6 +33,81 @@
         </a>
     </div>
 </header>
+
+<style>
+/* -------------------------------------------------------------
+   MOBILE OVERRIDES FOR DESKTOP COMPONENT 
+   Since payment-history_mobile.php includes the desktop file,
+   we must aggressively restyle its components for mobile view.
+   ------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+    /* 1. Hide the duplicate Desktop Header */
+    .mobile-page-body .top-header {
+        display: none !important;
+    }
+
+    /* 2. Fix the KPI Cards (Horizontal Scroll instead of squished grid) */
+    .mobile-page-body .kpi-grid-4 {
+        display: flex !important;
+        overflow-x: auto !important;
+        scroll-snap-type: x mandatory;
+        gap: 16px !important;
+        padding-bottom: 12px !important;
+        margin-left: -8px;
+        margin-right: -8px;
+        padding-left: 8px;
+        padding-right: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .mobile-page-body .kpi-grid-4::-webkit-scrollbar {
+        display: none;
+    }
+    .mobile-page-body .kpi-card-minimal {
+        min-width: 240px !important;
+        flex: 0 0 auto !important;
+        scroll-snap-align: center;
+        margin-bottom: 0 !important;
+    }
+
+    /* 3. Fix the Filter Section (Stack vertically) */
+    .mobile-page-body .tabs-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 16px 12px !important;
+    }
+    .mobile-page-body .filter-group {
+        width: 100% !important;
+        flex: none !important;
+    }
+    .mobile-page-body .filter-select {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .mobile-page-body .filter-group > div {
+        min-width: 100% !important;
+    }
+    .mobile-page-body .btn-outline-support {
+        width: 100% !important;
+        justify-content: center !important;
+        margin-top: 4px;
+    }
+
+    /* 4. Fix Table container padding */
+    .mobile-page-body .payments-container {
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        margin-left: -16px;
+        margin-right: -16px;
+        width: calc(100% + 32px) !important;
+    }
+    .mobile-page-body .payments-table {
+        min-width: 800px !important; /* Force horizontal scroll */
+    }
+}
+</style>
+
 <div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
 
 <div class='mobile-page-body animate-up' style='padding: 10px 0;'>
