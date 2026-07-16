@@ -819,6 +819,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             </form>
 
             <form id="changePasswordForm" onsubmit="submitChangePassword(event)" style="display: none;">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <div id="changePasswordAlert"></div>
                 <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 28px;">
                     <div>
