@@ -190,15 +190,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_residence_detail
         $r_join_date = empty($r_join_date) ? null : $r_join_date;
         $r_rent_amount = empty($r_rent_amount) ? 0 : (float)$r_rent_amount;
 
-        $stmt = mysqli_prepare($conn, "UPDATE users SET room_no=?, join_date=?, rent_amount=? WHERE id=?");
+        $stmt = mysqli_prepare($conn, "UPDATE users SET room_no=?, joining_date=?, fixed_rent=? WHERE id=?");
         if ($stmt) {
             mysqli_stmt_bind_param($stmt, "ssdi", $r_room_no, $r_join_date, $r_rent_amount, $user_id);
             if (mysqli_stmt_execute($stmt)) {
                 $success = "Residence details updated successfully.";
                 // update local variable so it reflects immediately
                 $user['room_no'] = $r_room_no;
-                $user['join_date'] = $r_join_date;
-                $user['rent_amount'] = $r_rent_amount;
+                $user['joining_date'] = $r_join_date;
+                $user['fixed_rent'] = $r_rent_amount;
             } else {
                 $errmsg = "Database update failed.";
             }
@@ -898,12 +898,12 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-calendar' style="font-size: 16px; vertical-align: middle;"></i> Join Date</label>
-                        <input type="date" name="join_date" value="<?php echo htmlspecialchars($user['join_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="date" name="join_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Base Rent (₹)</label>
-                        <input type="number" step="0.01" name="rent_amount" value="<?php echo htmlspecialchars($user['rent_amount'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="0.00">
+                        <input type="number" step="0.01" name="rent_amount" value="<?php echo htmlspecialchars($user['fixed_rent'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="0.00">
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
