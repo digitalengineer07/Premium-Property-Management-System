@@ -1,197 +1,13 @@
-<?php
-// renter/profile.php
-require_once "../db.php";   // include DB BEFORE session_start
-session_start();
-require_once "../audit.php";
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
-    exit;
-}
-$user_id = (int) $_SESSION['user_id'];
-require_once "fetch_notifications.php";
-
-/* CSRF */
-if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
-
-$errmsg = ""; $success = "";
-
-/* Handle profile updates (name/phone/room/about + profile pic + aadhaar upload) */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
-
-    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-        $errmsg = "Invalid form submission (CSRF).";
-    } else {
-        $name = trim($_POST['name'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $whatsapp = trim($_POST['whatsapp'] ?? '');
-        $room_no = trim($_POST['room_no'] ?? '');
-        $about = trim($_POST['about'] ?? '');
-
-        // Basic validation
-        if ($name === '') $errmsg = "Name cannot be empty.";
-
-        // handle cropped profile pic upload
-        $profileUploadedPath = null;
-        if (empty($errmsg) && !empty($_POST['cropped_image'])) {
-            $data = $_POST['cropped_image'];
-            if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
-                $data = substr($data, strpos($data, ',') + 1);
-                $type = strtolower($type[1]); // jpg, png, etc
-
-                if (!in_array($type, ['jpg', 'jpeg', 'png', 'webp'])) {
-                    $errmsg = "Invalid image type after crop.";
-                } else {
-                    $data = base64_decode($data);
-                    if ($data === false) {
-                        $errmsg = "Image data is corrupted.";
-                    } else {
-                        $safe = $user_id . "_profile_" . time() . ".jpg";
-                        $dest = __DIR__ . "/../uploads/profiles/";
-                        if (!is_dir($dest)) mkdir($dest, 0777, true);
-                        if (!file_put_contents($dest . $safe, $data)) {
-                            $errmsg = "Failed to save cropped image.";
-                        } else {
-                            chmod($dest . $safe, 0644);
-                            $profileUploadedPath = "uploads/profiles/" . $safe;
-                        }
-                    }
-                }
-            } else {
-                $errmsg = "Invalid image format.";
-            }
-        }
-
-        // handle aadhaar upload (image or pdf)
-        $aadhaarPath = null;
-        if (empty($errmsg) && !empty($_FILES['aadhaar']) && $_FILES['aadhaar']['error'] !== UPLOAD_ERR_NO_FILE) {
-            $f = $_FILES['aadhaar'];
-            if ($f['error'] !== UPLOAD_ERR_OK) $errmsg = "Aadhaar upload error.";
-            else {
-                $allowedMimes = ['image/jpeg'=>'jpg','image/png'=>'png','application/pdf'=>'pdf'];
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                $mime = finfo_file($finfo, $f['tmp_name']);
-                finfo_close($finfo);
-                if (!isset($allowedMimes[$mime])) $errmsg = "Aadhaar must be JPG/PNG or PDF.";
-                elseif ($f['size'] > 5*1024*1024) $errmsg = "Aadhaar file must be < 5MB.";
-                else {
-                    $ext = $allowedMimes[$mime];
-                    $safe = $user_id . "_aadhaar_" . time() . "." . $ext;
-                    $dest = __DIR__ . "/../uploads/aadhaar/";
-                    if (!is_dir($dest)) mkdir($dest,0777,true);
-                    if (!move_uploaded_file($f['tmp_name'], $dest . $safe)) $errmsg = "Failed to save Aadhaar file.";
-                    else {
-                        chmod($dest . $safe, 0644);
-                        $aadhaarPath = "uploads/aadhaar/" . $safe;
-                    }
-                }
-            }
-        }
-
-        // Update DB
-        if (empty($errmsg)) {
-            $email = trim($_POST['email'] ?? '');
-            $dob = empty($_POST['dob']) ? null : $_POST['dob'];
-            $gender = empty($_POST['gender']) ? null : $_POST['gender'];
-            $address = empty($_POST['address']) ? null : $_POST['address'];
-            $emg_name = empty($_POST['emergency_contact_name']) ? null : $_POST['emergency_contact_name'];
-            $emg_rel = empty($_POST['emergency_contact_relation']) ? null : $_POST['emergency_contact_relation'];
-            $emg_phone = empty($_POST['emergency_contact_phone']) ? null : $_POST['emergency_contact_phone'];
-            $emg_addr = empty($_POST['emergency_contact_address']) ? null : $_POST['emergency_contact_address'];
-
-            if ($profileUploadedPath && $aadhaarPath) {
-                $stmt = mysqli_prepare($conn, "UPDATE users SET name=?, phone=?, email=?, whatsapp=?, room_no=?, about=?, profile_pic=?, aadhaar_file=?, dob=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? WHERE id=?");
-                mysqli_stmt_bind_param($stmt, "sssssssssssssssi", $name, $phone, $email, $whatsapp, $room_no, $about, $profileUploadedPath, $aadhaarPath, $dob, $gender, $address, $emg_name, $emg_rel, $emg_phone, $emg_addr, $user_id);
-            } elseif ($profileUploadedPath) {
-                $stmt = mysqli_prepare($conn, "UPDATE users SET name=?, phone=?, email=?, whatsapp=?, room_no=?, about=?, profile_pic=?, dob=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? WHERE id=?");
-                mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $name, $phone, $email, $whatsapp, $room_no, $about, $profileUploadedPath, $dob, $gender, $address, $emg_name, $emg_rel, $emg_phone, $emg_addr, $user_id);
-            } elseif ($aadhaarPath) {
-                $stmt = mysqli_prepare($conn, "UPDATE users SET name=?, phone=?, email=?, whatsapp=?, room_no=?, about=?, aadhaar_file=?, dob=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? WHERE id=?");
-                mysqli_stmt_bind_param($stmt, "ssssssssssssssi", $name, $phone, $email, $whatsapp, $room_no, $about, $aadhaarPath, $dob, $gender, $address, $emg_name, $emg_rel, $emg_phone, $emg_addr, $user_id);
-            } else {
-                $stmt = mysqli_prepare($conn, "UPDATE users SET name=?, phone=?, email=?, whatsapp=?, room_no=?, about=?, dob=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? WHERE id=?");
-                mysqli_stmt_bind_param($stmt, "sssssssssssssi", $name, $phone, $email, $whatsapp, $room_no, $about, $dob, $gender, $address, $emg_name, $emg_rel, $emg_phone, $emg_addr, $user_id);
-            }
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
-
-            logAction($conn, "renter", $user_id, "Updated profile and files");
-            $success = "Profile updated.";
-        }
-    }
-}
-
-/* Handle Password Change */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
-    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-        $errmsg = "Invalid CSRF token.";
-    } else {
-        $curr_pass = $_POST['current_password'] ?? '';
-        $new_pass = $_POST['new_password'] ?? '';
-        $conf_pass = $_POST['confirm_password'] ?? '';
-
-        if (empty($curr_pass) || empty($new_pass) || empty($conf_pass)) {
-            $errmsg = "All password fields are required.";
-        } elseif ($new_pass !== $conf_pass) {
-            $errmsg = "New passwords do not match.";
-        } elseif (strlen($new_pass) < 6) {
-            $errmsg = "New password must be at least 6 characters.";
-        } else {
-            // Verify current
-            $stmt = mysqli_prepare($conn, "SELECT password FROM users WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "i", $user_id);
-            mysqli_stmt_execute($stmt);
-            $res = mysqli_stmt_get_result($stmt);
-            $u = mysqli_fetch_assoc($res);
-            mysqli_stmt_close($stmt);
-
-            if (!password_verify($curr_pass, $u['password'])) {
-                $errmsg = "Current password is incorrect.";
-            } else {
-                $hashed = password_hash($new_pass, PASSWORD_DEFAULT);
-                $stmt = mysqli_prepare($conn, "UPDATE users SET password = ?, must_change_password = 0 WHERE id = ?");
-                mysqli_stmt_bind_param($stmt, "si", $hashed, $user_id);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_close($stmt);
-                
-                logAction($conn, "renter", $user_id, "Changed password");
-                $success = "Password updated successfully!";
-            }
-        }
-    }
-}
-
-/* Fetch user info */
-$stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
-$user = mysqli_fetch_assoc($res);
-mysqli_stmt_close($stmt);
-
-/* Fetch electricity records for this user, recent first */
-$elec_q = mysqli_prepare($conn, "SELECT * FROM electricity WHERE user_id = ? ORDER BY id DESC");
-mysqli_stmt_bind_param($elec_q, "i", $user_id);
-mysqli_stmt_execute($elec_q);
-$elec_res = mysqli_stmt_get_result($elec_q);
-$elec_rows = [];
-while ($r = mysqli_fetch_assoc($elec_res)) $elec_rows[] = $r;
-mysqli_stmt_close($elec_q);
-
-$display_name = $user['name'] ?: $user['username'];
-$profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
-$aadhaar_file = $user['aadhaar_file'] ?? null;
-?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>My Profile | <?php echo HOUSE_NAME; ?></title>
+    <title>My Profile | Madhav kunj</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!-- Immediate Theme Setter to prevent flashes -->
     <script>
-        window.HOUSE_NAME = <?php echo json_encode(HOUSE_NAME); ?>;
+        window.HOUSE_NAME = "Madhav kunj";
         (function() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark-theme');
@@ -204,7 +20,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <link rel="manifest" href="../manifest.json">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=1784179758">
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -512,7 +328,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         }
     </style>
 </head>
-<body class="<?php echo $is_dark ? 'dark-theme' : ''; ?>" style="display: block;">
+<body class="">
 
 <div class="app-container">
     <!-- Desktop Sidebar -->
@@ -566,13 +382,677 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <main class="main-content">
         <!-- 1. EXCLUSIVE MOBILE VIEW CODE (Isolated in views/mobile/profile_mobile.php) -->
         <div class="mobile-view-wrapper">
-            <?php include __DIR__ . '/views/mobile/profile_mobile.php'; ?>
+            <style>
+    /* Reset & Base */
+    .m-profile-wrapper, .m-profile-wrapper * { box-sizing: border-box; }
+    .m-profile-wrapper {
+        background: var(--bg-main, #FAFBFC);
+        padding-bottom: 120px; /* Space for bottom nav and safe areas */
+    }
+    
+    /* Header */
+    .mp-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        background: var(--white, #fff);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+    .mp-header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .mp-back-btn {
+        font-size: 24px;
+        color: var(--text-dark, #0F172A);
+        text-decoration: none;
+        display: flex;
+    }
+    .mp-title-group h1 {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text-dark, #0F172A);
+        margin: 0 0 2px 0;
+    }
+    .mp-title-group p {
+        font-size: 12px;
+        color: var(--text-gray, #64748B);
+        margin: 0;
+    }
+    .mp-header-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .mp-bell {
+        position: relative;
+        font-size: 24px;
+        color: var(--text-dark, #0F172A);
+    }
+    .mp-bell .badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #EF4444;
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--white, #fff);
+    }
+    .mp-avatar-mini {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary-purple, #624BFF);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .mp-container {
+        padding: 16px 20px;
+    }
+
+    /* User Info Card */
+    .mp-user-card {
+        background: var(--white, #fff);
+        border-radius: 20px;
+        padding: 24px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+        margin-bottom: 24px;
+    }
+    .mp-avatar-container {
+        position: relative;
+    }
+    .mp-avatar-main {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #F1F5F9;
+    }
+    .mp-avatar-fallback {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--primary-purple, #624BFF);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 700;
+    }
+    .mp-camera-btn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--white, #fff);
+        border: 2px solid var(--white, #fff);
+        color: var(--primary-purple, #624BFF);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+    .mp-user-details h2 {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text-dark, #0F172A);
+        margin: 0 0 8px 0;
+    }
+    .mp-room-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        background: rgba(98, 75, 255, 0.1);
+        color: var(--primary-purple, #624BFF);
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 20px;
+    }
+
+    /* Menu List */
+    .mp-menu-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .mp-menu-item {
+        background: var(--white, #fff);
+        border-radius: 16px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-decoration: none;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+        border: 1px solid var(--border, #F1F5F9);
+    }
+    .mp-menu-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(98, 75, 255, 0.05);
+        color: var(--primary-purple, #624BFF);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+    .mp-menu-text {
+        flex: 1;
+    }
+    .mp-menu-text h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-dark, #0F172A);
+        margin: 0 0 2px 0;
+    }
+    .mp-menu-text p {
+        font-size: 12px;
+        color: var(--text-gray, #64748B);
+        margin: 0;
+    }
+    .mp-menu-arrow {
+        color: #CBD5E1;
+        font-size: 20px;
+    }
+    .mp-menu-badge {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* Promo Widget */
+    .mp-promo-card {
+        background: rgba(98, 75, 255, 0.04);
+        border: 1px solid rgba(98, 75, 255, 0.08);
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    .mp-promo-img {
+        width: 80px;
+        height: auto;
+    }
+    .mp-promo-text h4 {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text-dark, #0F172A);
+        margin: 0 0 4px 0;
+    }
+    .mp-promo-text p {
+        font-size: 12px;
+        color: var(--text-gray, #64748B);
+        margin: 0 0 12px 0;
+        line-height: 1.4;
+    }
+    .mp-btn-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--white, #fff);
+        color: var(--primary-purple, #624BFF);
+        border: 1px solid rgba(98, 75, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    /* Logout Button */
+    .mp-btn-logout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--white, #fff);
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        color: var(--text-dark, #0F172A);
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        margin-bottom: 16px;
+    }
+
+    /* Dark Theme Mobile Overrides */
+    .dark-theme .mp-header { background: var(--sidebar-bg, #111827); border-color: var(--border, #1E293B); }
+    .dark-theme .m-profile-wrapper { background: var(--bg-main, #0B0F19); }
+    .dark-theme .mp-user-card, .dark-theme .mp-menu-item { background: var(--white, #111827); border-color: var(--border, #1E293B); }
+    .dark-theme .mp-camera-btn { background: var(--white, #111827); border-color: var(--white, #111827); }
+    .dark-theme .mp-btn-logout { background: transparent; border-color: var(--border, #1E293B); color: var(--text-dark, #F8FAFC); }
+</style>
+
+<div class="m-profile-wrapper animate-up">
+    <header class="premium-header-pill">
+    <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
+        <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
+            <i class='bx bx-menu-alt-left'></i>
+        </div>
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+            <i class='bx bx-user-circle' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
+            Profile
+        </h1>
+    </div>
+    
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+        <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <i class='bx bx-moon'></i>
+        </div>
+        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+            <i class='bx bx-bell'></i>
+                    </div>
+        <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+                            <div style="width: 100%; height: 100%; background: #624BFF; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 800;">
+                    V                </div>
+                    </a>
+    </div>
+</header>
+<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+
+
+    <div class="mp-container">
+        <div class="mp-user-card">
+            <div class="mp-avatar-container" onclick="document.getElementById('editProfileModal').style.display='flex'">
+                                    <div class="mp-avatar-fallback">VI</div>
+                                <div class="mp-camera-btn">
+                    <i class='bx bx-camera'></i>
+                </div>
+            </div>
+            <div class="mp-user-details">
+                <h2>Vijay Jii</h2>
+                <div class="mp-room-badge">Room 201</div>
+            </div>
+        </div>
+
+        <div class="mp-menu-list">
+            <a href="#" class="mp-menu-item" onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                <div class="mp-menu-icon"><i class='bx bx-user'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Basic Information</h3>
+                    <p>View and edit your personal details</p>
+                </div>
+                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+            
+            <a href="#" class="mp-menu-item" onclick="document.getElementById('changePasswordModal').style.display='flex'; return false;">
+                <div class="mp-menu-icon"><i class='bx bx-shield'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Account & Security</h3>
+                    <p>Manage password and account security</p>
+                </div>
+                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+
+            <a href="#" class="mp-menu-item" onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                <div class="mp-menu-icon"><i class='bx bx-phone-call'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Emergency Contact</h3>
+                    <p>Update emergency contact information</p>
+                </div>
+                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+
+            <a href="#" class="mp-menu-item" onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                <div class="mp-menu-icon"><i class='bx bx-home'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Residence Details</h3>
+                    <p>View your residence and room details</p>
+                </div>
+                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+
+            <a href="documents.php" class="mp-menu-item">
+                <div class="mp-menu-icon"><i class='bx bx-file'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Linked Documents</h3>
+                    <p>Manage and view your documents</p>
+                </div>
+                                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+
+            <a href="#" class="mp-menu-item">
+                <div class="mp-menu-icon"><i class='bx bx-cog'></i></div>
+                <div class="mp-menu-text">
+                    <h3>Preferences</h3>
+                    <p>Notification and communication preferences</p>
+                </div>
+                <i class='bx bx-chevron-right mp-menu-arrow'></i>
+            </a>
+        </div>
+
+        <div class="mp-promo-card">
+            <div style="flex-shrink: 0;">
+                <div style="width: 50px; height: 80px; background: var(--primary-purple); border-radius: 12px; display: flex; flex-direction: column; align-items: center; padding: 6px; position: relative;">
+                    <div style="width: 20px; height: 3px; background: rgba(255,255,255,0.4); border-radius: 2px; margin-bottom: auto;"></div>
+                    <div style="width: 30px; height: 30px; background: rgba(255,255,255,0.2); border-radius: 8px; margin-bottom: 6px; display:flex; align-items:center; justify-content:center;"><i class='bx bx-home-heart' style="color:white;"></i></div>
+                    <div style="width: 24px; height: 4px; background: rgba(255,255,255,0.4); border-radius: 2px; margin-bottom: 4px;"></div>
+                    <div style="width: 30px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 4px;"></div>
+                    <div style="width: 16px; height: 2px; background: rgba(255,255,255,0.4); border-radius: 1px; position: absolute; bottom: 6px;"></div>
+                    <div style="position: absolute; right: -16px; top: 30px; width: 32px; height: 32px; background: var(--primary-purple); border-radius: 50%; border: 3px solid var(--white); display: flex; align-items: center; justify-content: center; color: white;"><i class='bx bx-user'></i></div>
+                </div>
+            </div>
+            <div class="mp-promo-text">
+                <h4>Manage on the Go!</h4>
+                <p>Update your profile, documents and preferences easily.</p>
+                <a href="#" class="mp-btn-download"><i class='bx bx-download'></i> Download App</a>
+            </div>
+        </div>
+
+        <a href="../logout.php" class="mp-btn-logout">
+            <i class='bx bx-log-out'></i> Logout
+        </a>
+    </div>
+</div>
         </div>
 
         <!-- 2. EXCLUSIVE DESKTOP VIEW CODE (Isolated in views/desktop/profile_desktop.php) -->
         <div class="desktop-view-wrapper">
-            <?php include __DIR__ . '/views/desktop/profile_desktop.php'; ?>
+            <!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
+
+
+    <header class="header-renter">
+        <div class="header-greeting">
+            <div class="header-icon-wrapper">
+                <i class='bx bx-user-circle' style="font-size: 24px; color: var(--primary-purple);"></i>
+            </div>
+            <div class="header-title-area">
+                <h1>Profile Settings</h1>
+                <p>View and update your personal information and preferences.</p>
+            </div>
         </div>
+        <div class="header-actions">
+            <div class="notification-wrapper">
+                <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
+                    <i class='bx bx-bell'></i>
+                                    </div>
+                
+                <!-- Notification Dropdown -->
+                <div id="notifDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: white; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 320px; z-index: 1000; overflow: hidden;">
+                    <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                        <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                                            </div>
+                    <div style="max-height: 350px; overflow-y: auto;">
+                                                    <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                            </div>
+                                            </div>
+                </div>
+            </div>
+
+            <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+                    <i class='bx bx-moon'></i>
+                </div>
+            <a href="queries.php" class="btn-outline-support"><i class='bx bx-help-circle'></i> Help & Support</a>
+          
+            <div style="position: relative;">
+                <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                    <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
+    <span style="color: var(--primary-purple); font-weight: 700;">VI</span>
+                    </div>
+                    <div class="user-info">
+                        <h4>Vijay</h4>
+                        <p>Room 201</p>
+                    </div>
+                    <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                </div>
+                
+                <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                    <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                    </a>
+                    <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    <div class="profile-grid animate-up">
+        <!-- LEFT COLUMN -->
+        <div class="grid-col-left">
+            <!-- Avatar Card -->
+            <div class="panel avatar-card">
+                <div class="avatar-wrapper">
+                                            <div class="avatar-huge" id="profileAvatarFallback" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); box-shadow: 0 10px 25px rgba(98, 75, 255, 0.25); color: white; font-size: 48px; font-weight: 700; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            VI                        </div>
+                        <img src="" alt="profile" class="avatar-huge" id="profileAvatarImg" style="display: none;">
+                                        <button type="button" class="btn-edit-avatar" onclick="document.getElementById('profilePicInput').click()">
+                        <i class='bx bx-camera'></i>
+                    </button>
+                    <!-- Hidden form for profile pic -->
+                    <form method="POST" id="hiddenProfileForm" class="hidden-form">
+                        <input type="hidden" name="csrf" value="af0d1cbb2e3df7adc50d7b24c9a37bc889bbabbaf15418941ae6cd8c51c658bf">
+                        <input type="hidden" name="name" value="Vijay Jii">
+                        <input type="hidden" name="phone" value="9801171097">
+                        <input type="hidden" name="email" value="">
+                        <input type="hidden" name="whatsapp" value="9801171097">
+                        <input type="hidden" name="room_no" value="201">
+                        <input type="hidden" name="about" value="">
+                        <input type="file" id="profilePicInput" accept="image/*">
+                        <input type="hidden" name="cropped_image" id="croppedImageInput">
+                        <button type="submit" name="save_profile" id="saveProfileBtn"></button>
+                    </form>
+                </div>
+                <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;">Vijay Jii</h2>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room 201</span>
+            </div>
+
+            <div class="panel">
+                  <div class="panel-header">
+                      <h3>Basic Information</h3>
+                      <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
+                  </div>
+                  <div class="info-list">
+                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value">Vijay Jii</div></div>
+                                            <div class="info-row"><div class="info-label"><i class='bx bx-envelope'></i> Email Address</div><div class="info-value" style="font-size: 14px; max-width: 70%; white-space: nowrap;">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value">9801171097</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone-call'></i> Alternate Number</div><div class="info-value">9801171097</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-calendar'></i> Date of Birth</div><div class="info-value">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-male'></i> Gender</div><div class="info-value">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;">-</div></div>
+                  </div>
+              </div>
+
+            <!-- Residence Details -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Residence Details</h3>
+                </div>
+                <div class="residence-grid">
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-home-alt-2'></i></div>
+                        <div class="residence-info"><h4>Flat / Room No.</h4><p>201</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-building-house'></i></div>
+                        <div class="residence-info"><h4>Block / Building</h4><p>Block A</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-map-alt'></i></div>
+                        <div class="residence-info"><h4>Property Name</h4><p>Madhav kunj Apartments</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-layer'></i></div>
+                        <div class="residence-info"><h4>Floor</h4><p>2nd Floor</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-calendar-event'></i></div>
+                        <div class="residence-info"><h4>Move-in Date</h4><p>01 Jan 2024</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-rupee'></i></div>
+                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹7,000.00</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-check-shield'></i></div>
+                        <div class="residence-info"><h4>Security Deposit</h4><p>₹0.00</p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-car'></i></div>
+                        <div class="residence-info"><h4>Parking Slot</h4><p>A-15</p></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preferences -->
+            <div class="panel">
+                <div class="panel-header" style="margin-bottom: 16px;">
+                    <h3>Preferences</h3>
+                </div>
+                <div class="preferences-grid">
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-envelope' style="color: var(--primary-purple);"></i> Email Notifications</h4>
+                            <p>Receive important updates via email</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-message-rounded-dots' style="color: var(--primary-purple);"></i> SMS Notifications</h4>
+                            <p>Receive important updates via SMS</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                    </div>
+                    <div class="pref-item">
+                        <div class="pref-info">
+                            <h4><i class='bx bx-bell' style="color: var(--primary-purple);"></i> Bill Reminders</h4>
+                            <p>Receive reminders before due</p>
+                        </div>
+                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="grid-col-right">
+            <!-- Account & Security -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class='bx bx-check-shield'></i> Account & Security</h3>
+                </div>
+                <div class="info-list">
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-lock-alt'></i> Password</div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="info-value">••••••••</div>
+                            <button type="button" id="btnOpenChangePwdModal" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0; cursor: pointer;" onclick="document.getElementById('changePasswordModal').style.display='flex'; return false;">Change</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-envelope'></i> Login Email</div>
+                                                <div style="display: flex; align-items: center; gap: 12px; max-width: 70%;">
+                            <div class="info-value" style="font-size: 14px; max-width: 100%; white-space: nowrap;">user@example.com</div>
+                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="var ep = document.getElementById('editProfileModal'); if(ep) { ep.style.display='flex'; setTimeout(function(){ var ei = ep.querySelector('input[name=\'email\']'); if(ei) { ei.focus(); ei.select(); } }, 100); } return false;">Change</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-shield-quarter'></i> Two-Factor Auth</div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="info-value value-green">Enabled</div>
+                            <button class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;">Manage</button>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class='bx bx-info-circle'></i> Account Status</div>
+                        <div class="info-value value-green">Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emergency Contact -->
+            <div class="panel">
+                  <div class="panel-header">
+                      <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
+                      <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
+                  </div>
+                  <div class="info-list">
+                      <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-group'></i> Relationship</div><div class="info-value">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-phone'></i> Phone Number</div><div class="info-value">-</div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-map'></i> Address</div><div class="info-value" style="text-align: right; line-height: 1.4;">-</div></div>
+                  </div>
+              </div>
+
+            <!-- Linked Documents -->
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class='bx bx-file'></i> Linked Documents</h3>
+                    <button class="btn-outline" style="padding: 6px 12px;" onclick="window.location.href='documents.php'">View All</button>
+                </div>
+                <div class="doc-list">
+                    <!-- Aadhar Card -->
+                    <div class="doc-item">
+                        <div class="doc-icon green"><i class='bx bx-id-card'></i></div>
+                        <div class="doc-info"><h4>Aadhar Card</h4></div>
+                        <div class="status-pill status-pending" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</div>
+                        <div class="doc-actions">
+                                                            <a href="documents.php#upload-widget-container" title="Upload"><i class='bx bx-upload'></i></a>
+                                                        <a href="documents.php#upload-widget-container"><i class='bx bx-chevron-right'></i></a>
+                        </div>
+                    </div>
+                    
+                    <!-- Agreement Copy -->
+                    <div class="doc-item">
+                        <div class="doc-icon purple"><i class='bx bx-file-blank'></i></div>
+                        <div class="doc-info"><h4>Agreement Copy</h4></div>
+                        <div class="status-pill status-pending" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</div>
+                        <div class="doc-actions">
+                                                        <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Electricity Copy -->
+                    <div class="doc-item">
+                        <div class="doc-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class='bx bx-bolt-circle'></i></div>
+                        <div class="doc-info"><h4>Electricity Copy</h4></div>
+                        <div class="status-pill status-pending" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;">Pending</div>
+                        <div class="doc-actions">
+                                                        <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>        </div>
 </main>
 </div>
 
@@ -593,45 +1073,45 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <button type="button" onclick="document.getElementById('editProfileModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
             </div>
             <form method="POST" action="">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+                <input type="hidden" name="csrf" value="af0d1cbb2e3df7adc50d7b24c9a37bc889bbabbaf15418941ae6cd8c51c658bf">
                 <input type="hidden" name="save_profile" value="1">
-                <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
-                <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about'] ?? ''); ?>">
+                <input type="hidden" name="room_no" value="201">
+                <input type="hidden" name="about" value="">
                 
                 <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-user'></i> Basic Information</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" required>
+                        <input type="text" name="name" value="Vijay Jii" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" required>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Email Address</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="email" name="email" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="phone" value="9801171097" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Alternate Number</label>
-                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="whatsapp" value="9801171097" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Date of Birth</label>
-                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="date" name="dob" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Gender</label>
                         <select name="gender" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                             <option value="">Select Gender</option>
-                            <option value="Male" <?php echo ($user['gender'] ?? '') === 'Male' ? 'selected' : ''; ?>>Male</option>
-                            <option value="Female" <?php echo ($user['gender'] ?? '') === 'Female' ? 'selected' : ''; ?>>Female</option>
-                            <option value="Other" <?php echo ($user['gender'] ?? '') === 'Other' ? 'selected' : ''; ?>>Other</option>
+                            <option value="Male" >Male</option>
+                            <option value="Female" >Female</option>
+                            <option value="Other" >Other</option>
                         </select>
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Address</label>
-                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="address" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                 </div>
 
@@ -641,19 +1121,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Name</label>
-                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_name" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Relationship</label>
-                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_relation" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_phone" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
-                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_address" value="" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
                       <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
@@ -698,7 +1178,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <div id="pwdModalAlert" style="display: none; padding: 14px 16px; border-radius: 14px; margin-bottom: 20px; font-size: 14px; font-weight: 600; align-items: center; gap: 10px;"></div>
 
             <form id="changePasswordForm" onsubmit="submitChangePassword(event)">
-                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+                <input type="hidden" name="csrf" value="af0d1cbb2e3df7adc50d7b24c9a37bc889bbabbaf15418941ae6cd8c51c658bf">
                 
                 <div style="margin-bottom: 18px;">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
@@ -995,7 +1475,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         }
     }
 </script>
-<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+<script src="../assets/js/renter.js?v=1784179758"></script>
 <script>
 // Mobile specific script if needed
 </script>
