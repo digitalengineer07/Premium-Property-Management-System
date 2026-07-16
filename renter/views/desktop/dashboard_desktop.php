@@ -8,7 +8,7 @@
                 <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no); ?></span></p>
             </div>
             <div class="header-actions">
-                <div class="notification-wrapper" style="position: relative;">
+                <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
