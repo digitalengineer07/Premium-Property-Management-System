@@ -893,25 +893,28 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: flex; flex-direction: column; gap: 16px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-door-open' style="font-size: 16px; vertical-align: middle;"></i> Room Number</label>
-                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="e.g. 101">
+                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-calendar' style="font-size: 16px; vertical-align: middle;"></i> Join Date</label>
-                        <input type="date" name="join_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="join_date" value="<?php echo $user['joining_date'] ? date('d M Y', strtotime($user['joining_date'])) : 'Not Set'; ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Base Rent (₹)</label>
-                        <input type="number" step="0.01" name="rent_amount" value="<?php echo htmlspecialchars($user['fixed_rent'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="0.00">
+                        <input type="text" name="rent_amount" value="<?php echo number_format($user['fixed_rent'] ?? 0, 2); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wrench' style="font-size: 16px; vertical-align: middle;"></i> Maintenance (₹)</label>
+                        <input type="text" name="maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
-                        <button type="button" class="btn-outline" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="border: none;">Cancel</button>
-                        <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
+                        <button type="button" class="btn-primary" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 32px;">Close</button>
                     </div>
                 </div>
-            </form>
         </div>
     </div>
 
