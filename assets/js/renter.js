@@ -57,6 +57,49 @@ const paymentModal = document.getElementById('paymentModal');
 const scannerModal = document.getElementById('scannerModal');
 const dynamicQR = document.getElementById('dynamicQR');
 const amountSpan = document.getElementById('paymentAmountDisplay');
+// Toast Notification System
+window.showToast = function(message, type = 'error') {
+    const toast = document.createElement('div');
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.backgroundColor = type === 'error' ? '#EF4444' : '#10B981';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '30px';
+    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
+    toast.style.zIndex = '999999';
+    toast.style.fontSize = '13px';
+    toast.style.fontWeight = '700';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    toast.style.pointerEvents = 'none';
+    toast.style.textAlign = 'center';
+    toast.style.maxWidth = '90vw';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '8px';
+    
+    const iconClass = type === 'error' ? 'bx-error-circle' : 'bx-check-circle';
+    toast.innerHTML = `<i class='bx ${iconClass}' style='font-size: 20px;'></i> <span>${message}</span>`;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(15px)';
+    }, 10);
+    
+    // Animate out
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        setTimeout(() => toast.remove(), 400);
+    }, 4000);
+};
+
 const paymentTitle = document.getElementById('paymentTitle');
 const hiddenBillType = document.getElementById('hiddenBillType');
 const hiddenBillId = document.getElementById('hiddenBillId');
