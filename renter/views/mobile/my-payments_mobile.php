@@ -104,12 +104,32 @@
 
     <!-- Transactions List -->
     <div style="display: flex; flex-direction: column; background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 24px;">
-        <?php foreach ($merged_rents as $idx => $t): ?>
-            <?php 
-                $isLast = ($idx === count($merged_rents) - 1);
-                $isPending = ($t['status'] === 'Due');
-                $amount = (float)$t['amount'];
-                
+                <?php 
+        $all_mobile = [];
+        foreach ($merged_rents as $t) {
+            $t['item_type'] = 'rent_or_other';
+            $all_mobile[] = $t;
+        }
+        // Take all elecs, or maybe just the same slice? The original code did array_slice($elecs, 0, 3).
+        // Let's take all of them so it matches desktop, but if we need slice, we will do it.
+        // Actually, since they want "month wise with both electricity record and rent record just like payment page on desktop view mode", desktop takes all bills!
+        foreach ($elecs as $t) {
+            $t['item_type'] = 'elec_only';
+            $all_mobile[] = $t;
+        }
+        usort($all_mobile, function($a, $b) {
+            $t1 = strtotime($b['month'] . '-01');
+            $t2 = strtotime($a['month'] . '-01');
+            return $t2 <=> $t1; // descending order
+        });
+        
+        foreach ($all_mobile as $idx => $t): 
+            $isLast = ($idx === count($all_mobile) - 1);
+            $isPending = ($t['status'] === 'Due');
+            $amount = (float)$t['amount'];
+            $dataYear = date('Y', strtotime($t['month'] . '-01'));
+
+            if ($t['item_type'] === 'rent_or_other'):
                 // Determine icons based on source
                 if ($t['source'] === 'rent_table' || $t['source'] === 'elec_table' && $amount > 0) {
                     $icon = "<i class='bx bx-home-alt'></i>";
@@ -127,11 +147,8 @@
                     $title = "Maintenance Charge";
                     $subtitle = date('M Y', strtotime($t['month'] . '-01'));
                 }
-            ?>
-            <?php
                 $dataType = ($t['source'] === 'rent_table' || $t['source'] === 'elec_table' && $amount > 0) ? 'rent' : (($t['source'] === 'advance') ? 'other' : 'other');
-                $dataYear = date('Y', strtotime($t['month'] . '-01'));
-            ?>
+        ?>
             <div class="m-pay-card-item" data-type="<?php echo $dataType; ?>" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>; position: relative; overflow: hidden;">
                 <?php if ($isPending): ?>
                     <span style="position: absolute; top: 0; right: 0; background: rgba(245,158,11,0.1); color: #D97706; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Pending</span>
@@ -168,15 +185,8 @@
                     </div>
                 </div>
             </div>
-        <?php endforeach; ?>
-        
-        <?php foreach (array_slice($elecs, 0, 3) as $idx => $t): ?>
-            <?php 
-                $isPending = ($t['status'] === 'Due');
-                $amount = (float)$t['amount'];
-                $dataYear = date('Y', strtotime($t['month'] . '-01'));
-            ?>
-            <div class="m-pay-card-item" data-type="electricity" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-top: 1px solid var(--border); position: relative; overflow: hidden;">
+        <?php else: ?>
+            <div class="m-pay-card-item" data-type="electricity" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>; position: relative; overflow: hidden;">
                 <?php if ($isPending): ?>
                     <span style="position: absolute; top: 0; right: 0; background: rgba(245,158,11,0.1); color: #D97706; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Pending</span>
                 <?php else: ?>
@@ -212,6 +222,7 @@
                     </div>
                 </div>
             </div>
+        <?php endif; ?>
         <?php endforeach; ?>
     </div>
 
