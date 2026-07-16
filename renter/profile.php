@@ -890,7 +890,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <input type="hidden" name="save_residence_details" value="1">
                 
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-door-open' style="font-size: 16px; vertical-align: middle;"></i> Room Number</label>
                         <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
@@ -911,14 +911,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <input type="text" name="maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
 
-                    <div>
+                    <div style="grid-column: 1 / -1;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-check-shield' style="font-size: 16px; vertical-align: middle;"></i> Security Deposit (₹)</label>
                         <input type="text" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0, 2); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
-                    
-                    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
-                        <button type="button" class="btn-primary" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 32px;">Close</button>
-                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn-primary" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 32px;">Close</button>
                 </div>
         </div>
     </div>
