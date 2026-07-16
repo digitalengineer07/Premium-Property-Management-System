@@ -152,7 +152,8 @@
                         <input type="hidden" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>">
                         <input type="file" id="profilePicInput" accept="image/*">
                         <input type="hidden" name="cropped_image" id="croppedImageInput">
-                        <button type="submit" name="save_profile" id="saveProfileBtn"></button>
+                        <input type="hidden" name="save_profile" value="1">
+                        <button type="submit" id="saveProfileBtn"></button>
                     </form>
                 </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
