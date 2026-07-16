@@ -120,7 +120,7 @@
         usort($all_mobile, function($a, $b) {
             $t1 = strtotime($b['month'] . '-01');
             $t2 = strtotime($a['month'] . '-01');
-            return $t2 <=> $t1; // descending order
+            return $t1 <=> $t2; // actually descending order (newest first)
         });
         
         foreach ($all_mobile as $idx => $t): 
