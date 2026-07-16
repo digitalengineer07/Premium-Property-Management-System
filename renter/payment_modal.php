@@ -22,8 +22,8 @@
                   .pm-col-left { order: 2; width: 100%; }
                   .pm-col-right { order: 1; width: 100%; }
                   #paymentModalPanel { 
-                      padding: 20px 20px 24px 20px !important; 
-                      width: 92% !important; 
+                      padding: 16px 16px 20px 16px !important; 
+                      width: 95% !important; 
                       max-width: 400px !important; 
                       max-height: 92vh !important; 
                       border-radius: 24px !important; 
@@ -33,16 +33,16 @@
                   .pm-layout { flex: 1; overflow-y: auto; padding-right: 2px; }
                   
                   .pm-header { margin-bottom: 12px !important; flex-shrink: 0; }
-                  .pm-header h2 { font-size: 22px !important; }
+                  .pm-header h2 { font-size: 20px !important; }
                   
                   /* Premium Horizontal QR Layout */
                   .pm-qr-section { 
                       display: grid;
-                      grid-template-columns: 85px 1fr;
-                      grid-template-rows: auto auto auto auto;
-                      gap: 4px 12px;
+                      grid-template-columns: 110px 1fr;
+                      grid-template-rows: auto auto 1fr auto;
+                      gap: 8px 16px;
                       padding: 12px !important; 
-                      margin-bottom: 16px !important; 
+                      margin-bottom: 12px !important; 
                       border-radius: 16px !important; 
                       text-align: left;
                       align-items: center;
@@ -54,26 +54,31 @@
                       padding: 6px !important;
                       border-radius: 12px !important;
                       box-shadow: 0 4px 12px rgba(0,0,0,0.06) !important;
+                      align-self: start;
                   }
                   .pm-qr-section img { max-width: 100% !important; height: auto !important; }
+                  
                   #pmQrText1 { grid-column: 2; grid-row: 1; margin: 0 !important; font-size: 11px !important; align-self: end; }
                   #pmQrText2 { grid-column: 2; grid-row: 2; margin: 0 !important; font-size: 13px !important; }
-                  #upiDeepLinkBtn { grid-column: 2; grid-row: 3; margin: 0 !important; padding: 8px 12px !important; font-size: 12px !important; border-radius: 8px !important; width: fit-content !important; }
+                  #upiDeepLinkBtn { grid-column: 2; grid-row: 3; margin: 0 !important; padding: 8px 12px !important; font-size: 12px !important; border-radius: 8px !important; width: fit-content !important; align-self: start; }
                   
-                  .pm-qr-section > div:last-child {
+                  .pm-qr-section > div:nth-of-type(2) {
                       grid-column: 1 / 3;
                       grid-row: 4;
-                      margin-top: 8px;
-                      padding-top: 8px !important;
+                      margin-top: 4px;
+                      padding-top: 12px !important;
                       border-top: 1px dashed rgba(0,0,0,0.08) !important;
+                      display: flex;
+                      gap: 12px;
+                      align-items: center;
                   }
-                  .pm-qr-section > div:last-child p { display: none; } /* Hide the helper text, just show the button */
-                  .pm-qr-section button { padding: 8px !important; font-size: 11px !important; }
+                  .pm-qr-section > div:nth-of-type(2) p { display: none !important; } /* Hide the helper text completely */
+                  .pm-qr-section button { padding: 8px !important; font-size: 12px !important; width: 100% !important; border-radius: 8px !important; }
                   
                   /* Amounts & Details */
                   #pmAmountContainer { font-size: 32px !important; margin-bottom: 4px !important; }
                   #paymentDetails { margin-bottom: 12px !important; text-align: center; }
-                  #paymentTitle { font-size: 13px !important; margin-bottom: 4px !important; }
+                  #paymentTitle { font-size: 12px !important; margin-bottom: 4px !important; }
                   
                   .pm-col-left > div:nth-child(2) { padding: 10px !important; margin-bottom: 16px !important; border-radius: 10px !important; }
                   .pm-timer-container { font-size: 12px !important; margin-bottom: 4px !important; }
