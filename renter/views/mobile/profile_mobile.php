@@ -330,7 +330,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     }
 </style>
 
-<div class="m-profile-wrapper animate-up">
+<div class="m-profile-wrapper">
     <header class="premium-header-pill">
         <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
             <div class="m-header-module m-header-left"
@@ -373,7 +373,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         </div>
     </header>
 
-    <div class="mp-container" style="padding-top: 114px;">
+    <div class="mp-container animate-up" style="padding-top: 114px;">
         <div class="mp-user-card">
             <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()"
                 style="cursor: pointer; width: 80px; height: 80px; flex-shrink: 0;">
