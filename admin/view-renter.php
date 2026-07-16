@@ -350,6 +350,31 @@ $admin_user = s($_SESSION['admin'] ?? '');
             <p style="font-size: 14px; line-height: 1.6; color: var(--text-dark); margin: 0;"><?php echo nl2br(htmlspecialchars($user['about'])); ?></p>
         </div>
         <?php endif; ?>
+
+        <?php if(!empty($user['emergency_contact_name'])): ?>
+        <!-- Emergency Contact -->
+        <div class="panel">
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-plus-medical'></i></div> Emergency Contact</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div>
+                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Contact Name</div>
+                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Relationship</div>
+                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Phone Number</div>
+                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
+                </div>
+                <div>
+                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Address</div>
+                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- 3. History Section (2 columns) -->
