@@ -132,7 +132,12 @@
                 $dataType = ($t['source'] === 'rent_table' || $t['source'] === 'elec_table' && $amount > 0) ? 'rent' : (($t['source'] === 'advance') ? 'other' : 'other');
                 $dataYear = date('Y', strtotime($t['month'] . '-01'));
             ?>
-            <div class="m-pay-card-item" data-type="<?php echo $dataType; ?>" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>;">
+            <div class="m-pay-card-item" data-type="<?php echo $dataType; ?>" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>; position: relative; overflow: hidden;">
+                <?php if ($isPending): ?>
+                    <span style="position: absolute; top: 0; right: 0; background: rgba(245,158,11,0.1); color: #D97706; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Pending</span>
+                <?php else: ?>
+                    <span style="position: absolute; top: 0; right: 0; background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Paid</span>
+                <?php endif; ?>
                 <!-- Icon -->
                 <div style="<?php echo $iconStyle; ?> width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
                     <?php echo $icon; ?>
@@ -143,11 +148,6 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px;">
                             <?php echo $title; ?>
-                            <?php if ($isPending): ?>
-                                <span style="background: rgba(245,158,11,0.1); color: #D97706; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 700;">Pending</span>
-                            <?php else: ?>
-                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 700;">Paid</span>
-                            <?php endif; ?>
                         </h4>
                         <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount, 2); ?></div>
                     </div>
@@ -176,7 +176,12 @@
                 $amount = (float)$t['amount'];
                 $dataYear = date('Y', strtotime($t['month'] . '-01'));
             ?>
-            <div class="m-pay-card-item" data-type="electricity" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-top: 1px solid var(--border);">
+            <div class="m-pay-card-item" data-type="electricity" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-top: 1px solid var(--border); position: relative; overflow: hidden;">
+                <?php if ($isPending): ?>
+                    <span style="position: absolute; top: 0; right: 0; background: rgba(245,158,11,0.1); color: #D97706; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Pending</span>
+                <?php else: ?>
+                    <span style="position: absolute; top: 0; right: 0; background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 12px; border-radius: 0 16px 0 12px; font-size: 10px; font-weight: 800;">Paid</span>
+                <?php endif; ?>
                 <!-- Icon -->
                 <div style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
                     <i class='bx bx-bolt-circle'></i>
@@ -187,11 +192,6 @@
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px;">
                             Electricity Payment
-                            <?php if ($isPending): ?>
-                                <span style="background: rgba(245,158,11,0.1); color: #D97706; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 700;">Pending</span>
-                            <?php else: ?>
-                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 700;">Paid</span>
-                            <?php endif; ?>
                         </h4>
                         <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount, 2); ?></div>
                     </div>

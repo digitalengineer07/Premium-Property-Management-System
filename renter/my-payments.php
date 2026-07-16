@@ -988,11 +988,13 @@ $show_banner = ($is_late && !empty($overdue_list));
                 background: var(--white);
                 border: 1px solid var(--border);
                 border-radius: 18px;
-                padding: 14px;
+                padding: 16px 14px;
                 display: flex;
                 align-items: center;
                 gap: 12px;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+                position: relative;
+                overflow: hidden;
             }
             .m-pci-icon {
                 width: 44px;
@@ -1029,13 +1031,16 @@ $show_banner = ($is_late && !empty($overdue_list));
                 margin: 0;
             }
             .m-pci-center {
-                flex-shrink: 0;
+                position: absolute;
+                top: 0;
+                right: 0;
             }
             .m-status-pill {
-                font-size: 11px;
-                font-weight: 700;
-                padding: 3px 10px;
-                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 800;
+                padding: 4px 12px;
+                border-radius: 0 18px 0 12px;
+                display: inline-block;
             }
             .m-status-pill.paid { background: rgba(16, 185, 129, 0.1); color: #10B981; }
             .m-status-pill.pending { background: rgba(245, 158, 11, 0.15); color: #D97706; }
