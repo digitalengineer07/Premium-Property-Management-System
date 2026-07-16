@@ -523,17 +523,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             background-color: var(--bg-main) !important;
             color: var(--text-dark) !important;
             border-color: var(--border) !important;
-        }
-
-
-        .mb-nav-center {
-            width: 52px;
-        
-        <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-item">
-                <i class='bx bx-grid-alt'></i>
-                <span>Dashboard</span>
-            </a>
             <a href="my-payments.php" class="nav-item">
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
