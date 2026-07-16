@@ -11,7 +11,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     .m-profile-wrapper, .m-profile-wrapper * { box-sizing: border-box; }
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
-        padding-bottom: 75px; /* Space for bottom nav */
+        padding-bottom: 120px; /* Space for bottom nav and safe areas */
     }
     
     /* Header */
@@ -269,7 +269,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         font-size: 15px;
         font-weight: 700;
         text-decoration: none;
-        margin-bottom: 8px;
+        margin-bottom: 16px;
     }
 
     /* Dark Theme Mobile Overrides */
