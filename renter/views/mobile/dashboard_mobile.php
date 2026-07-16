@@ -45,9 +45,7 @@
         <div class="m-greeting-text" style="position: relative; z-index: 2; max-width: 60%;">
             <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; letter-spacing: -0.5px;">Hello, <?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?> 👋</h2>
             <p style="font-size: 13px; color: var(--text-gray); margin: 0 0 12px 0; line-height: 1.4;">Welcome back! You are assigned to</p>
-            <div class="m-room-pill" style="display: inline-block; background: rgba(98,75,255,0.1); color: #624BFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">
-                <?php echo ($room_no === 'Not Assigned') ? 'Not Assigned' : 'Room ' . htmlspecialchars($room_no); ?>
-            </div>
+            <div class="m-room-pill" style="display: inline-block; background: rgba(98,75,255,0.1); color: #624BFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">Room <?php echo htmlspecialchars($room_no); ?></div>
         </div>
         <div class="m-greeting-img" style="position: absolute; right: -10px; bottom: 0; width: 170px; height: 100%; display: flex; align-items: flex-end; justify-content: flex-end; pointer-events: none; z-index: 1;">
             <img src="../assets/img/login_building.png" alt="Building" style="width: 100%; max-height: 130px; object-fit: contain; object-position: bottom right;">
