@@ -671,8 +671,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <i class='bx bx-home-heart'></i>
             </div>
             <div class="sidebar-brand">
-                <h2>Resident Dashboard</h2>
-                <p>Premium Renter Portal</p>
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
+                <p>Resident Dashboard</p>
             </div>
         </div>
         
