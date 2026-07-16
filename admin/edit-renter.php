@@ -228,8 +228,33 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                         </div>
 
+                        <!-- Card 2.5: EMERGENCY CONTACT -->
+                        <div style="background: #F8FAFC; border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9; margin-bottom: 24px;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                                <i class='bx bx-plus-medical' style="font-size: 16px;"></i> EMERGENCY CONTACT
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Contact Name</label>
+                                    <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Relationship</label>
+                                    <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Phone Number</label>
+                                    <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                </div>
+                                <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Address</label>
+                                    <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Card 3: LEASE & FINANCIALS -->
-                        <div style="background: #F8FAFC; border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9;">
+                        <div style="background: #F8FAFC; border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9; margin-bottom: 24px;">
                             <div style="display: inline-flex; align-items: center; gap: 8px; background: #ffffff; padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
                                 <i class='bx bx-wallet' style="font-size: 16px;"></i> LEASE CHARGES
                             </div>
