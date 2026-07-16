@@ -233,6 +233,51 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         });
       }
     </script>
+    <script>
+    function openProfileSection(section) {
+        var modal = document.getElementById('editProfileModal');
+        if (!modal) return;
+        
+        var basicInfo = document.getElementById('modalBasicInfoSection');
+        var emergencyInfo = document.getElementById('modalEmergencyContactSection');
+        var divider = document.getElementById('modalSectionDivider');
+        
+        if (section === 'basic') {
+            if(basicInfo) basicInfo.style.display = 'block';
+            if(emergencyInfo) emergencyInfo.style.display = 'none';
+            if(divider) divider.style.display = 'none';
+        } else if (section === 'emergency') {
+            if(basicInfo) basicInfo.style.display = 'none';
+            if(emergencyInfo) emergencyInfo.style.display = 'block';
+            if(divider) divider.style.display = 'none';
+        } else {
+            if(basicInfo) basicInfo.style.display = 'block';
+            if(emergencyInfo) emergencyInfo.style.display = 'block';
+            if(divider) divider.style.display = 'block';
+        }
+        
+        modal.style.setProperty('display', 'flex', 'important');
+    }
+
+    function openMobileChangePassword() {
+        var modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+            var box = modal.querySelector('.no-scrollbar');
+            if (box) {
+                box.style.opacity = '1';
+                box.style.transform = 'none';
+            }
+        }
+    }
+    
+    function openMobileResidence() {
+        var modal = document.getElementById('residenceDetailsModal');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+        }
+    }
+    </script>
     <script src="../assets/js/pwa.js" defer></script>
     
     <!-- Cropper JS -->
