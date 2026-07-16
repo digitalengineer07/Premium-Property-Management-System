@@ -354,23 +354,42 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <?php if(!empty($user['emergency_contact_name'])): ?>
         <!-- Emergency Contact -->
         <div class="panel">
-            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-plus-medical'></i></div> Emergency Contact</h4>
+            <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-plus-medical'></i></div> Emergency Contact</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Contact Name</div>
-                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
+                <!-- Contact Name Box -->
+                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <i class='bx bx-user' style="color: #64748B; font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
+                    </div>
+                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
                 </div>
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Relationship</div>
-                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
+                
+                <!-- Relationship Box -->
+                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <i class='bx bx-group' style="color: #64748B; font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
+                    </div>
+                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
                 </div>
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Phone Number</div>
-                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
+
+                <!-- Phone Box -->
+                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <i class='bx bx-phone' style="color: #64748B; font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
+                    </div>
+                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
                 </div>
-                <div>
-                    <div style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin-bottom: 4px;">Address</div>
-                    <div style="font-size: 14px; color: var(--text-dark); font-weight: 500;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
+
+                <!-- Address Box -->
+                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <i class='bx bx-map' style="color: #64748B; font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
+                    </div>
+                    <div style="font-size: 15px; color: #0F172A; font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
                 </div>
             </div>
         </div>
