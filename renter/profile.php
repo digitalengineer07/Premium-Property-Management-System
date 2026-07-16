@@ -19,6 +19,7 @@ $errmsg = ""; $success = "";
 /* Handle profile updates (name/phone/room/about + profile pic + aadhaar upload) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
     file_put_contents('test_log.txt', date('Y-m-d H:i:s') . " - Form Submitted!\n", FILE_APPEND);
+    file_put_contents('test_log.txt', print_r($_POST, true), FILE_APPEND);
 
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $errmsg = "Invalid form submission (CSRF).";
