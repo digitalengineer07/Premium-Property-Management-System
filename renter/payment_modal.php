@@ -21,6 +21,15 @@
               @media (max-width: 767px) {
                   .pm-col-left { order: 2; }
                   .pm-col-right { order: 1; }
+                  #paymentModalPanel { padding: 16px !important; max-height: 85vh !important; }
+                  .pm-header { margin-bottom: 12px !important; }
+                  .pm-header h2 { font-size: 20px !important; }
+                  .pm-qr-section { padding: 12px !important; margin-bottom: 12px !important; }
+                  .pm-qr-section img { max-width: 160px !important; height: auto; }
+                  #pmAmountContainer { font-size: 30px !important; }
+                  #paymentDetails { margin-bottom: 12px !important; }
+                  #paymentNotifyForm input { padding: 10px 14px !important; margin-bottom: 12px !important; }
+                  #submitPaymentBtn { padding: 12px !important; font-size: 14px !important; }
               }
           
               /* Dark Mode Overrides for Payment Modal */
