@@ -163,7 +163,7 @@
             <div class="panel">
                   <div class="panel-header">
                       <h3>Basic Information</h3>
-                      <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
+                      <button class="btn-outline" onclick="if(typeof openProfileSection === 'function') { openProfileSection('all'); } else { document.getElementById('editProfileModal').style.display='flex'; }"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
                   <div class="info-list">
                       <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
@@ -277,7 +277,7 @@
                         ?>
                         <div style="display: flex; align-items: center; gap: 12px; max-width: 70%;">
                             <div class="info-value" style="font-size: <?php echo $fs_login; ?>; max-width: 100%; white-space: nowrap;"><?php echo htmlspecialchars($login_email); ?></div>
-                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="var ep = document.getElementById('editProfileModal'); if(ep) { ep.style.display='flex'; setTimeout(function(){ var ei = ep.querySelector('input[name=\'email\']'); if(ei) { ei.focus(); ei.select(); } }, 100); } return false;">Change</button>
+                            <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="if(typeof openProfileSection === 'function') openProfileSection('all'); var ep = document.getElementById('editProfileModal'); if(ep) { ep.style.display='flex'; setTimeout(function(){ var ei = ep.querySelector('input[name=\'email\']'); if(ei) { ei.focus(); ei.select(); } }, 100); } return false;">Change</button>
                         </div>
                     </div>
                     <div class="info-row">
@@ -298,7 +298,7 @@
             <div class="panel">
                   <div class="panel-header">
                       <h3><i class='bx bx-user-circle'></i> Emergency Contact</h3>
-                      <button class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='flex'"><i class='bx bx-edit-alt'></i> Edit</button>
+                      <button class="btn-outline" onclick="if(typeof openProfileSection === 'function') { openProfileSection('all'); } else { document.getElementById('editProfileModal').style.display='flex'; }"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
                   <div class="info-list">
                       <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Contact Name</div><div class="info-value"><?php echo htmlspecialchars(!empty($user['emergency_contact_name']) ? $user['emergency_contact_name'] : '-'); ?></div></div>

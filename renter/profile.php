@@ -615,6 +615,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>">
                 <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about'] ?? ''); ?>">
                 
+                <div id="modalBasicInfoSection">
                 <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-user'></i> Basic Information</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
@@ -652,8 +653,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     </div>
                 </div>
 
-                <div style="width: 100%; height: 1px; background: var(--border); margin: 24px 0;"></div>
+                </div>
+                <div id="modalSectionDivider" style="width: 100%; height: 1px; background: var(--border); margin: 24px 0;"></div>
 
+                <div id="modalEmergencyContactSection">
                 <h4 style="margin: 0 0 16px 0; font-size: 15px; color: var(--primary-purple);"><i class='bx bx-plus-medical'></i> Emergency Contact</h4>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
@@ -672,6 +675,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
                         <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
                     </div>
+                </div>
                       <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="border: none;">Cancel</button>
                     <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
@@ -749,6 +753,168 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Residence Details Modal (For Mobile) -->
+    <div id="residenceDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh; overflow-y: auto;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class='bx bx-home' style="color: var(--primary-purple); font-size: 26px;"></i>
+                    </div>
+                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Residence Details</span>
+                </h3>
+                <button type="button" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-door-open' style="font-size: 20px;"></i> Room Number
+                    </div>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">
+                        <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?>
+                    </div>
+                </div>
+                
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-calendar' style="font-size: 20px;"></i> Join Date
+                    </div>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">
+                        <?php echo !empty($user['join_date']) ? date('M d, Y', strtotime($user['join_date'])) : 'N/A'; ?>
+                    </div>
+                </div>
+                
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-wallet' style="font-size: 20px;"></i> Base Rent
+                    </div>
+                    <div style="font-size: 15px; font-weight: 700; color: #10B981;">
+                        ₹<?php echo number_format($user['rent_amount'] ?? 0, 2); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account & Security Modal (For Mobile) -->
+    <div id="accountSecurityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh; overflow-y: auto;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
+                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                        <i class='bx bx-check-shield' style="color: var(--primary-purple); font-size: 26px;"></i>
+                    </div>
+                    <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Account & Security</span>
+                </h3>
+                <button type="button" onclick="document.getElementById('accountSecurityModal').style.display='none'" style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0,0,0,0.04); border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Password Row -->
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-lock-alt' style="font-size: 20px;"></i> Password
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">••••••••</div>
+                        <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="openMobileChangePassword()">Change</button>
+                    </div>
+                </div>
+                
+                <!-- Email Row -->
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-envelope' style="font-size: 20px;"></i> Login Email
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <?php echo htmlspecialchars($user['email'] ?: 'user@example.com'); ?>
+                        </div>
+                        <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;" onclick="document.getElementById('accountSecurityModal').style.display='none'; openProfileSection('basic');">Change</button>
+                    </div>
+                </div>
+
+                <!-- 2FA Row -->
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-shield-quarter' style="font-size: 20px;"></i> Two-Factor Auth
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 14px; font-weight: 700; color: #10B981;">Enabled</div>
+                        <button type="button" class="btn-outline" style="padding: 4px 12px; flex-shrink: 0;">Manage</button>
+                    </div>
+                </div>
+
+                <!-- Account Status Row -->
+                <div style="background: #F8FAFC; padding: 16px; border-radius: 16px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-gray); font-size: 14px; font-weight: 600;">
+                        <i class='bx bx-info-circle' style="font-size: 20px;"></i> Account Status
+                    </div>
+                    <div style="font-size: 14px; font-weight: 700; color: #10B981;">
+                        Active
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function openProfileSection(section) {
+        var modal = document.getElementById('editProfileModal');
+        if (!modal) return;
+        
+        var basicInfo = document.getElementById('modalBasicInfoSection');
+        var emergencyInfo = document.getElementById('modalEmergencyContactSection');
+        var divider = document.getElementById('modalSectionDivider');
+        
+        if (section === 'basic') {
+            if(basicInfo) basicInfo.style.display = 'block';
+            if(emergencyInfo) emergencyInfo.style.display = 'none';
+            if(divider) divider.style.display = 'none';
+        } else if (section === 'emergency') {
+            if(basicInfo) basicInfo.style.display = 'none';
+            if(emergencyInfo) emergencyInfo.style.display = 'block';
+            if(divider) divider.style.display = 'none';
+        } else {
+            // all
+            if(basicInfo) basicInfo.style.display = 'block';
+            if(emergencyInfo) emergencyInfo.style.display = 'block';
+            if(divider) divider.style.display = 'block';
+        }
+        
+        modal.style.setProperty('display', 'flex', 'important');
+    }
+
+    function openMobileChangePassword() {
+        var modal = document.getElementById('changePasswordModal');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+            var box = modal.querySelector('.no-scrollbar');
+            if (box) {
+                box.style.opacity = '1';
+                box.style.transform = 'none';
+            }
+        }
+    }
+    
+    function openMobileResidence() {
+        var modal = document.getElementById('residenceDetailsModal');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+        }
+    }
+    function openMobileAccountSecurity() {
+        var modal = document.getElementById('accountSecurityModal');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+        }
+    }
+    </script>
     </div>
 
 <script>
