@@ -510,18 +510,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             border-color: var(--border) !important;
             color: var(--text-gray) !important;
         }
-        
-        /* Force show bottom nav on desktop for profile page */
-        @media screen and (min-width: 769px) {
-            #profile-bottom-nav {
-                display: flex !important;
-                left: 50% !important;
-                transform: translateX(calc(-50% + 115px)) !important;
-                width: 450px !important;
-                right: auto !important;
-                bottom: 24px !important;
-            }
-        }
     </style>
 </head>
 <body class="<?php echo $is_dark ? 'dark-theme' : ''; ?>">
