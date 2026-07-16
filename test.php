@@ -1,21 +1,14 @@
 <?php
 require 'db.php';
-
-$queries = [
-    "ALTER TABLE users ADD COLUMN dob DATE NULL;",
-    "ALTER TABLE users ADD COLUMN gender VARCHAR(20) NULL;",
-    "ALTER TABLE users ADD COLUMN address TEXT NULL;",
-    "ALTER TABLE users ADD COLUMN emergency_contact_name VARCHAR(100) NULL;",
-    "ALTER TABLE users ADD COLUMN emergency_contact_relation VARCHAR(50) NULL;",
-    "ALTER TABLE users ADD COLUMN emergency_contact_phone VARCHAR(20) NULL;",
-    "ALTER TABLE users ADD COLUMN emergency_contact_address TEXT NULL;"
-];
-
-foreach ($queries as $q) {
-    if (mysqli_query($conn, $q)) {
-        echo "Success: $q\n";
+$stmt = mysqli_prepare($conn, "UPDATE users SET name='Vijay Jii', phone='1234567890', email='', whatsapp='', room_no='', about='', profile_pic='uploads/profiles/test.jpg', dob=NULL, gender=NULL, address=NULL, emergency_contact_name=NULL, emergency_contact_relation=NULL, emergency_contact_phone=NULL, emergency_contact_address=NULL WHERE id=1");
+if (!$stmt) {
+    echo "Prepare failed: " . mysqli_error($conn) . "\n";
+} else {
+    $res = mysqli_stmt_execute($stmt);
+    if (!$res) {
+        echo "Execute failed: " . mysqli_stmt_error($stmt) . "\n";
     } else {
-        echo "Error: " . mysqli_error($conn) . " on $q\n";
+        echo "Execute Success\n";
     }
 }
 ?>
