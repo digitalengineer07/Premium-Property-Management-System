@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // If advance_payment is changed, update advance_updated_at
-            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, advance_updated_at = IF(advance_payment != ?, NOW(), advance_updated_at), advance_payment=?, fixed_rent=?, fixed_maintenance=? {$aadhaar_update} {$agreement_update}";
+            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, advance_updated_at = IF(advance_payment != ?, NOW(), advance_updated_at), advance_payment=?, fixed_rent=?, fixed_maintenance=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? {$aadhaar_update} {$agreement_update}";
 
             if ($rent_maint_changed) {
                 $sql .= ", rent_maint_updated_at=NOW(), rent_maint_updated_by=?";
