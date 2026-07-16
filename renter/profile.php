@@ -964,18 +964,9 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     }
 </script>
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
-<style>
-@media (max-width: 768px) {
-    #profile-bottom-nav {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        z-index: 2147483647 !important;
-        transform: none !important;
-        pointer-events: auto !important;
-    }
-}
-</style>
+<script>
+// Mobile specific script if needed
+</script>
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <nav id="profile-bottom-nav" class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
