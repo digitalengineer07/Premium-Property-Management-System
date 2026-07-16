@@ -296,6 +296,6 @@
 
 <div style="height: 10px; width: 100%; display: block; flex-shrink: 0;"></div>
 
-<div class='mobile-page-body animate-up' style='padding: 10px 0;'>
+<div class='mobile-page-body animate-up' style='padding: 80px 0 10px 0;'>
     <?php include __DIR__ . '/../desktop/payment-history_desktop.php'; ?>
 </div>
