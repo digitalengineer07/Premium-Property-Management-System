@@ -242,6 +242,18 @@
     .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAID ON"; }
     .mobile-page-body .payments-table td:nth-child(9)::before { content: "PAYMENT MODE"; }
     
+    /* Fix UPI Logo size in mobile box */
+    .mobile-page-body .payments-table td img {
+        height: 14px !important;
+        width: auto !important;
+        max-width: 40px !important;
+        object-fit: contain !important;
+    }
+    .mobile-page-body .payments-table td:nth-child(9) div {
+        justify-content: flex-start !important;
+        margin-top: 2px !important;
+    }
+    
     /* Fix Pagination for Mobile */
     .mobile-page-body .pagination-container {
         flex-direction: column !important;
