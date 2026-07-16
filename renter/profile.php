@@ -845,31 +845,25 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 <script>
 (function() {
     function openChangePasswordModal() {
-        var modal = document.getElementById('changePasswordModal');
-        if (modal) {
-            modal.style.setProperty('display', 'flex', 'important');
-            var box = modal.querySelector('.no-scrollbar');
-            if (box) {
-                box.style.opacity = '1';
-                box.style.transform = 'none';
-            }
-            var alertBox = document.getElementById('pwdModalAlert');
-            if (alertBox) alertBox.style.display = 'none';
-            var form = document.getElementById('changePasswordForm');
-            if (form) form.reset();
-            setTimeout(function() {
-                var currPwd = document.getElementById('current_password');
-                if (currPwd) currPwd.focus();
-            }, 100);
+        if (typeof openProfileSection === 'function') {
+            openProfileSection('password');
         }
+        setTimeout(() => {
+            var currPwd = document.getElementById('current_password');
+            if (currPwd) {
+                currPwd.focus();
+            }
+        }, 100);
     }
 
     function closeChangePasswordModal() {
-        var modal = document.getElementById('changePasswordModal');
+        var modal = document.getElementById('editProfileModal');
         if (modal) {
             modal.style.display = 'none';
-            var form = document.getElementById('changePasswordForm');
-            if (form) form.reset();
+        }
+        var form = document.getElementById('changePasswordForm');
+        if (form) {
+            form.reset();
         }
     }
 
