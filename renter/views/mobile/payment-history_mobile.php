@@ -146,7 +146,7 @@
         margin-top: 4px;
     }
 
-    /* 4. Fix Table container padding */
+    /* 4. Fix Table Layout (Convert to Mobile Cards) */
     .mobile-page-body .payments-container {
         border-radius: 0 !important;
         border-left: none !important;
@@ -154,9 +154,82 @@
         margin-left: -16px;
         margin-right: -16px;
         width: calc(100% + 32px) !important;
+        background: transparent !important;
+        box-shadow: none !important;
     }
-    .mobile-page-body .payments-table {
-        min-width: 800px !important; /* Force horizontal scroll */
+    
+    .mobile-page-body .payments-table, 
+    .mobile-page-body .payments-table tbody {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+    
+    .mobile-page-body .payments-table thead {
+        display: none !important;
+    }
+    
+    .mobile-page-body .payments-table tr {
+        display: block !important;
+        margin: 0 16px 16px 16px !important;
+        border: 1px solid var(--border) !important;
+        border-radius: 16px !important;
+        background: var(--white) !important;
+        padding: 0 16px 16px 16px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+    }
+    
+    .mobile-page-body .payments-table td {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 0 !important;
+        border: none !important;
+        border-bottom: 1px dashed rgba(0,0,0,0.1) !important;
+        text-align: right !important;
+        font-size: 13px !important;
+    }
+    
+    .mobile-page-body .payments-table td:last-child {
+        border-bottom: none !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Hide the ID column */
+    .mobile-page-body .payments-table td:nth-child(1) {
+        display: none !important;
+    }
+    
+    /* Style the Bill Type as a card header */
+    .mobile-page-body .payments-table td:nth-child(2) {
+        justify-content: flex-start !important;
+        background: rgba(248, 250, 252, 0.8) !important;
+        margin: 0 -16px 8px -16px !important;
+        padding: 16px !important;
+        border-radius: 16px 16px 0 0 !important;
+        border-bottom: 1px solid var(--border) !important;
+    }
+    
+    .mobile-page-body .td-bill-type {
+        text-align: left !important;
+    }
+    
+    /* Inject Labels */
+    .mobile-page-body .payments-table td:nth-child(3)::before { content: "FOR PERIOD"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(4)::before { content: "BILL DATE"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(5)::before { content: "DUE DATE"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(6)::before { content: "AMOUNT"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(7)::before { content: "STATUS"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAID ON"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    .mobile-page-body .payments-table td:nth-child(9)::before { content: "PAYMENT MODE"; font-size: 10px; font-weight: 700; color: var(--text-gray); letter-spacing: 0.5px; }
+    
+    /* Fix Pagination for Mobile */
+    .mobile-page-body .pagination-container {
+        flex-direction: column !important;
+        gap: 16px !important;
+        padding: 16px !important;
+        align-items: center !important;
+        text-align: center !important;
     }
 }
 </style>
