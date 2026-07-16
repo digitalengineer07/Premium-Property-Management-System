@@ -876,9 +876,9 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <div id="residenceDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
         <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh; overflow-y: auto;">
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
-                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px; gap: 12px;">
+                <h3 style="margin: 0; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 12px; flex: 1; line-height: 1.2;">
+                    <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
                         <i class='bx bx-home' style="color: var(--primary-purple); font-size: 26px;"></i>
                     </div>
                     <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Residence Details</span>
