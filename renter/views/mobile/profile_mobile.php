@@ -430,7 +430,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 </nav>
 
 <!-- Hidden Profile Form for Mobile -->
-<form method="POST" id="hiddenProfileForm" class="hidden-form" style="display: none;">
+<form method="POST" id="hiddenProfileFormMobile" class="hidden-form" style="display: none;">
     <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
     <input type="hidden" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>">
     <input type="hidden" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
@@ -445,10 +445,10 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     <input type="hidden" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>">
     <input type="hidden" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>">
     <input type="hidden" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>">
-    <input type="file" id="profilePicInput" accept="image/*">
-    <input type="hidden" name="cropped_image" id="croppedImageInput">
+    <input type="file" id="profilePicInputMobile" accept="image/*">
+    <input type="hidden" name="cropped_image" id="croppedImageInputMobile">
     <input type="hidden" name="save_profile" value="1">
-    <button type="submit" id="saveProfileBtn"></button>
+    <button type="submit" id="saveProfileBtnMobile"></button>
 </form>
 
 <?php include 'mobile_notifications.php'; ?>

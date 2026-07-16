@@ -18,9 +18,11 @@ $errmsg = ""; $success = "";
 
 /* Handle profile updates (name/phone/room/about + profile pic + aadhaar upload) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
+    file_put_contents('test_log.txt', date('Y-m-d H:i:s') . " - Form Submitted!\n", FILE_APPEND);
 
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $errmsg = "Invalid form submission (CSRF).";
+        file_put_contents('test_log.txt', "CSRF Failed\n", FILE_APPEND);
     } else {
         $name = trim($_POST['name'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
@@ -30,10 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
 
         // Basic validation
         if ($name === '') $errmsg = "Name cannot be empty.";
+        if ($name === '') file_put_contents('test_log.txt', "Name empty\n", FILE_APPEND);
 
         // handle cropped profile pic upload
         $profileUploadedPath = null;
         if (empty($errmsg) && !empty($_POST['cropped_image'])) {
+            file_put_contents('test_log.txt', "Cropped image received length: " . strlen($_POST['cropped_image']) . "\n", FILE_APPEND);
             $data = $_POST['cropped_image'];
             if (preg_match('/^data:image\/(\w+);base64,/', $data, $type)) {
                 $data = substr($data, strpos($data, ',') + 1);
@@ -112,11 +116,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
                 $stmt = mysqli_prepare($conn, "UPDATE users SET name=?, phone=?, email=?, whatsapp=?, room_no=?, about=?, dob=?, gender=?, address=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? WHERE id=?");
                 mysqli_stmt_bind_param($stmt, "sssssssssssssi", $name, $phone, $email, $whatsapp, $room_no, $about, $dob, $gender, $address, $emg_name, $emg_rel, $emg_phone, $emg_addr, $user_id);
             }
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
 
+            if (!$stmt) {
+                file_put_contents('test_log.txt', "DB Prepare failed: " . mysqli_error($conn) . "\n", FILE_APPEND);
+            } else {
+                if (mysqli_stmt_execute($stmt)) {
+                    file_put_contents('test_log.txt', "DB Execute Success\n", FILE_APPEND);
+                    $success = "Profile updated successfully.";
+                    
+                    // Update session name if it changed
+                    $_SESSION['user_name'] = $name;
+                } else {
+                    file_put_contents('test_log.txt', "DB Execute Failed: " . mysqli_stmt_error($stmt) . "\n", FILE_APPEND);
+                    $errmsg = "Database update failed.";
+                }
+                mysqli_stmt_close($stmt);
+            }
+            
             logAction($conn, "renter", $user_id, "Updated profile and files");
-            $success = "Profile updated.";
         }
     }
 }
@@ -876,7 +893,12 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         if (cropper) cropper.destroy();
         
         // Auto submit form to save picture
-        document.getElementById('saveProfileBtn').click();
+        const hiddenForm = document.getElementById('hiddenProfileForm');
+        if (hiddenForm) {
+            hiddenForm.submit();
+        } else {
+            console.error('hiddenProfileForm not found!');
+        }
     }
 
     const aadhaarInput = document.querySelector('input[name="aadhaar"]');
