@@ -61,43 +61,44 @@ const amountSpan = document.getElementById('paymentAmountDisplay');
 window.showToast = function(message, type = 'error') {
     const toast = document.createElement('div');
     toast.style.position = 'fixed';
-    toast.style.top = '20px';
+    toast.style.bottom = '30px'; // Move to bottom for better UX on mobile
     toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%)';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
     toast.style.backgroundColor = type === 'error' ? '#EF4444' : '#10B981';
     toast.style.color = '#fff';
-    toast.style.padding = '12px 24px';
-    toast.style.borderRadius = '30px';
-    toast.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
+    toast.style.padding = '12px 16px';
+    toast.style.borderRadius = '12px'; // Square-ish rounded corners look better for wrapped text
+    toast.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
     toast.style.zIndex = '999999';
     toast.style.fontSize = '13px';
-    toast.style.fontWeight = '700';
+    toast.style.fontWeight = '500'; // Less bold
     toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    toast.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
     toast.style.pointerEvents = 'none';
-    toast.style.textAlign = 'center';
+    toast.style.textAlign = 'left'; // Align text left when wrapping
+    toast.style.width = 'max-content';
     toast.style.maxWidth = '90vw';
     toast.style.display = 'flex';
     toast.style.alignItems = 'center';
-    toast.style.gap = '8px';
+    toast.style.gap = '10px';
     
     const iconClass = type === 'error' ? 'bx-error-circle' : 'bx-check-circle';
-    toast.innerHTML = `<i class='bx ${iconClass}' style='font-size: 20px;'></i> <span>${message}</span>`;
+    toast.innerHTML = `<i class='bx ${iconClass}' style='font-size: 20px; flex-shrink: 0;'></i> <span>${message}</span>`;
     
     document.body.appendChild(toast);
     
     // Animate in
     setTimeout(() => {
         toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(15px)';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
     }, 10);
     
     // Animate out
     setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-        setTimeout(() => toast.remove(), 400);
-    }, 4000);
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
 };
 
 const paymentTitle = document.getElementById('paymentTitle');
@@ -118,9 +119,9 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
         const remainingMins = Math.ceil(remainingSecs / 60);
         
         if (typeof showToast === 'function') {
-            showToast(`Security Rate Limit: Please wait ${remainingMins} minute(s) before opening the payment scanner again.`, "error");
+            showToast(`Security Limit: Please wait ${remainingMins} min(s) to open scanner.`, "error");
         } else {
-            alert(`Security Rate Limit: Please wait ${remainingMins} minute(s) before opening the payment scanner again.`);
+            alert(`Security Limit: Please wait ${remainingMins} min(s) to open scanner.`);
         }
         return;
     }
