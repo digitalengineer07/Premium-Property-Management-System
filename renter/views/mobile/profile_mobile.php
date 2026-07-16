@@ -373,7 +373,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         </div>
     </header>
 
-    <div class="mp-container" style="padding-top: 115px;">
+    <div class="mp-container" style="padding-top: 114px;">
         <div class="mp-user-card">
             <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()"
                 style="cursor: pointer; width: 80px; height: 80px; flex-shrink: 0;">
