@@ -263,7 +263,8 @@
     /* Fix Pagination for Mobile (< 1 > format) */
     .mobile-page-body .payments-container > div:last-child {
         justify-content: center !important;
-        padding: 24px 16px !important;
+        padding: 16px 16px 4px 16px !important;
+        margin-bottom: 0 !important;
     }
     .mobile-page-body .payments-container > div:last-child > div:first-child {
         display: none !important; /* Hide 'Showing 1 to 5...' */
