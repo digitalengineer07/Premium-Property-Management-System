@@ -15,7 +15,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
-        padding-bottom: 85px;
+        padding-bottom: 65px;
         /* Exact space for 80px bottom nav + 5px gap */
     }
 
@@ -104,7 +104,8 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         padding: 16px 20px;
         display: flex;
         flex-direction: column;
-        min-height: 100vh; /* fill viewport height */
+        min-height: 100vh;
+        /* fill viewport height */
     }
 
     /* User Info Card */
