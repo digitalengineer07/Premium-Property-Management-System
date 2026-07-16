@@ -143,6 +143,13 @@
                         <input type="hidden" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp']); ?>">
                         <input type="hidden" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>">
                         <input type="hidden" name="about" value="<?php echo htmlspecialchars($user['about']); ?>">
+                        <input type="hidden" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>">
+                        <input type="hidden" name="gender" value="<?php echo htmlspecialchars($user['gender'] ?? ''); ?>">
+                        <input type="hidden" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>">
+                        <input type="hidden" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>">
+                        <input type="hidden" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>">
+                        <input type="hidden" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>">
+                        <input type="hidden" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>">
                         <input type="file" id="profilePicInput" accept="image/*">
                         <input type="hidden" name="cropped_image" id="croppedImageInput">
                         <button type="submit" name="save_profile" id="saveProfileBtn"></button>
