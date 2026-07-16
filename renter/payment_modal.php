@@ -21,27 +21,33 @@
               @media (max-width: 767px) {
                   .pm-col-left { order: 2; }
                   .pm-col-right { order: 1; }
-                  #paymentModalPanel { padding: 12px 16px !important; max-height: 95vh !important; border-radius: 16px !important; }
-                  .pm-header { margin-bottom: 8px !important; }
-                  .pm-header h2 { font-size: 18px !important; }
-                  .pm-qr-section { padding: 8px !important; margin-bottom: 8px !important; border-radius: 12px !important; }
-                  .pm-qr-section img { max-width: 110px !important; height: auto; }
-                  #pmQrText1 { font-size: 11px !important; margin-bottom: 2px !important; }
-                  #pmQrText2 { font-size: 12px !important; margin-bottom: 8px !important; }
-                  #upiDeepLinkBtn { padding: 8px !important; font-size: 12px !important; margin-bottom: 8px !important; }
-                  .pm-qr-section button { padding: 6px !important; font-size: 10px !important; }
+                  #paymentModalPanel { 
+                      padding: 4vw 5vw !important; 
+                      width: 92vw !important; 
+                      max-width: 92vw !important; 
+                      max-height: 90vh !important; 
+                      border-radius: 4vw !important; 
+                  }
+                  .pm-header { margin-bottom: 2vh !important; }
+                  .pm-header h2 { font-size: 5.5vw !important; }
+                  .pm-qr-section { padding: 3vw !important; margin-bottom: 2vh !important; border-radius: 3vw !important; }
+                  .pm-qr-section img { max-width: 35vw !important; height: auto; }
+                  #pmQrText1 { font-size: 3vw !important; margin-bottom: 0.5vh !important; }
+                  #pmQrText2 { font-size: 3.5vw !important; margin-bottom: 1.5vh !important; }
+                  #upiDeepLinkBtn { padding: 2.5vw !important; font-size: 3.5vw !important; margin-bottom: 1.5vh !important; }
+                  .pm-qr-section button { padding: 2vw !important; font-size: 2.8vw !important; }
                   
-                  #pmAmountContainer { font-size: 26px !important; }
-                  #paymentDetails { margin-bottom: 8px !important; }
-                  #paymentTitle { font-size: 13px !important; margin-bottom: 4px !important; }
+                  #pmAmountContainer { font-size: 8vw !important; }
+                  #paymentDetails { margin-bottom: 2vh !important; }
+                  #paymentTitle { font-size: 3.5vw !important; margin-bottom: 1vh !important; }
                   
-                  .pm-timer-container { font-size: 11px !important; margin-bottom: 2px !important; }
-                  .pm-timer-container i { font-size: 14px !important; }
-                  .pm-timer-text { font-size: 9px !important; }
+                  .pm-timer-container { font-size: 3vw !important; margin-bottom: 0.5vh !important; }
+                  .pm-timer-container i { font-size: 4vw !important; }
+                  .pm-timer-text { font-size: 2.5vw !important; }
                   
-                  #paymentNotifyForm label { font-size: 11px !important; margin-bottom: 4px !important; }
-                  #paymentNotifyForm input { padding: 8px 12px !important; margin-bottom: 8px !important; border-radius: 8px !important; font-size: 13px !important; }
-                  #submitPaymentBtn { padding: 10px !important; font-size: 13px !important; border-radius: 8px !important; }
+                  #paymentNotifyForm label { font-size: 3.2vw !important; margin-bottom: 1vh !important; }
+                  #paymentNotifyForm input { padding: 3vw 4vw !important; margin-bottom: 2vh !important; border-radius: 2vw !important; font-size: 3.5vw !important; }
+                  #submitPaymentBtn { padding: 3vw !important; font-size: 3.8vw !important; border-radius: 2vw !important; }
               }
           
               /* Dark Mode Overrides for Payment Modal */

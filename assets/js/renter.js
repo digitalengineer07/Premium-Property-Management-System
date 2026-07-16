@@ -103,6 +103,7 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
     }
     
     paymentModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
     startTimer(300);
 }
 
@@ -122,9 +123,9 @@ function startTimer(duration) {
     }, 1000);
 }
 
-function closePaymentModal() { paymentModal.style.display = 'none'; if (timerInterval) clearInterval(timerInterval); }
-function openScannerModal() { scannerModal.style.display = 'flex'; }
-function closeScannerModal() { scannerModal.style.display = 'none'; }
+function closePaymentModal() { paymentModal.style.display = 'none'; document.body.style.overflow = ''; if (timerInterval) clearInterval(timerInterval); }
+function openScannerModal() { scannerModal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+function closeScannerModal() { scannerModal.style.display = 'none'; document.body.style.overflow = ''; }
 
 window.addEventListener('click', function (event) {
     if (event.target == paymentModal) closePaymentModal();
