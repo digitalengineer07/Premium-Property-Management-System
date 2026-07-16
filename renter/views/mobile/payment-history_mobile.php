@@ -199,6 +199,12 @@
         display: none !important;
     }
     
+    /* VERY IMPORTANT: Allow JS to hide rows for pagination by respecting inline display: none */
+    .mobile-page-body .payments-table tr[style*="display: none"],
+    .mobile-page-body .payments-table tr[style*="display: none;"] {
+        display: none !important;
+    }
+    
     /* Style the Bill Type as a card header spanning both columns */
     .mobile-page-body .payments-table td:nth-child(2) {
         grid-column: 1 / span 2 !important;
@@ -283,12 +289,12 @@
     }
     
     body {
-        padding-bottom: 90px !important;
+        padding-bottom: 76px !important; /* Just enough for the nav bar */
     }
 }
 </style>
 
-<div style="height: 90px; width: 100%; display: block; flex-shrink: 0;"></div>
+<div style="height: 10px; width: 100%; display: block; flex-shrink: 0;"></div>
 
 <div class='mobile-page-body animate-up' style='padding: 10px 0;'>
     <?php include __DIR__ . '/../desktop/payment-history_desktop.php'; ?>
