@@ -845,10 +845,22 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         const base64Image = canvas.toDataURL('image/jpeg', 0.9);
         croppedImageInput.value = base64Image;
-        avatarPreview.src = base64Image;
-        avatarPreview.style.display = 'block';
+        
+        if (avatarPreview) {
+            avatarPreview.src = base64Image;
+            avatarPreview.style.display = 'block';
+        }
         if (document.getElementById('profileAvatarFallback')) {
             document.getElementById('profileAvatarFallback').style.display = 'none';
+        }
+
+        const avatarPreviewMobile = document.getElementById('profileAvatarImgMobile');
+        if (avatarPreviewMobile) {
+            avatarPreviewMobile.src = base64Image;
+            avatarPreviewMobile.style.display = 'block';
+        }
+        if (document.getElementById('profileAvatarFallbackMobile')) {
+            document.getElementById('profileAvatarFallbackMobile').style.display = 'none';
         }
         
         cropperModal.style.display = 'none';

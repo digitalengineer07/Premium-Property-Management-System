@@ -303,7 +303,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             <?php endif; ?>
         </div>
         <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
-            <?php if (!empty($user['profile_pic']) && file_exists(__DIR__ . '/../../' . $user['profile_pic'])): ?>
+            <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
                 <div style="width: 100%; height: 100%; background: #624BFF; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 800;">
@@ -319,10 +319,11 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     <div class="mp-container">
         <div class="mp-user-card">
             <div class="mp-avatar-container" onclick="document.getElementById('profilePicInput').click()" style="cursor: pointer;">
-                <?php if (!empty($user['profile_pic']) && file_exists(__DIR__ . '/../../' . $user['profile_pic'])): ?>
-                    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main">
+                <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
+                    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile">
                 <?php else: ?>
-                    <div class="mp-avatar-fallback"><?php echo $avatar_initials; ?></div>
+                    <div class="mp-avatar-fallback" id="profileAvatarFallbackMobile"><?php echo $avatar_initials; ?></div>
+                    <img src="" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile" style="display: none;">
                 <?php endif; ?>
                 <div class="mp-camera-btn">
                     <i class='bx bx-camera'></i>
