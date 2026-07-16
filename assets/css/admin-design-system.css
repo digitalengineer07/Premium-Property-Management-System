@@ -1511,17 +1511,13 @@ body.dark-theme thead th:last-child {
         flex-direction: column !important;
         background: var(--white, #FFFFFF) !important;
         box-shadow: 10px 10px 50px rgba(0, 0, 0, 0.5) !important;
-        padding: 16px !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        overscroll-behavior-y: contain !important;
+        padding: 20px 16px 0 16px !important;
+        overflow: hidden !important;
         border-radius: 24px !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
         animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
     }
-    .sidebar.mobile-drawer-open::-webkit-scrollbar {
-        display: none !important;
+    .sidebar.mobile-drawer-open .sidebar-header {
+        flex-shrink: 0 !important;
     }
     .dark-theme .sidebar.mobile-drawer-open {
         background: #111827 !important;
@@ -1536,14 +1532,28 @@ body.dark-theme thead th:last-child {
         display: block !important;
     }
     .sidebar.mobile-drawer-open .nav-menu {
-        flex: 1 1 auto !important;
+        flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        min-height: max-content !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+        padding-bottom: 20px !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    .sidebar.mobile-drawer-open .nav-menu::-webkit-scrollbar {
+        display: none !important;
+    }
+    .sidebar.mobile-drawer-open .nav-menu::after {
+        content: '' !important;
+        display: block !important;
+        min-height: 80px !important;
+        flex-shrink: 0 !important;
     }
     .sidebar.mobile-drawer-open .nav-menu a[href*="logout.php"] {
         margin-top: auto !important;
-        margin-bottom: 16px !important;
+        margin-bottom: 0 !important;
     }
     .sidebar.mobile-drawer-open .nav-item span {
         display: inline-block !important;
