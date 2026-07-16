@@ -801,7 +801,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     </div>
 
     <!-- Account & Security Modal (For Mobile) -->
-    <div id="accountSecurityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
+    <div id="accountSecurityModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
         <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh; overflow-y: auto;">
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
