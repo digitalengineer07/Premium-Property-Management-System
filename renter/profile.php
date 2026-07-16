@@ -350,7 +350,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         }
         @media (max-width: 768px) {
             .sidebar { display: none; }
-            .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
+            .main-content { margin-left: 0; max-width: 100%; padding: 0; }
             
             .header-renter { flex-direction: column !important; text-align: center; gap: 15px !important; margin-bottom: 24px !important; }
             .profile-grid { grid-template-columns: 1fr !important; }
