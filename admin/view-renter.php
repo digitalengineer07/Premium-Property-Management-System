@@ -203,7 +203,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-user-circle' style="font-size: 16px;"></i> @<?php echo htmlspecialchars($user['username']); ?></span>
                         <span style="color: var(--border);">|</span> 
                         <span style="display: flex; align-items: center; gap: 4px; color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-door-open' style="font-size: 14px;"></i> Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></span>
-
+                        <span style="display: flex; align-items: center; gap: 4px; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px;"><i class='bx bx-id-card' style="font-size: 14px;"></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></span>
                     </div>
                 </div>
             </div>
