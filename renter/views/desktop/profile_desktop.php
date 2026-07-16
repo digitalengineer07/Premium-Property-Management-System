@@ -157,9 +157,9 @@
                     </form>
                 </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
-                <div style="display: flex; gap: 8px;">
-                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
-                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1);"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></span>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1); white-space: nowrap;"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1); white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></span>
                 </div>
             </div>
 
