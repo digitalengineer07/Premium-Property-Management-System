@@ -2144,7 +2144,7 @@ padding: 16px !important;
     }
 
     /* --- MODAL MOBILE BOTTOM SHEET REFRESH --- */
-    #editProfileModal, #changePasswordModal {
+    #editProfileModal {
         align-items: flex-end !important;
         padding: 0 !important;
         z-index: 99999 !important;
@@ -2152,7 +2152,7 @@ padding: 16px !important;
         bottom: 0 !important;
         top: 0 !important;
     }
-    #editProfileModal > div, #changePasswordModal > div {
+    #editProfileModal > div {
         max-height: 90vh !important;
         max-height: 90dvh !important;
         border-radius: 32px 32px 0 0 !important;
@@ -2163,47 +2163,47 @@ padding: 16px !important;
     }
     
     /* Force WebKit browsers to render scroll space below the button */
-    #editProfileModal form, #changePasswordModal form {
+    #editProfileModal form {
         padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
     }
     
     /* Convert 2-column inline grids to 1-column on mobile */
-    #editProfileModal form > div[style*="grid-template-columns"],
-    #changePasswordModal form > div[style*="grid-template-columns"] {
+    #editProfileModal form > div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
         gap: clamp(12px, 2vh, 16px) !important;
     }
     
     /* Ensure elements spanning 2 columns revert to 1 */
-    #editProfileModal form > div > div,
-    #changePasswordModal form > div > div {
+    #editProfileModal form > div > div {
         grid-column: span 1 !important;
     }
 
     /* Make input fields automatically scale with screen ratio */
-    #editProfileModal input, #editProfileModal select,
-    #changePasswordModal input, #changePasswordModal select {
+    #editProfileModal input, #editProfileModal select {
         padding: clamp(12px, 2vh, 16px) 16px !important;
         font-size: clamp(14px, 3.5vw, 15px) !important;
         border-radius: 14px !important;
         background: #F1F5F9 !important;
         border: 2px solid transparent !important;
         transition: all 0.3s ease !important;
+        width: 100% !important;
+    }
+    
+    /* Focus effects for inputs */
+    #editProfileModal input:focus, #editProfileModal select:focus {
+        background: var(--white) !important;
+        border: 2px solid var(--primary-purple) !important;
+        box-shadow: 0 4px 15px rgba(98, 75, 255, 0.1) !important;
+        outline: none !important;
     }
     
     /* Ensure bottom nav is ALWAYS visible on mobile */
     .mobile-bottom-nav {
         display: flex !important;
     }
-    #editProfileModal input:focus, #editProfileModal select:focus,
-    #changePasswordModal input:focus, #changePasswordModal select:focus {
-        border-color: var(--primary-purple) !important;
-        background: #FFFFFF !important;
-        box-shadow: 0 4px 15px rgba(98, 75, 255, 0.1) !important;
-    }
     
     /* Floating action buttons at bottom of sheet */
-    #editProfileModal .btn-primary, #changePasswordModal .btn-primary {
+    #editProfileModal .btn-primary {
         width: 100% !important;
         padding: 16px !important;
         font-size: 16px !important;

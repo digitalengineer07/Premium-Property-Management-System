@@ -249,7 +249,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         if (section === 'password') {
             if(mainForm) mainForm.style.display = 'none';
-            if(passwordForm) passwordForm.style.display = 'block';
+            if(passwordForm) passwordForm.style.display = 'flex';
+            if(passwordForm) passwordForm.style.flexDirection = 'column';
             if(modalHeaderIcon) modalHeaderIcon.innerHTML = "<i class='bx bx-shield' style='color: var(--primary-purple); font-size: 24px;'></i>";
             if(modalHeaderTitle) modalHeaderTitle.innerText = "Change Password";
         } else {
