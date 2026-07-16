@@ -350,8 +350,8 @@
     <div class="m-pay-items-list" id="mPayList">
         <?php foreach ($all_bills as $bill): 
             $title_disp = $bill['title'] == 'Rent' ? 'Rent Payment' : ($bill['title'] == 'Electricity' ? 'Electricity Payment' : $bill['title']);
-            $sub_disp = date('M Y', strtotime($bill['period'])) . ' • ' . ($bill['type']=='rent' ? 'Room '.$room_no : ($bill['type']=='electricity' ? $bill['subtitle'] : $bill['period']));
             $year_val = date('Y', strtotime($bill['period']));
+            $sub_disp = date('M Y', strtotime($bill['period'])) . ($bill['type']=='rent' ? '' : ' • ' . ($bill['type']=='electricity' ? $bill['subtitle'] : $bill['period']));
         ?>
             <div class="m-pay-card-item" data-type="<?php echo $bill['filter_type']; ?>" data-year="<?php echo $year_val; ?>">
                 <div class="m-pci-icon <?php echo $bill['color']; ?>">
