@@ -182,7 +182,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- 1. Top Header Card -->
     <div class="panel animate-up" style="margin-bottom: 24px; padding: 32px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div style="display: flex; gap: 16px; align-items: center;">
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
                     <?php if ($user['profile_pic']): ?>
@@ -208,7 +208,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
             </div>
 
-            <div style="display: flex; gap: 8px; flex-wrap: nowrap; align-items: center; transform: translateY(-20px);">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; transform: translateY(-30px);">
                 <a href="bill-generator.php?user_id=<?php echo $user['id']; ?>" class="btn-primary" style="padding: 9px 18px; border-radius: 8px; white-space: nowrap; font-size: 14px; font-weight: 500;"><i class='bx bx-plus'></i> New Bill</a>
                 <a href="edit-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 9px 18px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 14px; font-weight: 500;"><i class='bx bx-edit-alt'></i> Edit Profile</a>
                 <button onclick="openAgreementModal()" class="btn-outline" style="padding: 9px 18px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 14px; font-weight: 500;"><i class='bx bx-upload'></i> Agreement</button>
