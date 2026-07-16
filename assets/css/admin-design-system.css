@@ -2190,6 +2190,11 @@ padding: 16px !important;
         border: 2px solid transparent !important;
         transition: all 0.3s ease !important;
     }
+    
+    /* Ensure bottom nav is ALWAYS visible on mobile */
+    .mobile-bottom-nav {
+        display: flex !important;
+    }
     #editProfileModal input:focus, #editProfileModal select:focus,
     #changePasswordModal input:focus, #changePasswordModal select:focus {
         border-color: var(--primary-purple) !important;
