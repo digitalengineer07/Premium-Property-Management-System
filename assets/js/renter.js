@@ -93,13 +93,14 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
     // Unique transaction reference for secure tracking
     const trRef = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
     
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=${trRef}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(cleanTitle)}`;
+    // Updated robust deep link format with merchant code and intent mode
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=${trRef}&mc=0000&mode=02&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(cleanTitle)}`;
     dynamicQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
     
     const deepLinkBtn = document.getElementById('upiDeepLinkBtn');
     if (deepLinkBtn) {
         deepLinkBtn.href = upiUrl;
-        deepLinkBtn.style.display = 'flex';
+        deepLinkBtn.target = "_top"; // Ensure it breaks out of any constrained context
     }
     
     paymentModal.style.display = 'flex';
