@@ -401,7 +401,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
         <div class="mp-menu-list">
             <a href="#" class="mp-menu-item"
-                onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                onclick="document.getElementById('editProfileModal').style.setProperty('display', 'flex', 'important'); return false;">
                 <div class="mp-menu-icon"><i class='bx bx-user'></i></div>
                 <div class="mp-menu-text">
                     <h3>Basic Information</h3>
@@ -411,7 +411,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="if(typeof openChangePasswordModal === 'function') { openChangePasswordModal(); } else { document.getElementById('changePasswordModal').style.setProperty('display', 'flex', 'important'); } return false;">
+                onclick="document.getElementById('changePasswordModal').style.setProperty('display', 'flex', 'important'); var box = document.getElementById('changePasswordModal').querySelector('.no-scrollbar'); if(box){box.style.opacity='1'; box.style.transform='none';} return false;">
                 <div class="mp-menu-icon"><i class='bx bx-shield'></i></div>
                 <div class="mp-menu-text">
                     <h3>Account & Security</h3>
@@ -421,7 +421,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                onclick="document.getElementById('editProfileModal').style.setProperty('display', 'flex', 'important'); return false;">
                 <div class="mp-menu-icon"><i class='bx bx-phone-call'></i></div>
                 <div class="mp-menu-text">
                     <h3>Emergency Contact</h3>
@@ -431,7 +431,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </a>
 
             <a href="#" class="mp-menu-item"
-                onclick="document.getElementById('editProfileModal').style.display='flex'; return false;">
+                onclick="document.getElementById('editProfileModal').style.setProperty('display', 'flex', 'important'); return false;">
                 <div class="mp-menu-icon"><i class='bx bx-home'></i></div>
                 <div class="mp-menu-text">
                     <h3>Residence Details</h3>
