@@ -2154,18 +2154,19 @@ padding: 16px !important;
         box-sizing: border-box !important;
     }
     #editProfileModal > div {
-        max-height: 90vh !important;
-        max-height: 90dvh !important;
+        max-height: 85vh !important;
+        max-height: 85dvh !important;
+        height: max-content !important;
         border-radius: 32px 32px 0 0 !important;
-        padding: clamp(24px, 4vh, 36px) 24px 24px 24px !important;
+        padding: clamp(20px, 4vh, 32px) 24px 24px 24px !important;
         width: 100% !important;
         animation: slideUpSheet 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         box-shadow: 0 -10px 40px rgba(0,0,0,0.2) !important;
     }
     
-    /* Force WebKit browsers to render scroll space below the button */
+    /* Auto adjust padding to just the safe area, avoiding excessive empty space */
     #editProfileModal form {
-        padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: env(safe-area-inset-bottom, 16px) !important;
     }
     
     /* Convert 2-column inline grids to 1-column on mobile */
