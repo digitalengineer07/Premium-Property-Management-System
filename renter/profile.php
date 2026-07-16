@@ -254,10 +254,24 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 passwordForm.style.flexDirection = 'column';
                 passwordForm.style.opacity = '1';
                 passwordForm.style.visibility = 'visible';
+                passwordForm.style.minHeight = '450px'; /* FORCED HEIGHT */
+                passwordForm.style.height = '450px'; /* FORCED HEIGHT */
+                passwordForm.style.paddingBottom = '100px'; /* FORCED PADDING */
             }
             if(modalHeaderIcon) modalHeaderIcon.innerHTML = "<i class='bx bx-shield' style='color: var(--primary-purple); font-size: 24px;'></i>";
             if(modalHeaderTitle) modalHeaderTitle.innerText = "Change Password";
+            
+            /* FORCE CONTAINER TO EXPAND */
+            var modalDiv = modal.querySelector('.no-scrollbar');
+            if(modalDiv) {
+                modalDiv.style.minHeight = '65vh';
+            }
         } else {
+            var modalDiv = modal.querySelector('.no-scrollbar');
+            if(modalDiv) {
+                modalDiv.style.minHeight = 'auto';
+            }
+
             if(mainForm) mainForm.style.display = 'block';
             if(passwordForm) passwordForm.style.display = 'none';
             if(modalHeaderIcon) modalHeaderIcon.innerHTML = "<i class='bx bx-edit-alt' style='color: var(--primary-purple); font-size: 24px;'></i>";
