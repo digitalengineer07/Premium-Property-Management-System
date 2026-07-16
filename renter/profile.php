@@ -510,22 +510,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             border-color: var(--border) !important;
             color: var(--text-gray) !important;
         }
-        .dark-theme .doc-actions a:hover {
-            background: rgba(98, 75, 255, 0.15) !important;
-            color: var(--primary-purple) !important;
-            border-color: var(--primary-purple) !important;
-        }
-        .dark-theme .panel {
-            background: var(--white) !important;
-                <i class='bx bx-bolt-circle'></i>
-                <span>Electricity Record</span>
-            </a>
-            <a href="my-bills.php" class="nav-item">
-                <i class='bx bx-receipt'></i>
-                <span>My Bills</span>
-            </a>
-            <a href="queries.php" class="nav-item">
-                <i class='bx bx-message-square-dots'></i>
                 <span>Raise Query</span>
             </a>
             <a href="notices.php" class="nav-item">
