@@ -528,18 +528,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
         .mb-nav-center {
             width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #624BFF;
-            color: white;
-            display: flex;
-            align-items: center;
-            </div>
-            <div class="sidebar-brand">
-                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
-                <p>Resident Dashboard</p>
-            </div>
-        </div>
         
         <nav class="nav-menu">
             <a href="dashboard.php" class="nav-item">
