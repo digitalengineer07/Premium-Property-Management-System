@@ -262,6 +262,21 @@
         align-items: center !important;
         text-align: center !important;
     }
+
+    /* FORCE NAVIGATION BAR TO BOTTOM VIEWPORT */
+    .mobile-bottom-nav {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 999999 !important;
+        display: flex !important;
+        transform: none !important;
+    }
+    
+    body {
+        padding-bottom: 90px !important;
+    }
 }
 </style>
 
