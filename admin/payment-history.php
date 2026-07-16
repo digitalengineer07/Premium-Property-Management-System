@@ -48,7 +48,7 @@ mysqli_stmt_close($count_stmt);
 $total_pages = ceil($total_transactions / $limit);
 
 /* Fetch detailed payment history log with LIMIT */
-$stmt = mysqli_prepare($conn, "SELECT p.*, a.username as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN admin a ON p.recorded_by = a.id LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC LIMIT ? OFFSET ?");
+$stmt = mysqli_prepare($conn, "SELECT p.*, 'Admin' as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC LIMIT ? OFFSET ?");
 mysqli_stmt_bind_param($stmt, "iii", $id, $limit, $offset);
 mysqli_stmt_execute($stmt);
 $payment_res = mysqli_stmt_get_result($stmt);
