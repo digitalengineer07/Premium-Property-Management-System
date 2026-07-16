@@ -396,13 +396,19 @@
 </div>
 
 <script>
-function filterMobilePayments(type, btn) {
-    document.querySelectorAll('.m-ptab').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-    
+let mCurrentType = 'all';
+let mCurrentYear = 'all';
+
+function applyMobileFilters() {
     const items = document.querySelectorAll('.m-pay-card-item');
     items.forEach(it => {
-        if (type === 'all' || it.getAttribute('data-type') === type) {
+        const type = it.getAttribute('data-type');
+        const year = it.getAttribute('data-year');
+        
+        const typeMatch = (mCurrentType === 'all' || type === mCurrentType);
+        const yearMatch = (mCurrentYear === 'all' || year === mCurrentYear);
+        
+        if (typeMatch && yearMatch) {
             it.style.display = 'flex';
         } else {
             it.style.display = 'none';
@@ -410,15 +416,17 @@ function filterMobilePayments(type, btn) {
     });
 }
 
+function filterMobilePayments(type, btn) {
+    document.querySelectorAll('.m-ptab').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    
+    mCurrentType = type;
+    applyMobileFilters();
+}
+
 function filterMobileByYear(year) {
-    const items = document.querySelectorAll('.m-pay-card-item');
-    items.forEach(it => {
-        if (year === 'all' || it.getAttribute('data-year') === year) {
-            it.style.display = 'flex';
-        } else {
-            it.style.display = 'none';
-        }
-    });
+    mCurrentYear = year;
+    applyMobileFilters();
 }
 </script>
 
