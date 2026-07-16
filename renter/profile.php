@@ -344,6 +344,27 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             modal.style.setProperty('display', 'flex', 'important');
         }
     }
+
+    function togglePasswordVisibility(inputId) {
+        var input = document.getElementById(inputId);
+        if(!input) return;
+        var icon = input.nextElementSibling;
+        if (input.type === "password") {
+            input.type = "text";
+            if(icon) {
+                icon.classList.remove('bx-hide');
+                icon.classList.add('bx-show');
+                icon.style.color = 'var(--primary-purple)';
+            }
+        } else {
+            input.type = "password";
+            if(icon) {
+                icon.classList.remove('bx-show');
+                icon.classList.add('bx-hide');
+                icon.style.color = '#94A3B8';
+            }
+        }
+    }
     </script>
     <script src="../assets/js/pwa.js" defer></script>
     
