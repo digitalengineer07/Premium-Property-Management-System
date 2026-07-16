@@ -254,13 +254,21 @@
         margin-top: 2px !important;
     }
     
-    /* Fix Pagination for Mobile */
+    /* Fix Pagination for Mobile (< 1 > format) */
     .mobile-page-body .pagination-container {
-        flex-direction: column !important;
-        gap: 16px !important;
-        padding: 16px !important;
-        align-items: center !important;
-        text-align: center !important;
+        justify-content: center !important;
+        padding: 24px 16px !important;
+    }
+    .mobile-page-body .pagination-container > div:first-child {
+        display: none !important; /* Hide 'Showing 1 to 5...' */
+    }
+    .mobile-page-body .pagination .page-btn {
+        display: none !important; /* Hide all page numbers */
+    }
+    .mobile-page-body .pagination .page-btn:first-child,
+    .mobile-page-body .pagination .page-btn:last-child,
+    .mobile-page-body .pagination .page-btn.active {
+        display: flex !important; /* Only show <, current active page, and > */
     }
 
     /* FORCE NAVIGATION BAR TO BOTTOM VIEWPORT */
