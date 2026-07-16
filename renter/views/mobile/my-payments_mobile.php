@@ -80,21 +80,26 @@
     </div>
 
     <!-- Tabs -->
-    <div style="display: flex; gap: 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px;">
-        <div style="font-size: 13px; font-weight: 700; color: #624BFF; border-bottom: 2px solid #624BFF; padding-bottom: 4px; white-space: nowrap;">All Payments</div>
-        <div style="font-size: 13px; font-weight: 600; color: var(--text-gray); white-space: nowrap;">Rent</div>
-        <div style="font-size: 13px; font-weight: 600; color: var(--text-gray); white-space: nowrap;">Electricity</div>
-        <div style="font-size: 13px; font-weight: 600; color: var(--text-gray); white-space: nowrap;">Other</div>
+    <div style="display: flex; justify-content: space-between; border-bottom: 2px solid var(--border); margin-bottom: 16px;">
+        <button class="m-ptab active" onclick="filterMobilePayments('all', this)">All Payments</button>
+        <button class="m-ptab" onclick="filterMobilePayments('rent', this)">Rent</button>
+        <button class="m-ptab" onclick="filterMobilePayments('electricity', this)">Electricity</button>
+        <button class="m-ptab" onclick="filterMobilePayments('other', this)">Other</button>
     </div>
 
     <!-- Filters -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-dark); background: var(--white);">
-            <i class='bx bx-calendar'></i> All Years <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+        <div style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 4px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-dark); background: var(--white);">
+            <i class='bx bx-calendar'></i>
+            <select style="border: none; background: transparent; font-weight: 600; color: var(--text-dark); outline: none;" onchange="filterMobileByYear(this.value)">
+                <option value="all">All Years</option>
+                <option value="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></option>
+                <option value="<?php echo date('Y') - 1; ?>"><?php echo date('Y') - 1; ?></option>
+            </select>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-dark); background: var(--white);">
+        <button style="border: 1px solid var(--border); background: var(--white); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px; cursor: pointer;">
             <i class='bx bx-filter-alt'></i> Filter
-        </div>
+        </button>
     </div>
 
     <!-- Transactions List -->
@@ -123,7 +128,11 @@
                     $subtitle = date('M Y', strtotime($t['month'] . '-01'));
                 }
             ?>
-            <div style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>;">
+            <?php
+                $dataType = ($t['source'] === 'rent_table' || $t['source'] === 'elec_table' && $amount > 0) ? 'rent' : (($t['source'] === 'advance') ? 'other' : 'other');
+                $dataYear = date('Y', strtotime($t['month'] . '-01'));
+            ?>
+            <div class="m-pay-card-item" data-type="<?php echo $dataType; ?>" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-bottom: <?php echo $isLast ? 'none' : '1px solid var(--border)'; ?>;">
                 <!-- Icon -->
                 <div style="<?php echo $iconStyle; ?> width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
                     <?php echo $icon; ?>
@@ -165,8 +174,9 @@
             <?php 
                 $isPending = ($t['status'] === 'Due');
                 $amount = (float)$t['amount'];
+                $dataYear = date('Y', strtotime($t['month'] . '-01'));
             ?>
-            <div style="display: flex; align-items: center; padding: 16px; border-top: 1px solid var(--border);">
+            <div class="m-pay-card-item" data-type="electricity" data-year="<?php echo $dataYear; ?>" style="display: flex; align-items: center; padding: 16px; border-top: 1px solid var(--border);">
                 <!-- Icon -->
                 <div style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;">
                     <i class='bx bx-bolt-circle'></i>
