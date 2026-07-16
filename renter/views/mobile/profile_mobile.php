@@ -102,6 +102,9 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
     .mp-container {
         padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* fill viewport height */
     }
 
     /* User Info Card */
@@ -299,7 +302,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         font-size: 15px;
         font-weight: 700;
         text-decoration: none;
-        margin-bottom: 16px;
+        margin-top: auto;
     }
 
     /* Dark Theme Mobile Overrides */
