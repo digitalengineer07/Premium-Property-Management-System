@@ -315,14 +315,14 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     </div>
 </header>
 
-<div class="mp-container" style="padding-top: 100px;">
+    <div class="mp-container" style="padding-top: 115px;">
         <div class="mp-user-card">
-            <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()" style="cursor: pointer;">
+            <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()" style="cursor: pointer; width: 80px; height: 80px; flex-shrink: 0;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
-                    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile">
+                    <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
                 <?php else: ?>
-                    <div class="mp-avatar-fallback" id="profileAvatarFallbackMobile"><?php echo $avatar_initials; ?></div>
-                    <img src="" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile" style="display: none;">
+                    <div class="mp-avatar-fallback" id="profileAvatarFallbackMobile" style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-purple, #624BFF); color: white; flex-shrink: 0; font-size: 28px; font-weight: 700;"><?php echo $avatar_initials; ?></div>
+                    <img src="" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile" style="display: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
                 <?php endif; ?>
                 <div class="mp-camera-btn">
                     <i class='bx bx-camera'></i>
