@@ -1114,7 +1114,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         transform: none !important;
     }
     body {
-        padding-bottom: 120px !important;
+        padding-bottom: 0 !important; /* Removed massive 120px gap */
     }
 }
 </style>
