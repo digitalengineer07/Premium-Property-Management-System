@@ -162,6 +162,27 @@
                       
                       <script>
                       document.getElementById('paymentNotifyForm').addEventListener('submit', function(e) {
+                          // Level 3 Security: Strict Rate Limiting
+                          const rateLimitKey = 'lastPaymentSubmitTime';
+                          const lastSubmit = localStorage.getItem(rateLimitKey);
+                          const cooldownMs = 3 * 60 * 1000; // 3 minutes
+                          
+                          if (lastSubmit && (Date.now() - parseInt(lastSubmit)) < cooldownMs) {
+                              e.preventDefault();
+                              const remainingSecs = Math.ceil((cooldownMs - (Date.now() - parseInt(lastSubmit))) / 1000);
+                              const remainingMins = Math.ceil(remainingSecs / 60);
+                              
+                              if (typeof showToast === 'function') {
+                                  showToast(`Security Alert: Please wait ${remainingMins} minute(s) before submitting another payment.`, "error");
+                              } else {
+                                  alert(`Security Alert: Please wait ${remainingMins} minute(s) before submitting another payment.`);
+                              }
+                              return;
+                          }
+                          
+                          // Register submission time for rate limiting
+                          localStorage.setItem(rateLimitKey, Date.now());
+                          
                           let btn = document.getElementById('submitPaymentBtn');
                           if (btn.disabled) {
                               e.preventDefault();
