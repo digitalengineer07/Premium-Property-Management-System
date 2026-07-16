@@ -174,7 +174,7 @@ foreach ($notices as $n) {
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
-        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+        <div class="header-icon-btn" onclick="openMobileNotif()">
             <i class='bx bx-bell'></i>
             <?php if (isset($unread_count) && $unread_count > 0): ?>
                 <span class="m-notif-badge"></span>
@@ -363,3 +363,4 @@ foreach ($notices as $n) {
 
     <!-- Enable Notifications CTA (Removed per user request) -->
 </div>
+<?php include 'mobile_notifications.php'; ?>

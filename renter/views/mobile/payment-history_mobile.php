@@ -16,7 +16,7 @@
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
-        <div class="header-icon-btn" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none';">
+        <div class="header-icon-btn" onclick="openMobileNotif()">
             <i class='bx bx-bell'></i>
             <?php if (isset($unread_count) && $unread_count > 0): ?>
                 <span class="m-notif-badge"></span>
@@ -302,3 +302,4 @@
 <div class='mobile-page-body animate-up' style='padding: 80px 0 10px 0;'>
     <?php include __DIR__ . '/../desktop/payment-history_desktop.php'; ?>
 </div>
+<?php include 'mobile_notifications.php'; ?>
