@@ -1542,7 +1542,7 @@ body.dark-theme thead th:last-child {
     }
     .sidebar.mobile-drawer-open .nav-menu a[href*="logout.php"] {
         margin-top: auto !important;
-        margin-bottom: 24px !important;
+        margin-bottom: 16px !important;
     }
     .sidebar.mobile-drawer-open .nav-item span {
         display: inline-block !important;
