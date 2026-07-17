@@ -109,6 +109,14 @@ function s($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
+/**
+ * Escape input for SQL context (SQL Injection Prevention)
+ */
+function e($conn, $text) {
+    if ($text === null) return '';
+    return mysqli_real_escape_string($conn, trim($text));
+}
+
 // Update "Last Seen" for residents (throttled to once every 5 mins)
 function updateLastSeen($conn) {
     if (session_status() === PHP_SESSION_ACTIVE && isset($_SESSION['user_id'])) {

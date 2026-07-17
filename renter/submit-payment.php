@@ -18,11 +18,38 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0777, true);
 }
 
-$fileName = time() . "_" . basename($_FILES['screenshot']['name']);
-$path = $uploadDir . $fileName;
+$fileName = "";
+$path = "";
 
-if (move_uploaded_file($_FILES['screenshot']['tmp_name'], $path)) {
-    chmod($path, 0644);
+if (isset($_FILES['screenshot']) && $_FILES['screenshot']['error'] === UPLOAD_ERR_OK) {
+    $fileTmpPath = $_FILES['screenshot']['tmp_name'];
+    $fileSize = $_FILES['screenshot']['size'];
+    
+    // Max 5MB
+    if ($fileSize > 5 * 1024 * 1024) {
+        die("File size exceeds 5MB limit.");
+    }
+    
+    // Secure extension generation based on MIME type
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $fileTmpPath);
+    finfo_close($finfo);
+    
+    $allowedMimes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'application/pdf' => 'pdf'];
+    
+    if (!isset($allowedMimes[$mime])) {
+        die("Invalid file format. Only JPG, PNG, WebP, and PDF are allowed.");
+    }
+    
+    $ext = $allowedMimes[$mime];
+    $fileName = time() . "_" . $user_id . "_payment." . $ext;
+    $path = $uploadDir . $fileName;
+
+    if (move_uploaded_file($fileTmpPath, $path)) {
+        chmod($path, 0644);
+    } else {
+        $path = "";
+    }
 }
 
 /* Insert into payment_requests */

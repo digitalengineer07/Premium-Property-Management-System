@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit;
 }
-$admin_user = s($_SESSION['admin'] ?? 'Admin');
+$admin_user = e($conn, $_SESSION['admin'] ?? 'Admin');
 
 $success = '';
 $error = '';
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
     } else {
         $id = (int)$_POST['id'];
         $action = $_POST['action'];
-        $admin_note = s($_POST['admin_note'] ?? '');
+        $admin_note = e($conn, $_POST['admin_note'] ?? '');
         
         $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id");
         $notif = mysqli_fetch_assoc($q);

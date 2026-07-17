@@ -17,7 +17,7 @@ updateLastSeen($conn); // Track activity if session exists
 
 $error = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (false) { // CSRF check disabled for login to prevent friction
+    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $error = "Session expired or invalid form submission. Please refresh the page.";
     } else {
         $username = trim($_POST['username'] ?? '');

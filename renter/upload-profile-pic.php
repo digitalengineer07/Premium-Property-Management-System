@@ -23,9 +23,20 @@ if (!isset($_FILES['profile_pic']) || $_FILES['profile_pic']['error'] !== UPLOAD
 }
 
 $file = $_FILES['profile_pic'];
-$allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 
-if (!in_array($file['type'], $allowed)) {
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
+$mime = finfo_file($finfo, $file['tmp_name']);
+finfo_close($finfo);
+
+$allowedMimes = [
+    'image/jpeg' => 'jpg',
+    'image/jpg'  => 'jpg',
+    'image/png'  => 'png',
+    'image/gif'  => 'gif',
+    'image/webp' => 'webp'
+];
+
+if (!isset($allowedMimes[$mime])) {
     echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Only JPG, PNG, GIF, and WebP are allowed.']);
     exit;
 }
@@ -42,8 +53,8 @@ if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0755, true);
 }
 
-// Generate unique filename
-$extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+// Generate unique filename securely based on MIME extension
+$extension = $allowedMimes[$mime];
 $filename = 'profile_' . $user_id . '_' . time() . '.' . $extension;
 $filepath = $upload_dir . $filename;
 $db_path = 'uploads/profiles/' . $filename;

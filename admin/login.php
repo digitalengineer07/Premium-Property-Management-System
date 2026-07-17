@@ -6,6 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+/* CSRF token */
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+
 // Redirect if already logged in
 if (isset($_SESSION['admin'])) {
     header("Location: dashboard.php");
@@ -15,10 +20,13 @@ if (isset($_SESSION['admin'])) {
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if ($username === '' || $password === '') {
+    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
+        $error = "Session expired or invalid form submission. Please refresh the page.";
+    } else {
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if ($username === '' || $password === '') {
         $error = "Please provide both username and password.";
     } else {
         $stmt = mysqli_prepare($conn, "SELECT id, username, password FROM admin WHERE username = ?");
@@ -57,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_close($stmt);
         } else {
             $error = "Database preparation failed.";
+        }
         }
     }
 }
@@ -401,6 +410,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" autocomplete="off">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <div class="form-group">
                     <label class="form-label">Username</label>
                     <div class="input-wrapper">
