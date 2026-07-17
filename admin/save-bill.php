@@ -252,6 +252,10 @@ if (mysqli_stmt_execute($stmt)) {
         }
     }
 
+    // Insert App Notification
+    $msg_safe = mysqli_real_escape_string($conn, "A new electricity bill for $month_display (₹" . number_format($total_amount, 2) . ") has been assigned to you.");
+    mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
+
     // Clean buffer and send success
     if (ob_get_length()) ob_clean();
     echo json_encode([
