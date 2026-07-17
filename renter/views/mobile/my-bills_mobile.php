@@ -273,7 +273,6 @@ $total_bills_count = count($mobile_all_bills);
     <div class="m-bottom-panel" id="mBillSummaryPanel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Bill Summary</h3>
-            <span id="mSummaryStatus" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
         </div>
         
         <div id="mSummaryDetails">
@@ -285,9 +284,7 @@ $total_bills_count = count($mobile_all_bills);
             <span id="mSummaryTotal" style="color: #FF4B6B;">₹0.00</span>
         </div>
 
-        <button class="m-btn-primary" id="mPayNowBtn" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
-            <i class='bx bx-credit-card-front'></i> Pay Now
-        </button>
+
         <button class="m-btn-outline" onclick="window.location.href='#'">
             <i class='bx bx-download'></i> Download Bill
         </button>
@@ -325,11 +322,6 @@ $total_bills_count = count($mobile_all_bills);
                             <?php endif; ?>
                         </div>
                     </h4>
-                    <?php if($bill['status'] === 'Paid'): ?>
-                        <span class="m-bill-status" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Paid</span>
-                    <?php else: ?>
-                        <span class="m-bill-status" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -403,21 +395,10 @@ $total_bills_count = count($mobile_all_bills);
         
         document.getElementById('mSummaryTotal').innerText = '₹' + parseFloat(bill.amount).toFixed(2);
         
-        const statusBadge = document.getElementById('mSummaryStatus');
-        const payNowBtn = document.getElementById('mPayNowBtn');
-        
         if (bill.status === 'Paid') {
-            statusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
-            statusBadge.style.color = '#10B981';
-            statusBadge.innerText = 'Paid';
             document.getElementById('mSummaryTotal').style.color = 'var(--text-dark)';
-            payNowBtn.style.display = 'none';
         } else {
-            statusBadge.style.background = 'rgba(255, 75, 107, 0.1)';
-            statusBadge.style.color = '#FF4B6B';
-            statusBadge.innerText = 'Unpaid';
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
-            payNowBtn.style.display = 'flex';
         }
         
         showMobileBillSummary();

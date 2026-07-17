@@ -296,7 +296,6 @@
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
                             <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">AMOUNT</th>
-                            <th style="text-align: center; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">STATUS</th>
                             <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
                         </tr>
                     </thead>
@@ -314,7 +313,6 @@
             <div class="bill-details-panel" style="background: var(--white); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
-                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(16, 185, 129, 0.1); color: #10B981;">Paid</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
@@ -337,7 +335,6 @@
                         <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹0.00</h2>
                     </div>
                     <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
-                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
                         <button id="bdBtnDownload" style="background: var(--white); color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
@@ -386,12 +383,7 @@
 
                 // Update Bill Details Panel
                 const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
-                const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                 
-                document.querySelectorAll('#bdStatus').forEach(el => el.textContent = bill.status);
-                document.querySelectorAll('#bdStatus').forEach(el => el.style.color = statusColor);
-                document.querySelectorAll('#bdStatus').forEach(el => el.style.background = statusBg);
-
                 document.querySelectorAll('#bdTitle').forEach(el => el.textContent = bill.title);
                 document.querySelectorAll('#bdSubtitle').forEach(el => el.textContent = bill.subtitle);
                 document.querySelectorAll('#bdDueDate').forEach(el => el.textContent = bill.due_date);
@@ -425,13 +417,7 @@
                 document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
-                const btnPay = document.getElementById('bdBtnPay');
-                if (bill.status === 'Unpaid') {
-                    btnPay.style.display = 'flex';
-                    btnPay.onclick = () => openPaymentModal(bill.amount, bill.title, bill.type, bill.id);
-                } else {
-                    btnPay.style.display = 'none';
-                }
+                // Pay button is removed
             }
 
             function goToPage(page, e) {
@@ -502,9 +488,6 @@
                             </td>
                             <td style="text-align:right;">
                                 <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
-                            </td>
-                            <td style="text-align:center;">
-                                <span style="font-size:10px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:4px 10px; border-radius:20px; display:inline-block; min-width: 50px;">${bill.status}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}

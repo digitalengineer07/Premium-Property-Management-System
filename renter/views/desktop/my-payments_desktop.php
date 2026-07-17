@@ -463,11 +463,78 @@ function filterMobileByYear(year) {
                     </thead>
                     <tbody id="paymentsTableBody">
                         <?php 
+                        // First generate aggregates
+                        $monthly_aggregates = [];
+                        foreach($all_bills as $bill) {
+                            $p = $bill['period'];
+                            if(!isset($monthly_aggregates[$p])) {
+                                $monthly_aggregates[$p] = [
+                                    'period' => $p,
+                                    'amount' => 0,
+                                    'due_date' => $bill['due_date'],
+                                    'paid_on' => '-',
+                                    'has_unpaid' => false,
+                                    'has_partial' => false,
+                                    'has_paid' => false,
+                                ];
+                            }
+                            $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
+                            
+                            $st = strtolower($bill['status']);
+                            if($st == 'unpaid' || $st == 'due') {
+                                $monthly_aggregates[$p]['has_unpaid'] = true;
+                            } elseif($st == 'partial') {
+                                $monthly_aggregates[$p]['has_partial'] = true;
+                            } elseif($st == 'paid') {
+                                $monthly_aggregates[$p]['has_paid'] = true;
+                                if($bill['paid_on'] != '-') $monthly_aggregates[$p]['paid_on'] = $bill['paid_on'];
+                            }
+                        }
+                        
+                        foreach($monthly_aggregates as &$agg) {
+                            $agg['status'] = 'Unpaid';
+                            if ($agg['has_partial'] || ($agg['has_paid'] && $agg['has_unpaid'])) {
+                                $agg['status'] = 'Partial';
+                            } elseif ($agg['has_paid'] && !$agg['has_unpaid'] && !$agg['has_partial']) {
+                                $agg['status'] = 'Paid';
+                            }
+                        }
+                        unset($agg);
+
                         $current_month = '';
                         foreach($all_bills as $bill): 
                             if ($bill['period'] != $current_month) {
                                 $current_month = $bill['period'];
                                 echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month'><td colspan='7' style='padding: 14px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border); background: var(--bg-main);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
+                                
+                                $agg = $monthly_aggregates[$current_month];
+                                ?>
+                                <tr data-filter-type="all-aggregate" data-period="<?php echo htmlspecialchars($current_month); ?>" class="data-row">
+                                    <td>
+                                        <div class="td-bill-type">
+                                            <div class="td-icon purple"><i class='bx bx-receipt'></i></div>
+                                            <div class="td-info">
+                                                <h4>Total Payment</h4>
+                                                <p>For <?php echo htmlspecialchars($current_month); ?></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($current_month); ?></td>
+                                    <td><?php echo $agg['due_date']; ?></td>
+                                    <td style="font-weight: 800;"><?php echo money($agg['amount']); ?></td>
+                                    <td><span class="td-status <?php echo strtolower($agg['status']); ?>"><?php echo $agg['status']; ?></span></td>
+                                    <td><?php echo $agg['paid_on']; ?></td>
+                                    <td>
+                                        <?php if ($agg['status'] == 'Paid'): ?>
+                                            <a href="payment-history.php" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
+                                        <?php else: ?>
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo $agg['amount']; ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0)">
+                                                <i class='bx bx-credit-card-alt'></i> Pay Now
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php
                             }
                         ?>
                             <tr data-filter-type="<?php echo $bill['filter_type']; ?>" data-period="<?php echo htmlspecialchars($bill['period']); ?>" class="data-row">
@@ -527,7 +594,11 @@ function filterMobileByYear(year) {
                 const allDividers = Array.from(document.querySelectorAll('#paymentsTableBody tr.month-divider'));
                 
                 // 1. Filter rows by tab
-                const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                const filteredRows = allDataRows.filter(row => {
+                    const fType = row.getAttribute('data-filter-type');
+                    if (currentTab === 'all') return fType === 'all-aggregate';
+                    return fType === currentTab;
+                });
                 
                 // 2. Extract unique periods from filtered rows
                 const uniquePeriods = [...new Set(filteredRows.map(row => row.getAttribute('data-period')))];
