@@ -1,7 +1,11 @@
 <?php
 require 'db.php';
-$res = mysqli_query($conn, "DESCRIBE electricity");
-while($r = mysqli_fetch_assoc($res)) {
-    echo $r['Field'] . ' ' . $r['Type'] . "\n";
+$t1 = mysqli_query($conn, "DESCRIBE rent");
+while ($r = mysqli_fetch_assoc($t1)) {
+    echo "rent: " . $r['Field'] . "\n";
+}
+$t2 = mysqli_query($conn, "DESCRIBE electricity");
+while ($r = mysqli_fetch_assoc($t2)) {
+    echo "electricity: " . $r['Field'] . "\n";
 }
 ?>

@@ -36,7 +36,7 @@ if (isset($_POST['save'])) {
         $amount = $_POST['rent_amount'];
         $status = $_POST['status'];
 
-    $i_stmt = mysqli_prepare($conn, "INSERT INTO rent (user_id, month, rent_amount, status) VALUES (?, ?, ?, ?)");
+    $i_stmt = mysqli_prepare($conn, "INSERT INTO rent (user_id, month, rent_amount, status, due_date) VALUES (?, ?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 10 DAY))");
     mysqli_stmt_bind_param($i_stmt, "isss", $user_id, $month, $amount, $status);
     mysqli_stmt_execute($i_stmt);
     mysqli_stmt_close($i_stmt);

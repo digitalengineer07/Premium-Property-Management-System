@@ -12,10 +12,15 @@ if (!isset($_SESSION['admin'])) {
 $success_msg = "";
 $error_msg = "";
 
+$csrf_token = getCsrfToken();
+
 // Handle Manual Reminder
 if (isset($_GET['action']) && $_GET['action'] == 'remind') {
-    $bill_id = (int)$_GET['id'];
-    $bill_type = $_GET['type'];
+    if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+        $error_msg = "Security validation failed. Please try again.";
+    } else {
+        $bill_id = (int)$_GET['id'];
+        $bill_type = $_GET['type'];
     
     if ($bill_type == 'Rent') {
         $q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.id = $bill_id");
@@ -30,53 +35,75 @@ if (isset($_GET['action']) && $_GET['action'] == 'remind') {
     }
 
     if ($bill && !empty($bill['email'])) {
-        $pdf_path = ($bill_type == 'Electricity' && !empty($bill['bill_file'])) ? $bill['bill_file'] : null;
-        if (send_payment_reminder_email($bill['email'], $bill['name'], $details, $amount, $pdf_path)) {
-            log_reminder($conn, $bill['user_id'], $bill_id, $bill_type, $bill['month'], 'Manual', 'Sent');
-            $success_msg = "Manual reminder sent to " . $bill['name'];
+        if ($bill_type == 'Rent') {
+            $q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.id = $bill_id");
+            $bill = mysqli_fetch_assoc($q);
+            $amount = $bill['rent_amount'];
+            $details = ["Rent for " . $bill['month']];
         } else {
-            $error_msg = "Failed to send email. Check mail server configuration.";
+            $q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.id = $bill_id");
+            $bill = mysqli_fetch_assoc($q);
+            $amount = $bill['total_amount'];
+            $details = ["Rent & Electricity for " . $bill['month']];
         }
-    } else {
-        $error_msg = "Resident does not have a valid email address.";
+
+        if ($bill && !empty($bill['email'])) {
+            $pdf_path = ($bill_type == 'Electricity' && !empty($bill['bill_file'])) ? $bill['bill_file'] : null;
+            if (send_payment_reminder_email($bill['email'], $bill['name'], $details, $amount, $pdf_path)) {
+                log_reminder($conn, $bill['user_id'], $bill_id, $bill_type, $bill['month'], 'Manual', 'Sent');
+                $success_msg = "Manual reminder sent to " . $bill['name'];
+            } else {
+                $error_msg = "Failed to send email. Check mail server configuration.";
+            }
+        } else {
+            $error_msg = "Resident does not have a valid email address.";
+        }
     }
 }
 
 // Handle Status Toggle (Stop/Enable)
 if (isset($_GET['action']) && $_GET['action'] == 'toggle') {
-    $bill_id = (int)$_GET['id'];
-    $bill_type = $_GET['type'];
-    $new_status = $_GET['status']; // Enabled or Disabled
+    if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+        $error_msg = "Security validation failed. Please try again.";
+    } else {
+        $bill_id = (int)$_GET['id'];
+        $bill_type = $_GET['type'];
+        $new_status = $_GET['status']; // Enabled or Disabled
 
-    $table = ($bill_type == 'Rent') ? 'rent' : 'electricity';
-    $stmt = mysqli_prepare($conn, "UPDATE $table SET reminder_status = ? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "si", $new_status, $bill_id);
-    if (mysqli_stmt_execute($stmt)) {
-        $success_msg = "Reminders " . ($new_status == 'Enabled' ? 'ENABLED' : 'STOPPED') . " for this bill.";
+        $table = ($bill_type == 'Rent') ? 'rent' : 'electricity';
+        $stmt = mysqli_prepare($conn, "UPDATE $table SET reminder_status = ? WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "si", $new_status, $bill_id);
+        if (mysqli_stmt_execute($stmt)) {
+            $success_msg = "Reminders " . ($new_status == 'Enabled' ? 'ENABLED' : 'STOPPED') . " for this bill.";
+        }
+        mysqli_stmt_close($stmt);
     }
-    mysqli_stmt_close($stmt);
 }
 
 // Handle Custom Reminder Form Submission
 if (isset($_POST['send_custom_reminder'])) {
-    $bill_info = explode('_', $_POST['bill_selection']); // e.g. "Rent_45"
-    if(count($bill_info) == 2) {
-        $b_type = mysqli_real_escape_string($conn, $bill_info[0]);
-        $b_id = mysqli_real_escape_string($conn, $bill_info[1]);
-        
-        $table = ($b_type == 'Rent') ? 'rent' : 'electricity';
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error_msg = "Security validation failed. Please try again.";
+    } else {
+        $bill_info = explode('_', $_POST['bill_selection']); // e.g. "Rent_45"
+        if(count($bill_info) == 2) {
+            $b_type = mysqli_real_escape_string($conn, $bill_info[0]);
+            $b_id = (int)$bill_info[1]; // Explicit cast to int for security
+            
+            $table = ($b_type == 'Rent') ? 'rent' : 'electricity';
         $b_q = mysqli_query($conn, "SELECT user_id, month FROM $table WHERE id='$b_id'");
         
-        if ($b_row = mysqli_fetch_assoc($b_q)) {
-            $u_id = $b_row['user_id'];
-            $b_month = mysqli_real_escape_string($conn, $b_row['month']);
-            $remark = mysqli_real_escape_string($conn, $_POST['remark']);
-            
-            mysqli_query($conn, "INSERT INTO payment_reminders (user_id, bill_id, bill_type, month, remind_type, status, admin_remark) VALUES ('$u_id', '$b_id', '$b_type', '$b_month', 'Manual', 'Sent', '$remark')");
-            
-            $_SESSION['msg'] = "Custom manual reminder dispatched successfully!";
-            header("Location: manage-reminders.php");
-            exit;
+            if ($b_row = mysqli_fetch_assoc($b_q)) {
+                $u_id = (int)$b_row['user_id'];
+                $b_month = mysqli_real_escape_string($conn, $b_row['month']);
+                $remark = mysqli_real_escape_string($conn, $_POST['remark']);
+                
+                mysqli_query($conn, "INSERT INTO payment_reminders (user_id, bill_id, bill_type, month, remind_type, status, admin_remark) VALUES ($u_id, $b_id, '$b_type', '$b_month', 'Manual', 'Sent', '$remark')");
+                
+                $_SESSION['msg'] = "Custom manual reminder dispatched successfully!";
+                header("Location: manage-reminders.php");
+                exit;
+            }
         }
     }
 }
@@ -311,9 +338,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <div style="position: relative;">
                             <button onclick="document.getElementById('remindersMenu').style.display = document.getElementById('remindersMenu').style.display === 'block' ? 'none' : 'block'; event.stopPropagation();" style="background: none; border: none; color: var(--text-dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;"><i class='bx bx-dots-vertical-rounded'></i></button>
                             <div id="remindersMenu" style="display: none; position: absolute; right: 0; top: 24px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #E2E8F0; width: 160px; z-index: 100; overflow: hidden;">
-                                <a href="manage-reminders.php?action=remind_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-send' style="font-size: 14px; color: var(--primary-purple);"></i> Send All</a>
-                                <a href="manage-reminders.php?action=enable_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-play-circle' style="font-size: 14px; color: #10B981;"></i> Resume All</a>
-                                <a href="manage-reminders.php?action=disable_all" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-pause-circle' style="font-size: 14px; color: #EF4444;"></i> Pause All</a>
+                                <a href="manage-reminders.php?action=remind_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-send' style="font-size: 14px; color: var(--primary-purple);"></i> Send All</a>
+                                <a href="manage-reminders.php?action=enable_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-play-circle' style="font-size: 14px; color: #10B981;"></i> Resume All</a>
+                                <a href="manage-reminders.php?action=disable_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-pause-circle' style="font-size: 14px; color: #EF4444;"></i> Pause All</a>
                             </div>
                         </div>
                     </div>
@@ -375,16 +402,16 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             
                             <div style="display: flex; gap: 8px;">
                                 <?php if ($isDisabled): ?>
-                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Enabled" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; color: #10B981; border-color: #10B981; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Enabled&csrf=<?php echo $csrf_token; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
                                         <i class='bx bx-play-circle' style="font-size: 16px;"></i> Resume
                                     </a>
                                 <?php else: ?>
-                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Disabled" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
+                                    <a href="manage-reminders.php?action=toggle&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&status=Disabled&csrf=<?php echo $csrf_token; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600;">
                                         <i class='bx bx-pause-circle' style="font-size: 16px;"></i> Pause
                                     </a>
                                 <?php endif; ?>
                                 
-                                <a href="manage-reminders.php?action=remind&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>" class="btn-primary" style="padding: 6px 16px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600; <?php echo $isDisabled ? 'opacity: 0.5; pointer-events: none;' : ''; ?>">
+                                <a href="manage-reminders.php?action=remind&id=<?php echo $d['id']; ?>&type=<?php echo $d['type']; ?>&csrf=<?php echo $csrf_token; ?>" class="btn-primary" style="padding: 6px 16px; font-size: 11px; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 4px; font-weight: 600; <?php echo $isDisabled ? 'opacity: 0.5; pointer-events: none;' : ''; ?>">
                                     <i class='bx bx-send' style="font-size: 14px;"></i> Send Now
                                 </a>
                             </div>
@@ -502,6 +529,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div style="background: var(--bg-color, #fff); width: 400px; max-width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid var(--border);">
         <h3 style="margin-top: 0; color: var(--text-dark); margin-bottom: 20px;">Create Custom Reminder</h3>
         <form method="POST" action="">
+            <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($csrf_token); ?>">
             <div style="margin-bottom: 16px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px;">Select Pending Bill</label>
                 <select name="bill_selection" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; background: #fff; color: #1e293b; outline: none;">

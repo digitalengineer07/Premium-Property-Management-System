@@ -206,8 +206,8 @@ $stmt = mysqli_prepare($conn,
         user_id, month, payment_date, units, previous_reading, current_reading, 
         units_consumed, rate_per_unit, amount, rent_amount, maintenance, 
         dues, total_amount, meter_screenshot, meter_screenshot_orig, meter_screenshot_thumb,
-        status, created_at, extra_charges, extra_charges_desc
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), ?, ?)"
+        status, created_at, due_date, extra_charges, extra_charges_desc
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, ?)"
 );
 
 if (!$stmt) {
