@@ -95,6 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         $msg = "Hello {$notif['user_name']},<br><br>Your payment of Rs. {$notif['amount']} (Ref: {$notif['transaction_id']}) has been approved.<br><br>Thank you!";
                         @sendEmail($notif['user_email'], $sub, $msg);
                     }
+                    
+                    // App notification
+                    $msg_safe = mysqli_real_escape_string($conn, "Your payment of ₹" . number_format($notif['amount'], 2) . " (Ref: {$notif['transaction_id']}) has been approved.");
+                    mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$notif['user_id']}, 'Payment Approved', '$msg_safe', 'payment_verified')");
+
                 } else {
                     $error = "Failed to approve payment: " . mysqli_error($conn);
                 }
