@@ -206,6 +206,7 @@
             }
             
             $all_bills[] = [
+                'raw_id' => $p['id'],
                 'id' => $p['bill_type'][0].'_'.$p['id'],
                 'type' => $p['bill_type'],
                 'filter_type' => $filter_type,
@@ -236,12 +237,17 @@
         
         $total_all_amount = $total_successful_amount + $total_pending_amount;
 
-        // Sort by Period Descending, then by Bill Date Descending
+        // Sort by Period Descending, then by Bill Date Descending, then by Payment ID Descending
         usort($all_bills, function($a, $b) { 
             $t1 = strtotime($b['period']);
             $t2 = strtotime($a['period']);
             if ($t1 == $t2) {
-                return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+                $bd1 = strtotime($b['bill_date']);
+                $bd2 = strtotime($a['bill_date']);
+                if ($bd1 == $bd2) {
+                    return $b['raw_id'] - $a['raw_id'];
+                }
+                return $bd1 - $bd2;
             }
             return $t1 - $t2;
         });
