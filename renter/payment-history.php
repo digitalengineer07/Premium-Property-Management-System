@@ -733,6 +733,20 @@ $show_banner = ($is_late && !empty($overdue_list));
         </div>
 </main>
 
+    <script>
+        // Close notification dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notifDropdown');
+            const bell = document.querySelector('.bell-icon');
+            if (dropdown && dropdown.style.display === 'block') {
+                if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+
+        // Notification Dismissal & Swipe Logic
+        function setCookie(name, value, days) {
             if (days) {
                 let date = new Date();
                 date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
