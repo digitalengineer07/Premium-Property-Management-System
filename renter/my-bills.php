@@ -65,7 +65,7 @@ mysqli_stmt_close($stmt);
 $stmt = mysqli_prepare($conn, "
     SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
     FROM rent r 
-    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
+    LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
     WHERE r.user_id = ? 
     ORDER BY r.id DESC LIMIT 10
 ");
