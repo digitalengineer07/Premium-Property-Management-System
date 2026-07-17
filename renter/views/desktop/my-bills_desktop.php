@@ -215,18 +215,9 @@
         
         // Sort by Period Descending
         usort($all_bills, function($a, $b) { 
-            return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+            return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
         });
         
-        // Compute KPIs
-        $paid_this_year = 0;
-        $bills_paid_count = 0;
-        foreach($all_bills as $b) {
-            if ($b['status'] == 'Paid') {
-                $paid_this_year += $b['amount'];
-                $bills_paid_count++;
-            }
-        }
         $due_this_month = $total_due; 
         ?>
 
@@ -255,7 +246,7 @@
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Paid This Year</h4>
                     <h2 style="font-size: 24px; color: var(--text-dark); margin: 0 0 6px 0; font-weight: 800;"><?php echo money($paid_this_year); ?></h2>
-                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;"><?php echo $bills_paid_count; ?> Bills Paid</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;"><?php echo $bills_paid_count; ?> Payments Made</div>
                 </div>
             </div>
             

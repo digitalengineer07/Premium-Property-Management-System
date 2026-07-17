@@ -79,17 +79,8 @@ while($m = mysqli_fetch_assoc($maint_q)) {
 
 // Sort by Period Descending
 usort($mobile_all_bills, function($a, $b) { 
-    return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+    return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
 });
-
-$paid_this_year = 0;
-$bills_paid_count = 0;
-foreach($mobile_all_bills as $b) {
-    if ($b['status'] == 'Paid') {
-        $paid_this_year += $b['amount'];
-        $bills_paid_count++;
-    }
-}
 $due_this_month = $total_due ?? 0; 
 $total_bills_count = count($mobile_all_bills);
 ?>
@@ -230,7 +221,7 @@ $total_bills_count = count($mobile_all_bills);
                 </div>
             </div>
             <div style="margin-top: auto;">
-                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Bills Paid</span>
+                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Payments Made</span>
             </div>
         </div>
 
