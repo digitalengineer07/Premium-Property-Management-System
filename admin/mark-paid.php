@@ -134,6 +134,10 @@ if ($uRow = mysqli_fetch_assoc($qUser)) {
     }
 }
 
+// App Notification
+$msg_safe = mysqli_real_escape_string($conn, "Your payment of ₹" . number_format($paid_amount, 2) . " for " . $bill['month'] . " (" . ucfirst($type) . ") has been verified.");
+mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$bill['user_id']}, 'Payment Verified', '$msg_safe', 'payment_verified')");
+
 logAction($conn, "admin", $admin_id, "Marked {$type} id {$actual_bill_id} (user {$bill['user_id']}) as Paid via {$payment_mode} (Paid: ₹{$paid_amount})");
 
 // If AJAX request, return JSON
