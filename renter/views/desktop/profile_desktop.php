@@ -213,15 +213,15 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-rupee'></i></div>
-                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹<?php echo number_format($user['fixed_rent'] ?? 0, 2); ?></p></div>
+                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹<?php echo number_format($user['fixed_rent'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-wrench'></i></div>
-                        <div class="residence-info"><h4>Maintenance</h4><p>₹<?php echo number_format($user['fixed_maintenance'] ?? 0, 2); ?></p></div>
+                        <div class="residence-info"><h4>Maintenance</h4><p>₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-check-shield'></i></div>
-                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></p></div>
+                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-car'></i></div>

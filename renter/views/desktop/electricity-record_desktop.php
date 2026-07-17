@@ -190,7 +190,7 @@
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Rate per Unit</span>
-                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit'], 2); ?></span>
+                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit']); ?></span>
                     </div>
                 </div>
                 <div class="cmd-total">

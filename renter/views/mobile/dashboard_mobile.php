@@ -88,7 +88,7 @@
                     </div>
                     <div>
                         <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Total Outstanding</p>
-                        <h2 style="font-size: 22px; font-weight: 800; color: #FF4B6B; margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)$total_due, 2); ?></h2>
+                        <h2 style="font-size: 22px; font-weight: 800; color: #FF4B6B; margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)$total_due); ?></h2>
                     </div>
                 </div>
                 <?php if ($total_due > 0): ?>
@@ -115,7 +115,7 @@
                 </div>
                 <div>
                     <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Electricity Due</p>
-                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($elec_due ?? 0), 2); ?></h2>
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($elec_due ?? 0)); ?></h2>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">
@@ -136,7 +136,7 @@
                 </div>
                 <div>
                     <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Rent Due</p>
-                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($rent_due ?? 0), 2); ?></h2>
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($rent_due ?? 0)); ?></h2>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">

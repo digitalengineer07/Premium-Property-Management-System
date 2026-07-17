@@ -47,7 +47,7 @@
                 <i class='bx bx-credit-card-alt'></i>
             </div>
             <p style="font-size: 11px; color: var(--text-dark); font-weight: 700; margin: 0 0 4px 0;">Total Outstanding</p>
-            <h2 style="font-size: 20px; font-weight: 800; color: #FF4B6B; margin: 0 0 12px 0;">₹<?php echo number_format((float)$total_due, 2); ?></h2>
+            <h2 style="font-size: 20px; font-weight: 800; color: #FF4B6B; margin: 0 0 12px 0;">₹<?php echo number_format((float)$total_due); ?></h2>
             <span style="background: rgba(255,75,107,0.1); color: #FF4B6B; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 12px; width: 100%; box-sizing: border-box;"><?php echo $total_due > 0 ? 'Payment Due' : 'All Clear'; ?></span>
         </div>
         <!-- Card 2 -->
@@ -56,7 +56,7 @@
                 <i class='bx bx-bolt-circle'></i>
             </div>
             <p style="font-size: 11px; color: var(--text-dark); font-weight: 700; margin: 0 0 4px 0;">Electricity Due</p>
-            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)$elec_due, 2); ?></h2>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)$elec_due); ?></h2>
             <span style="background: rgba(245,158,11,0.1); color: #D97706; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 12px; width: 100%; box-sizing: border-box;">Due on <?php echo date('31 M Y'); ?></span>
         </div>
         <!-- Card 3 -->
@@ -65,7 +65,7 @@
                 <i class='bx bx-home-alt'></i>
             </div>
             <p style="font-size: 11px; color: var(--text-dark); font-weight: 700; margin: 0 0 4px 0;">Rent Due</p>
-            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)$rent_due, 2); ?></h2>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)$rent_due); ?></h2>
             <span style="background: rgba(98,75,255,0.1); color: #624BFF; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 12px; width: 100%; box-sizing: border-box;">Due on <?php echo date('05 M Y', strtotime('+1 month')); ?></span>
         </div>
         <!-- Card 4 -->
@@ -74,7 +74,7 @@
                 <i class='bx bx-check-circle'></i>
             </div>
             <p style="font-size: 11px; color: var(--text-dark); font-weight: 700; margin: 0 0 4px 0;">Last Payment</p>
-            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)($last_payment['total_amount'] ?? 0), 2); ?></h2>
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0 0 12px 0;">₹<?php echo number_format((float)($last_payment['total_amount'] ?? 0)); ?></h2>
             <span style="background: rgba(16,185,129,0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 12px; width: 100%; box-sizing: border-box;">Paid on <?php echo isset($last_payment['payment_date']) ? date('d M Y', strtotime($last_payment['payment_date'])) : 'N/A'; ?></span>
         </div>
     </div>
@@ -192,7 +192,7 @@
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px;">
                             <?php echo $title; ?>
                         </h4>
-                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount, 2); ?></div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount); ?></div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <p style="font-size: 11px; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -250,7 +250,7 @@
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px;">
                             <?php echo $title; ?>
                         </h4>
-                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount, 2); ?></div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount); ?></div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <p style="font-size: 11px; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 8px;">
@@ -289,7 +289,7 @@
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 8px;">
                             Electricity Payment
                         </h4>
-                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount, 2); ?></div>
+                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount); ?></div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <p style="font-size: 11px; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 8px;">

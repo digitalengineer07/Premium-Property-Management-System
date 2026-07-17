@@ -159,7 +159,7 @@
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Rate per Unit</span>
-                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;">₹<?php echo number_format((float)$latest_record['rate_per_unit'], 2); ?></span>
+                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;">₹<?php echo number_format((float)$latest_record['rate_per_unit']); ?></span>
             </div>
         </div>
         <div style="background: rgba(98, 75, 255, 0.05); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin: 0 -4px;">

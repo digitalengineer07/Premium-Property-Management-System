@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
 }
 }
 
-function money($v) { return '₹' . number_format((float)$v, 2); }
+function money($v) { return '₹' . number_format((float)$v); }
 
 // Reminder System Logic
 $current_day = (int)date('d');

@@ -287,7 +287,7 @@
                 <div class="m-sum-icon red"><i class='bx bx-credit-card-alt'></i></div>
             </div>
             <span>Total Outstanding</span>
-            <h3 class="amount-red">₹<?php echo number_format((float)$total_due, 2); ?></h3>
+            <h3 class="amount-red">₹<?php echo number_format((float)$total_due); ?></h3>
             <div class="m-sum-pill red">Payment Due</div>
         </div>
 
@@ -297,7 +297,7 @@
                 <div class="m-sum-icon yellow"><i class='bx bx-bolt-circle'></i></div>
             </div>
             <span>Electricity Due</span>
-            <h3>₹<?php echo number_format((float)($elec_due ?? 8.00), 2); ?></h3>
+            <h3>₹<?php echo number_format((float)($elec_due ?? 8)); ?></h3>
             <div class="m-sum-pill yellow">Due on 31 <?php echo date('M Y'); ?></div>
         </div>
 
@@ -307,7 +307,7 @@
                 <div class="m-sum-icon purple"><i class='bx bx-home-alt'></i></div>
             </div>
             <span>Rent Due</span>
-            <h3>₹<?php echo number_format((float)($rent_due ?? 8000.00), 2); ?></h3>
+            <h3>₹<?php echo number_format((float)($rent_due ?? 8000)); ?></h3>
             <div class="m-sum-pill purple">Due on 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
         </div>
 
@@ -317,7 +317,7 @@
                 <div class="m-sum-icon green"><i class='bx bx-check-circle'></i></div>
             </div>
             <span>Last Payment</span>
-            <h3>₹<?php echo $last_payment ? number_format((float)$last_payment['total_amount'], 2) : '8,000.00'; ?></h3>
+            <h3>₹<?php echo $last_payment ? number_format((float)$last_payment['total_amount']) : '8,000'; ?></h3>
             <div class="m-sum-pill green">Paid on <?php echo $last_payment ? date('d M Y', strtotime($last_payment['payment_date'])) : '05 Dec 2025'; ?></div>
         </div>
     </div>
@@ -365,7 +365,7 @@
                     <span class="m-status-pill <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span>
                 </div>
                 <div class="m-pci-right">
-                    <div class="m-pci-amt">₹<?php echo number_format((float)$bill['amount'], 2); ?></div>
+                    <div class="m-pci-amt">₹<?php echo number_format((float)$bill['amount']); ?></div>
                     <?php if ($bill['status'] == 'Paid'): ?>
                         <div class="m-pci-date"><?php echo $bill['paid_on']; ?></div>
                     <?php else: ?>

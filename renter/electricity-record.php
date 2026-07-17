@@ -66,7 +66,7 @@ $last_reading = $latest_record['current_reading'] ?? 0;
 $last_reading_date = $latest_record ? date("d M Y", strtotime($latest_record['created_at'])) : 'N/A';
 
 function money($val) {
-    return '₹' . number_format((float)$val, 2);
+    return '₹' . number_format((float)$val);
 }
 ?>
 <!DOCTYPE html>
