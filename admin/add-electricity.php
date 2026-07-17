@@ -8,11 +8,12 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-$user_id = $_GET['user_id'] ?? null;
+$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 if (!$user_id) {
     header("Location: manage-renters.php");
     exit;
 }
+$error = "";
 
 // Fetch renter info
 $u_stmt = mysqli_prepare($conn, "SELECT name, room_no FROM users WHERE id = ?");
@@ -28,10 +29,13 @@ if (!$user) {
 }
 
 if (isset($_POST['save'])) {
-    $month = $_POST['month'];
-    $units = $_POST['units'];
-    $amount = $_POST['amount'];
-    $status = $_POST['status'];
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Security validation failed. Please try again.";
+    } else {
+        $month = $_POST['month'];
+        $units = $_POST['units'];
+        $amount = $_POST['amount'];
+        $status = $_POST['status'];
 
     $p_date = DateTime::createFromFormat('!F Y', $month) ?: DateTime::createFromFormat('!Y-m', $month);
     if ($p_date && (int)$p_date->format('Ym') > (int)date('Ym')) {
@@ -46,6 +50,7 @@ if (isset($_POST['save'])) {
 
     header("Location: view-renter.php?id=$user_id");
     exit;
+    }
 }
 
 $elec = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
@@ -71,6 +76,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="welcome animate-up">
         <h1>New Electricity Bill</h1>
         <p>Record utility usage for <?php echo htmlspecialchars($user['name']); ?></p>
+        <?php if (!empty($error)): ?>
+            <div style="background: #fee2e2; color: #ef4444; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="dashboard-grid-70 animate-up" style="margin-top: 30px;">
@@ -81,6 +91,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
                 
                 <form method="POST">
+                    <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div class="form-group">
                         <label style="display: flex; justify-content: space-between; align-items: center;">
                             <span>Bill For Month <span style="color:#EF4444">*</span></span>
