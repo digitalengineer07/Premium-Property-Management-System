@@ -64,7 +64,7 @@ mysqli_stmt_close($stmt);
 $stmt = mysqli_prepare($conn, "
     SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
     FROM rent r 
-    LEFT JOIN payments p ON p.bill_type = 'rent' AND p.bill_id = r.id 
+    LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type, MAX(payment_date) as payment_date FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
     WHERE r.user_id = ? 
     ORDER BY r.id DESC LIMIT 10
 ");
