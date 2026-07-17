@@ -35,29 +35,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'remind') {
     }
 
     if ($bill && !empty($bill['email'])) {
-        if ($bill_type == 'Rent') {
-            $q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.id = $bill_id");
-            $bill = mysqli_fetch_assoc($q);
-            $amount = $bill['rent_amount'];
-            $details = ["Rent for " . $bill['month']];
+        $pdf_path = ($bill_type == 'Electricity' && !empty($bill['bill_file'])) ? $bill['bill_file'] : null;
+        if (send_payment_reminder_email($bill['email'], $bill['name'], $details, $amount, $pdf_path)) {
+            log_reminder($conn, $bill['user_id'], $bill_id, $bill_type, $bill['month'], 'Manual', 'Sent');
+            $success_msg = "Manual reminder sent to " . $bill['name'];
         } else {
-            $q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.id = $bill_id");
-            $bill = mysqli_fetch_assoc($q);
-            $amount = $bill['total_amount'];
-            $details = ["Rent & Electricity for " . $bill['month']];
+            $error_msg = "Failed to send email. Check mail server configuration.";
         }
-
-        if ($bill && !empty($bill['email'])) {
-            $pdf_path = ($bill_type == 'Electricity' && !empty($bill['bill_file'])) ? $bill['bill_file'] : null;
-            if (send_payment_reminder_email($bill['email'], $bill['name'], $details, $amount, $pdf_path)) {
-                log_reminder($conn, $bill['user_id'], $bill_id, $bill_type, $bill['month'], 'Manual', 'Sent');
-                $success_msg = "Manual reminder sent to " . $bill['name'];
-            } else {
-                $error_msg = "Failed to send email. Check mail server configuration.";
-            }
-        } else {
-            $error_msg = "Resident does not have a valid email address.";
-        }
+    } else {
+        $error_msg = "Resident does not have a valid email address.";
+    }
     }
 }
 
