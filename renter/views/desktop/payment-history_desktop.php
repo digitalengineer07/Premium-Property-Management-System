@@ -17,7 +17,7 @@
             </div>
             <div class="header-actions">
                                 <div class="notification-wrapper" style="position: relative; display: inline-block;">
-                    <div class="icon-btn bell-icon" onclick="const nd = document.getElementById('notifDropdown'); if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                    <div class="icon-btn bell-icon" onclick="const nd = this.nextElementSibling; if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
                             <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
@@ -76,7 +76,7 @@
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
                 <div style="position: relative;">
-                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                    <div class="user-profile-pill" onclick="const pd = this.nextElementSibling; if(pd) pd.style.display = pd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                         <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
 <?php 
     $real_pic = '';

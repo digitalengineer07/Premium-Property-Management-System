@@ -734,15 +734,27 @@ $show_banner = ($is_late && !empty($overdue_list));
 </main>
 
     <script>
-        // Close notification dropdown when clicking outside
+        // Close notification and profile dropdowns when clicking outside
         document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('notifDropdown');
-            const bell = document.querySelector('.bell-icon');
-            if (dropdown && dropdown.style.display === 'block') {
-                if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
-                    dropdown.style.display = 'none';
+            // Handle multiple notification dropdowns due to mobile/desktop include overlaps
+            document.querySelectorAll('#notifDropdown').forEach(function(dropdown) {
+                const bell = dropdown.previousElementSibling;
+                if (dropdown.style.display === 'block') {
+                    if (!dropdown.contains(event.target) && (!bell || !bell.contains(event.target))) {
+                        dropdown.style.display = 'none';
+                    }
                 }
-            }
+            });
+
+            // Handle multiple profile dropdowns
+            document.querySelectorAll('#profileDropdown').forEach(function(pDropdown) {
+                const pill = pDropdown.previousElementSibling;
+                if (pDropdown.style.display === 'block') {
+                    if (!pDropdown.contains(event.target) && (!pill || !pill.contains(event.target))) {
+                        pDropdown.style.display = 'none';
+                    }
+                }
+            });
         });
 
         // Notification Dismissal & Swipe Logic
