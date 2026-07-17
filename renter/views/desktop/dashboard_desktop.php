@@ -344,41 +344,28 @@
                     <a href="payment-history.php" class="panel-link">View All</a>
                 </div>
                 <div class="transaction-list" style="overflow-y: auto; max-height: 250px;">
-                    <?php if (empty($merged_rents) && empty($elecs)): ?>
+                    <?php 
+                    $payments_recent_q = mysqli_query($conn, "SELECT id, bill_type, month, paid_amount as amount, payment_date, 'Paid' as status FROM payments WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
+                    $display_tx = [];
+                    while($pt = mysqli_fetch_assoc($payments_recent_q)) {
+                        $display_tx[] = $pt;
+                    }
+                    if (empty($display_tx)): ?>
                         <div style="text-align: center; padding: 30px; color: var(--text-gray); font-size: 13px; margin: auto;">No recent transactions found.</div>
                     <?php else: ?>
-                        <?php 
-                        // Combine and filter to get only Paid transactions
-                        $all_tx = array_filter(array_merge($merged_rents, $elecs), function($tx) {
-                            return isset($tx['status']) && $tx['status'] === 'Paid';
-                        });
-                        
-                        // Sort by payment_date descending, fallback to id descending
-                        usort($all_tx, function($a, $b) {
-                            $timeA = !empty($a['payment_date']) ? strtotime($a['payment_date']) : 0;
-                            $timeB = !empty($b['payment_date']) ? strtotime($b['payment_date']) : 0;
-                            if ($timeA == $timeB) {
-                                return $b['id'] - $a['id'];
-                            }
-                            return $timeB - $timeA;
-                        });
-                        
-                        $display_tx = array_slice($all_tx, 0, 5); 
-                        foreach($display_tx as $tx):
-                            $is_paid = ($tx['status'] == 'Paid');
-                            $is_elec = (isset($tx['source']) && $tx['source'] == 'elec_table');
-                            $is_adv = (isset($tx['source']) && $tx['source'] == 'advance');
+                        <?php foreach($display_tx as $tx):
+                            $is_paid = true;
+                            $is_elec = ($tx['bill_type'] == 'electricity' || $tx['bill_type'] == 'total' || $tx['bill_type'] == 'elec_rent');
+                            $is_adv = ($tx['bill_type'] == 'advance');
                             
                             $icon_class = 'up';
                             $icon_bx = 'bx-up-arrow-alt';
                             if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt-circle'; }
                             else if ($is_adv) { $icon_class = 'adv'; $icon_bx = 'bx-wallet'; }
-                            else { $icon_class = 'up'; $icon_bx = 'bx-up-arrow-alt'; }
                             
                             $title = 'Rent Payment';
                             if ($is_elec) $title = 'Electricity Payment';
                             if ($is_adv) $title = 'Advance Payment';
-                            if (!isset($tx['source'])) $title = 'Electricity Payment'; // from $elecs array
                         ?>
                         <div class="transaction-item">
                             <div class="tx-left">
@@ -389,8 +376,8 @@
                                 </div>
                             </div>
                             <div class="tx-right">
-                                <div class="tx-amount <?php echo $is_paid ? '' : 'pending'; ?>"><?php echo money($tx['amount']); ?></div>
-                                <div class="tx-status <?php echo $is_paid ? 'paid' : 'pending'; ?>"><?php echo htmlspecialchars($tx['status']); ?></div>
+                                <div class="tx-amount"><?php echo money($tx['amount']); ?></div>
+                                <div class="tx-status paid"><?php echo htmlspecialchars($tx['status']); ?></div>
                                 <div class="tx-date"><?php echo !empty($tx['payment_date']) ? date('d M Y', strtotime($tx['payment_date'])) : '-'; ?></div>
                             </div>
                         </div>

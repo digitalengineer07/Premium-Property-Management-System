@@ -144,129 +144,82 @@
         <?php endif; ?>
 
         <?php
-        // Prepare all bills data based strictly on database 'status'
+        // Fetch all transactions from the payments table
         $all_bills = [];
-
-        // 1. Fetch Paid Rent Bills
-        $rent_q = mysqli_query($conn, "
-            SELECT r.id, r.month, r.rent_amount as amount, r.paid_date, 
-                   (SELECT payment_mode FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id ORDER BY p.id DESC LIMIT 1) as payment_mode,
-                   (SELECT transaction_id FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id ORDER BY p.id DESC LIMIT 1) as transaction_id
-            FROM rent r
-            WHERE r.user_id = $user_id AND r.status = 'Paid'
+        $payments_q = mysqli_query($conn, "
+            SELECT p.id, p.bill_type, p.bill_id, p.month, p.total_amount as bill_amount, p.paid_amount, p.payment_date, p.payment_mode, p.transaction_id,
+                   e.status as elec_status, e.rent_amount, e.maintenance, e.dues, e.amount as elec_usage, e.created_at
+            FROM payments p
+            LEFT JOIN electricity e ON p.bill_type IN ('electricity', 'total', 'elec_rent') AND p.bill_id = e.id
+            WHERE p.user_id = $user_id
         ");
-        while ($r = mysqli_fetch_assoc($rent_q)) {
-            $month = $r['month'];
-            $amt = (float)$r['amount'];
-            $pdate = !empty($r['paid_date']) ? date('d M Y', strtotime($r['paid_date'])) : 'N/A';
+
+        while ($p = mysqli_fetch_assoc($payments_q)) {
+            $month = $p['month'];
+            $amt = (float)$p['paid_amount'];
+            $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
             
             $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : 'N/A';
-            $due_date = $ts ? date('07 M Y', $ts) : 'N/A';
+            $bill_date = 'N/A';
+            $due_date = 'N/A';
             
-            $all_bills[] = [
-                'id' => 'r_'.$r['id'],
-                'type' => 'rent',
-                'filter_type' => 'rent',
-                'title' => 'Rent Payment',
-                'subtitle' => !empty($r['transaction_id']) ? ('Ref: ' . $r['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($r['payment_mode']) ? $r['payment_mode'] : 'Cash/UPI',
-                'icon' => 'bx-home',
-                'color' => 'purple'
-            ];
-        }
-
-        // 2. Fetch Paid Electricity/Total Bills
-        $elec_q = mysqli_query($conn, "
-            SELECT e.id, e.month, e.total_amount, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.payment_date, e.created_at, e.paid_date,
-                   (SELECT payment_mode FROM payments p WHERE p.bill_type IN ('electricity','total') AND p.bill_id=e.id ORDER BY p.id DESC LIMIT 1) as payment_mode,
-                   (SELECT transaction_id FROM payments p WHERE p.bill_type IN ('electricity','total') AND p.bill_id=e.id ORDER BY p.id DESC LIMIT 1) as transaction_id
-            FROM electricity e
-            WHERE e.user_id = $user_id AND e.status = 'Paid'
-        ");
-        while ($e = mysqli_fetch_assoc($elec_q)) {
-            $month = !empty($e['month']) ? $e['month'] : date('F Y', strtotime($e['created_at']));
-            $amt = (float)$e['total_amount'] > 0 ? (float)$e['total_amount'] : ((float)$e['elec_amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['dues']);
-            $pdate = !empty($e['paid_date']) ? date('d M Y', strtotime($e['paid_date'])) : (!empty($e['payment_date']) ? date('d M Y', strtotime($e['payment_date'])) : 'N/A');
-            
-            $slip_dt = !empty($e['payment_date']) ? $e['payment_date'] : $e['created_at'];
-            $bill_date = date('d M Y', strtotime($slip_dt));
-            $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
-            
-            $has_elec = (float)$e['elec_amount'] > 0;
-            $has_rent = (float)$e['rent_amount'] > 0 || (float)$e['maintenance'] > 0;
-            
-            if ($has_elec && $has_rent) {
-                $title = 'Rent + Main. + Electricity';
-                $filter_type = 'other';
-                $icon = 'bx-credit-card';
-                $color = 'purple';
-            } elseif ($has_rent) {
-                $title = 'Rent + Main.';
-                $filter_type = 'other';
+            if ($p['bill_type'] == 'rent') {
+                $bill_date = $ts ? date('01 M Y', $ts) : 'N/A';
+                $due_date = $ts ? date('07 M Y', $ts) : 'N/A';
+                $title = 'Rent Payment';
+                $filter_type = 'rent';
                 $icon = 'bx-home';
                 $color = 'purple';
-            } else {
-                $title = 'Electricity Payment';
-                $filter_type = 'electricity';
-                $icon = 'bx-bulb';
-                $color = 'yellow';
+            } elseif ($p['bill_type'] == 'electricity' || $p['bill_type'] == 'total' || $p['bill_type'] == 'elec_rent') {
+                $slip_dt = !empty($p['created_at']) ? $p['created_at'] : $p['payment_date'];
+                if ($ts) {
+                    $bill_date = date('d M Y', strtotime($slip_dt));
+                    $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
+                }
+                
+                $has_elec = (float)$p['elec_usage'] > 0;
+                $has_rent = (float)$p['rent_amount'] > 0 || (float)$p['maintenance'] > 0;
+                
+                if ($has_elec && $has_rent) {
+                    $title = 'Rent + Main. + Electricity';
+                    $filter_type = 'other';
+                    $icon = 'bx-credit-card';
+                    $color = 'purple';
+                } elseif ($has_rent) {
+                    $title = 'Rent + Main.';
+                    $filter_type = 'other';
+                    $icon = 'bx-home';
+                    $color = 'purple';
+                } else {
+                    $title = 'Electricity Payment';
+                    $filter_type = 'electricity';
+                    $icon = 'bx-bulb';
+                    $color = 'yellow';
+                }
+            } elseif ($p['bill_type'] == 'advance') {
+                $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
+                $due_date = $ts ? date('07 M Y', $ts) : $pdate;
+                $title = 'Advance Payment';
+                $filter_type = 'other';
+                $icon = 'bx-file';
+                $color = 'blue';
             }
             
             $all_bills[] = [
-                'id' => 'e_'.$e['id'],
-                'type' => 'electricity',
+                'id' => $p['bill_type'][0].'_'.$p['id'],
+                'type' => $p['bill_type'],
                 'filter_type' => $filter_type,
                 'title' => $title,
-                'subtitle' => !empty($e['transaction_id']) ? ('Ref: ' . $e['transaction_id']) : ('Room ' . $room_no),
+                'subtitle' => !empty($p['transaction_id']) ? ('Ref: ' . $p['transaction_id']) : ('Room ' . $room_no),
                 'period' => $month,
                 'bill_date' => $bill_date,
                 'due_date' => $due_date,
                 'amount' => $amt,
                 'status' => 'Paid',
                 'paid_on' => $pdate,
-                'payment_mode' => !empty($e['payment_mode']) ? $e['payment_mode'] : 'Cash/UPI',
+                'payment_mode' => !empty($p['payment_mode']) ? $p['payment_mode'] : 'Cash/UPI',
                 'icon' => $icon,
                 'color' => $color
-            ];
-        }
-
-        // 3. Fetch Advance Payments
-        $adv_q = mysqli_query($conn, "
-            SELECT id, month, paid_amount, payment_date, payment_mode, transaction_id
-            FROM payments
-            WHERE user_id = $user_id AND bill_type = 'advance'
-        ");
-        while ($a = mysqli_fetch_assoc($adv_q)) {
-            $month = $a['month'];
-            $amt = (float)$a['paid_amount'];
-            $pdate = !empty($a['payment_date']) ? date('d M Y', strtotime($a['payment_date'])) : 'N/A';
-            
-            $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
-            
-            $all_bills[] = [
-                'id' => 'a_'.$a['id'],
-                'type' => 'advance',
-                'filter_type' => 'other',
-                'title' => 'Advance Payment',
-                'subtitle' => !empty($a['transaction_id']) ? ('Ref: ' . $a['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($a['payment_mode']) ? $a['payment_mode'] : 'Cash/UPI',
-                'icon' => 'bx-file',
-                'color' => 'blue'
             ];
         }
 

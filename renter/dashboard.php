@@ -26,7 +26,7 @@ $room_no = $user['room_no'];
 
 /* Calculate totals */
 // 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r1 = mysqli_stmt_get_result($stmt);
@@ -36,8 +36,8 @@ mysqli_stmt_close($stmt);
 
 // 2. Electricity and Rent components from 'electricity' table
 $stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status != 'Paid') OR (status != 'Paid' AND elec_status != 'Paid') THEN amount ELSE 0 END), 0) as elec_total, 
-    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status != 'Paid') OR (status != 'Paid' AND rent_status != 'Paid') THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
+    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status = 'Due') OR (status = 'Due' AND elec_status != 'Paid') THEN amount ELSE 0 END), 0) as elec_total, 
+    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status = 'Due') OR (status = 'Due' AND rent_status != 'Paid') THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
 FROM electricity WHERE user_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
@@ -225,7 +225,7 @@ $overdue_list = [];
 
 if ($total_due > 0) {
     // Collect months that are unpaid
-    $due_q = mysqli_query($conn, "SELECT month FROM rent WHERE user_id = $user_id AND status != 'Paid' UNION SELECT month FROM electricity WHERE user_id = $user_id AND status != 'Paid'");
+    $due_q = mysqli_query($conn, "SELECT month FROM rent WHERE user_id = $user_id AND status = 'Due' UNION SELECT month FROM electricity WHERE user_id = $user_id AND status = 'Due'");
     while($dq = mysqli_fetch_assoc($due_q)) {
         $overdue_list[] = $dq['month'];
     }

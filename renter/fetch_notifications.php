@@ -60,7 +60,7 @@ if ($rej_notif_q) {
 
 // 3. Outstanding Balance (Always calculated independently using decoupled status columns)
 $pure_rent_due_n = 0;
-$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
+$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 if ($stmt_n) {
     mysqli_stmt_bind_param($stmt_n, "i", $notif_user_id);
     mysqli_stmt_execute($stmt_n);
@@ -79,10 +79,10 @@ if ($stmt_n2) {
     while ($row = mysqli_fetch_assoc($r2_n)) {
         $e_status = !empty($row['elec_status']) ? $row['elec_status'] : $row['status'];
         $r_status = !empty($row['rent_status']) ? $row['rent_status'] : $row['status'];
-        if ($e_status !== 'Paid') {
+        if ($e_status === 'Due') {
             $elec_due_n += (float)$row['amount'];
         }
-        if ($r_status !== 'Paid') {
+        if ($r_status === 'Due') {
             $rent_portion_due_n += ((float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues']);
         }
     }

@@ -35,7 +35,7 @@ $res_amount_paid = mysqli_query($conn, $q_amount_paid);
 $amount_paid = mysqli_fetch_assoc($res_amount_paid)['total'] ?? 0;
 
 // Query 3: Pending Amount
-$q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status != 'Paid'";
+$q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status = 'Due'";
 $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
