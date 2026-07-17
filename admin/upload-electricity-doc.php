@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) { die('Security validation failed.'); }
     $user_id = (int)$_POST['user_id'];
 
     if (isset($_FILES['electricity_file']) && $_FILES['electricity_file']['error'] === UPLOAD_ERR_OK) {

@@ -161,6 +161,7 @@
     <!-- New Query Form -->
     <div id="tab-new" class="m-form-container active">
         <form method="POST">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
             <div class="m-form-group">
                 <label class="m-form-label">Query Category</label>
                 <div class="m-select-wrapper">

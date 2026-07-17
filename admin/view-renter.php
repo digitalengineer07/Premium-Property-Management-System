@@ -571,6 +571,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="background: none; border: none; font-size: 24px; color: var(--text-gray); cursor: pointer;"><i class='bx bx-x'></i></button>
             </div>
             <form action="upload-electricity-doc.php" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
                 <div style="margin-bottom: 24px;">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Select Electricity Bill Copy (PDF, PNG, JPG)</label>
@@ -620,6 +621,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             </div>
             
             <form action="upload-agreement.php" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                 
                 <div class="form-group" style="margin-bottom: 20px;">
@@ -653,6 +655,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             </div>
             
             <form action="upload-aadhaar.php" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                 
                 <div class="form-group" style="margin-bottom: 24px;">
@@ -681,6 +684,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             </div>
             
             <form action="upload-electricity-doc.php" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="user_id" value="<?php echo $id; ?>">
                 
                 <div class="form-group" style="margin-bottom: 24px;">

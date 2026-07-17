@@ -111,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <div class="form-group">
                     <label>New Password</label>
                     <div style="position: relative;">

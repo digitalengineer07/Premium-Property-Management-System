@@ -247,6 +247,7 @@
                         <?php endif; ?>
 
                         <form action="" method="POST" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                             <div class="upload-area" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; max-width: 800px; margin: 0 auto; border-width: 2px; border-style: dashed;" onclick="document.getElementById('aadhar-upload').click();">
                                 <div class="upload-icon" style="width: 80px; height: 80px; font-size: 40px;">
                                     <i class='bx bx-cloud-upload'></i>

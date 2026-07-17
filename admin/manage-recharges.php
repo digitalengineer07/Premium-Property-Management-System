@@ -31,10 +31,13 @@ if (isset($_GET['delete'])) {
 
 // Handle Add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recharge'])) {
-    $amount = (float)$_POST['amount'];
-    $date = $_POST['recharge_date'];
-    $time = $_POST['recharge_time'];
-    $notes = trim($_POST['notes'] ?? '');
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Security validation failed. Please try again.";
+    } else {
+        $amount = (float)$_POST['amount'];
+        $date = $_POST['recharge_date'];
+        $time = $_POST['recharge_time'];
+        $notes = trim($_POST['notes'] ?? '');
 
     if ($amount <= 0 || !$date || !$time) {
         $error = "Please provide valid amount, date and time.";
@@ -140,6 +143,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                     </h2>
                 </div>
                 <form method="POST">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
                         
                         <!-- Recharge Amount -->
