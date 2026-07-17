@@ -109,6 +109,30 @@ if ($notif_total_due > 0) {
     }
 }
 
+// 4. App Notifications
+$app_n_q = @mysqli_query($conn, "SELECT id, title, message, type, created_at FROM app_notifications WHERE user_id = $notif_user_id ORDER BY created_at DESC LIMIT 20");
+if ($app_n_q) {
+    while($n = mysqli_fetch_assoc($app_n_q)) {
+        $nid = 'app_' . $n['id'];
+        if (in_array($nid, $dismissed_ids)) continue;
+        
+        $icon = 'bx-bell';
+        $color = '#6366f1';
+        if ($n['type'] == 'bill') { $icon = 'bx-receipt'; $color = '#EC4899'; }
+        elseif ($n['type'] == 'payment_verified') { $icon = 'bx-check-circle'; $color = '#10B981'; }
+
+        $unread_notifications[] = [
+            'id' => $nid,
+            'type' => $n['type'],
+            'title' => $n['title'],
+            'message' => $n['message'],
+            'time' => $n['created_at'],
+            'icon' => $icon,
+            'color' => $color
+        ];
+    }
+}
+
 // Sort by time descending
 usort($unread_notifications, function($a, $b) {
     return strtotime($b['time']) - strtotime($a['time']);
