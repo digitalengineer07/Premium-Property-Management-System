@@ -187,11 +187,11 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         padding: 12px 16px !important;
         border: none !important;
         border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-        text-align: left !important;
+        text-align: center !important;
         font-size: 13px !important;
     }
     
@@ -258,7 +258,7 @@
         object-fit: contain !important;
     }
     .mobile-page-body .payments-table td:nth-child(9) div {
-        justify-content: flex-start !important;
+        justify-content: center !important;
         margin-top: 2px !important;
     }
     
@@ -382,11 +382,11 @@ height: 32px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         padding: 12px 16px !important;
         border: none !important;
         border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-        text-align: left !important;
+        text-align: center !important;
         font-size: 13px !important;
     }
     
@@ -453,7 +453,7 @@ height: 32px !important;
         object-fit: contain !important;
     }
     .mobile-page-body .payments-table td:nth-child(9) div {
-        justify-content: flex-start !important;
+        justify-content: center !important;
         margin-top: 2px !important;
     }
     
