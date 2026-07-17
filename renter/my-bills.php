@@ -317,6 +317,16 @@ foreach ($elecs as $t) {
         'summary' => $summary
     ];
 }
+
+// Calculate Payments made this year (Net amount verified by Admin)
+$current_year = date('Y');
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as total_paid, COUNT(*) as pay_count FROM payments WHERE user_id = ? AND YEAR(payment_date) = ?");
+mysqli_stmt_bind_param($stmt, "is", $user_id, $current_year);
+mysqli_stmt_execute($stmt);
+$res_paid = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
+$paid_this_year = (float)$res_paid['total_paid'];
+$bills_paid_count = (int)$res_paid['pay_count'];
+mysqli_stmt_close($stmt);
 ?>
 <!doctype html>
 <html lang="en">
