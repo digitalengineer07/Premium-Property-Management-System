@@ -117,11 +117,21 @@ if ($type === 'rent') {
     mysqli_stmt_bind_param($stmt, "si", $new_status, $id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+
+    // If fully paid, clear out previous unpaid/partial rent bills as they are settled
+    if ($new_status === 'Paid') {
+        mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id != $id");
+    }
 } elseif ($type === 'electricity') {
-    $stmt = mysqli_prepare($conn, "UPDATE electricity SET status=? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "si", $new_status, $id);
+    $stmt = mysqli_prepare($conn, "UPDATE electricity SET status=?, elec_status=?, rent_status=? WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "sssi", $new_status, $new_status, $new_status, $id);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
+    
+    // If fully paid, clear out previous unpaid/partial electricity bills as they are settled
+    if ($new_status === 'Paid') {
+        mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id != $id");
+    }
 }
 
 // Send Email Receipt
