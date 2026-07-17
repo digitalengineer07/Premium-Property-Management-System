@@ -37,6 +37,19 @@ if (isset($_POST['save'])) {
     mysqli_stmt_execute($i_stmt);
     mysqli_stmt_close($i_stmt);
 
+    if ($status === 'Due') {
+        require_once "utils_mailer.php";
+        $email_query = mysqli_query($conn, "SELECT email, name FROM users WHERE id = $user_id");
+        if ($email_query && mysqli_num_rows($email_query) > 0) {
+            $u_data = mysqli_fetch_assoc($email_query);
+            if (!empty($u_data['email'])) {
+                send_new_bill_notification($u_data['email'], $u_data['name'], $month, $amount);
+            }
+        }
+        $msg_safe = mysqli_real_escape_string($conn, "A new rent bill for $month (₹" . number_format((float)$amount, 2) . ") has been assigned to you.");
+        mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
+    }
+
     header("Location: view-renter.php?id=$user_id");
     exit;
 }
