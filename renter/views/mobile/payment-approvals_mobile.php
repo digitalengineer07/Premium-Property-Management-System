@@ -255,16 +255,6 @@
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
-                    
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <a href="?page=<?php echo $i; ?>" style="padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; <?php echo $i === $page ? 'background: var(--primary-purple); color: white;' : 'border: 1px solid var(--border); color: var(--text-dark);'; ?>"><?php echo $i; ?></a>
-                    <?php endfor; ?>
-                    
-                    <?php if ($page < $total_pages): ?>
-                        <a href="?page=<?php echo $page + 1; ?>" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;">Next <i class='bx bx-chevron-right'></i></a>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
 
         <?php else: ?>
             <div style="padding: 40px 20px; text-align: center;">

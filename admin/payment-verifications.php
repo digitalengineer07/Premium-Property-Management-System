@@ -448,7 +448,7 @@ if ($res) {
         .pv-avatar-rs { background: #D1FAE5; color: #047857; }
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; }
+        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
         .pv-bill-info-inv { font-size: 11px; color: #64748B; white-space: nowrap; }
         
         .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
@@ -745,7 +745,7 @@ include "sidebar.php";
                                 }
                             }
                             ?>
-                            <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
+                            <span class="pv-bill-info-type" title="<?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?>"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>
