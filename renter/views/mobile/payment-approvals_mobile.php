@@ -219,6 +219,10 @@
                             <?php endif; ?>
                         </div>
                     </div>
+                    <div style="text-align: center;">
+                        <div class="ac-label">Bill Month</div>
+                        <div class="ac-value"><?php echo !empty($ap[\'month\']) ? htmlspecialchars($ap[\'month\']) : \'-\'; ?></div>
+                    </div>
                     <div style="text-align: right;">
                         <div class="ac-label">Ref / UTR No</div>
                         <div class="ac-value" style="font-family: monospace;">
