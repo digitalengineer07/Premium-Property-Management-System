@@ -61,7 +61,7 @@ while ($r = mysqli_fetch_assoc($q_rent)) {
     $payment_date = !empty($r['paid_date']) ? $r['paid_date'] : (!empty($r['due_date']) ? $r['due_date'] : date('Y-m-d'));
     
     $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, transaction_id) VALUES (?, 'rent', ?, ?, ?, 'Manual', ?, 0, '', ?, 'SYS_BACKFILL')");
-    mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $month, $total_amount, $total_amount, $payment_date);
+    mysqli_stmt_bind_param($stmt, "iisdds", $user_id, $bill_id, $month, $total_amount, $total_amount, $payment_date);
     if(mysqli_stmt_execute($stmt)) {
         $rent_count++;
     }
