@@ -96,6 +96,7 @@
         
         .main-content {
             flex: 1;
+            margin-left: 230px;
            
             padding: 32px 40px;
         }
