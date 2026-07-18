@@ -44,37 +44,12 @@
         }
 
         /* Top Bar */
-        .top-bar {
-            background: var(--white);
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border-bottom: 1px solid var(--border);
-        }
-        .user-info { display: flex; align-items: center; gap: 12px; }
+                .user-info { display: flex; align-items: center; gap: 12px; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
         .greeting { font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; }
         .name { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; }
 
-        .btn-apply {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);
-        }
-
+        
         .content-area { padding: 20px; }
 
         .approval-card {
@@ -171,20 +146,30 @@
 </head>
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
 
-    <div class="top-bar">
-        <div class="user-info">
-            <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile" class="avatar">
-            <div>
-                <p class="greeting">Approvals</p>
-                <h1 class="name"><?php echo htmlspecialchars($display_name); ?></h1>
-            </div>
+    <header class="premium-header-pill" style="position: fixed; top: 0; left: 0;">
+        <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
+            <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px;">
+                <i class='bx bx-check-shield' style="font-size: 24px; color: #ffffff; margin-top: 2px;"></i>
+                Approvals
+            </h1>
         </div>
-        <button class="btn-apply" onclick="openApprovalModal()">
-            <i class='bx bx-plus'></i> Apply
-        </button>
-    </div>
+        
+        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 6px;">
+            <div class="header-icon-btn" onclick="openApprovalModal()" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid;">
+                <i class='bx bx-plus' style="color: white;"></i>
+            </div>
+            <div class="header-icon-btn" id="themeToggleMobile" onclick="const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid;">
+                <i class='bx bx-moon' style="color: white;"></i>
+            </div>
+            <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+                <div style="width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #624BFF; font-size: 16px; font-weight: 800;">
+                    <?php echo strtoupper(substr(trim($display_name ?? 'U'), 0, 1)); ?>
+                </div>
+            </a>
+        </div>
+    </header>
 
-    <div class="content-area">
+    <div class="content-area" style="padding-top: 100px;">
         <?php if (!empty($payment_success)): ?>
             <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
                 <i class='bx bx-check-circle' style="font-size: 18px;"></i> <?php echo $payment_success; ?>
