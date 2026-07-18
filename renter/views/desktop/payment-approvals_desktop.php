@@ -69,10 +69,13 @@
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 4px; flex: 1;  overflow-y: auto;}
+        .nav-menu::-webkit-scrollbar { width: 4px; }
+        .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 10px 14px; border-radius: 12px;
+            padding: 8px 16px; border-radius: 12px;
             color: var(--text-gray); text-decoration: none;
             font-weight: 600; font-size: 13px; transition: all 0.2s ease;
         }
@@ -177,7 +180,7 @@
         @media (max-width: 1024px) {
             .sidebar { width: 80px; padding: 24px 10px; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span { display: none; }
-            .nav-item { justify-content: center; padding: 12px; }
+            .nav-item { justify-content: center; padding: 8px 16px; }
             .nav-item i { font-size: 24px; }
         }
     </style>
@@ -203,10 +206,11 @@
             <a href="documents.php" class="nav-item"><i class='bx bx-folder'></i><span>Documents</span></a>
             <a href="queries.php" class="nav-item"><i class='bx bx-message-square-dots'></i><span>Queries</span></a>
             <a href="notices.php" class="nav-item"><i class='bx bx-bell'></i><span>Notices</span></a>
-            <a href="profile.php" class="nav-item"><i class='bx bx-user'></i><span>Profile</span></a>
-            <a href="../logout.php" class="nav-item" style="margin-top: auto;  color: var(--danger);"><i class='bx bx-log-out'></i><span>Logout</span></a>
+            <a href="profile.php" class="nav-item"><i class='bx bx-user'></i><span>Profile</span></a></nav>
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
+            <a href="../logout.php" class="nav-item" style="  color: var(--danger);"><i class='bx bx-log-out'></i><span>Logout</span></a>
         
-        </nav>
+        </div>
     </aside>
 
     <main class="main-content">
