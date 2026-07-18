@@ -436,7 +436,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Date Submitted</th>
+                        <th>Date & Time</th>
+                        <th>Bill Month</th>
                         <th>Amount</th>
                         <th>Mode</th>
                         <th>Ref No / UTR</th>
@@ -450,6 +451,11 @@
                         <td>
                             <div style="font-weight: 700; color: var(--text-dark);"><?php echo date('d M Y', strtotime($ap['created_at'])); ?></div>
                             <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;"><?php echo date('h:i A', strtotime($ap['created_at'])); ?></div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-gray);">
+                                <?php echo !empty($ap['month']) ? htmlspecialchars($ap['month']) : '-'; ?>
+                            </div>
                         </td>
                         <td>
                             <div style="font-weight: 800; color: var(--primary-purple);">&#8377;<?php echo number_format($ap['amount'], 2); ?></div>
