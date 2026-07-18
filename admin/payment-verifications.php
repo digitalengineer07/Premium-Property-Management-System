@@ -745,7 +745,23 @@ include "sidebar.php";
                                 }
                             }
                             ?>
-                            <span class="pv-bill-info-type" title="<?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?>"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
+                            <?php
+                            $disp_month = date('M Y', strtotime($n['created_at'])); // Default fallback
+                            if (!empty($n['month'])) {
+                                $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                            } elseif ($n['bill_id'] > 0) {
+                                // Try to fetch from rent/electricity table
+                                $bid = (int)$n['bill_id'];
+                                if ($n['bill_type'] == 'rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
+                                    if ($mr && !empty($mr['month'])) $disp_month = date('M Y', strtotime($mr['month'] . '-01'));
+                                } elseif ($n['bill_type'] == 'electricity' || $n['bill_type'] == 'elec_rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$bid"));
+                                    if ($mr && !empty($mr['month'])) $disp_month = date('M Y', strtotime($mr['month'] . '-01'));
+                                }
+                            }
+                            ?>
+                            <span class="pv-bill-info-type" title="<?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo htmlspecialchars($disp_month); ?>"><?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo htmlspecialchars($disp_month); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>

@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
+        $month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
 
@@ -212,8 +213,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )");
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "isidss", $user_id, $b_type, $b_id, $amt, $tr_id, $payment_method);
+            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "isidsss", $user_id, $b_type, $b_id, $amt, $tr_id, $month, $payment_method);
             if (mysqli_stmt_execute($stmt)) {
                 $payment_success = "Payment notification sent to Admin for verification!";
             } else {

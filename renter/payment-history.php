@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
+        $month = $_POST['month'] ?? '';
         $p_month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
