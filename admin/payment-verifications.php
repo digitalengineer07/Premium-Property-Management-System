@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         
         if ($notif && $notif['status'] == 'Pending') {
             if ($action == 'approve') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 
-                if ($upd_status) {
+                if ($upd_status && mysqli_affected_rows($conn) > 0) {
                     require_once "allocate_payment.php";
                     
                     $p_uid = (int)$notif['user_id'];
@@ -91,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 }
                 
             } elseif ($action == 'reject') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
-                if ($upd_status) {
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
+                if ($upd_status && mysqli_affected_rows($conn) > 0) {
                     $success = "Payment #{$notif['transaction_id']} rejected.";
                     
                     if (!empty($notif['user_email'])) {

@@ -180,10 +180,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_type = $_POST['bill_type'] ?? 'total';
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
+        $tr_id = trim($_POST['transaction_id'] ?? '');
+        
+        $bill_valid = true;
+        if ($b_id > 0 && $b_type === 'rent') {
+            $ck = mysqli_query($conn, "SELECT id FROM rent WHERE id=$b_id AND user_id=$user_id");
+            if (mysqli_num_rows($ck) == 0) $bill_valid = false;
+        } else if ($b_id > 0 && $b_type === 'electricity') {
+            $ck = mysqli_query($conn, "SELECT id FROM electricity WHERE id=$b_id AND user_id=$user_id");
+            if (mysqli_num_rows($ck) == 0) $bill_valid = false;
+        }
+
         if ($amt <= 0) {
             $payment_error = "Payment amount must be greater than zero.";
-        } else
-        $tr_id = trim($_POST['transaction_id'] ?? '');
+        } else if (!$bill_valid) {
+            $payment_error = "Invalid bill reference. You can only pay your own bills.";
+        } else {
         if (empty($tr_id)) {
             $tr_id = 'SYS-' . strtoupper(bin2hex(random_bytes(6)));
         }
@@ -251,6 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             }
             mysqli_stmt_close($stmt);
         }
+        } // Close the new else block
     }
 }
 }
