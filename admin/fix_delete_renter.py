@@ -1,4 +1,8 @@
-<?php
+import os
+
+filepath = r'c:\xampp\htdocs\renter-system\admin\delete-renter.php'
+
+content = """<?php
 // admin/delete-renter.php
 require_once "../db.php";
 session_start();
@@ -56,3 +60,9 @@ try {
 
 mysqli_close($conn);
 ?>
+"""
+
+with open(filepath, 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print("Rewrote delete-renter.php to include accounting protection and full purge logic")
