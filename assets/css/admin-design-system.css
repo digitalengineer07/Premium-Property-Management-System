@@ -2236,6 +2236,27 @@ body.dark-theme thead th:last-child {
     #editProfileModal .btn-outline, #changePasswordModal .btn-outline {
         display: none !important; /* Hide cancel button to save space, user can use top X button */
     }
+/* Pending Payment Notice (Mobile) */
+.pending-payment-notice {
+    background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+    border: 1px solid rgba(98, 75, 255, 0.15);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+.pending-payment-text {
+    display: flex; align-items: flex-start; gap: 2px;
+    font-size: 11px; color: var(--text-dark);
+    line-height: 1.4; margin-bottom: 14px;
+}
+.pending-payment-text i {
+    font-size: 18px; color: #624BFF; flex-shrink: 0;
+}
+
+:root.dark-theme .pending-payment-notice,
+body.dark-theme .pending-payment-notice {
+    background: linear-gradient(135deg, rgba(98, 75, 255, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%) !important;
+    border-color: rgba(98, 75, 255, 0.25) !important;
 }
 
 @keyframes slideUpSheet {
