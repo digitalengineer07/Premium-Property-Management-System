@@ -432,8 +432,19 @@
                 function renderTable() {
                     const allDataRows = Array.from(container.querySelectorAll('tbody tr.data-row'));
                     
-                    // 1. Filter rows by tab
-                    const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const monthFilter = urlParams.get('month');
+                    
+                    // 1. Filter rows by tab and month
+                    const filteredRows = allDataRows.filter(row => {
+                        const tabMatch = currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab;
+                        if (!tabMatch) return false;
+                        if (monthFilter) {
+                            const rowMonth = row.querySelector('td:nth-child(3)').textContent.trim();
+                            if (rowMonth !== monthFilter) return false;
+                        }
+                        return true;
+                    });
                     
                     // 2. Paginate rows
                     const totalRecords = filteredRows.length;
