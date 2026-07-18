@@ -1,4 +1,4 @@
-- `[x]` 1. Create Auto-Allocation Algorithm (`admin/allocate_payment.php`)
-- `[x]` 2. Secure Specific Bill Updates (`admin/payment-verifications.php`)
-- `[x]` 3. Integrate Allocation for Total/Monthly Payments
-- `[x]` 4. Final verification and testing
+- `[ ]` 1. Refactor `admin/mark-paid.php` to use the unified `allocate_payment.php` engine.
+- `[ ]` 2. Harden `admin/delete-bill.php` to block deletion of `Partial` and `Paid` bills.
+- `[ ]` 3. Enhance `admin/save-bill.php` to automatically apply `advance_payment` credits to new bills.
+- `[ ]` 4. Verify end-to-end functionality of the Enterprise Financial Architecture.
