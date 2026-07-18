@@ -1191,7 +1191,30 @@ tr:hover td {
         min-width: 0 !important;
     }
 }
-.btn-primary:active, .btn-outline:active { transform: scale(0.96); transition: transform 0.1s; }
+/* Universal Click/Press Effect for ALL Buttons & Interactables */
+button:active, 
+.btn:active, 
+.btn-primary:active, 
+.btn-outline:active, 
+.btn-fw:active, 
+.btn-view-all:active, 
+.btn-apply:active,
+.icon-btn:active,
+.header-icon-btn:active,
+.header-profile-btn:active,
+.btn-download:active,
+.btn-outline-support:active,
+.mb-nav-item:active,
+.mb-nav-center:active,
+.nav-item:active,
+.kpi-card:active,
+.approval-card:active,
+a[href]:active,
+.status-badge:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0.9;
+}
 
 /* ==========================================================================
    ULTRA-PREMIUM SAAS DARK MODE SYNC (Renter & Admin UI)
