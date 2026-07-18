@@ -54,6 +54,20 @@ if (isset($_POST['save'])) {
         mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
     }
 
+    // --- NEW: Enterprise Auto-Credit Application ---
+    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
+    if ($qAdv && $rowAdv = mysqli_fetch_assoc($qAdv)) {
+        $adv = (float)$rowAdv['advance_payment'];
+        if ($adv > 0) {
+            // Temporarily zero the advance so the allocator can redistribute it without doubling
+            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
+            require_once "allocate_payment.php";
+            $sys_id = 'SYS-CREDIT-' . time() . '-' . rand(100,999);
+            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Credit', $sys_id, $sys_id, null);
+        }
+    }
+    // -----------------------------------------------
+
     header("Location: view-renter.php?id=$user_id");
     exit;
     }
