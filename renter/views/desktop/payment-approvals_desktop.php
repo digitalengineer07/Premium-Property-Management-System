@@ -196,6 +196,35 @@
             .nav-item { justify-content: center; padding: 10px 16px; }
             .nav-item i { font-size: 24px; }
         }
+    
+        /* Top Header Styles Extracted from Dashboard */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
+        }
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
+
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .header-actions .icon-btn {
+            width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
+            position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+        
+        .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
+        .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
+        
+        .btn-outline-support {
+            border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
+            padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            white-space: nowrap;
+        }
+        .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
+
     </style>
 </head>
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
@@ -259,16 +288,116 @@
     </aside>
 
     <main class="main-content">
-        <div class="top-header">
-            <div class="header-title">
-                <h1>Payment Approvals</h1>
-                <p>Track your submitted payment verifications</p>
+                <div class="top-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
+                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
+                    <i class='bx bx-check-shield' style="font-size: 24px; color: var(--primary-purple);"></i>
+                </div>
+                <div>
+                    <h1 style="margin: 0; font-size: 24px; font-weight: 800; color: var(--text-dark);">Payment Approvals</h1>
+                    <p style="margin: 4px 0 0 0; color: var(--text-gray); font-size: 14px;">Track your cash and UPI payment verifications</p>
+                </div>
             </div>
-            
-            <button class="btn-primary" onclick="openPaymentModal(0, 'Advance / General Payment', 'general', 0, 'Advance/General')">
-                <i class='bx bx-plus'></i> Apply for Approval
-            </button>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
+
+                <button class="btn-primary" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="openPaymentModal(0, 'Advance / General Payment', 'general', 0, 'Advance/General')">
+                    <i class='bx bx-plus'></i> Apply for Approval
+                </button>
+            <div class="header-actions">
+                <div class="notification-wrapper" style="position: relative; display: inline-block;">
+                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
+                        <i class='bx bx-bell'></i>
+                        <?php if ($unread_count > 0): ?>
+                            <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
+                                <?php echo $unread_count; ?>
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <!-- Notification Dropdown -->
+                    <div id="notifDropdown" style="display: none;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
+                            <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
+                            <?php if($unread_count > 0): ?>
+                                <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="max-height: 350px;">
+                            <?php if (empty($unread_notifications)): ?>
+                                <div style="padding: 30px; text-align: center; color: var(--text-gray);">
+                                    <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
+                                </div>
+                            <?php else: ?>
+                                <?php foreach ($unread_notifications as $notif): ?>
+                                    <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
+                                        <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
+                                            <i class='bx bx-trash'></i>
+                                        </div>
+                                        <div class="notif-content" style="padding: 16px; display: flex; gap: 12px; position: relative; z-index: 2; background: var(--white); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);">
+                                            <div style="width: 40px; height: 40px; border-radius: 50%; background: <?php echo $notif['color']; ?>15; color: <?php echo $notif['color']; ?>; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
+                                                <i class='bx <?php echo $notif['icon']; ?>'></i>
+                                            </div>
+                                            <div style="flex: 1; padding-right: 36px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
+                                                </div>
+                                                <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
+                                            </div>
+                                            <button onclick="dismissNotification('<?php echo $notif['id']; ?>', this)" style="position: absolute; right: 12px; top: 16px; background: none; border: none; font-size: 18px; color: var(--text-gray); opacity: 0.5; cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(0,0,0,0.05)'; this.style.opacity='1'" onmouseout="this.style.background='none'; this.style.opacity='0.5'" title="Dismiss">
+                                                <i class='bx bx-x'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+                    <i class='bx bx-moon'></i>
+                </div>
+                
+                <div style="position: relative;">
+                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                        <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
+<?php 
+    $real_pic = '';
+    if (isset($user['profile_pic']) && !empty($user['profile_pic'])) $real_pic = $user['profile_pic'];
+    elseif (isset($usr['profile_pic']) && !empty($usr['profile_pic'])) $real_pic = $usr['profile_pic'];
+    elseif (isset($profile_pic) && $profile_pic !== 'assets/img/default-avatar.png' && !empty($profile_pic)) $real_pic = $profile_pic;
+    
+    $d_name = $display_name ?? $user['name'] ?? $usr['name'] ?? 'User';
+?>
+<?php if (!empty($real_pic)): ?>
+    <img src="../<?php echo htmlspecialchars($real_pic); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
+<?php else: ?>
+    <span style="color: var(--primary-purple); font-weight: 700;"><?php echo strtoupper(substr(trim($d_name), 0, 2)); ?></span>
+<?php endif; ?>
+</div>
+                        <div class="user-info">
+                            <h4><?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?></h4>
+                            <p>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></p>
+                        </div>
+                        <i class='bx bx-chevron-down' style="color: var(--text-gray);"></i>
+                    </div>
+                    
+                    <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                            <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
+                        </a>
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
+                            <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            </div>
         </div>
+
 
         <?php if (!empty($payment_success)): ?>
             <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 16px; border-radius: 12px; margin-bottom: 24px; display: flex; align-items: center; gap: 2px; font-weight: 600;">
