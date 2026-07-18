@@ -23,10 +23,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             elseif ($total_paid > 0) $new_status = 'Partial';
             mysqli_query($conn, "UPDATE rent SET status='$new_status', paid_date=IF('$new_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
-            // Clear prior unpaid if fully paid
-            if ($new_status === 'Paid') {
-                mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id={$b['user_id']} AND status IN ('Due', 'Partial') AND id < $bill_id");
-            }
+
         }
     } elseif ($bill_type === 'electricity' || $bill_type === 'elec_rent') {
         // electricity table stores combined rent and electricity
@@ -55,10 +52,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             
             mysqli_query($conn, "UPDATE electricity SET status='$overall_status', elec_status='$elec_status', rent_status='$rent_status', paid_date=IF('$overall_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
-            // Clear prior unpaid if fully paid
-            if ($overall_status === 'Paid') {
-                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$b['user_id']} AND status IN ('Due', 'Partial') AND id < $bill_id");
-            }
+
         }
     }
 }
