@@ -506,10 +506,22 @@
                 </tbody>
             </table>
             <?php if (isset($total_pages) && $total_pages > 1): ?>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px 0; border-top: 1px solid var(--border);">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 16px; padding: 16px 0; border-top: 1px solid var(--border);">
                     <?php if ($page > 1): ?>
-                        <a href="?page=<?php echo $page - 1; ?>" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;"><i class='bx bx-chevron-left'></i> Prev</a>
+                        <a href="?page=<?php echo $page - 1; ?>" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); text-decoration: none; font-size: 18px; font-weight: 800; transition: 0.2s;"><i class='bx bx-chevron-left'></i></a>
+                    <?php else: ?>
+                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 0, 0, 0.05); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>
                     <?php endif; ?>
+                    
+                    <span style="font-size: 14px; font-weight: 800; color: var(--text-dark); min-width: 24px; text-align: center;"><?php echo $page; ?></span>
+                    
+                    <?php if ($page < $total_pages): ?>
+                        <a href="?page=<?php echo $page + 1; ?>" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); text-decoration: none; font-size: 18px; font-weight: 800; transition: 0.2s;"><i class='bx bx-chevron-right'></i></a>
+                    <?php else: ?>
+                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 0, 0, 0.05); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
                     
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <a href="?page=<?php echo $i; ?>" style="padding: 6px 12px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; <?php echo $i === $page ? 'background: var(--primary-purple); color: white;' : 'border: 1px solid var(--border); color: var(--text-dark);'; ?>"><?php echo $i; ?></a>
