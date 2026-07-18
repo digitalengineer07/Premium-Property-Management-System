@@ -197,6 +197,9 @@
             .sidebar-brand p, .sidebar-brand h2, .nav-item span { display: none; }
             .nav-item { justify-content: center; padding: 10px 16px; }
             .nav-item i { font-size: 24px; }
+            .main-content { margin-left: 80px; padding: 24px; }
+            .approvals-table-container { overflow-x: auto; }
+            table { min-width: 800px; } /* Ensures table doesn't squish unreadably */
         }
     
         /* Top Header Styles Extracted from Dashboard */
