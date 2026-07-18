@@ -169,6 +169,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dismiss_rejection']))
 // Payment Notification Handling
 $payment_success = "";
 $payment_error = "";
+if (isset($_SESSION['payment_success'])) {
+    $payment_success = $_SESSION['payment_success'];
+    unset($_SESSION['payment_success']);
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $payment_error = "Invalid CSRF token.";
@@ -223,7 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?)");
             mysqli_stmt_bind_param($stmt, "isidsss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method);
             if (mysqli_stmt_execute($stmt)) {
-                $payment_success = "Payment notification sent to Admin for verification!";
+                $_SESSION['payment_success'] = "Payment notification sent to Admin for verification!";
+                header("Location: " . $_SERVER['PHP_SELF']);
+                exit;
             } else {
                 $payment_error = "Failed to send notification: " . mysqli_stmt_error($stmt);
             }
