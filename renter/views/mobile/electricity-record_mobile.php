@@ -147,15 +147,15 @@
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Previous Reading</span>
-                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['previous_reading']); ?> Units</span>
+                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['previous_reading']); ?></span>
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Current Reading</span>
-                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['current_reading']); ?> Units</span>
+                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['current_reading']); ?></span>
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Units Consumed</span>
-                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['units_consumed']); ?> Units</span>
+                <span style="font-size: 11px; color: var(--text-dark); font-weight: 600;"><?php echo number_format($latest_record['units_consumed']); ?></span>
             </div>
             <div style="display: flex; justify-content: space-between;">
                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Rate per Unit</span>
