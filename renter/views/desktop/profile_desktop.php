@@ -33,11 +33,11 @@
                             <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                         <?php endif; ?>
                     </div>
-                    <div style="max-height: 350px; overflow-y: auto;">
+                    <div style="max-height: 350px;">
                         <?php if (empty($unread_notifications)): ?>
                             <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                 <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                             </div>
                         <?php else: ?>
                             <?php foreach ($unread_notifications as $notif): ?>
@@ -51,7 +51,7 @@
                                         </div>
                                         <div style="flex: 1; padding-right: 36px;">
                                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                             </div>
                                             <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -96,10 +96,10 @@
                 </div>
                 
                 <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                    <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                    <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                         <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                     </a>
-                    <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                    <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                         <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                     </a>
                 </div>
@@ -157,7 +157,7 @@
                     </form>
                 </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 2px; flex-wrap: wrap;">
                     <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1); white-space: nowrap;"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
                     <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1); white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></span>
                 </div>

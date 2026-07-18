@@ -112,7 +112,7 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-left { display: flex; align-items: center; gap: 12px; flex: 1.2; min-width: 0; }
     .m-bill-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
     .m-bill-info { min-width: 0; }
-    .m-bill-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-bill-info h4 { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-bill-info p { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-bill-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
     
@@ -120,8 +120,8 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-mid h4 { font-size: 11px; font-weight: 700; color: var(--text-gray); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 0.5px; }
     .m-bill-mid p { font-size: 10px; color: #FF4B6B; margin: 0; font-weight: 600; white-space: nowrap; }
 
-    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; flex: 1; text-align: right; min-width: 0; }
-    .m-bill-right-info h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
+    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; flex: 1; text-align: right; min-width: 0; }
+    .m-bill-right-info h4 { font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
     .m-bill-status { position: absolute; top: 0; right: 0; font-size: 9px; font-weight: 800; padding: 4px 12px; border-top-right-radius: 15px; border-bottom-left-radius: 12px; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
     .m-download-btn-mini { width: 26px; height: 26px; background: rgba(98, 75, 255, 0.1); color: #624BFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; margin-left: 6px; }
@@ -133,8 +133,8 @@ $total_bills_count = count($mobile_all_bills);
     
     .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-dark); font-weight: 500; }
     .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px; }
-    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
-    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; }
+    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 2px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
+    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 2px; cursor: pointer; }
     
 </style>
 
@@ -145,13 +145,13 @@ $total_bills_count = count($mobile_all_bills);
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-receipt' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             My Bills
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -320,7 +320,7 @@ $total_bills_count = count($mobile_all_bills);
         
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 12px; color: var(--text-gray);">
             <span>Showing 1 to <?php echo min(10, count($mobile_all_bills)); ?> of <?php echo count($mobile_all_bills); ?> bills</span>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 2px;">
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;"><i class='bx bx-chevron-left'></i></div>
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: #624BFF; color: white; display: flex; align-items: center; justify-content: center;">1</div>
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">2</div>

@@ -7,13 +7,13 @@
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-home-circle' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             Dashboard
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -92,9 +92,9 @@
                     </div>
                 </div>
                 <?php if ($total_due > 0): ?>
-                    <span style="background: rgba(255,75,107,0.1); color: #FF4B6B; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-time-five'></i> Payment Due</span>
+                    <span style="background: rgba(255,75,107,0.1); color: #FF4B6B; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 2px;"><i class='bx bx-time-five'></i> Payment Due</span>
                 <?php else: ?>
-                    <span style="background: rgba(16,185,129,0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle'></i> All Clear</span>
+                    <span style="background: rgba(16,185,129,0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 2px;"><i class='bx bx-check-circle'></i> All Clear</span>
                 <?php endif; ?>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">

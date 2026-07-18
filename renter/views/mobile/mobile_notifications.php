@@ -9,13 +9,13 @@
 .m-notif-dropdown::before { content: ''; position: absolute; top: -6px; right: 24px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
 
 .m-notif-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.m-notif-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+.m-notif-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 2px; }
 .m-notif-badge-pill { font-size: 10px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 8px; font-weight: 700; margin-left: auto; }
-.m-notif-body { padding: 12px; overflow-y: auto; flex: 1; }
+.m-notif-body { padding: 12px; flex: 1; }
 
 .m-notif-empty { text-align: center; padding: 30px 0; color: var(--text-gray); }
 .m-notif-empty i { font-size: 40px; opacity: 0.3; margin-bottom: 12px; }
-.m-notif-empty p { margin: 0; font-size: 14px; font-weight: 600; }
+.m-notif-empty p { margin: 0; font-size: 13px; font-weight: 600; }
 
 .m-notif-item { display: flex; gap: 12px; padding: 12px; background: transparent; border-radius: 12px; margin-bottom: 8px; position: relative; overflow: hidden; transition: background 0.2s ease; }
 .m-notif-item:active { background: rgba(0,0,0,0.03); }
@@ -23,7 +23,7 @@
 
 .m-notif-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .m-notif-text { flex: 1; padding-right: 24px; }
-.m-notif-text h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+.m-notif-text h4 { margin: 0 0 4px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); }
 .m-notif-text p { margin: 0 0 6px 0; font-size: 12px; color: var(--text-gray); line-height: 1.4; }
 .m-notif-time { font-size: 10px; font-weight: 600; color: #a0aec0; }
 .m-notif-dismiss { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-gray); font-size: 18px; cursor: pointer; opacity: 0.6; }

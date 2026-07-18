@@ -117,7 +117,7 @@ if (isset($_GET['ajax_id'])) {
     // Output HTML for the detail pane only
     ?>
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-        <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #EF4444; display: flex; align-items: center; gap: 6px;">
+        <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: #EF4444; display: flex; align-items: center; gap: 6px;">
             <i class='bx bx-star'></i> Important Notice
         </h4>
     </div>
@@ -127,14 +127,14 @@ if (isset($_GET['ajax_id'])) {
             <i class='bx <?php echo $selected['icon']; ?>'></i>
         </div>
         <h2 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 800; color: var(--text-dark);"><?php echo htmlspecialchars($selected['title']); ?></h2>
-        <div style="font-size: 13px; font-weight: 600; color: var(--text-gray); display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <div style="font-size: 13px; font-weight: 600; color: var(--text-gray); display: flex; align-items: center; justify-content: center; gap: 2px;">
             <span><?php echo $selected['date']; ?></span>
             <span style="width: 4px; height: 4px; border-radius: 50%; background: var(--border);"></span>
             <span><?php echo $selected['time']; ?></span>
         </div>
     </div>
     
-    <div style="padding-top: 24px; border-top: 1px dashed var(--border); font-size: 14px; line-height: 1.8; color: var(--text-dark); flex: 1;">
+    <div style="padding-top: 24px; border-top: 1px dashed var(--border); font-size: 13px; line-height: 1.8; color: var(--text-dark); flex: 1;">
         <?php echo nl2br(htmlspecialchars($selected['full_desc'])); ?>
     </div>
     
@@ -229,11 +229,11 @@ if (isset($_GET['ajax_id'])) {
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 2px; flex: 1; }
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 14px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -252,7 +252,7 @@ if (isset($_GET['ajax_id'])) {
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: var(--white); padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -262,8 +262,8 @@ if (isset($_GET['ajax_id'])) {
             flex: 1; margin-left: 230px; padding: 32px 40px; max-width: calc(100% - 230px); box-sizing: border-box;
         }
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         
         .header-actions { display: flex; align-items: center; gap: 16px; }
@@ -276,7 +276,7 @@ if (isset($_GET['ajax_id'])) {
         
         .page-btn {
             width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--white);
-            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 13px; font-weight: 600;
             cursor: pointer; text-decoration: none; transition: 0.2s;
         }
         .page-btn:hover:not(:disabled) { background: #f8fafc; border-color: rgba(98, 75, 255, 0.3); color: var(--primary-purple); }
@@ -284,7 +284,7 @@ if (isset($_GET['ajax_id'])) {
         
         .btn-outline {
             border: 1px solid rgba(98, 75, 255, 0.15); background: var(--white); color: var(--primary-purple);
-            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap; cursor: pointer;
         }
         .btn-outline:hover { background: rgba(98, 75, 255, 0.02); }
@@ -323,7 +323,7 @@ if (isset($_GET['ajax_id'])) {
         .detail-card {
             background: var(--white); border: 1px solid var(--border);
             border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            width: 700px; max-width: 92%; max-height: 85vh; overflow-y: auto;
+            width: 700px; max-width: 92%; max-height: 85vh;
             transform: translateY(20px) scale(0.95); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative;
             display: flex; flex-direction: column;
         }
@@ -359,7 +359,7 @@ if (isset($_GET['ajax_id'])) {
         .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--border); overflow-x: auto; overflow-y: hidden; flex: 1; scrollbar-width: none; -ms-overflow-style: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab {
-            padding: 0 4px 12px 4px; font-size: 14px; font-weight: 700; color: var(--text-gray);
+            padding: 0 4px 12px 4px; font-size: 13px; font-weight: 700; color: var(--text-gray);
             cursor: pointer; position: relative; white-space: nowrap; transition: 0.2s;
         }
         .tab:hover { color: var(--primary-purple); }
@@ -393,7 +393,7 @@ if (isset($_GET['ajax_id'])) {
         .ni-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
         .ni-desc { margin: 0; font-size: 13px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
         
-        .ni-meta { text-align: right; min-width: 90px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; gap: 8px; }
+        .ni-meta { text-align: right; min-width: 90px; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; gap: 2px; }
         .ni-meta .date { font-size: 12px; font-weight: 600; color: var(--text-dark); margin: 0; }
         .ni-meta .time { font-size: 11px; color: var(--text-gray); font-weight: 500; margin: 0; }
         
@@ -404,7 +404,7 @@ if (isset($_GET['ajax_id'])) {
         }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
       @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -451,7 +451,7 @@ if (isset($_GET['ajax_id'])) {
             color: var(--text-gray);
             font-size: 10px;
             font-weight: 600;
-            gap: 4px;
+            gap: 2px;
             flex: 1;
             transition: all 0.2s ease;
         }
@@ -593,6 +593,10 @@ if (isset($_GET['ajax_id'])) {
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
             <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
@@ -617,10 +621,11 @@ if (isset($_GET['ajax_id'])) {
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
             </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            <a href="../logout.php" class="nav-item" style="margin-top: auto; color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
+        
         </nav>
     </aside>
 

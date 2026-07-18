@@ -95,17 +95,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class='bx bx-shield-quarter' style="font-size: 32px; color: var(--primary-purple);"></i>
                 </div>
                 <h1 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;">Secure Your Account</h1>
-                <p style="color: var(--text-gray); font-size: 14px; line-height: 1.5;">First-time login detected. Please set a new password to continue.</p>
+                <p style="color: var(--text-gray); font-size: 13px; line-height: 1.5;">First-time login detected. Please set a new password to continue.</p>
             </div>
 
             <?php if($error): ?>
-                <div style="background: #FEF2F2; color: #EF4444; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid #FEE2E2; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #FEF2F2; color: #EF4444; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid #FEE2E2; display: flex; align-items: center; gap: 2px;">
                     <i class='bx bx-error-circle'></i> <?php echo $error; ?>
                 </div>
             <?php endif; ?>
 
             <?php if($success): ?>
-                <div style="background: #F0FDF4; color: #10B981; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid #DCFCE7; display: flex; align-items: center; gap: 8px;">
+                <div style="background: #F0FDF4; color: #10B981; padding: 12px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid #DCFCE7; display: flex; align-items: center; gap: 2px;">
                     <i class='bx bx-check-circle'></i> <?php echo $success; ?>
                 </div>
             <?php endif; ?>

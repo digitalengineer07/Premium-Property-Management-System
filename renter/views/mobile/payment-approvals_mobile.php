@@ -1,0 +1,269 @@
+<?php
+// views/mobile/payment-approvals_mobile.php
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Approvals - <?php echo htmlspecialchars(HOUSE_NAME); ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --primary: #624BFF;
+            --bg-main: #F4F7FA;
+            --text-dark: #0F172A;
+            --text-gray: #64748B;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        .dark-theme {
+            --bg-main: #0B0F19;
+            --text-dark: #F8FAFC;
+            --text-gray: #94A3B8;
+            --white: #111827;
+            --border: #1E293B;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            margin: 0;
+            padding-bottom: 80px; /* Space for bottom nav */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--white);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border-bottom: 1px solid var(--border);
+        }
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .greeting { font-size: 11px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 2px 0; }
+        .name { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; }
+
+        .btn-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2);
+        }
+
+        .content-area { padding: 20px; }
+
+        .approval-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+        }
+
+        .ac-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .ac-date {
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-approved { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-rejected { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .ac-amount {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .ac-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        .ac-label { color: var(--text-gray); font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
+        .ac-value { color: var(--text-dark); font-weight: 700; }
+
+        .ac-note {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--text-gray);
+            border-left: 3px solid var(--primary);
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: var(--white);
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 12px 0;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+        .dark-theme .mobile-bottom-nav { box-shadow: 0 -4px 20px rgba(0,0,0,0.3); }
+        .mb-nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            color: var(--text-gray); text-decoration: none; font-size: 10px; font-weight: 600;
+            width: 20%;
+        }
+        .mb-nav-item i { font-size: 22px; transition: 0.2s; }
+        .mb-nav-item.active { color: var(--primary); }
+        .mb-nav-item.active i { transform: translateY(-2px); }
+        
+        .mb-nav-center {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
+            cursor: pointer; margin-top: -24px;
+            border: 4px solid var(--white); transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
+
+    <div class="top-bar">
+        <div class="user-info">
+            <img src="../<?php echo htmlspecialchars($profile_pic); ?>" alt="Profile" class="avatar">
+            <div>
+                <p class="greeting">Approvals</p>
+                <h1 class="name"><?php echo htmlspecialchars($display_name); ?></h1>
+            </div>
+        </div>
+        <button class="btn-apply" onclick="openPaymentModal(0, 'Apply for Approval', 'general', 0, 'Advance/General')">
+            <i class='bx bx-plus'></i> Apply
+        </button>
+    </div>
+
+    <div class="content-area">
+        <?php if (!empty($payment_success)): ?>
+            <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+                <i class='bx bx-check-circle' style="font-size: 18px;"></i> <?php echo $payment_success; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($payment_error)): ?>
+            <div style="background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+                <i class='bx bx-error-circle' style="font-size: 18px;"></i> <?php echo $payment_error; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (count($approvals) > 0): ?>
+            <?php foreach ($approvals as $ap): ?>
+            <div class="approval-card">
+                <div class="ac-header">
+                    <div class="ac-date"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($ap['created_at'])); ?></div>
+                    <span class="status-badge status-<?php echo strtolower($ap['status']); ?>">
+                        <?php echo htmlspecialchars($ap['status']); ?>
+                    </span>
+                </div>
+                
+                <div class="ac-amount">&#8377;<?php echo number_format($ap['amount'], 2); ?></div>
+                
+                <div class="ac-details">
+                    <div>
+                        <div class="ac-label">Method</div>
+                        <div class="ac-value" style="display: flex; align-items: center; gap: 2px;">
+                            <?php if (strtolower($ap['payment_method']) === 'upi'): ?>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 12px;"> UPI
+                            <?php else: ?>
+                                <i class='bx bx-money' style="color: #10B981;"></i> Cash
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="ac-label">Ref / UTR No</div>
+                        <div class="ac-value" style="font-family: monospace;">
+                            <?php echo !empty($ap['transaction_id']) ? htmlspecialchars($ap['transaction_id']) : 'N/A'; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <?php if (!empty($ap['admin_note'])): ?>
+                    <div class="ac-note">
+                        <strong>Admin Note:</strong> <?php echo htmlspecialchars($ap['admin_note']); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div style="padding: 40px 20px; text-align: center;">
+                <div style="width: 70px; height: 70px; background: rgba(98, 75, 255, 0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                    <i class='bx bx-check-shield' style="font-size: 32px; color: var(--primary);"></i>
+                </div>
+                <h3 style="margin: 0 0 8px 0; color: var(--text-dark); font-size: 16px;">No Requests Yet</h3>
+                <p style="margin: 0; color: var(--text-gray); font-size: 13px;">You haven't submitted any payment verifications.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <a href="dashboard.php" class="mb-nav-item">
+            <i class='bx bx-home-alt-2'></i>
+            <span>Home</span>
+        </a>
+        <a href="my-bills.php" class="mb-nav-item">
+            <i class='bx bx-receipt'></i>
+            <span>Bills</span>
+        </a>
+        <div class="mb-nav-center" onclick="openPaymentModal(0, 'Quick Payment', 'general', 0, 'Advance/General')">
+            <i class='bx bx-plus'></i>
+        </div>
+        <a href="payment-approvals.php" class="mb-nav-item active">
+            <i class='bx bx-check-shield'></i>
+            <span>Approvals</span>
+        </a>
+        <a href="profile.php" class="mb-nav-item">
+            <i class='bx bx-user'></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <?php include "payment_modal.php"; ?>
+</body>
+</html>

@@ -124,7 +124,7 @@ foreach ($notices as $n) {
     .m-notice-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
     .m-notice-header { display: flex; justify-content: space-between; align-items: flex-start; }
     .m-notice-title-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .m-notice-title { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.2px; }
+    .m-notice-title { font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.2px; }
     .m-notice-badge { font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 6px; display: inline-block; line-height: 1; text-transform: uppercase; letter-spacing: 0.5px; }
     .m-notice-desc { font-size: 12px; font-weight: 500; color: var(--text-gray); margin: 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.3s ease; opacity: 0.9; }
     .m-notice-item.expanded .m-notice-desc { -webkit-line-clamp: unset; display: block; opacity: 1; margin-top: 4px; }
@@ -135,14 +135,14 @@ foreach ($notices as $n) {
 
     /* Pagination */
     .m-pagination-info { text-align: center; font-size: 11px; color: var(--text-gray); font-weight: 500; margin-bottom: 12px; }
-    .m-pagination { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .m-pagination { display: flex; justify-content: center; gap: 2px; margin-bottom: 24px; }
     .m-page-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--text-dark); background: var(--white); text-decoration: none; }
     .m-page-btn.active { background: #624BFF; color: white; border-color: #624BFF; }
     
     /* Important Banner */
     .m-important-banner { background: rgba(255, 75, 107, 0.03); border: 1px solid rgba(255, 75, 107, 0.1); border-radius: 16px; margin: 0 16px 16px 16px; padding: 16px; position: relative; }
     .m-important-tag { font-size: 11px; font-weight: 700; color: #FF4B6B; display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-    .m-important-tag i { font-size: 14px; }
+    .m-important-tag i { font-size: 13px; }
     .m-important-content { display: flex; align-items: center; gap: 12px; }
     .m-important-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .m-important-text { flex: 1; }
@@ -150,7 +150,7 @@ foreach ($notices as $n) {
     .m-important-meta { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 6px; }
     
     /* Floating Notification CTA */
-    .m-notify-cta { background: var(--white); border-radius: 12px; margin: 0 16px 16px 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(98, 75, 255, 0.2); box-shadow: 0 4px 15px rgba(98, 75, 255, 0.05); }
+    .m-notify-cta { background: var(--white); border-radius: 12px; margin: 0 16px 16px 16px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(98, 75, 255, 0.2); box-shadow: 0 4px 15px rgba(98, 75, 255, 0.05); }
     .m-notify-text { display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 600; color: var(--text-dark); }
     .m-notify-text i { font-size: 18px; color: #624BFF; }
     .m-notify-btn { font-size: 12px; font-weight: 700; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 6px; padding: 6px 12px; background: transparent; cursor: pointer; }
@@ -164,13 +164,13 @@ foreach ($notices as $n) {
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-bell' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             Notices
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -268,7 +268,7 @@ foreach ($notices as $n) {
     <!-- Notices List -->
     <div class="m-notice-list">
         <?php if ($total_filtered === 0): ?>
-            <div style="text-align: center; padding: 40px 20px; color: var(--text-gray); font-size: 14px; font-weight: 500;">
+            <div style="text-align: center; padding: 40px 20px; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                 <i class='bx bx-ghost' style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
                 <p>No notices found in this category.</p>
             </div>

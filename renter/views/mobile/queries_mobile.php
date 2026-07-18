@@ -33,7 +33,7 @@
     .m-upload-box h5 { font-size: 13px; font-weight: 600; color: var(--text-dark); margin: 0 0 4px 0; }
     .m-upload-box p { font-size: 11px; color: var(--text-gray); margin: 0; }
     
-    .m-btn-submit { width: 100%; background: #624BFF; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); cursor: pointer; }
+    .m-btn-submit { width: 100%; background: #624BFF; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 16px; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); cursor: pointer; }
 
     .m-list-container { padding: 0 16px; display: none; }
     .m-list-container.active { display: block; animation: fadeIn 0.3s ease; }
@@ -42,7 +42,7 @@
     .m-query-header { padding: 16px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
     .m-query-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .m-query-info { flex: 1; min-width: 0; }
-    .m-query-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-query-info h4 { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-query-info p { font-size: 12px; color: var(--text-gray); margin: 0 0 8px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-query-meta { display: flex; justify-content: space-between; align-items: center; }
     .m-query-date { font-size: 11px; font-weight: 600; color: var(--text-gray); }
@@ -59,13 +59,13 @@
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-message-square-dots' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             Queries
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -90,12 +90,12 @@
 
 
     <?php if(!empty($success)): ?>
-        <div style="margin: 0 16px 16px 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+        <div style="margin: 0 16px 16px 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-check-circle'></i> <?php echo $success; ?>
         </div>
     <?php endif; ?>
     <?php if(!empty($error)): ?>
-        <div style="margin: 0 16px 16px 16px; padding: 12px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+        <div style="margin: 0 16px 16px 16px; padding: 12px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-error-circle'></i> <?php echo $error; ?>
         </div>
     <?php endif; ?>

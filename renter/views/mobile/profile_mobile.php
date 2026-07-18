@@ -94,7 +94,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         cursor: pointer;
     }
@@ -155,7 +155,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 13px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
     }
@@ -215,7 +215,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     }
 
     .mp-menu-text h3 {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text-dark, #0F172A);
         margin: 0 0 2px 0;
@@ -291,7 +291,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 2px;
         background: var(--white, #fff);
         border: 1px solid rgba(15, 23, 42, 0.1);
         color: var(--text-dark, #0F172A);
@@ -338,13 +338,13 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <i class='bx bx-menu-alt-left'></i>
             </div>
             <h1 class="m-page-title"
-                style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+                style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
                 <i class='bx bx-user-circle' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
                 Profile
             </h1>
         </div>
 
-        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
             <div class="header-icon-btn" id="themeToggleMobile"
                 onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
                 <i class='bx bx-moon'></i>
@@ -395,7 +395,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </div>
             <div class="mp-user-details">
                 <h2><?php echo htmlspecialchars($d_name); ?></h2>
-                <div style="display: flex; gap: 8px; margin-top: 6px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
+                <div style="display: flex; gap: 2px; margin-top: 6px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
                     <div class="mp-room-badge" style="white-space: nowrap;">Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></div>
                     <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></div>
                 </div>
@@ -497,7 +497,8 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         <a href="../logout.php" class="mp-btn-logout">
             <i class='bx bx-log-out'></i> Logout
         </a>
-    </div>
+    
+        </nav>
 </div>
 
 <nav class="mobile-bottom-nav"
@@ -510,6 +511,6 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     </div>
     <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
     <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
-</nav>
+</div>
 
 <?php include 'mobile_notifications.php'; ?>

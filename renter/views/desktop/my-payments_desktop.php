@@ -16,7 +16,7 @@
                             <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B; border-radius: 20px; letter-spacing: 0.5px;">DUES PENDING</span>
                         <?php endif; ?>
                     </h1>
-                    <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">View and manage all your bills and payments in one place.</p>
+                    <p style="font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;">View and manage all your bills and payments in one place.</p>
                 </div>
             </div>
             <div class="header-actions">
@@ -38,11 +38,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -56,7 +56,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -107,10 +107,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -528,7 +528,7 @@ function filterMobileByYear(year) {
                                         <?php if ($agg['status'] == 'Paid'): ?>
                                             <a href="payment-history.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
                                         <?php elseif ($agg['status'] == 'Partial'): ?>
-                                            <div style="display: flex; gap: 8px; align-items: center;">
+                                            <div style="display: flex; gap: 2px; align-items: center;">
                                                 <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
                                                     <i class='bx bx-credit-card-alt'></i> Pay Now
                                                 </button>
@@ -563,7 +563,7 @@ function filterMobileByYear(year) {
                                     <?php if ($bill['status'] == 'Paid'): ?>
                                         <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
                                     <?php elseif ($bill['status'] == 'Partial'): ?>
-                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                        <div style="display: flex; gap: 2px; align-items: center;">
                                             <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
                                                 <i class='bx bx-credit-card-alt'></i> Pay Now
                                             </button>

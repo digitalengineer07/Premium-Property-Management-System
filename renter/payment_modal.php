@@ -30,7 +30,7 @@
                       display: flex;
                       flex-direction: column;
                   }
-                  .pm-layout { flex: 1; overflow-y: auto; padding-right: 2px; }
+                  .pm-layout { flex: 1; padding-right: 2px; }
                   
                   .pm-header { margin-bottom: 12px !important; flex-shrink: 0; }
                   .pm-header h2 { font-size: 20px !important; }
@@ -124,7 +124,7 @@
         }
 
 </style>
-          <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; overflow-y: auto; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
+          <div id="paymentModalPanel" class="animate-up" style="max-width: 420px; width: 100%; background: white; text-align: center; padding: 24px; max-height: 90vh; border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.1);">
               <div class="pm-header">
                   <h2 style="font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--primary-purple), #FF4B6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; letter-spacing: -0.5px;">Make Payment</h2>
                   <div onclick="closePaymentModal()" style="width: 36px; height: 36px; border-radius: 50%; background: #F8F9FA; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;">
@@ -136,7 +136,7 @@
                   <div class="pm-col-left">
                       <div id="paymentDetails" style="margin-bottom: 20px;">
                           <div id="paymentTitle" style="font-weight: 700; font-size: 15px; margin-bottom: 8px; color: var(--text-dark);">Total Outstanding Balance</div>
-                          <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 4px;">&#8377;<span id="paymentAmountDisplay">0</span></div>
+                          <div id="pmAmountContainer" style="font-size: 40px; font-weight: 800; color: var(--primary-purple); letter-spacing: -1px; display: flex; align-items: center; justify-content: center; gap: 2px;">&#8377;<span id="paymentAmountDisplay">0</span></div>
                       </div>
 
                       <div style="background: rgba(98, 75, 255, 0.04); padding: 12px 10px; border-radius: 12px; border: 1px dashed rgba(98, 75, 255, 0.2); margin-bottom: 20px;">
@@ -153,8 +153,22 @@
                           <input type="hidden" name="amount" id="hiddenAmount">
                           <input type="hidden" name="month" id="hiddenMonth">
                           
-                          <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Enter Transaction ID / UTR</label>
-                          <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
+                          <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Payment Mode</label>
+                          <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+                              <label style="flex: 1; border: 1px solid var(--primary-purple); background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px; font-weight: 600; font-size: 13px;" class="pm-mode-label" id="label-upi">
+                                  <input type="radio" name="payment_method" value="UPI" checked onchange="toggleRefField(true)" style="display: none;">
+                                  <i class='bx bx-mobile'></i> UPI
+                              </label>
+                              <label style="flex: 1; border: 1px solid var(--border); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px; font-weight: 600; font-size: 13px;" class="pm-mode-label" id="label-cash">
+                                  <input type="radio" name="payment_method" value="Cash" onchange="toggleRefField(false)" style="display: none;">
+                                  <i class='bx bx-money'></i> Cash
+                              </label>
+                          </div>
+
+                          <div id="refNoContainer">
+                              <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Enter Transaction ID / UTR</label>
+                              <input type="text" name="transaction_id" id="transaction_id_input" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
+                          </div>
                           
                           <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 15px; border-radius: 12px; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);">
                               <i class='bx bx-check-shield' style="font-size: 18px;"></i> Confirm Payment
@@ -162,6 +176,33 @@
                       </form>
                       
                       <script>
+                      function toggleRefField(isUpi) {
+                          const refContainer = document.getElementById('refNoContainer');
+                          const input = document.getElementById('transaction_id_input');
+                          const labelUpi = document.getElementById('label-upi');
+                          const labelCash = document.getElementById('label-cash');
+                          
+                          if (isUpi) {
+                              refContainer.style.display = 'block';
+                              input.required = true;
+                              labelUpi.style.borderColor = 'var(--primary-purple)';
+                              labelUpi.style.backgroundColor = 'rgba(98, 75, 255, 0.05)';
+                              labelUpi.style.color = 'var(--primary-purple)';
+                              labelCash.style.borderColor = 'var(--border)';
+                              labelCash.style.backgroundColor = 'transparent';
+                              labelCash.style.color = 'var(--text-dark)';
+                          } else {
+                              refContainer.style.display = 'none';
+                              input.required = false;
+                              input.value = '';
+                              labelCash.style.borderColor = '#10B981';
+                              labelCash.style.backgroundColor = 'rgba(16, 185, 129, 0.05)';
+                              labelCash.style.color = '#10B981';
+                              labelUpi.style.borderColor = 'var(--border)';
+                              labelUpi.style.backgroundColor = 'transparent';
+                              labelUpi.style.color = 'var(--text-dark)';
+                          }
+                      }
                       document.getElementById('paymentNotifyForm').addEventListener('submit', function(e) {
                           // Level 3 Security: Strict Rate Limiting
                           const rateLimitKey = 'lastPaymentSubmitTime';
@@ -203,9 +244,9 @@
                               <img id="dynamicQR" src="" alt="UPI QR Code" style="width: 140px; height: 140px; display: block; border-radius: 8px;">
                           </div>
                           <p id="pmQrText1" style="font-size: 12px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Scan with any UPI App</p>
-                          <div id="pmQrText2" style="font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
+                          <div id="pmQrText2" style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin-bottom: 16px;">nikhil119124-1@oksbi</div>
                           
-                          <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 13px; font-weight: 700; padding: 10px; justify-content: center; width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 8px; margin-bottom: 16px;">
+                          <a id="upiDeepLinkBtn" href="#" style="display: none; background: #10B981; color: white; border: none; font-size: 13px; font-weight: 700; padding: 10px; justify-content: center; width: 100%; border-radius: 10px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); text-decoration: none; align-items: center; gap: 2px; margin-bottom: 16px;">
                               <i class='bx bx-mobile-alt' style="font-size: 16px;"></i> Pay on phone
                           </a>
                           

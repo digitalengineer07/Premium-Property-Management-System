@@ -34,11 +34,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -98,10 +98,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -170,7 +170,7 @@
         </div>
 
         <?php if($success): ?>
-            <div id="successMsgAlert" style="padding: 16px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: opacity 0.5s ease-out;">
+            <div id="successMsgAlert" style="padding: 16px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 2px; transition: opacity 0.5s ease-out;">
                 <i class='bx bx-check-circle' style="font-size: 20px;"></i> <?php echo $success; ?>
             </div>
             <script>
@@ -184,7 +184,7 @@
             </script>
         <?php endif; ?>
         <?php if($error): ?>
-            <div id="errorMsgAlert" style="padding: 16px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: opacity 0.5s ease-out;">
+            <div id="errorMsgAlert" style="padding: 16px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border-radius: 12px; margin-bottom: 24px; font-weight: 600; display: flex; align-items: center; gap: 2px; transition: opacity 0.5s ease-out;">
                 <i class='bx bx-error-circle' style="font-size: 20px;"></i> <?php echo $error; ?>
             </div>
             <script>
@@ -336,8 +336,8 @@
                         </div>
                         <div id="details-<?php echo $index; ?>" style="display: none; padding: 0 0 20px 64px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
-                                <p style="font-size: 14px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
-                                <a href="?action=delete&id=<?php echo $q['id']; ?>" onclick="return confirm('Are you sure you want to delete this query?');" style="color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 4px; flex-shrink: 0; background: rgba(239, 68, 68, 0.05);"><i class='bx bx-trash'></i> Delete</a>
+                                <p style="font-size: 13px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                                <a href="?action=delete&id=<?php echo $q['id']; ?>" onclick="return confirm('Are you sure you want to delete this query?');" style="color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 2px; flex-shrink: 0; background: rgba(239, 68, 68, 0.05);"><i class='bx bx-trash'></i> Delete</a>
                             </div>
                             <?php if(!empty($q['admin_remark'])): ?>
                                 <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
@@ -358,7 +358,7 @@
                     $end_idx = min($offset + $limit, $total_filtered);
                     ?>
                     <span>Showing <?php echo $start_idx; ?> to <?php echo $end_idx; ?> of <?php echo $total_filtered; ?> queries</span>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 2px;">
                         <?php if($page > 1): ?>
                             <a href="?page=<?php echo $page - 1; ?>" class="page-btn"><i class='bx bx-chevron-left'></i></a>
                         <?php else: ?>

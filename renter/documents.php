@@ -206,11 +206,12 @@ $pending_count = 3 - $verified_count;
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 14px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -229,7 +230,7 @@ $pending_count = 3 - $verified_count;
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: var(--white); padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -257,8 +258,8 @@ $pending_count = 3 - $verified_count;
         }
         
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
@@ -270,7 +271,7 @@ $pending_count = 3 - $verified_count;
         
         .btn-outline {
             border: 1px solid rgba(98, 75, 255, 0.15); background: var(--white); color: var(--primary-purple);
-            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap; cursor: pointer;
         }
         .btn-outline:hover { background: rgba(98, 75, 255, 0.02); }
@@ -280,7 +281,7 @@ $pending_count = 3 - $verified_count;
         .kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 32px 20px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: 0.2s; }
         .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
         .kpi-icon { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; flex-shrink: 0; }
-        .kpi-info h4 { margin: 0 0 8px 0; font-size: 14px; color: var(--text-gray); font-weight: 600; }
+        .kpi-info h4 { margin: 0 0 8px 0; font-size: 13px; color: var(--text-gray); font-weight: 600; }
         .kpi-info h2 { margin: 0; font-size: 32px; color: var(--text-dark); font-weight: 800; line-height: 1; }
         .kpi-subtext { margin: 0; font-size: 12px; font-weight: 600; color: var(--text-gray); text-align: center; }
 
@@ -309,7 +310,7 @@ $pending_count = 3 - $verified_count;
         .upload-area:hover { background: rgba(98, 75, 255, 0.05); border-color: var(--primary-purple); }
         .upload-icon { width: 64px; height: 64px; border-radius: 50%; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: inline-flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 16px; }
 
-        .btn-primary { background: var(--primary-purple); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn-primary { background: var(--primary-purple); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 13px; cursor: pointer; width: 100%; transition: 0.2s; }
         .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(98,75,255,0.3); }
 
         /* Table Styles */
@@ -319,7 +320,7 @@ $pending_count = 3 - $verified_count;
         .docs-table tr:last-child td { border-bottom: none; }
         .docs-table tr:hover td { background: rgba(0,0,0,0.01); }
 
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
         .status-Verified { background: rgba(16, 185, 129, 0.1); color: #10B981; }
         .status-Pending { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .status-Rejected { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
@@ -330,15 +331,15 @@ $pending_count = 3 - $verified_count;
         .cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
         .cat-list-item:last-child { border-bottom: none; padding-bottom: 0; }
         .cat-left { display: flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; color: var(--text-dark); }
-        .cat-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-        .cat-right { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-gray); }
+        .cat-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+        .cat-right { display: flex; align-items: center; gap: 2px; font-size: 12px; font-weight: 700; color: var(--text-gray); }
 
         .tips-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
         .tips-list li { display: flex; align-items: start; gap: 10px; font-size: 13px; color: var(--text-dark); line-height: 1.5; font-weight: 500; }
         .tips-list li i { color: #10B981; font-size: 16px; margin-top: 2px; }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
       @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -447,7 +448,7 @@ $pending_count = 3 - $verified_count;
             color: var(--text-gray, #64748B);
             font-size: 11px;
             font-weight: 600;
-            gap: 4px;
+            gap: 2px;
             transition: all 0.2s ease;
             padding: 6px 12px;
             border-radius: 12px;
@@ -483,6 +484,10 @@ $pending_count = 3 - $verified_count;
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
             <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
@@ -507,10 +512,11 @@ $pending_count = 3 - $verified_count;
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
             </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            <a href="../logout.php" class="nav-item" style="margin-top: auto; color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
+        
         </nav>
     </aside>
 
@@ -552,7 +558,7 @@ $pending_count = 3 - $verified_count;
                     <div class="side-widget" style="text-align: center; padding: 60px 24px; animation: fadeIn 0.5s;">
                         <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(16, 185, 129, 0.1); color: #10B981; display: inline-flex; align-items: center; justify-content: center; font-size: 40px; margin-bottom: 24px;"><i class='bx bx-check-shield'></i></div>
                         <h3 style="margin: 0 0 12px 0; font-size: 20px; font-weight: 800; color: var(--text-dark);">Identity Verified</h3>
-                        <p style="margin: 0; font-size: 14px; font-weight: 500; color: var(--text-gray); line-height: 1.6;">Your Aadhar Card has been securely uploaded and verified.<br>You cannot overwrite a verified document.</p>
+                        <p style="margin: 0; font-size: 13px; font-weight: 500; color: var(--text-gray); line-height: 1.6;">Your Aadhar Card has been securely uploaded and verified.<br>You cannot overwrite a verified document.</p>
                     </div>
                 `;
                 

@@ -178,16 +178,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
 
-        if (empty($tr_id)) {
+        $payment_method = $_POST['payment_method'] ?? 'UPI';
+
+        if ($payment_method === 'UPI' && empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";
         } else {
-            // Check for duplicate UTR
-            $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE transaction_id = ?");
-            mysqli_stmt_bind_param($check_stmt, "s", $tr_id);
-            mysqli_stmt_execute($check_stmt);
-            $check_res = mysqli_stmt_get_result($check_stmt);
+            $is_duplicate = false;
+            if ($payment_method === 'UPI' && !empty($tr_id)) {
+                // Check for duplicate UTR
+                $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE transaction_id = ?");
+                mysqli_stmt_bind_param($check_stmt, "s", $tr_id);
+                mysqli_stmt_execute($check_stmt);
+                $check_res = mysqli_stmt_get_result($check_stmt);
+                if (mysqli_num_rows($check_res) > 0) {
+                    $is_duplicate = true;
+                }
+            }
             
-            if (mysqli_num_rows($check_res) > 0) {
+            if ($is_duplicate) {
                 $payment_error = "This UTR number has already been submitted. Please check your transaction ID.";
             } else {
                 // Ensure table exists (safeguard)
@@ -204,8 +212,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )");
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id) VALUES (?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "isids", $user_id, $b_type, $b_id, $amt, $tr_id);
+            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, payment_method) VALUES (?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "isidss", $user_id, $b_type, $b_id, $amt, $tr_id, $payment_method);
             if (mysqli_stmt_execute($stmt)) {
                 $payment_success = "Payment notification sent to Admin for verification!";
             } else {
@@ -346,11 +354,12 @@ $show_banner = ($is_late && !empty($overdue_list));
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 14px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -369,7 +378,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -387,8 +396,8 @@ $show_banner = ($is_late && !empty($overdue_list));
         .top-header {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
         }
-        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
 
         .header-actions { display: flex; align-items: center; gap: 16px; }
@@ -405,7 +414,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         .user-profile-pill {
-            display: flex; align-items: center; gap: 8px; cursor: pointer; padding-left: 8px;
+            display: flex; align-items: center; gap: 2px; cursor: pointer; padding-left: 8px;
         }
         .user-avatar { width: 34px; height: 34px; background: var(--primary-purple); color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
         .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; white-space: nowrap; }
@@ -421,8 +430,8 @@ $show_banner = ($is_late && !empty($overdue_list));
         .reminder-content { display: flex; align-items: center; gap: 20px; z-index: 2; }
         .reminder-icon { width: 56px; height: 56px; background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.3); }
         .reminder-text h3 { font-size: 18px; font-weight: 800; margin: 0 0 4px 0; }
-        .reminder-text p { font-size: 14px; opacity: 0.95; margin: 0; font-weight: 500; }
-        .reminder-banner .btn-pay-now { background: white; color: #FF4B6B; padding: 12px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; z-index: 2; transition: all 0.2s; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+        .reminder-text p { font-size: 13px; opacity: 0.95; margin: 0; font-weight: 500; }
+        .reminder-banner .btn-pay-now { background: white; color: #FF4B6B; padding: 12px 24px; border-radius: 14px; font-weight: 700; font-size: 15px; border: none; cursor: pointer; display: flex; align-items: center; gap: 2px; z-index: 2; transition: all 0.2s; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
         .reminder-banner .btn-pay-now:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
         .reminder-bg-art { position: absolute; right: 15%; top: 50%; transform: translateY(-50%); opacity: 0.1; font-size: 160px; z-index: 1; pointer-events: none; }
 
@@ -451,7 +460,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .dashboard-3col { display: grid; grid-template-columns: 1.2fr 1.1fr 1.5fr; gap: 24px; margin-bottom: 32px; align-items: stretch; }
         .dash-panel { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; }
         .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .panel-title { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 800; margin: 0; color: var(--text-dark); }
+        .panel-title { display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 800; margin: 0; color: var(--text-dark); }
         .panel-link { font-size: 13px; font-weight: 700; color: var(--primary-purple); text-decoration: none; transition: 0.2s; }
         .panel-link:hover { text-decoration: underline; }
 
@@ -462,7 +471,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .bill-icon { width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 75, 107, 0.08); color: #FF4B6B; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink:0; }
         .bill-icon.yellow { background: rgba(245, 158, 11, 0.08); color: #F59E0B; }
         .bill-icon.green { background: rgba(16, 185, 129, 0.08); color: #10B981; }
-        .bill-info h4 { font-size: 14px; font-weight: 700; margin: 0 0 4px 0; color: var(--text-dark); }
+        .bill-info h4 { font-size: 13px; font-weight: 700; margin: 0 0 4px 0; color: var(--text-dark); }
         .bill-info p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
         .bill-right { text-align: right; }
         .bill-right h4 { font-size: 15px; font-weight: 800; color: #FF4B6B; margin: 0 0 6px 0; }
@@ -493,10 +502,10 @@ $show_banner = ($is_late && !empty($overdue_list));
         .tx-icon.elec { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .tx-icon.adv { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
         .tx-icon.maint { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
-        .tx-info h4 { font-size: 14px; font-weight: 700; margin: 0 0 4px 0; color: var(--text-dark); }
+        .tx-info h4 { font-size: 13px; font-weight: 700; margin: 0 0 4px 0; color: var(--text-dark); }
         .tx-info p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
         .tx-right { display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
-        .tx-amount { font-size: 14px; font-weight: 800; color: #10B981; width: 75px; text-align: right; }
+        .tx-amount { font-size: 13px; font-weight: 800; color: #10B981; width: 75px; text-align: right; }
         .tx-amount.pending { color: #FF4B6B; }
         .tx-status { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; width: 60px; text-align: center; }
         .tx-status.paid { background: rgba(16, 185, 129, 0.1); color: #10B981; }
@@ -513,7 +522,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .fw-icon.bell { color: var(--primary-purple); }
         .fw-info h4 { font-size: 15px; font-weight: 800; margin: 0 0 4px 0; color: var(--text-dark); }
         .fw-info p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
-        .btn-fw { border: 1px solid rgba(98, 75, 255, 0.2); background: transparent; color: var(--primary-purple); padding: 10px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.03); }
+        .btn-fw { border: 1px solid rgba(98, 75, 255, 0.2); background: transparent; color: var(--primary-purple); padding: 10px 14px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 8px rgba(98,75,255,0.03); }
         .btn-fw:hover { background: rgba(98, 75, 255, 0.03); border-color: var(--primary-purple); }
 
         /* App Footer */
@@ -562,7 +571,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .payments-container { background: white; border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--card-shadow); overflow: hidden; margin-bottom: 24px; }
         
         .tabs-header { display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid var(--border); gap: 32px; background: white; }
-        .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 20px 0; font-size: 14px; font-weight: 600; color: var(--text-gray); cursor: pointer; transition: 0.2s; }
+        .tab-btn { background: none; border: none; border-bottom: 2px solid transparent; padding: 20px 0; font-size: 13px; font-weight: 600; color: var(--text-gray); cursor: pointer; transition: 0.2s; }
         .tab-btn:hover { color: var(--primary-purple); }
         .tab-btn.active { color: var(--primary-purple); border-bottom-color: var(--primary-purple); }
         
@@ -582,7 +591,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .td-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .td-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
         .td-icon.red { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
-        .td-info h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; white-space: nowrap; }
+        .td-info h4 { margin: 0 0 4px 0; font-size: 13px; font-weight: 700; white-space: nowrap; }
         .td-info p { margin: 0; font-size: 11px; color: var(--text-gray); font-weight: 500; white-space: nowrap; }
         
         .td-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
@@ -595,13 +604,13 @@ $show_banner = ($is_late && !empty($overdue_list));
         .btn-action-pay:hover { background: rgba(255, 75, 107, 0.05); }
         
         .bottom-info-bar { background: rgba(98, 75, 255, 0.04); border: 1px solid rgba(98, 75, 255, 0.1); border-radius: 16px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
-        .info-text { font-size: 13px; color: var(--text-gray); font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .info-text { font-size: 13px; color: var(--text-gray); font-weight: 500; display: flex; align-items: center; gap: 2px; }
         .info-text i { font-size: 18px; color: var(--primary-purple); }
-        .btn-pay-pending { background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-pay-pending { background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 2px; transition: 0.2s; }
         .btn-pay-pending:hover { background: var(--primary-hover); transform: translateY(-1px); }
         
         .pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 24px; padding: 24px; border-top: 1px solid var(--border); }
-        .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.2s; }
+        .page-btn { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid var(--border); color: var(--text-gray); font-size: 13px; font-weight: 600; text-decoration: none; transition: 0.2s; }
         .page-btn:hover { background: #FAFBFC; color: var(--text-dark); border-color: #E2E8F0; }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); box-shadow: 0 4px 12px rgba(98, 75, 255, 0.3); }
 
@@ -737,7 +746,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             color: var(--text-gray, #64748B);
             font-size: 11px;
             font-weight: 600;
-            gap: 4px;
+            gap: 2px;
             transition: all 0.2s ease;
             padding: 6px 12px;
             border-radius: 12px;
@@ -1069,7 +1078,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 font-weight: 700;
                 display: inline-flex;
                 align-items: center;
-                gap: 4px;
+                gap: 2px;
                 cursor: pointer;
             }
             .m-pci-dl-btn {
@@ -1102,7 +1111,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .m-pn-note {
                 display: flex;
                 align-items: flex-start;
-                gap: 8px;
+                gap: 2px;
                 font-size: 11px;
                 color: var(--text-dark);
                 line-height: 1.4;
@@ -1120,12 +1129,12 @@ $show_banner = ($is_late && !empty($overdue_list));
                 border: none;
                 border-radius: 14px;
                 padding: 14px;
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 800;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 8px;
+                gap: 2px;
                 box-shadow: 0 4px 15px rgba(98, 75, 255, 0.35);
                 cursor: pointer;
             }
@@ -1158,6 +1167,10 @@ $show_banner = ($is_late && !empty($overdue_list));
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
             <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
@@ -1182,10 +1195,11 @@ $show_banner = ($is_late && !empty($overdue_list));
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
             </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            <a href="../logout.php" class="nav-item" style="margin-top: auto; color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
+        
         </nav>
     </aside>
 
@@ -1272,7 +1286,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                         setTimeout(() => {
                             container.innerHTML = `<div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                 <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                             </div>`;
                         }, 600);
                     }

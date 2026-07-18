@@ -70,7 +70,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         cursor: pointer;
     }
@@ -223,7 +223,7 @@
         min-width: 0;
     }
     .m-doc-title {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text-dark, #0F172A);
         margin-bottom: 2px;
@@ -322,7 +322,7 @@
         margin-bottom: 12px;
     }
     .m-upload-zone h4 {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text-dark, #0F172A);
         margin: 0 0 6px 0;
@@ -341,7 +341,7 @@
         width: 100%;
         border-radius: 10px;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 13px;
         cursor: pointer;
     }
 
@@ -404,7 +404,7 @@
     .m-tips-list li {
         display: flex;
         align-items: flex-start;
-        gap: 8px;
+        gap: 2px;
         font-size: 12px;
         color: var(--text-dark, #0F172A);
         font-weight: 600;
@@ -430,13 +430,13 @@
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-folder-open' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             Documents
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -604,7 +604,7 @@
     <!-- Important Tips -->
     <div class="m-section-card">
         <div class="m-section-title" style="margin-bottom: 12px;">
-            <span style="display: flex; align-items: center; gap: 8px;"><i class='bx bx-bulb' style="color: #F59E0B; font-size: 20px;"></i> Important Tips</span>
+            <span style="display: flex; align-items: center; gap: 2px;"><i class='bx bx-bulb' style="color: #F59E0B; font-size: 20px;"></i> Important Tips</span>
         </div>
         <ul class="m-tips-list">
             <li><i class='bx bx-check'></i> Upload clear and valid documents for quick verification.</li>
