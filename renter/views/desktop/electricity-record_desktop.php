@@ -111,7 +111,7 @@
         
         <!-- KPI Grid -->
         <div class="kpi-grid">
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon purple"><i class='bx bx-credit-card'></i></div>
                 <div class="kpi-info">
                     <h4>Total Units (This Year)</h4>
@@ -119,7 +119,7 @@
                     <p>Total electricity consumed</p>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon green"><i class='bx bx-money'></i></div>
                 <div class="kpi-info">
                     <h4>Amount Paid (This Year)</h4>
@@ -127,7 +127,7 @@
                     <p>Total paid for electricity</p>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon orange"><i class='bx bx-time-five'></i></div>
                 <div class="kpi-info">
                     <h4>Pending Amount</h4>
@@ -139,7 +139,7 @@
                     <?php endif; ?>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon blue"><i class='bx bx-tachometer'></i></div>
                 <div class="kpi-info">
                     <h4>Last Recorded Reading</h4>
