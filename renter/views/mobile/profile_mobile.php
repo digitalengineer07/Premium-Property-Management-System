@@ -15,7 +15,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
-        padding-bottom: 0px;
+        padding-bottom: 90px;
     }
 
     /* Header */
@@ -501,8 +501,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         </nav>
 </div>
 
-<nav class="mobile-bottom-nav"
-    style="display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; z-index: 2147483647 !important; transform: none !important; position: fixed !important; height: 72px !important; bottom: 8px !important; left: 16px !important; right: 16px !important; border-radius: 24px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important; border: 1px solid rgba(255,255,255,0.8) !important; padding: 0 16px !important; background: rgba(255,255,255,0.95) !important; backdrop-filter: blur(12px) !important; justify-content: space-around !important; align-items: center !important;">
+<nav class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
     <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
     <div class="mb-nav-center"

@@ -1262,96 +1262,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 // Mobile specific script if needed
 </script>
 
-<style>
-/* Universal Mobile Bottom Navigation Bar CSS */
-@media screen and (max-width: 768px) {
-    .mobile-bottom-nav { display: flex !important; }
-    .main-content {
-        padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
-    }
-}
 
-.mobile-bottom-nav {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: calc(68px + env(safe-area-inset-bottom));
-    padding-bottom: env(safe-area-inset-bottom);
-    background: var(--white, #FFFFFF);
-    border-top: 1px solid var(--border, #F1F5F9);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
-    z-index: 9999;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 8px;
-}
-.dark-theme .mobile-bottom-nav {
-    background: #111827;
-    border-top-color: #1E293B;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-}
-.mb-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--text-gray, #64748B);
-    font-size: 11px;
-    font-weight: 600;
-    gap: 2px;
-    transition: all 0.2s ease;
-    padding: 6px 12px;
-    border-radius: 12px;
-}
-.mb-nav-item i { font-size: 22px; transition: transform 0.2s ease, color 0.2s ease; }
-.mb-nav-item.active {
-    color: var(--primary-purple, #624BFF);
-}
-.mb-nav-item.active i {
-    transform: translateY(-2px);
-    color: var(--primary-purple, #624BFF);
-}
-.mb-nav-center {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #624BFF, #8B5CF6);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 8px 20px rgba(98, 75, 255, 0.4);
-    margin-top: -24px;
-    margin-bottom: 4px;
-    border: 4px solid var(--white, #FFFFFF);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.dark-theme .mb-nav-center {
-    border-color: #111827;
-}
-</style>
 
 <!-- Mobile Nav Moved to profile_mobile.php -->
 
-<style>
-/* BRUTEFORCE MOBILE NAV VISIBILITY (Restricted to mobile screens to protect desktop layout) */
-@media screen and (max-width: 768px) {
-    nav.mobile-bottom-nav {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 2147483647 !important;
-        transform: none !important;
-    }
-    body {
-        padding-bottom: 0 !important; /* Removed massive 120px gap */
-    }
-}
-</style>
+
 </body>
 </html>

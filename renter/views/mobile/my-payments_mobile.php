@@ -472,9 +472,9 @@
 
     <!-- Notice & Pay All Button -->
     <?php if ($total_due > 0): ?>
-    <div style="background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%); border: 1px solid rgba(98, 75, 255, 0.15); border-radius: 20px; padding: 16px; margin-bottom: 24px;">
-        <div style="display: flex; align-items: flex-start; gap: 2px; font-size: 11px; color: var(--text-dark); line-height: 1.4; margin-bottom: 14px;">
-            <i class='bx bx-info-circle' style="font-size: 18px; color: #624BFF; flex-shrink: 0;"></i>
+    <div class="pending-payment-notice">
+        <div class="pending-payment-text">
+            <i class='bx bx-info-circle'></i>
             <div>
                 <strong>Note:</strong> Please clear your pending payments before the due date to avoid service interruptions.
             </div>
