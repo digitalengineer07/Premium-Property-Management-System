@@ -147,27 +147,33 @@
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
 
     <header class="premium-header-pill" style="position: fixed; top: 0; left: 0;">
-        <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
-            <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px;">
-                <i class='bx bx-check-shield' style="font-size: 24px; color: #ffffff; margin-top: 2px;"></i>
-                Approvals
-            </h1>
-        </div>
-        
-        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 6px;">
-            <div class="header-icon-btn" onclick="openApprovalModal()" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid;">
-                <i class='bx bx-plus' style="color: white;"></i>
-            </div>
-            <div class="header-icon-btn" id="themeToggleMobile" onclick="const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid;">
-                <i class='bx bx-moon' style="color: white;"></i>
-            </div>
-            <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
-                <div style="width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #624BFF; font-size: 16px; font-weight: 800;">
-                    <?php echo strtoupper(substr(trim($display_name ?? 'U'), 0, 1)); ?>
+            <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
+                <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.toggle('mobile-drawer-open'); }" style="color: white; font-size: 28px; cursor: pointer;">
+                    <i class='bx bx-menu-alt-left'></i>
                 </div>
-            </a>
-        </div>
-    </header>
+                <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 6px;">
+                    <i class='bx bx-check-shield' style="font-size: 24px; color: #ffffff; margin-top: 2px;"></i>
+                    Approvals
+                </h1>
+            </div>
+            
+            <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 6px;">
+                <div class="header-icon-btn" onclick="openApprovalModal()" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid; cursor: pointer;">
+                    <i class='bx bx-plus' style="color: white;"></i>
+                </div>
+                <div class="header-icon-btn" onclick="if(typeof openNotif==='function') openNotif(); else alert('Notifications');" style="color: white; border-color: rgba(255,255,255,0.2); border: 1px solid; cursor: pointer; position: relative;">
+                    <i class='bx bx-bell' style="color: white;"></i>
+                    <?php if (isset($unread_count) && $unread_count > 0): ?>
+                        <span class="m-notif-badge" style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: #EF4444; border-radius: 50%; border: 2px solid #624BFF;"></span>
+                    <?php endif; ?>
+                </div>
+                <a href="profile.php" class="header-profile-btn" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+                    <div style="width: 100%; height: 100%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #624BFF; font-size: 16px; font-weight: 800;">
+                        <?php echo strtoupper(substr(trim($display_name ?? 'U'), 0, 1)); ?>
+                    </div>
+                </a>
+            </div>
+        </header>
 
     <div class="content-area" style="padding-top: 100px;">
         <?php if (!empty($payment_success)): ?>
