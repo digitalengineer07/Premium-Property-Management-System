@@ -50,7 +50,7 @@
         .name { font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; }
 
         
-        .content-area { padding: 20px; }
+        .content-area { padding: 20px; width: 100%; box-sizing: border-box; }
 
         .approval-card {
             background: var(--white);
