@@ -369,7 +369,7 @@
                     <?php if ($bill['status'] == 'Paid'): ?>
                         <div class="m-pci-date"><?php echo $bill['paid_on']; ?></div>
                     <?php else: ?>
-                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
                             <i class='bx bx-credit-card'></i> Pay Now
                         </button>
                     <?php endif; ?>
@@ -528,7 +528,7 @@ function filterMobileByYear(year) {
                                         <?php if ($agg['status'] == 'Paid'): ?>
                                             <a href="payment-history.php" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
                                         <?php else: ?>
-                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo $agg['amount']; ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0)">
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0)">
                                                 <i class='bx bx-credit-card-alt'></i> Pay Now
                                             </button>
                                         <?php endif; ?>
@@ -556,7 +556,7 @@ function filterMobileByYear(year) {
                                     <?php if ($bill['status'] == 'Paid'): ?>
                                         <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
                                     <?php else: ?>
-                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
                                             <i class='bx bx-credit-card-alt'></i> Pay Now
                                         </button>
                                     <?php endif; ?>

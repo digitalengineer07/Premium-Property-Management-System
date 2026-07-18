@@ -199,7 +199,7 @@
                             <?php echo $subtitle; ?>
                         </p>
                         <?php if ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo $amount; ?>, 'Total Payment', 'monthly')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Total Payment', 'monthly')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
@@ -257,7 +257,7 @@
                             <?php echo $subtitle; ?>
                         </p>
                         <?php if ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo $amount; ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
@@ -296,7 +296,7 @@
                             <?php echo date('M Y', strtotime($t['month'] . '-01')); ?> • Units: <?php echo htmlspecialchars($t['units_consumed']); ?>
                         </p>
                         <?php if ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo $amount; ?>, 'Electricity Bill', 'electricity')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Electricity Bill', 'electricity')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
