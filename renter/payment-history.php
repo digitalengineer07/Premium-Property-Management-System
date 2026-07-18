@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             }
 
             $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "isidsss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method);
+            mysqli_stmt_bind_param($stmt, "isidssss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method, $sys_tx_id);
             if (mysqli_stmt_execute($stmt)) {
                 $_SESSION['payment_success'] = "Payment notification sent to Admin for verification!";
                 header("Location: " . $_SERVER['PHP_SELF']);
