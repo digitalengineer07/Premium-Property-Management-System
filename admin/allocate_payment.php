@@ -1,0 +1,148 @@
+<?php
+// admin/allocate_payment.php
+require_once "../db.php";
+
+/**
+ * Recalculate and update the status of a specific bill based on total payments made.
+ */
+function recalculate_bill_status($conn, $bill_type, $bill_id) {
+    if (empty($bill_id)) return;
+    $bill_id = (int)$bill_id;
+    
+    // 1. Calculate total paid
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
+    $total_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
+    
+    // 2. Fetch bill amount and update status
+    if ($bill_type === 'rent') {
+        $qBill = mysqli_query($conn, "SELECT rent_amount, user_id FROM rent WHERE id=$bill_id");
+        if ($b = mysqli_fetch_assoc($qBill)) {
+            $bill_amount = (float)$b['rent_amount'];
+            $new_status = ($total_paid >= $bill_amount - 0.01) ? 'Paid' : 'Partial';
+            mysqli_query($conn, "UPDATE rent SET status='$new_status', paid_date=IF('$new_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
+            
+            // Clear prior unpaid if fully paid
+            if ($new_status === 'Paid') {
+                mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id={$b['user_id']} AND status IN ('Due', 'Partial') AND id < $bill_id");
+            }
+        }
+    } elseif ($bill_type === 'electricity' || $bill_type === 'elec_rent') {
+        // electricity table stores combined rent and electricity
+        $qBill = mysqli_query($conn, "SELECT amount, rent_amount, maintenance, dues, total_amount, user_id FROM electricity WHERE id=$bill_id");
+        if ($b = mysqli_fetch_assoc($qBill)) {
+            $elec_part = (float)$b['amount'];
+            $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'];
+            
+            $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
+            $total_elec_paid = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
+            
+            $qRentPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
+            $total_rent_paid = (float)(mysqli_fetch_assoc($qRentPaid)['tp'] ?? 0);
+            
+            $elec_status = ($total_elec_paid >= $elec_part - 0.01) ? 'Paid' : 'Partial';
+            $rent_status = ($total_rent_paid >= $rent_part - 0.01) ? 'Paid' : 'Partial';
+            $overall_status = ($elec_status === 'Paid' && $rent_status === 'Paid') ? 'Paid' : 'Partial';
+            
+            mysqli_query($conn, "UPDATE electricity SET status='$overall_status', elec_status='$elec_status', rent_status='$rent_status', paid_date=IF('$overall_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
+            
+            // Clear prior unpaid if fully paid
+            if ($overall_status === 'Paid') {
+                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$b['user_id']} AND status IN ('Due', 'Partial') AND id < $bill_id");
+            }
+        }
+    }
+}
+
+/**
+ * Allocate a bulk payment across the oldest pending bills.
+ */
+function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transaction_id, $sys_tx_id, $max_month_str = null) {
+    $user_id = (int)$user_id;
+    $remaining_payment = (float)$amount;
+    
+    // Fetch all pending bills (rent and electricity)
+    $pending_bills = [];
+    
+    // 1. Rent
+    $qRent = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount, 'rent' as type FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+    while ($r = mysqli_fetch_assoc($qRent)) {
+        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+        $due = max(0, (float)$r['total_amount'] - $paid);
+        if ($due > 0) {
+            $r['due'] = $due;
+            $pending_bills[] = $r;
+        }
+    }
+    
+    // 2. Electricity (elec_rent part and electricity part)
+    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+    while ($r = mysqli_fetch_assoc($qElec)) {
+        // Elec part
+        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+        $edue = max(0, (float)$r['elec_part'] - $epaid);
+        if ($edue > 0) {
+            $pending_bills[] = [
+                'id' => $r['id'], 'month' => $r['month'], 'due_date' => $r['due_date'], 'total_amount' => $r['elec_part'], 'type' => 'electricity', 'due' => $edue
+            ];
+        }
+        
+        // Rent part
+        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
+        if ($rdue > 0) {
+            $pending_bills[] = [
+                'id' => $r['id'], 'month' => $r['month'], 'due_date' => $r['due_date'], 'total_amount' => $r['rent_part'], 'type' => 'elec_rent', 'due' => $rdue
+            ];
+        }
+    }
+    
+    // Sort chronologically
+    usort($pending_bills, function($a, $b) {
+        $da = strtotime($a['month'] . '-01');
+        $db = strtotime($b['month'] . '-01');
+        if ($da == $db) {
+            return ($a['type'] == 'elec_rent' || $a['type'] == 'rent') ? -1 : 1; // Prioritize rent over elec for same month
+        }
+        return $da - $db;
+    });
+    
+    $max_time = $max_month_str ? strtotime($max_month_str . '-01') : null;
+    
+    // Allocate
+    foreach ($pending_bills as $bill) {
+        if ($remaining_payment <= 0.01) break; // done
+        
+        $bill_time = strtotime($bill['month'] . '-01');
+        if ($max_time && $bill_time > $max_time) continue; // skip future bills if paying 'monthly'
+        
+        $allocate = min($bill['due'], $remaining_payment);
+        $remaining_payment -= $allocate;
+        
+        $p_month = $bill['month'];
+        
+        // Insert into payments
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?)");
+        mysqli_stmt_bind_param($stmt, "isisdsdss", $user_id, $bill['type'], $bill['id'], $p_month, $bill['total_amount'], $payment_mode, $allocate, $transaction_id, $sys_tx_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        
+        // Recalculate status for this bill
+        recalculate_bill_status($conn, $bill['type'], $bill['id']);
+    }
+    
+    // If there is still remaining payment (advance payment), handle it
+    if ($remaining_payment > 0.01) {
+        // Insert as advance
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?)");
+        mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        
+        // Update user advance_payment balance
+        mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $remaining_payment WHERE id=$user_id");
+    }
+}
+?>

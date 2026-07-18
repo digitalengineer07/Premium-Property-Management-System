@@ -1,0 +1,4 @@
+- `[x]` 1. Create Auto-Allocation Algorithm (`admin/allocate_payment.php`)
+- `[x]` 2. Secure Specific Bill Updates (`admin/payment-verifications.php`)
+- `[x]` 3. Integrate Allocation for Total/Monthly Payments
+- `[x]` 4. Final verification and testing

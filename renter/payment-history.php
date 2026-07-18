@@ -185,6 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $p_month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
+        $sys_tx_id = 'PAY-' . strtoupper(bin2hex(random_bytes(4)));
 
         if ($payment_method === 'UPI' && empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";
@@ -224,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN month VARCHAR(50) NULL");
             }
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             mysqli_stmt_bind_param($stmt, "isidsss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method);
             if (mysqli_stmt_execute($stmt)) {
                 $_SESSION['payment_success'] = "Payment notification sent to Admin for verification!";
