@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     $p_sys_tx = !empty($notif['sys_tx_id']) ? mysqli_real_escape_string($conn, $notif['sys_tx_id']) : '';
                     
                     // 1. Handle Bulk/Total/Monthly Payments
-                    if ($p_btype == 'total' || $p_btype == 'monthly') {
+                    if ($p_btype == 'total' || $p_btype == 'monthly' || $p_btype == 'general') {
                         $max_m = ($p_btype == 'monthly' && !empty($notif['month'])) ? mysqli_real_escape_string($conn, $notif['month']) : null;
                         allocate_bulk_payment($conn, $p_uid, $p_amt, $p_pmode, $p_tx, $p_sys_tx, $max_m);
                     } 
