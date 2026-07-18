@@ -97,10 +97,16 @@
         }
 
         .ac-details {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.2fr;
+            gap: 8px;
             font-size: 13px;
+            align-items: start;
         }
+        .ac-details > div { display: flex; flex-direction: column; }
+        .ac-details > div:nth-child(2) { text-align: center; align-items: center; }
+        .ac-details > div:nth-child(3) { text-align: right; align-items: flex-end; }
+        .ac-value { word-break: break-all; }
         .ac-label { color: var(--text-gray); font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px; }
         .ac-value { color: var(--text-dark); font-weight: 700; }
 
@@ -202,11 +208,11 @@
                 <div class="ac-details">
                     <div>
                         <div class="ac-label">Method</div>
-                        <div class="ac-value" style="display: flex; align-items: center; gap: 2px;">
+                        <div class="ac-value" style="display: flex; align-items: center; gap: 4px;">
                             <?php if (strtolower($ap['payment_method']) === 'upi'): ?>
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px; width: 40px; object-fit: contain;"> UPI
+                                <span style="background: rgba(98, 75, 255, 0.1); color: #624BFF; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; border: 1px solid rgba(98, 75, 255, 0.2);">UPI</span>
                             <?php else: ?>
-                                <i class='bx bx-money' style="color: #10B981;"></i> Cash
+                                <span style="background: rgba(16, 185, 129, 0.1); color: #10B981; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.2);"><i class='bx bx-money'></i> Cash</span>
                             <?php endif; ?>
                         </div>
                     </div>
