@@ -204,7 +204,7 @@
                         <div class="ac-label">Method</div>
                         <div class="ac-value" style="display: flex; align-items: center; gap: 2px;">
                             <?php if (strtolower($ap['payment_method']) === 'upi'): ?>
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 12px;"> UPI
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px; width: 40px; object-fit: contain;"> UPI
                             <?php else: ?>
                                 <i class='bx bx-money' style="color: #10B981;"></i> Cash
                             <?php endif; ?>
