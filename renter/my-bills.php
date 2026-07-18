@@ -196,16 +196,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
+        if (empty($tr_id)) {
+            $tr_id = 'SYS-' . strtoupper(bin2hex(random_bytes(6)));
+        }
         $sys_tx_id = 'PAY-' . strtoupper(bin2hex(random_bytes(4)));
 
-        if ($payment_method === 'UPI' && empty($tr_id)) {
+        $bill_valid = true;
+        if ($b_id > 0 && $b_type === 'rent') {
+            $ck = mysqli_query($conn, "SELECT id FROM rent WHERE id=$b_id AND user_id=$user_id");
+            if (mysqli_num_rows($ck) == 0) $bill_valid = false;
+        } else if ($b_id > 0 && $b_type === 'electricity') {
+            $ck = mysqli_query($conn, "SELECT id FROM electricity WHERE id=$b_id AND user_id=$user_id");
+            if (mysqli_num_rows($ck) == 0) $bill_valid = false;
+        }
+
+        if ($amt <= 0) {
+            $payment_error = "Payment amount must be greater than zero.";
+        } else if (!$bill_valid) {
+            $payment_error = "Invalid bill reference. You can only pay your own bills.";
+        } else if ($payment_method === 'UPI' && strpos($tr_id, 'SYS-') === 0) {
             $payment_error = "Please enter the Transaction ID / UTR.";
         } else {
             $is_duplicate = false;
-            if ($payment_method === 'UPI' && !empty($tr_id)) {
+            if ($payment_method === 'UPI' && !empty($tr_id) && strpos($tr_id, 'SYS-') !== 0) {
                 // Check for duplicate UTR
                 $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE transaction_id = ?");
                 mysqli_stmt_bind_param($check_stmt, "s", $tr_id);
+                mysqli_stmt_execute($check_stmt);
+                $check_res = mysqli_stmt_get_result($check_stmt);
+                if (mysqli_num_rows($check_res) > 0) {
+                    $is_duplicate = true;
+                }
+            } else if ($payment_method === 'Cash' || $payment_method === 'Bank Transfer') {
+                // Check for duplicate cash/bank applications within the last 5 minutes to prevent spam
+                $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE user_id = ? AND amount = ? AND payment_method = ? AND created_at >= NOW() - INTERVAL 5 MINUTE");
+                mysqli_stmt_bind_param($check_stmt, "ids", $user_id, $amt, $payment_method);
                 mysqli_stmt_execute($check_stmt);
                 $check_res = mysqli_stmt_get_result($check_stmt);
                 if (mysqli_num_rows($check_res) > 0) {
