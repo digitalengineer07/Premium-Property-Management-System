@@ -181,6 +181,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
+        if (empty($tr_id)) {
+            $tr_id = 'SYS-' . strtoupper(bin2hex(random_bytes(6)));
+        }
         $month = $_POST['month'] ?? '';
         $p_month = $_POST['month'] ?? '';
 
