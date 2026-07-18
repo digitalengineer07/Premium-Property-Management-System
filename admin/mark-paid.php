@@ -64,6 +64,13 @@ if (isset($_POST['paid_amount']) && is_numeric($_POST['paid_amount'])) {
     $paid_amount = (float)$_POST['paid_amount'];
 }
 
+if ($paid_amount <= 0) {
+    $_SESSION['error'] = "Payment amount must be greater than zero.";
+    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? 'dashboard.php'));
+    exit;
+}
+
+
 /* 2. Process via Unified Engine */
 if ($type === 'advance') {
     // Direct deposit into advance_payment

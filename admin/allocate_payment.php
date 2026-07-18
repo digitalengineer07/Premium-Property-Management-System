@@ -67,6 +67,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
  * Allocate a bulk payment across the oldest pending bills.
  */
 function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transaction_id, $sys_tx_id, $max_month_str = null) {
+    if ((float)$amount <= 0) return;
     $user_id = (int)$user_id;
     $remaining_payment = (float)$amount;
     
