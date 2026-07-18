@@ -274,11 +274,15 @@
             </div>
 
             <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-time'></i></div>
+                <div class="kpi-min-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;"><i class='bx bx-credit-card'></i></div>
                 <div class="kpi-min-info">
-                    <h4>Pending Payments</h4>
-                    <h2><?php echo money($total_pending_amount); ?></h2>
-                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo $total_pending_count; ?> Transactions</div>
+                    <h4>Total Outstanding</h4>
+                    <h2 style="<?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></h2>
+                    <?php if ($total_due > 0): ?>
+                        <div class="kpi-min-tag" style="background: rgba(255, 75, 107, 0.08); color: #FF4B6B;">Payment Due</div>
+                    <?php else: ?>
+                        <div class="kpi-min-tag" style="background: rgba(16, 185, 129, 0.08); color: #10B981;">All Clear</div>
+                    <?php endif; ?>
                 </div>
             </div>
             
