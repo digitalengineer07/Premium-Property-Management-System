@@ -18,7 +18,9 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
         $qBill = mysqli_query($conn, "SELECT rent_amount, user_id FROM rent WHERE id=$bill_id");
         if ($b = mysqli_fetch_assoc($qBill)) {
             $bill_amount = (float)$b['rent_amount'];
-            $new_status = ($total_paid >= $bill_amount - 0.01) ? 'Paid' : 'Partial';
+            $new_status = 'Due';
+            if ($total_paid >= $bill_amount - 0.01) $new_status = 'Paid';
+            elseif ($total_paid > 0) $new_status = 'Partial';
             mysqli_query($conn, "UPDATE rent SET status='$new_status', paid_date=IF('$new_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
             // Clear prior unpaid if fully paid
@@ -39,9 +41,17 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $qRentPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
             $total_rent_paid = (float)(mysqli_fetch_assoc($qRentPaid)['tp'] ?? 0);
             
-            $elec_status = ($total_elec_paid >= $elec_part - 0.01) ? 'Paid' : 'Partial';
-            $rent_status = ($total_rent_paid >= $rent_part - 0.01) ? 'Paid' : 'Partial';
-            $overall_status = ($elec_status === 'Paid' && $rent_status === 'Paid') ? 'Paid' : 'Partial';
+            $elec_status = 'Due';
+            if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
+            elseif ($total_elec_paid > 0) $elec_status = 'Partial';
+            
+            $rent_status = 'Due';
+            if ($total_rent_paid >= $rent_part - 0.01) $rent_status = 'Paid';
+            elseif ($total_rent_paid > 0) $rent_status = 'Partial';
+            
+            $overall_status = 'Due';
+            if ($elec_status === 'Paid' && $rent_status === 'Paid') $overall_status = 'Paid';
+            elseif ($total_elec_paid > 0 || $total_rent_paid > 0) $overall_status = 'Partial';
             
             mysqli_query($conn, "UPDATE electricity SET status='$overall_status', elec_status='$elec_status', rent_status='$rent_status', paid_date=IF('$overall_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
