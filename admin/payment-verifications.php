@@ -1,6 +1,8 @@
 <?php
 // admin/payment-verifications.php
 require_once "../db.php";
+require_once "recalculate_status.php";
+require_once "../vendor/autoload.php";
 session_start();
 require_once "utils_mailer.php";
 
@@ -30,64 +32,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
                 
                 if ($upd_status) {
-                    // If this payment was for a bill, update the bill status strictly
-                    if (!empty($notif['bill_id'])) {
-                        $bid = (int)$notif['bill_id'];
-                        if ($notif['bill_type'] == 'rent') {
-                            mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                            mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
-                        } elseif ($notif['bill_type'] == 'elec_rent') {
-                            mysqli_query($conn, "UPDATE electricity SET rent_status='Paid', paid_date=COALESCE(paid_date, CURDATE()) WHERE id=$bid");
-                            // If electricity part is also paid or zero, mark overall status Paid, else Partial
-                            $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT amount, elec_status FROM electricity WHERE id=$bid"));
-                            if ($ck && ($ck['elec_status'] == 'Paid' || (float)$ck['amount'] <= 0)) {
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
-                            } else {
-                                mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
-                            }
-                        } elseif ($notif['bill_type'] == 'electricity') {
-                            mysqli_query($conn, "UPDATE electricity SET elec_status='Paid', paid_date=COALESCE(paid_date, CURDATE()) WHERE id=$bid");
-                            // If rent part is also paid or zero, mark overall status Paid, else Partial
-                            $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rent_amount, maintenance, dues, rent_status FROM electricity WHERE id=$bid"));
-                            if ($ck && ($ck['rent_status'] == 'Paid' || ((float)$ck['rent_amount'] + (float)$ck['maintenance'] + (float)$ck['dues']) <= 0)) {
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
-                            } else {
-                                mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
-                            }
-                        }
-                    } elseif ($notif['bill_type'] == 'total') {
-                        $uid = (int)$notif['user_id'];
-                        mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
-                        mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
-                    }
-                    
-                    // Automatically record transaction in payments table if not present
                     $p_uid = (int)$notif['user_id'];
                     $p_bid = (int)$notif['bill_id'];
                     $p_btype = $notif['bill_type'];
                     $p_amt = (float)$notif['amount'];
                     $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
                     $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
-                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
-                    if ($ck_p && mysqli_num_rows($ck_p) == 0) {
-                        $p_month = date('F Y');
-                        if ($p_bid > 0) {
+                    $p_month = $notif['month'] ?? date('F Y');
+
+                    // If bill_type is monthly or total, allocate lump sum payment
+                    if ($p_btype == 'monthly' || $p_btype == 'total' || $p_bid == 0) {
+                        allocate_lump_sum_payment($conn, $p_uid, $p_amt, $p_tx, $p_pmode, $p_month);
+                    } else {
+                        // Automatically record transaction in payments table if not present for specific bill
+                        $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
+                        if ($ck_p && mysqli_num_rows($ck_p) == 0) {
                             if ($p_btype == 'rent') {
-                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$p_bid"));
-                                if ($mr) $p_month = $mr['month'];
+                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
+                                if ($mr) { $p_month = $mr['month']; $total_amt = $mr['rent_amount']; }
                             } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
-                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$p_bid"));
-                                if ($mr) $p_month = $mr['month'];
+                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, amount, (rent_amount + maintenance + dues) as er_amt FROM electricity WHERE id=$p_bid"));
+                                if ($mr) { $p_month = $mr['month']; $total_amt = ($p_btype == 'electricity') ? $mr['amount'] : $mr['er_amt']; }
                             }
-                        } else {
-                            $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$p_uid AND (status='Paid' OR total_amount=$p_amt OR amount=$p_amt) ORDER BY id DESC LIMIT 1"));
-                            if (!$mr) $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$p_uid AND (status='Paid' OR rent_amount=$p_amt) ORDER BY id DESC LIMIT 1"));
-                            if ($mr && !empty($mr['month'])) $p_month = $mr['month'];
+                            $total_amt = $total_amt ?? $p_amt;
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $total_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
                         }
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
                     }
+
+                    // Strict Rule: Recalculate all statuses dynamically based on the updated payments table!
+                    recalculate_user_status($conn, $p_uid);
 
 
                     $success = "Payment #{$notif['transaction_id']} approved successfully.";

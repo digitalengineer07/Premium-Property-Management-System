@@ -26,7 +26,7 @@ $room_no = $user['room_no'] ?? 'N/A';
 
 /* Calculate totals */
 // 1. Rent from pure 'rent' table
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount - (SELECT IFNULL(SUM(paid_amount), 0) FROM payments WHERE bill_type = 'rent' AND bill_id = rent.id)), 0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r1 = mysqli_stmt_get_result($stmt);
@@ -36,8 +36,8 @@ mysqli_stmt_close($stmt);
 
 // 2. Electricity and Rent components from 'electricity' table
 $stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status = 'Due') OR (status = 'Due' AND elec_status = 'Due') THEN amount ELSE 0 END), 0) as elec_total, 
-    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status = 'Due') OR (status = 'Due' AND rent_status = 'Due') THEN (rent_amount + maintenance + dues) ELSE 0 END), 0) as rent_portion_total 
+    IFNULL(SUM(CASE WHEN elec_status != 'Paid' AND status != 'Paid' THEN (amount - (SELECT IFNULL(SUM(paid_amount), 0) FROM payments WHERE bill_type = 'electricity' AND bill_id = electricity.id)) ELSE 0 END), 0) as elec_total, 
+    IFNULL(SUM(CASE WHEN rent_status != 'Paid' AND status != 'Paid' THEN ((rent_amount + maintenance + dues) - (SELECT IFNULL(SUM(paid_amount), 0) FROM payments WHERE bill_type = 'elec_rent' AND bill_id = electricity.id)) ELSE 0 END), 0) as rent_portion_total 
 FROM electricity WHERE user_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
@@ -173,10 +173,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $payment_error = "Invalid CSRF token.";
     } else {
-        $b_type = $_POST['bill_type'] ?? 'total';
-        $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
+        $b_type = $_POST['bill_type'] ?? '';
+        $b_id = (int)$_POST['bill_id'];
         $amt = (float)$_POST['amount'];
+        $month_val = $_POST['month'] ?? '';
         $tr_id = trim($_POST['transaction_id'] ?? '');
+        $pm_method = $_POST['payment_method'] ?? 'UPI';
 
         if (empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";
@@ -204,8 +206,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )");
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id) VALUES (?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "isids", $user_id, $b_type, $b_id, $amt, $tr_id);
+            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month) VALUES (?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "isidss", $user_id, $b_type, $b_id, $amt, $tr_id, $month_val);
             if (mysqli_stmt_execute($stmt)) {
                 $payment_success = "Payment notification sent to Admin for verification!";
             } else {
