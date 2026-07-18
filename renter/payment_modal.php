@@ -151,7 +151,6 @@
                           <input type="hidden" name="bill_type" id="hiddenBillType">
                           <input type="hidden" name="bill_id" id="hiddenBillId">
                           <input type="hidden" name="amount" id="hiddenAmount">
-                          <input type="hidden" name="month" id="hiddenMonth">
                           
                           <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Enter Transaction ID / UTR</label>
                           <input type="text" name="transaction_id" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
