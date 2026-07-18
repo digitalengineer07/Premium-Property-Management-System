@@ -67,8 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
 
 
 // Fetch Approvals from DB
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
+$total_res = mysqli_query($conn, "SELECT COUNT(*) as total FROM payment_notifications WHERE user_id = $user_id");
+$total_row = mysqli_fetch_assoc($total_res);
+$total_records = $total_row['total'];
+$total_pages = ceil($total_records / $limit);
+
 $approvals = [];
-$res = mysqli_query($conn, "SELECT * FROM payment_notifications WHERE user_id = $user_id ORDER BY created_at DESC");
+$res = mysqli_query($conn, "SELECT * FROM payment_notifications WHERE user_id = $user_id ORDER BY created_at DESC LIMIT $limit OFFSET $offset");
 if ($res) {
     while ($row = mysqli_fetch_assoc($res)) {
         $approvals[] = $row;
