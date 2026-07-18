@@ -120,7 +120,7 @@ if ($type === 'rent') {
 
     // If fully paid, clear out previous unpaid/partial rent bills as they are settled
     if ($new_status === 'Paid') {
-        mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id != $id");
+        mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id < $id");
     }
 } elseif ($type === 'electricity') {
     $stmt = mysqli_prepare($conn, "UPDATE electricity SET status=?, elec_status=?, rent_status=? WHERE id = ?");
@@ -130,7 +130,7 @@ if ($type === 'rent') {
     
     // If fully paid, clear out previous unpaid/partial electricity bills as they are settled
     if ($new_status === 'Paid') {
-        mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id != $id");
+        mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id = {$bill['user_id']} AND status IN ('Due', 'Partial') AND id < $id");
     }
 }
 

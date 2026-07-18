@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : null;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
+        $p_month = $_POST['month'] ?? '';
 
         if (empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";
@@ -204,8 +205,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )");
 
-            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id) VALUES (?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "isids", $user_id, $b_type, $b_id, $amt, $tr_id);
+            // If month column doesn't exist, add it
+            $month_check = mysqli_query($conn, "SHOW COLUMNS FROM payment_notifications LIKE 'month'");
+            if (mysqli_num_rows($month_check) == 0) {
+                mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN month VARCHAR(50) NULL");
+            }
+
+            $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month) VALUES (?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "isidss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month);
             if (mysqli_stmt_execute($stmt)) {
                 $payment_success = "Payment notification sent to Admin for verification!";
             } else {

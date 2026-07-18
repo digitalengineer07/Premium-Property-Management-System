@@ -221,7 +221,7 @@ $total_bills_count = count($mobile_all_bills);
                 </div>
             </div>
             <div style="margin-top: auto;">
-                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Payments Made</span>
+                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Bills Cleared</span>
             </div>
         </div>
 

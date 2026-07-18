@@ -318,15 +318,16 @@ foreach ($elecs as $t) {
     ];
 }
 
-// Calculate Payments made this year (Net amount verified by Admin)
+// Calculate total value of bills cleared this year (as requested by user)
 $current_year = date('Y');
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as total_paid, COUNT(*) as pay_count FROM payments WHERE user_id = ? AND YEAR(payment_date) = ?");
-mysqli_stmt_bind_param($stmt, "is", $user_id, $current_year);
-mysqli_stmt_execute($stmt);
-$res_paid = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-$paid_this_year = (float)$res_paid['total_paid'];
-$bills_paid_count = (int)$res_paid['pay_count'];
-mysqli_stmt_close($stmt);
+$stmt_elec = mysqli_query($conn, "SELECT IFNULL(SUM(total_amount), 0) as total, COUNT(*) as cnt FROM electricity WHERE user_id = $user_id AND status = 'Paid' AND YEAR(COALESCE(paid_date, due_date, CURDATE())) = $current_year");
+$elec_data = mysqli_fetch_assoc($stmt_elec);
+
+$stmt_rent = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount), 0) as total, COUNT(*) as cnt FROM rent WHERE user_id = $user_id AND status = 'Paid' AND YEAR(COALESCE(paid_date, due_date, CURDATE())) = $current_year");
+$rent_data = mysqli_fetch_assoc($stmt_rent);
+
+$paid_this_year = (float)($elec_data['total'] + $rent_data['total']);
+$bills_paid_count = (int)($elec_data['cnt'] + $rent_data['cnt']);
 ?>
 <!doctype html>
 <html lang="en">

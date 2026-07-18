@@ -148,9 +148,11 @@
         $all_bills = [];
         $payments_q = mysqli_query($conn, "
             SELECT p.id, p.bill_type, p.bill_id, p.month, p.total_amount as bill_amount, p.paid_amount, p.payment_date, p.payment_mode, p.transaction_id,
-                   e.status as elec_status, e.rent_amount, e.maintenance, e.dues, e.amount as elec_usage, e.created_at
+                   e.status as elec_status, e.rent_amount, e.maintenance, e.dues, e.amount as elec_usage, e.created_at, e.due_date as elec_due,
+                   r.due_date as rent_due
             FROM payments p
-            LEFT JOIN electricity e ON p.bill_type IN ('electricity', 'total', 'elec_rent') AND p.bill_id = e.id
+            LEFT JOIN electricity e ON (p.bill_type IN ('electricity', 'total', 'elec_rent') AND p.bill_id = e.id) OR (p.bill_type = 'monthly' AND p.month = e.month AND p.user_id = e.user_id)
+            LEFT JOIN rent r ON p.bill_type = 'rent' AND p.bill_id = r.id
             WHERE p.user_id = $user_id
         ");
 
@@ -165,16 +167,16 @@
             
             if ($p['bill_type'] == 'rent') {
                 $bill_date = $ts ? date('01 M Y', $ts) : 'N/A';
-                $due_date = $ts ? date('07 M Y', $ts) : 'N/A';
+                $due_date = !empty($p['rent_due']) ? date('d M Y', strtotime($p['rent_due'])) : ($ts ? date('07 M Y', $ts) : 'N/A');
                 $title = 'Rent Payment';
                 $filter_type = 'rent';
                 $icon = 'bx-home';
                 $color = 'purple';
-            } elseif ($p['bill_type'] == 'electricity' || $p['bill_type'] == 'total' || $p['bill_type'] == 'elec_rent') {
+            } elseif ($p['bill_type'] == 'electricity' || $p['bill_type'] == 'total' || $p['bill_type'] == 'elec_rent' || $p['bill_type'] == 'monthly') {
                 $slip_dt = !empty($p['created_at']) ? $p['created_at'] : $p['payment_date'];
                 if ($ts) {
                     $bill_date = date('d M Y', strtotime($slip_dt));
-                    $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
+                    $due_date = !empty($p['elec_due']) ? date('d M Y', strtotime($p['elec_due'])) : date('d M Y', strtotime($slip_dt . ' + 6 days'));
                 }
                 
                 $has_elec = (float)$p['elec_usage'] > 0;
@@ -226,8 +228,16 @@
 
         // 2. Removed fallback loop that caused duplicate/inflated 'extra paid amount' KPIs
         
-        $total_successful_amount = array_sum(array_column($all_bills, 'amount'));
-        $total_successful_count = count($all_bills);
+        // Calculate total value of bills cleared this year (as requested by user)
+        $stmt_elec = mysqli_query($conn, "SELECT IFNULL(SUM(total_amount), 0) as total, COUNT(*) as cnt FROM electricity WHERE user_id = $user_id AND status = 'Paid'");
+        $elec_data = mysqli_fetch_assoc($stmt_elec);
+
+        $stmt_rent = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount), 0) as total, COUNT(*) as cnt FROM rent WHERE user_id = $user_id AND status = 'Paid'");
+        $rent_data = mysqli_fetch_assoc($stmt_rent);
+
+        $total_successful_amount = (float)($elec_data['total'] + $rent_data['total']);
+        $total_successful_count = (int)($elec_data['cnt'] + $rent_data['cnt']);
+        
         $avg_payment = $total_successful_count > 0 ? $total_successful_amount / $total_successful_count : 0;
         
         $pending_q = mysqli_query($conn, "SELECT COALESCE(SUM(amount),0) as total_pending, COUNT(id) as count_pending FROM payment_notifications WHERE user_id=$user_id AND status='Pending'");
@@ -484,12 +494,6 @@
                 function renderPaginationControls(totalPages) {
                     const pagContainer = container.querySelector('.pagination-controls');
                     if (!pagContainer) return;
-                    
-                    if (totalPages <= 1) {
-                        pagContainer.innerHTML = '';
-                        pagContainer.style.display = 'none';
-                        return;
-                    }
                     
                     pagContainer.style.display = 'flex';
                     let html = '';

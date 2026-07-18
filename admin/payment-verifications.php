@@ -35,14 +35,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         $bid = (int)$notif['bill_id'];
                         if ($notif['bill_type'] == 'rent') {
                             mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                            mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
+                            mysqli_query($conn, "UPDATE rent SET status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id < $bid");
                         } elseif ($notif['bill_type'] == 'elec_rent') {
                             mysqli_query($conn, "UPDATE electricity SET rent_status='Paid', paid_date=COALESCE(paid_date, CURDATE()) WHERE id=$bid");
                             // If electricity part is also paid or zero, mark overall status Paid, else Partial
                             $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT amount, elec_status FROM electricity WHERE id=$bid"));
                             if ($ck && ($ck['elec_status'] == 'Paid' || (float)$ck['amount'] <= 0)) {
                                 mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
+                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id < $bid");
                             } else {
                                 mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
                             }
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                             $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rent_amount, maintenance, dues, rent_status FROM electricity WHERE id=$bid"));
                             if ($ck && ($ck['rent_status'] == 'Paid' || ((float)$ck['rent_amount'] + (float)$ck['maintenance'] + (float)$ck['dues']) <= 0)) {
                                 mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id != $bid");
+                                mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid' WHERE user_id={$notif['user_id']} AND status IN ('Due', 'Partial') AND id < $bid");
                             } else {
                                 mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
                             }
@@ -61,6 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         $uid = (int)$notif['user_id'];
                         mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
                         mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
+                    } elseif ($notif['bill_type'] == 'monthly') {
+                        $uid = (int)$notif['user_id'];
+                        $m = isset($notif['month']) ? mysqli_real_escape_string($conn, $notif['month']) : '';
+                        if (!empty($m)) {
+                            // Mark all previous or current bills as paid since dues roll over
+                            mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status IN ('Due', 'Partial') AND STR_TO_DATE(CONCAT('01 ', month), '%d %M %Y') <= STR_TO_DATE(CONCAT('01 ', '$m'), '%d %M %Y')");
+                            mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status IN ('Due', 'Partial') AND STR_TO_DATE(CONCAT('01 ', month), '%d %M %Y') <= STR_TO_DATE(CONCAT('01 ', '$m'), '%d %M %Y')");
+                        }
                     }
                     
                     // Automatically record transaction in payments table if not present

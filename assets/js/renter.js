@@ -104,11 +104,12 @@ window.showToast = function(message, type = 'error') {
 const paymentTitle = document.getElementById('paymentTitle');
 const hiddenBillType = document.getElementById('hiddenBillType');
 const hiddenBillId = document.getElementById('hiddenBillId');
+const hiddenMonth = document.getElementById('hiddenMonth');
 const hiddenAmount = document.getElementById('hiddenAmount');
 const paymentTimer = document.getElementById('paymentTimer');
 let timerInterval = null;
 
-function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null) {
+function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null, month = '') {
     // Level 3 Security: Rate Limiting to prevent modal opening spam
     const rateLimitKey = 'lastModalOpenTime';
     const lastOpen = localStorage.getItem(rateLimitKey);
@@ -148,6 +149,7 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
     hiddenAmount.value = numericAmount;
     hiddenBillType.value = type;
     hiddenBillId.value = id;
+    if (hiddenMonth) hiddenMonth.value = month;
 
     const upiId = "nikhil119124-1@oksbi";
     const name = "Nikhil Kumar";

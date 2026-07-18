@@ -200,7 +200,7 @@
                         </p>
                         <?php if ($t['status'] === 'Partial'): ?>
                             <div style="display: flex; gap: 6px;">
-                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Total Payment', 'monthly')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Total Payment', 'monthly', 0, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                     <i class='bx bx-revision'></i> Pay Now
                                 </button>
                                 <a href="payment-history.php?month=<?php echo urlencode(date('F Y', strtotime($t['month'].'-01'))); ?>" style="background: white; border: 1px solid rgba(98, 75, 255, 0.3); color: #624BFF; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none;">
@@ -208,7 +208,7 @@
                                 </a>
                             </div>
                         <?php elseif ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Total Payment', 'monthly')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Total Payment', 'monthly', 0, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
@@ -267,7 +267,7 @@
                         </p>
                         <?php if ($t['status'] === 'Partial'): ?>
                             <div style="display: flex; gap: 6px;">
-                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>', <?php echo $t['id']; ?>, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                     <i class='bx bx-revision'></i> Pay Now
                                 </button>
                                 <a href="payment-history.php?month=<?php echo urlencode(date('F Y', strtotime($t['month'].'-01'))); ?>" style="background: white; border: 1px solid rgba(98, 75, 255, 0.3); color: #624BFF; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none;">
@@ -275,7 +275,7 @@
                                 </a>
                             </div>
                         <?php elseif ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, '<?php echo addslashes($title); ?>', '<?php echo $t['source'] === 'advance' ? 'advance' : 'rent'; ?>', <?php echo $t['id']; ?>, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
@@ -315,7 +315,7 @@
                         </p>
                         <?php if ($t['status'] === 'Partial'): ?>
                             <div style="display: flex; gap: 6px;">
-                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Electricity Bill', 'electricity')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                                <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Electricity Bill', 'electricity', <?php echo $t['id']; ?>, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                     <i class='bx bx-revision'></i> Pay Now
                                 </button>
                                 <a href="payment-history.php?month=<?php echo urlencode(date('F Y', strtotime($t['month'].'-01'))); ?>" style="background: white; border: 1px solid rgba(98, 75, 255, 0.3); color: #624BFF; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none;">
@@ -323,7 +323,7 @@
                                 </a>
                             </div>
                         <?php elseif ($isPending): ?>
-                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Electricity Bill', 'electricity')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
+                            <button onclick="openPaymentModal(<?php echo max(0, min((float)$amount, (float)$total_due)); ?>, 'Electricity Bill', 'electricity', <?php echo $t['id']; ?>, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; cursor: pointer;">
                                 <i class='bx bx-revision'></i> Pay Now
                             </button>
                         <?php else: ?>
