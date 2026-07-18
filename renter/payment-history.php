@@ -200,6 +200,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 if (mysqli_num_rows($check_res) > 0) {
                     $is_duplicate = true;
                 }
+            } else if ($payment_method === 'Cash' || $payment_method === 'Bank Transfer') {
+                // Check for duplicate cash/bank applications within the last 5 minutes to prevent spam
+                $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE user_id = ? AND amount = ? AND payment_method = ? AND created_at >= NOW() - INTERVAL 5 MINUTE");
+                mysqli_stmt_bind_param($check_stmt, "ids", $user_id, $amt, $payment_method);
+                mysqli_stmt_execute($check_stmt);
+                $check_res = mysqli_stmt_get_result($check_stmt);
+                if (mysqli_num_rows($check_res) > 0) {
+                    $is_duplicate = true;
+                }
             }
             
             if ($is_duplicate) {
