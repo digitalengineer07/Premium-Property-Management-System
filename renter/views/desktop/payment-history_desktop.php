@@ -149,7 +149,7 @@
         $all_bills = [];
         
         // 1. Fetch user-applied transactions from payment_notifications
-        $q_n = mysqli_query($conn, "SELECT id, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id ORDER BY id DESC LIMIT 50");
+        $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id ORDER BY id DESC LIMIT 50");
         $sys_tx_ids = [];
         if ($q_n) {
             while ($row = mysqli_fetch_assoc($q_n)) {
