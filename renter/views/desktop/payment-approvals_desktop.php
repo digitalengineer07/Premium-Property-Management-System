@@ -225,6 +225,27 @@
         }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
 
+    
+        /* Notification Dropdown Fix */
+        .notification-wrapper { position: relative; }
+        #notifDropdown { 
+            position: absolute; 
+            top: 110%; 
+            right: 0; 
+            width: 340px; 
+            background: white; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); 
+            border: 1px solid var(--border); 
+            z-index: 99999; 
+            overflow: hidden; 
+            text-align: left;
+        }
+        .dark-theme #notifDropdown {
+            background: var(--sidebar-bg);
+            border-color: var(--border);
+        }
+
     </style>
 </head>
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
