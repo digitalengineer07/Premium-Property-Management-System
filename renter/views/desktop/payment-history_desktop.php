@@ -170,12 +170,12 @@
                     'icon' => $icon,
                     'title' => $title,
                     'subtitle' => 'UTR: ' . ($row['transaction_id'] ?: 'N/A'),
-                    'month' => $row['month'] ?: 'Multiple',
+                    'period' => $row['month'] ?: 'Multiple',
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
                     'status' => $row['status'],
-                    'pdate' => date('d M Y', strtotime($row['p_date'])),
+                    'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['p_date']),
                     'payment_mode' => $row['payment_mode'] ?: 'Online'
                 ];
@@ -214,12 +214,12 @@
                     'icon' => 'bx-check-double',
                     'title' => 'Admin Manual Payment',
                     'subtitle' => 'Ref: ' . ($row['transaction_id'] ?: 'Offline'),
-                    'month' => $row['period'] ?: 'Multiple',
+                    'period' => $row['period'] ?: 'Multiple',
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
                     'status' => 'Paid',
-                    'pdate' => date('d M Y', strtotime($row['p_date'])),
+                    'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
                     'payment_mode' => $row['payment_mode'] ?: 'Offline'
                 ];
@@ -229,6 +229,17 @@
         usort($all_bills, function($a, $b) {
             return $b['p_ts'] - $a['p_ts'];
         });
+
+        // KPI Calculations
+        $total_all_amount = 0;
+        $valid_payment_count = 0;
+        foreach($all_bills as $b) {
+            if (in_array(strtolower($b['status']), ['paid', 'approved'])) {
+                $total_all_amount += $b['amount'];
+                $valid_payment_count++;
+            }
+        }
+        $avg_payment = $valid_payment_count > 0 ? ($total_all_amount / $valid_payment_count) : 0;
         ?>
 
         <!-- 4-Col KPI Grid -->
