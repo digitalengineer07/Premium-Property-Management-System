@@ -1140,3 +1140,17 @@ a:hover {
 
 .notification-wrapper { position: relative !important; display: inline-block !important; }
 
+/* Hide scrollbar for notification dropdowns */
+#notifDropdown > div[style*="overflow-y"],
+.notification-wrapper > div[style*="overflow-y"],
+div[style*="max-height: 350px; overflow-y: auto"] {
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+}
+#notifDropdown > div[style*="overflow-y"]::-webkit-scrollbar,
+.notification-wrapper > div[style*="overflow-y"]::-webkit-scrollbar,
+div[style*="max-height: 350px; overflow-y: auto"]::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+}
+
