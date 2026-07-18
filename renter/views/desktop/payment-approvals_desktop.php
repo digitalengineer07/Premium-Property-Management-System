@@ -100,7 +100,7 @@
             height: 100vh;
             overflow-y: auto;
             padding: 32px 40px;
-            padding-bottom: 80px; /* Extra padding so the bottom isn't cut off */
+            padding-bottom: 40px; /* Extra padding so the bottom isn't cut off */
         }
 
         .top-header {
@@ -506,7 +506,7 @@
                 </tbody>
             </table>
             <?php if (isset($total_pages) && $total_pages > 1): ?>
-                <div style="display: flex; justify-content: center; align-items: center; gap: 8px; padding: 20px 0; border-top: 1px solid var(--border);">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 8px; padding: 16px 0; border-top: 1px solid var(--border);">
                     <?php if ($page > 1): ?>
                         <a href="?page=<?php echo $page - 1; ?>" style="padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-dark); display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600;"><i class='bx bx-chevron-left'></i> Prev</a>
                     <?php endif; ?>
