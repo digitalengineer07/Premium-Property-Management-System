@@ -19,7 +19,7 @@ $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 $admin_id = $_SESSION['admin_id'] ?? 1;
 
 // Payment Mode Fields
-$payment_mode = $_POST['payment_mode'] ?? 'Online';
+$payment_mode = !empty($_POST['payment_mode']) ? $_POST['payment_mode'] : 'Cash';
 $payment_date = $_POST['payment_date'] ?? date("Y-m-d");
 $payment_time = $_POST['payment_time'] ?? date("H:i:s");
 $datetime = $payment_date . " " . $payment_time;

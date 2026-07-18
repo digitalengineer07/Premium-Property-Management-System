@@ -220,7 +220,7 @@
                 'amount' => $amt,
                 'status' => 'Paid',
                 'paid_on' => $pdate,
-                'payment_mode' => !empty($p['payment_mode']) ? $p['payment_mode'] : 'Cash/UPI',
+                'payment_mode' => !empty($p['payment_mode']) ? $p['payment_mode'] : (!empty($p['transaction_id']) ? 'UPI' : 'Cash'),
                 'icon' => $icon,
                 'color' => $color
             ];
