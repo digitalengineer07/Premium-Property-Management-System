@@ -120,35 +120,7 @@
             border-left: 3px solid var(--primary);
         }
 
-        /* Mobile Bottom Nav */
-        .mobile-bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--white);
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 12px 0;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-            border-top: 1px solid var(--border);
-            z-index: 1000;
-        }
-        .dark-theme .mobile-bottom-nav { box-shadow: 0 -4px 20px rgba(0,0,0,0.3); }
-        .mb-nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 2px;
-            color: var(--text-gray); text-decoration: none; font-size: 10px; font-weight: 600;
-            width: 20%;
-        }
-        .mb-nav-item i { font-size: 22px; transition: 0.2s; }
-        .mb-nav-item.active { color: var(--primary); }
-        .mb-nav-item.active i { transform: translateY(-2px); }
-        
-        .mb-nav-center {
-            width: 52px; height: 52px; border-radius: 50%;
-            background: var(--primary); color: white;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.4);
-            cursor: pointer; margin-top: -24px;
-            border: 4px solid var(--white); transition: transform 0.2s;
-        }
-    </style>
+            </style>
 </head>
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
 
