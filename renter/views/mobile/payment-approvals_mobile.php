@@ -179,7 +179,7 @@
                 <h1 class="name"><?php echo htmlspecialchars($display_name); ?></h1>
             </div>
         </div>
-        <button class="btn-apply" onclick="openPaymentModal(0, 'Apply for Approval', 'general', 0, 'Advance/General')">
+        <button class="btn-apply" onclick="openApprovalModal()">
             <i class='bx bx-plus'></i> Apply
         </button>
     </div>
@@ -259,7 +259,7 @@
             <i class='bx bx-receipt'></i>
             <span>Bills</span>
         </a>
-        <div class="mb-nav-center" onclick="openPaymentModal(0, 'Quick Payment', 'general', 0, 'Advance/General')">
+        <div class="mb-nav-center" onclick="openApprovalModal()">
             <i class='bx bx-plus'></i>
         </div>
         <a href="payment-approvals.php" class="mb-nav-item active">
@@ -272,6 +272,6 @@
         </a>
     </nav>
 
-    <?php include "payment_modal.php"; ?>
+    <?php include "approval_modal.php"; ?>
 </body>
 </html>

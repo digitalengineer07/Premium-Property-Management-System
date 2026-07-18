@@ -696,6 +696,7 @@ include "sidebar.php";
                         <th>Amount</th>
                         <th>Transaction ID (UTR)</th>
                         <th>Date Submitted</th>
+                        <th>Bill Month</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -763,6 +764,11 @@ include "sidebar.php";
                         <td>
                             <span class="pv-date-text"><?php echo date('M d, Y', strtotime($n['created_at'])); ?></span>
                             <span class="pv-time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
+                        </td>
+                        <td>
+                            <span class="pv-date-text" style="color: #64748B; font-weight: 500;">
+                                <?php echo !empty($n['month']) ? s($n['month']) : '-'; ?>
+                            </span>
                         </td>
                         <td>
                             <?php if($n['status'] == 'Pending'): ?>

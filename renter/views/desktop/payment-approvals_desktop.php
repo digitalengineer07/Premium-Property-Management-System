@@ -321,7 +321,7 @@
             </div>
             <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
 
-                <button class="btn-primary" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="openPaymentModal(0, 'Advance / General Payment', 'general', 0, 'Advance/General')">
+                <button class="btn-primary" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="openApprovalModal()">
                     <i class='bx bx-plus'></i> Apply for Approval
                 </button>
             <div class="header-actions">
@@ -515,6 +515,6 @@
         </div>
     </main>
 
-    <?php include "payment_modal.php"; ?>
+    <?php include "approval_modal.php"; ?>
 </body>
 </html>
