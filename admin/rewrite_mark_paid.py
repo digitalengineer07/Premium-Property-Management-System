@@ -1,4 +1,9 @@
-<?php
+import os
+
+filepath = r'c:\xampp\htdocs\renter-system\admin\mark-paid.php'
+
+with open(filepath, 'w', encoding='utf-8') as f:
+    f.write("""<?php
 // admin/mark-paid.php
 require_once "../db.php";
 session_start();
@@ -115,4 +120,5 @@ if ($uRow = mysqli_fetch_assoc($qUser)) {
 $_SESSION['success'] = "Payment recorded and successfully processed by the auto-allocator.";
 header("Location: " . ($_SERVER['HTTP_REFERER'] ?? 'dashboard.php'));
 exit;
-?>
+?>""")
+print("Rebuilt mark-paid.php")

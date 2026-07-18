@@ -256,6 +256,20 @@ if (mysqli_stmt_execute($stmt)) {
     $msg_safe = mysqli_real_escape_string($conn, "A new electricity bill for $month_display (₹" . number_format($total_amount, 2) . ") has been assigned to you.");
     mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
 
+    // --- NEW: Enterprise Auto-Credit Application ---
+    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
+    if ($qAdv && $rowAdv = mysqli_fetch_assoc($qAdv)) {
+        $adv = (float)$rowAdv['advance_payment'];
+        if ($adv > 0) {
+            // Temporarily zero the advance so the allocator can redistribute it without doubling
+            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
+            require_once "allocate_payment.php";
+            $sys_id = 'SYS-CREDIT-' . time() . '-' . rand(100,999);
+            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Credit', $sys_id, $sys_id, null);
+        }
+    }
+    // -----------------------------------------------
+
     // Clean buffer and send success
     if (ob_get_length()) ob_clean();
     echo json_encode([

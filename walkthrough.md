@@ -1,29 +1,29 @@
-# Security Update: End-to-End Payment Amount Verification
+# Enterprise-Grade Financial Hardening Walkthrough
 
-## What Was Done
+I have completely overhauled the remaining legacy parts of the billing system to ensure true enterprise-grade financial integrity. The system now strictly protects ledger history and operates on a single, unified mathematical engine.
 
-I have successfully rewritten the backend payment verification logic to eliminate the blind-approval vulnerability. The system is now mathematically infallible when handling both specific and bulk payments.
+## 1. The Unified Financial Engine
+Previously, when you used the "Mark as Paid" button in the admin panel to manually record a cash payment, the system bypassed the new auto-allocator and used its own standalone logic. 
 
-### 1. Secure Specific Bill Updates (Rent & Electricity)
-- I removed the unsafe `UPDATE rent SET status='Paid'` logic from `payment-verifications.php`.
-- The system now natively imports a brand-new calculation engine (`allocate_payment.php`).
-- When you click "Approve" on a specific bill, the backend:
-  1. Securely logs the exact approved amount into the `payments` ledger.
-  2. Mathematically queries the database for the total sum paid towards that bill over time.
-  3. Verifies it against the actual required bill amount.
-  4. Only sets the bill to `Paid` if `Total Paid >= Bill Total`. Otherwise, it flawlessly updates it to `Partial`.
+**What Changed:**
+- I completely rebuilt `mark-paid.php`. 
+- Manual payments are now fed directly into the new `allocate_payment.php` unified engine.
+- Whether a payment comes from a user's mobile app or is manually punched in by you, it undergoes the exact same mathematical verification.
+- **Benefit:** If you manually mark a bill with an overpayment (e.g. paying ₹2,000 on a ₹1,500 bill), the system will intelligently deposit the ₹500 remainder directly into their `advance_payment` balance!
 
-### 2. Auto-Allocation Engine for Bulk Payments (Total & Monthly)
-- I built a complex accounting algorithm to handle "Total Outstanding" and "Monthly" payments.
-- If a renter submits a partial payment towards their entire balance, the algorithm:
-  1. Fetches all unpaid bills for that user, sorted chronologically (oldest first).
-  2. Cascades the approved payment amount downwards, distributing it across the bills one by one.
-  3. If a bill is fully covered by the cascading amount, it marks it as `Paid`.
-  4. If the money runs out halfway through a bill, it marks that specific bill as `Partial` and generates a perfectly accurate ledger entry for it.
-  5. If there is leftover money after paying everything (e.g. they overpaid), it automatically redirects the remainder into the user's `advance_payment` balance!
+## 2. Immutable Ledger Deletions
+Previously, if you deleted a bill that was marked as `Partial`, the system would ruthlessly delete all the payments associated with it. This was a catastrophic risk because it destroyed financial records and essentially erased the user's money.
 
-## Verification
-You can now safely approve any payment notification, regardless of whether the renter modified the hidden amount field or genuinely submitted a partial payment. The system will strictly enforce the mathematical truth and update the ledger with surgical precision. 
+**What Changed:**
+- I hardened `delete-bill.php`.
+- The system will now **strictly block** the deletion of any bill that is marked as `Paid` or `Partial`. 
+- **Benefit:** True financial integrity. You can only delete `Due` bills. If you absolutely must delete a partially paid bill, you must first manually reverse the payment to protect the ledger.
 
-> [!TIP]
-> This upgrade effectively turns your application into an enterprise-grade accounting system. All loopholes regarding duplicate entries and payment amount manipulation have been permanently sealed.
+## 3. Automated Credit Application System
+Before this update, if a user had ₹1,000 sitting in their `advance_payment` balance, that money just sat there. You had to manually factor it in.
+
+**What Changed:**
+- I intercepted the core bill generation script (`save-bill.php`).
+- Now, the exact millisecond you generate a new rent or electricity bill, the system silently checks the user's `advance_payment` balance.
+- If they have credit, the system instantly generates an automated, internal `SYS-CREDIT` transaction and applies it against the new bill!
+- **Benefit:** If a user has ₹500 in advance and you generate a ₹2,000 bill, by the time it reaches the user's dashboard, it will already say `Partial` with ₹1,500 due. The system works for you entirely in the background.

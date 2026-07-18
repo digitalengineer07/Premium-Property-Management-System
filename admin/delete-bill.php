@@ -12,18 +12,18 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
     // Check if electricity bill is paid
-    $e_q = mysqli_query($conn, "SELECT status FROM electricity WHERE id = $id");
+    $e_q = mysqli_query($conn, "SELECT status, elec_status, rent_status FROM electricity WHERE id = $id");
     if ($e_q && $row = mysqli_fetch_assoc($e_q)) {
-        if ($row['status'] == 'Paid') {
-            die("<script>alert('Error: Cannot delete a fully Paid electricity bill to protect accounting integrity.'); window.history.back();</script>");
+        if ($row['status'] == 'Paid' || $row['status'] == 'Partial' || $row['elec_status'] == 'Paid' || $row['elec_status'] == 'Partial' || $row['rent_status'] == 'Paid' || $row['rent_status'] == 'Partial') {
+            die("<script>alert('Error: Cannot delete a bill that has associated payments (Paid or Partial) to protect accounting integrity. Please reverse the payments first.'); window.history.back();</script>");
         }
     }
 
     // Check if rent bill is paid
     $r_q = mysqli_query($conn, "SELECT status FROM rent WHERE id = $id");
     if ($r_q && $row = mysqli_fetch_assoc($r_q)) {
-        if ($row['status'] == 'Paid') {
-            die("<script>alert('Error: Cannot delete a fully Paid rent bill to protect accounting integrity.'); window.history.back();</script>");
+        if ($row['status'] == 'Paid' || $row['status'] == 'Partial') {
+            die("<script>alert('Error: Cannot delete a bill that has associated payments (Paid or Partial) to protect accounting integrity. Please reverse the payments first.'); window.history.back();</script>");
         }
     }
 
