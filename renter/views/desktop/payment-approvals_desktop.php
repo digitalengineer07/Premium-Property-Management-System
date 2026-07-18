@@ -7,8 +7,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Approvals - <?php echo htmlspecialchars(HOUSE_NAME); ?></title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+        <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin-design-system.css">
+
     <style>
         :root {
             --primary-purple: #624BFF;
@@ -34,7 +38,7 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-dark);
             margin: 0;
@@ -51,9 +55,13 @@
             display: flex;
             flex-direction: column;
             padding: 24px 20px;
-            box-sizing: border-box;
-            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
         }
+
         .sidebar-header {
             display: flex;
             align-items: center;
@@ -64,7 +72,7 @@
             width: 40px; height: 40px;
             background: #1E293B; border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 20px;
+            color: white; font-size: 20px; font-weight: 800;
         }
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
@@ -73,14 +81,18 @@
         .nav-menu::-webkit-scrollbar { width: 4px; }
         .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
             padding: 10px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none;
-            font-weight: 600; font-size: 13px; transition: all 0.2s ease;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
+            transition: all 0.2s ease;
         }
-        .nav-item:hover { background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); }
-        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98,75,255,0.2); }
+        .nav-item i { font-size: 18px; opacity: 0.8; }
+        .nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
+        .nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
+        .nav-item.active i { opacity: 1; }
+
         
         .main-content {
             flex: 1;
@@ -190,25 +202,57 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo"><i class='bx bx-home-heart'></i></div>
+            <div class="sidebar-logo">
+                <i class='bx bx-home-heart'></i>
+            </div>
             <div class="sidebar-brand">
                 <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
                 <p>Resident Dashboard</p>
             </div>
         </div>
+        
         <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-item"><i class='bx bx-grid-alt'></i><span>Overview</span></a>
-            <a href="my-bills.php" class="nav-item"><i class='bx bx-receipt'></i><span>My Bills</span></a>
-            <a href="my-payments.php" class="nav-item"><i class='bx bx-wallet'></i><span>My Payments</span></a>
-            <a href="payment-history.php" class="nav-item"><i class='bx bx-history'></i><span>Payment History</span></a>
-            <a href="payment-approvals.php" class="nav-item active"><i class='bx bx-check-shield'></i><span>Approvals</span></a>
-            <a href="electricity-record.php" class="nav-item"><i class='bx bx-bulb'></i><span>Electricity</span></a>
-            <a href="documents.php" class="nav-item"><i class='bx bx-folder'></i><span>Documents</span></a>
-            <a href="queries.php" class="nav-item"><i class='bx bx-message-square-dots'></i><span>Queries</span></a>
-            <a href="notices.php" class="nav-item"><i class='bx bx-bell'></i><span>Notices</span></a>
-            <a href="profile.php" class="nav-item"><i class='bx bx-user'></i><span>Profile</span></a></nav>
+            <a href="dashboard.php" class="nav-item">
+                <i class='bx bx-grid-alt'></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="my-payments.php" class="nav-item">
+                <i class='bx bx-wallet'></i>
+                <span>My Payments</span>
+            </a>
+            <a href="payment-approvals.php" class="nav-item active">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
+            <a href="electricity-record.php" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
+            </a>
+            <a href="my-bills.php" class="nav-item">
+                <i class='bx bx-receipt'></i>
+                <span>My Bills</span>
+            </a>
+            <a href="queries.php" class="nav-item">
+                <i class='bx bx-message-square-dots'></i>
+                <span>Raise Query</span>
+            </a>
+            <a href="notices.php" class="nav-item">
+                <i class='bx bx-bell'></i>
+                <span>Notices</span>
+            </a>
+            <a href="documents.php" class="nav-item">
+                <i class='bx bx-folder'></i>
+                <span>Documents</span>
+            </a>
+            <a href="profile.php" class="nav-item">
+                <i class='bx bx-user-circle'></i>
+                <span>Profile Settings</span>
+            </a></nav>
         <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
-            <a href="../logout.php" class="nav-item" style="  color: var(--danger);"><i class='bx bx-log-out'></i><span>Logout</span></a>
+            <a href="../logout.php" class="nav-item" style=" color: #FF4B6B; ">
+                <i class='bx bx-log-out'></i>
+                <span>Logout</span>
+            </a>
         
         </div>
     </aside>
