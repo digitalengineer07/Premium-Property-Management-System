@@ -145,121 +145,89 @@
 
         <?php
         // Fetch all transactions from the payments table
+        // Fetch all transactions grouped by system transaction intent (sys_tx_id) to avoid showing fragmented ledger entries
         $all_bills = [];
-        $payments_q = mysqli_query($conn, "
-            SELECT p.id, p.bill_type, p.bill_id, p.month, p.total_amount as bill_amount, p.paid_amount, p.payment_date, p.payment_mode, p.transaction_id,
-                   e.status as elec_status, e.rent_amount, e.maintenance, e.dues, e.amount as elec_usage, e.created_at, e.due_date as elec_due,
-                   r.due_date as rent_due
-            FROM payments p
-            LEFT JOIN electricity e ON (p.bill_type IN ('electricity', 'total', 'elec_rent') AND p.bill_id = e.id) OR (p.bill_type = 'monthly' AND p.month = e.month AND p.user_id = e.user_id)
-            LEFT JOIN rent r ON p.bill_type = 'rent' AND p.bill_id = r.id
-            WHERE p.user_id = $user_id
-        ");
-
-        while ($p = mysqli_fetch_assoc($payments_q)) {
-            $month = $p['month'];
-            $amt = (float)$p['paid_amount'];
-            $pdate = !empty($p['payment_date']) ? date('d M Y', strtotime($p['payment_date'])) : 'N/A';
-            
-            $ts = strtotime($month);
-            $bill_date = 'N/A';
-            $due_date = 'N/A';
-            
-            if ($p['bill_type'] == 'rent') {
-                $bill_date = $ts ? date('01 M Y', $ts) : 'N/A';
-                $due_date = !empty($p['rent_due']) ? date('d M Y', strtotime($p['rent_due'])) : ($ts ? date('07 M Y', $ts) : 'N/A');
-                $title = 'Rent Payment';
-                $filter_type = 'rent';
-                $icon = 'bx-home';
-                $color = 'purple';
-            } elseif ($p['bill_type'] == 'electricity' || $p['bill_type'] == 'total' || $p['bill_type'] == 'elec_rent' || $p['bill_type'] == 'monthly') {
-                $slip_dt = !empty($p['created_at']) ? $p['created_at'] : $p['payment_date'];
-                if ($ts) {
-                    $bill_date = date('d M Y', strtotime($slip_dt));
-                    $due_date = !empty($p['elec_due']) ? date('d M Y', strtotime($p['elec_due'])) : date('d M Y', strtotime($slip_dt . ' + 6 days'));
+        
+        // 1. Fetch user-applied transactions from payment_notifications
+        $q_n = mysqli_query($conn, "SELECT id, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id ORDER BY id DESC LIMIT 50");
+        $sys_tx_ids = [];
+        if ($q_n) {
+            while ($row = mysqli_fetch_assoc($q_n)) {
+                if (!empty($row['sys_tx_id'])) {
+                    $sys_tx_ids[] = "'" . mysqli_real_escape_string($conn, $row['sys_tx_id']) . "'";
                 }
                 
-                $has_elec = (float)$p['elec_usage'] > 0;
-                $has_rent = (float)$p['rent_amount'] > 0 || (float)$p['maintenance'] > 0;
+                $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
+                $icon = ($row['status'] == 'Approved') ? 'bx-check-circle' : (($row['status'] == 'Rejected') ? 'bx-x-circle' : 'bx-time-five');
                 
-                if ($has_elec && $has_rent) {
-                    $title = 'Rent + Main. + Electricity';
-                    $filter_type = 'other';
-                    $icon = 'bx-credit-card';
-                    $color = 'purple';
-                } elseif ($has_rent) {
-                    $title = 'Rent + Main.';
-                    $filter_type = 'other';
-                    $icon = 'bx-home';
-                    $color = 'purple';
-                } else {
-                    $title = 'Electricity Payment';
-                    $filter_type = 'electricity';
-                    $icon = 'bx-bulb';
-                    $color = 'yellow';
-                }
-            } elseif ($p['bill_type'] == 'advance') {
-                $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-                $due_date = $ts ? date('07 M Y', $ts) : $pdate;
-                $title = 'Advance Payment';
-                $filter_type = 'other';
-                $icon = 'bx-file';
-                $color = 'blue';
+                $title = 'Consolidated Payment';
+                if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
+                if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
+                
+                $all_bills[] = [
+                    'filter_type' => strtolower($row['status']),
+                    'color' => $color,
+                    'icon' => $icon,
+                    'title' => $title,
+                    'subtitle' => 'UTR: ' . ($row['transaction_id'] ?: 'N/A'),
+                    'month' => $row['month'] ?: 'Multiple',
+                    'bill_date' => date('d M Y', strtotime($row['p_date'])),
+                    'due_date' => '-',
+                    'amount' => (float)$row['amount'],
+                    'status' => $row['status'],
+                    'pdate' => date('d M Y', strtotime($row['p_date'])),
+                    'p_ts' => strtotime($row['p_date']),
+                    'payment_mode' => $row['payment_mode'] ?: 'Online'
+                ];
             }
-            
-            $all_bills[] = [
-                'raw_id' => $p['id'],
-                'id' => $p['bill_type'][0].'_'.$p['id'],
-                'type' => $p['bill_type'],
-                'filter_type' => $filter_type,
-                'title' => $title,
-                'subtitle' => !empty($p['transaction_id']) ? ('Ref: ' . $p['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($p['payment_mode']) ? $p['payment_mode'] : (!empty($p['transaction_id']) ? 'UPI' : 'Cash'),
-                'icon' => $icon,
-                'color' => $color
-            ];
         }
 
-        // 2. Removed fallback loop that caused duplicate/inflated 'extra paid amount' KPIs
-        
-        // Calculate total value of bills cleared this year (as requested by user)
-        $stmt_elec = mysqli_query($conn, "SELECT IFNULL(SUM(total_amount), 0) as total, COUNT(*) as cnt FROM electricity WHERE user_id = $user_id AND status = 'Paid'");
-        $elec_data = mysqli_fetch_assoc($stmt_elec);
+        // 2. Fetch admin manual transactions from payments (where sys_tx_id not in notifications)
+        $not_in_clause = "";
+        if (count($sys_tx_ids) > 0) {
+            $not_in_clause = "AND (sys_tx_id IS NULL OR sys_tx_id = '' OR sys_tx_id NOT IN (" . implode(',', $sys_tx_ids) . "))";
+        } else {
+            $not_in_clause = "AND (sys_tx_id IS NULL OR sys_tx_id = '')";
+        }
 
-        $stmt_rent = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount), 0) as total, COUNT(*) as cnt FROM rent WHERE user_id = $user_id AND status = 'Paid'");
-        $rent_data = mysqli_fetch_assoc($stmt_rent);
-
-        $total_successful_amount = (float)($elec_data['total'] + $rent_data['total']);
-        $total_successful_count = (int)($elec_data['cnt'] + $rent_data['cnt']);
+        $q_m = mysqli_query($conn, "
+            SELECT 
+                DATE(payment_date) as p_date,
+                MAX(payment_date) as full_date,
+                payment_mode,
+                transaction_id,
+                sys_tx_id,
+                SUM(paid_amount) as amount,
+                GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
+            FROM payments 
+            WHERE user_id = $user_id $not_in_clause
+            GROUP BY DATE(payment_date), payment_mode, transaction_id, sys_tx_id
+            ORDER BY p_date DESC
+            LIMIT 50
+        ");
         
-        $avg_payment = $total_successful_count > 0 ? $total_successful_amount / $total_successful_count : 0;
-        
-        $pending_q = mysqli_query($conn, "SELECT COALESCE(SUM(amount),0) as total_pending, COUNT(id) as count_pending FROM payment_notifications WHERE user_id=$user_id AND status='Pending'");
-        $pending_row = mysqli_fetch_assoc($pending_q);
-        $total_pending_amount = $pending_row['total_pending'];
-        $total_pending_count = $pending_row['count_pending'];
-        
-        $total_all_amount = $total_successful_amount + $total_pending_amount;
-
-        // Sort by Period Descending, then by Bill Date Descending, then by Payment ID Descending
-        usort($all_bills, function($a, $b) { 
-            $t1 = strtotime($b['period']);
-            $t2 = strtotime($a['period']);
-            if ($t1 == $t2) {
-                $bd1 = strtotime($b['bill_date']);
-                $bd2 = strtotime($a['bill_date']);
-                if ($bd1 == $bd2) {
-                    return $b['raw_id'] - $a['raw_id'];
-                }
-                return $bd1 - $bd2;
+        if ($q_m) {
+            while ($row = mysqli_fetch_assoc($q_m)) {
+                $all_bills[] = [
+                    'filter_type' => 'approved',
+                    'color' => 'green',
+                    'icon' => 'bx-check-double',
+                    'title' => 'Admin Manual Payment',
+                    'subtitle' => 'Ref: ' . ($row['transaction_id'] ?: 'Offline'),
+                    'month' => $row['period'] ?: 'Multiple',
+                    'bill_date' => date('d M Y', strtotime($row['p_date'])),
+                    'due_date' => '-',
+                    'amount' => (float)$row['amount'],
+                    'status' => 'Paid',
+                    'pdate' => date('d M Y', strtotime($row['p_date'])),
+                    'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
+                    'payment_mode' => $row['payment_mode'] ?: 'Offline'
+                ];
             }
-            return $t1 - $t2;
+        }
+
+        usort($all_bills, function($a, $b) {
+            return $b['p_ts'] - $a['p_ts'];
         });
         ?>
 
