@@ -28,7 +28,7 @@ while ($e = mysqli_fetch_assoc($q_elec)) {
     $payment_date = !empty($e['created_at']) ? date('Y-m-d', strtotime($e['created_at'] . ' + 1 day')) : date('Y-m-d');
     
     $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, adjustment_amount, adjustment_type, payment_date, transaction_id) VALUES (?, 'electricity', ?, ?, ?, 'Manual', ?, 0, '', ?, 'SYS_BACKFILL')");
-    mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $month, $total_amount, $total_amount, $payment_date);
+    mysqli_stmt_bind_param($stmt, "iisdds", $user_id, $bill_id, $month, $total_amount, $total_amount, $payment_date);
     if(mysqli_stmt_execute($stmt)) {
         $elec_count++;
     }
