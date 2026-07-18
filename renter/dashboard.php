@@ -353,14 +353,14 @@ $show_banner = ($is_late && !empty($overdue_list));
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 4px; flex: 1;  overflow-y: auto;}
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1;  overflow-y: auto;}
         .nav-menu::-webkit-scrollbar { width: 4px; }
         .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
 
 
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 8px 16px; border-radius: 12px;
+            padding: 10px 16px; border-radius: 12px;
             color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
@@ -534,7 +534,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .kpi-grid { grid-template-columns: 1fr 1fr; }
             .sidebar { width: 80px; padding: 24px 10px; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none; }
-            .nav-item { justify-content: center; padding: 8px 16px; }
+            .nav-item { justify-content: center; padding: 10px 16px; }
             .nav-item i { font-size: 24px; }
             .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
         }
@@ -564,7 +564,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .grid-2-1, .dashboard-3col { grid-template-columns: 1fr !important; gap: 20px !important; }
             .sidebar { width: 80px !important; padding: 24px 10px !important; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none !important; }
-            .nav-item { justify-content: center !important; padding: 8px 16px; }
+            .nav-item { justify-content: center !important; padding: 10px 16px; }
             .nav-item i { font-size: 24px !important; }
             .main-content { margin-left: 80px !important; max-width: calc(100% - 80px) !important; }
         }
