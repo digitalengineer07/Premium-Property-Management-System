@@ -1,47 +1,33 @@
 import os
 import re
 
-folders = [
-    r'C:\xampp\htdocs\renter-system\renter',
-    r'C:\xampp\htdocs\renter-system\renter\views\desktop'
-]
+path_mobile = r'c:\xampp\htdocs\renter-system\renter\views\mobile\payment-approvals_mobile.php'
+path_desktop = r'c:\xampp\htdocs\renter-system\renter\views\desktop\payment-approvals_desktop.php'
 
-css_to_add = """
-        .nav-menu::-webkit-scrollbar { width: 4px; }
-        .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
-"""
+# Extract sidebar from desktop
+with open(path_desktop, 'r', encoding='utf-8') as f:
+    desktop_content = f.read()
 
-for folder in folders:
-    for root, dirs, files in os.walk(folder):
-        for file in files:
-            if file.endswith('.php'):
-                path = os.path.join(root, file)
-                with open(path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-
-                modified = False
-
-                # 1. Make nav-menu scrollable
-                if '.nav-menu {' in content and 'overflow-y: auto;' not in content:
-                    content = re.sub(r'(\.nav-menu\s*\{[^}]*)(\})', r'\1 overflow-y: auto;\2', content)
-                    if '.nav-menu::-webkit-scrollbar' not in content:
-                        content = re.sub(r'(\.nav-menu\s*\{[^}]*\})', r'\1' + css_to_add, content)
-                    modified = True
-
-                # 2. Extract Logout button and place it outside nav-menu
-                logout_regex = r'(\s*<a[^>]*href="[^"]*logout\.php"[^>]*>.*?</a>\s*)(</nav>)'
-                match = re.search(logout_regex, content, re.IGNORECASE | re.DOTALL)
-                if match:
-                    logout_html = match.group(1)
-                    # Remove from inside nav
-                    content = content.replace(match.group(0), '\n        </nav>\n        <div class="sidebar-footer" style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border, #E2E8F0);">' + logout_html + '</div>')
-                    
-                    # Ensure margin-top is removed from the logout link itself so it doesn't push down unnecessarily
-                    content = re.sub(r'(<a[^>]*href="[^"]*logout\.php"[^>]*style="[^"]*)margin-top:\s*[^;"]*;?', r'\1', content, flags=re.IGNORECASE)
-                    
-                    modified = True
-
-                if modified:
-                    with open(path, 'w', encoding='utf-8') as f:
-                        f.write(content)
-                    print(f"Updated sidebar layout in {path}")
+# Grab the whole aside block
+match = re.search(r'(<aside class="sidebar">.*?</aside>)', desktop_content, re.DOTALL)
+if match:
+    sidebar_html = match.group(1)
+    
+    with open(path_mobile, 'r', encoding='utf-8') as f:
+        mobile_content = f.read()
+        
+    # 1. Insert the sidebar right before the <div class="content-area"> if it's not already there
+    if '<aside class="sidebar">' not in mobile_content:
+        mobile_content = mobile_content.replace('<div class="content-area"', sidebar_html + '\n\n    <div class="content-area"')
+        
+    # 2. Add renter.js right before </body> if it's not already there
+    if 'renter.js' not in mobile_content:
+        js_tag = '<script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>\n</body>'
+        mobile_content = mobile_content.replace('</body>', js_tag)
+        
+    with open(path_mobile, 'w', encoding='utf-8') as f:
+        f.write(mobile_content)
+        
+    print("Sidebar and renter.js injected into mobile view successfully.")
+else:
+    print("Could not find sidebar in desktop view.")
