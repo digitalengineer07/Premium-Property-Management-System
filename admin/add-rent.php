@@ -62,7 +62,7 @@ if (isset($_POST['save'])) {
             // Temporarily zero the advance so the allocator can redistribute it without doubling
             mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
             require_once "allocate_payment.php";
-            $sys_id = 'SYS-CREDIT-' . time() . '-' . rand(100,999);
+            $sys_id = 'SYS_ADJ_' . strtoupper(bin2hex(random_bytes(6)));
             allocate_bulk_payment($conn, $user_id, $adv, 'Advance Credit', $sys_id, $sys_id, null, true);
         }
     }

@@ -217,10 +217,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
+        
+        $sys_prefix = 'SYS_ONL_';
+        if ($payment_method === 'UPI') $sys_prefix = 'SYS_UPI_';
+        else if ($payment_method === 'Cash' || $payment_method === 'Bank Transfer') $sys_prefix = 'SYS_OFF_';
+        
         if (empty($tr_id)) {
-            $tr_id = 'SYS-' . strtoupper(bin2hex(random_bytes(6)));
+            $tr_id = $sys_prefix . strtoupper(bin2hex(random_bytes(6)));
         }
-        $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
+        $sys_tx_id = $sys_prefix . strtoupper(bin2hex(random_bytes(6)));
 
         $bill_valid = true;
         if ($b_id > 0 && $b_type === 'rent') {
@@ -235,11 +240,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             $payment_error = "Payment amount must be greater than zero.";
         } else if (!$bill_valid) {
             $payment_error = "Invalid bill reference. You can only pay your own bills.";
-        } else if ($payment_method === 'UPI' && strpos($tr_id, 'SYS-') === 0) {
+        } else if ($payment_method === 'UPI' && strpos($tr_id, 'SYS_') === 0) {
             $payment_error = "Please enter the Transaction ID / UTR.";
         } else {
             $is_duplicate = false;
-            if ($payment_method === 'UPI' && !empty($tr_id) && strpos($tr_id, 'SYS-') !== 0) {
+            if ($payment_method === 'UPI' && !empty($tr_id) && strpos($tr_id, 'SYS_') !== 0) {
                 // Check for duplicate UTR
                 $check_stmt = mysqli_prepare($conn, "
                     SELECT id FROM payment_notifications WHERE transaction_id = ?
