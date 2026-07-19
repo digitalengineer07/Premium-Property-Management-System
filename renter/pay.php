@@ -47,8 +47,8 @@ if ($type === 'rent') {
     $amount = (int) $row['rent_amount'];
     $month = $row['month'];
 
-    $ins = mysqli_prepare($conn, "INSERT INTO payments (user_id, month, total_amount, payment_date) VALUES (?, ?, ?, ?)");
-    mysqli_stmt_bind_param($ins, "isis", $user_id, $month, $amount, $date);
+    $ins = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, paid_amount, payment_date, payment_mode) VALUES (?, 'rent', ?, ?, ?, ?, ?, 'Online')");
+    mysqli_stmt_bind_param($ins, "iisdds", $user_id, $id, $month, $amount, $amount, $date);
     mysqli_stmt_execute($ins);
     mysqli_stmt_close($ins);
 
@@ -87,8 +87,8 @@ if ($type === 'electricity') {
     $amount = (int) $row['amount'];
     $month = $row['month'];
 
-    $ins = mysqli_prepare($conn, "INSERT INTO payments (user_id, month, total_amount, payment_date) VALUES (?, ?, ?, ?)");
-    mysqli_stmt_bind_param($ins, "isis", $user_id, $month, $amount, $date);
+    $ins = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, paid_amount, payment_date, payment_mode) VALUES (?, 'electricity', ?, ?, ?, ?, ?, 'Online')");
+    mysqli_stmt_bind_param($ins, "iisdds", $user_id, $id, $month, $amount, $amount, $date);
     mysqli_stmt_execute($ins);
     mysqli_stmt_close($ins);
 
