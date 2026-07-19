@@ -153,15 +153,7 @@ while ($row = mysqli_fetch_assoc($elec_res)) {
 }
 mysqli_stmt_close($stmt);
 
-// Calculate advance paid
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = ? AND bill_type = 'advance'");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-$adv_paid = (float)$adv_paid_res['adv_paid'];
-mysqli_stmt_close($stmt);
-
-$advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
+  // (Obsolete advance calculations removed as advance_payment is now a floating wallet)
 
 // Check for recent announcements (last 24h)
 $dismissed_cookie_val = $_COOKIE['dismissed_notifs'] ?? '';
