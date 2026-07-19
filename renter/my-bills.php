@@ -437,6 +437,7 @@ foreach ($elecs as $t) {
         'subtitle' => $subtitle,
         'due_date' => date('d M Y', $due_timestamp),
         'amount' => (float)$t['amount'],
+        'remaining_amount' => isset($t['remaining_amount']) ? (float)$t['remaining_amount'] : (float)$t['amount'],
         'status' => $status,
         'summary' => $summary
     ];
