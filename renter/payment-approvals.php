@@ -46,8 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         } else {
             $is_duplicate = false;
             if ($payment_method === 'UPI' && !empty($tr_id)) {
-                $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE transaction_id = ?");
-                mysqli_stmt_bind_param($check_stmt, "s", $tr_id);
+                $check_stmt = mysqli_prepare($conn, "
+                    SELECT id FROM payment_notifications WHERE transaction_id = ?
+                    UNION 
+                    SELECT id FROM payments WHERE transaction_id = ?
+                ");
+                mysqli_stmt_bind_param($check_stmt, "ss", $tr_id, $tr_id);
                 mysqli_stmt_execute($check_stmt);
                 $check_res = mysqli_stmt_get_result($check_stmt);
                 if (mysqli_num_rows($check_res) > 0) {

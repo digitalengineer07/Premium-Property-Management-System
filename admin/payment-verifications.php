@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         if (!empty($p_sys_tx)) {
                             $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id='$p_sys_tx'");
                         } else {
-                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND ((transaction_id='$p_tx' AND '$p_tx' != '') OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
+                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND transaction_id='$p_tx' AND '$p_tx' != ''");
                         }
                         
                         if ($ck_p && mysqli_num_rows($ck_p) == 0) {
