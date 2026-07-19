@@ -171,6 +171,7 @@
             $isLast = ($idx === count($all_mobile) - 1);
             $isPending = ($t['status'] === 'Due');
             $amount = (float)$t['amount'];
+            $displayAmount = ($t['status'] === 'Paid') ? $amount : (isset($t['remaining_amount']) ? (float)$t['remaining_amount'] : $amount);
             $dataYear = date('Y', strtotime($t['month'] . '-01'));
 
             if ($t['item_type'] === 'aggregate'):
@@ -200,7 +201,12 @@
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 2px;">
                             <?php echo $title; ?>
                         </h4>
-                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount); ?></div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($displayAmount); ?></div>
+                            <?php if ($t['status'] === 'Partial' && $displayAmount < $amount): ?>
+                                <div style="font-size: 10px; color: var(--text-gray); font-weight: 500;">Orig: ₹<?php echo number_format($amount); ?></div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <p style="font-size: 11px; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 2px;">
@@ -275,7 +281,12 @@
                         <h4 style="font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 2px;">
                             <?php echo $title; ?>
                         </h4>
-                        <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($amount); ?></div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 13px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format($displayAmount); ?></div>
+                            <?php if ($t['status'] === 'Partial' && $displayAmount < $amount): ?>
+                                <div style="font-size: 10px; color: var(--text-gray); font-weight: 500;">Orig: ₹<?php echo number_format($amount); ?></div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <p style="font-size: 11px; color: var(--text-gray); margin: 0; display: flex; align-items: center; gap: 2px;">

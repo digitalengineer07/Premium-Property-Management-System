@@ -614,7 +614,19 @@ function filterMobileByYear(year) {
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
                                 <td><?php echo $bill['due_date']; ?></td>
-                                <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
+                                <td style="font-weight: 800;">
+                                    <?php 
+                                    if ($bill['status'] === 'Paid') {
+                                        echo money($bill['amount']);
+                                    } else {
+                                        $rem = isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount'];
+                                        echo money($rem);
+                                        if ($bill['status'] === 'Partial' && $rem < $bill['amount']) {
+                                            echo "<div style='font-size: 11px; color: var(--text-gray); font-weight: 500;'>Orig: " . money($bill['amount']) . "</div>";
+                                        }
+                                    }
+                                    ?>
+                                </td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>

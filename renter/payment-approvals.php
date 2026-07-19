@@ -21,12 +21,15 @@ $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
 mysqli_stmt_close($stmt);
 
 // Handle Payment Submission
-$payment_error = '';
-$payment_success = '';
+$payment_error = $_SESSION['payment_error'] ?? '';
+$payment_success = $_SESSION['payment_success'] ?? '';
+unset($_SESSION['payment_error'], $_SESSION['payment_success']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-        $payment_error = "Invalid CSRF token.";
+        $_SESSION['payment_error'] = "Invalid CSRF token.";
+        header("Location: payment-approvals.php");
+        exit;
     } else {
         $b_type = $_POST['bill_type'] ?? 'general';
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : 0;
@@ -37,7 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
 
         if ($payment_method === 'UPI' && empty($tr_id)) {
-            $payment_error = "Please enter the Transaction ID / UTR.";
+            $_SESSION['payment_error'] = "Please enter the Transaction ID / UTR.";
+            header("Location: payment-approvals.php");
+            exit;
         } else {
             $is_duplicate = false;
             if ($payment_method === 'UPI' && !empty($tr_id)) {
@@ -98,19 +103,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             }
 
             if ($is_duplicate) {
-                $payment_error = "This UTR number has already been submitted. Please check your transaction ID.";
+                $_SESSION['payment_error'] = "This UTR number has already been submitted. Please check your transaction ID.";
             } else if ($is_duplicate_request) {
-                $payment_error = $duplicate_msg;
+                $_SESSION['payment_error'] = $duplicate_msg;
             } else {
                 $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                 mysqli_stmt_bind_param($stmt, "isidssss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method, $sys_tx_id);
                 if (mysqli_stmt_execute($stmt)) {
-                    $payment_success = "Payment approval request submitted successfully!";
+                    $_SESSION['payment_success'] = "Payment approval request submitted successfully!";
                 } else {
-                    $payment_error = "Error submitting request. Please try again.";
+                    $_SESSION['payment_error'] = "Error submitting request. Please try again.";
                 }
                 mysqli_stmt_close($stmt);
             }
+            header("Location: payment-approvals.php");
+            exit;
         }
     }
 }
