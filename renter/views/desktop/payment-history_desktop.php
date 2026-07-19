@@ -177,19 +177,10 @@
                 }
             }
         } else {
-        // 1. Fetch user-applied transactions from payment_notifications
-        $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id ORDER BY id DESC LIMIT 50");
-        $sys_tx_ids = [];
-        $txn_ids = [];
+        // 1. Fetch user-applied transactions from payment_notifications (Only Pending and Rejected)
+        $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
         if ($q_n) {
             while ($row = mysqli_fetch_assoc($q_n)) {
-                if (!empty($row['sys_tx_id'])) {
-                    $sys_tx_ids[] = "'" . mysqli_real_escape_string($conn, $row['sys_tx_id']) . "'";
-                }
-                if (!empty($row['transaction_id'])) {
-                    $txn_ids[] = "'" . mysqli_real_escape_string($conn, $row['transaction_id']) . "'";
-                }
-                
                 $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
                 $icon = ($row['status'] == 'Approved') ? 'bx-check-circle' : (($row['status'] == 'Rejected') ? 'bx-x-circle' : 'bx-time-five');
                 
@@ -215,11 +206,7 @@
             }
         }
 
-        // 2. Fetch admin manual transactions from payments (where sys_tx_id and transaction_id not in notifications)
-        $exclude_sys = (count($sys_tx_ids) > 0) ? "(sys_tx_id IS NULL OR sys_tx_id = '' OR sys_tx_id NOT IN (" . implode(',', $sys_tx_ids) . "))" : "1=1";
-        $exclude_txn = (count($txn_ids) > 0) ? "(transaction_id IS NULL OR transaction_id = '' OR transaction_id NOT IN (" . implode(',', $txn_ids) . "))" : "1=1";
-        $not_in_clause = "AND ($exclude_sys) AND ($exclude_txn)";
-
+        // 2. Fetch completed transactions directly from the payments ledger
         $q_m = mysqli_query($conn, "
             SELECT 
                 DATE(payment_date) as p_date,
@@ -230,7 +217,7 @@
                 SUM(paid_amount) as amount,
                 GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
             FROM payments 
-            WHERE user_id = $user_id $not_in_clause
+            WHERE user_id = $user_id
             GROUP BY DATE(payment_date), payment_mode, transaction_id, sys_tx_id
             ORDER BY p_date DESC
             LIMIT 50
