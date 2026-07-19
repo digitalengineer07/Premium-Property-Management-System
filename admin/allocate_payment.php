@@ -150,13 +150,11 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     
     // If there is still remaining payment (advance payment), handle it
     if ($remaining_payment > 0.01) {
-        if (!$is_wallet_transfer) {
-            // Only insert a new advance row if this was a NEW cash injection, not a wallet transfer
-            $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?)");
-            mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
-        }
+        // Always insert leftover advance (the initial negative offset balances this)
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?)");
+        mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
         
         // Update user advance_payment balance (Restore the leftover amount to the wallet)
         mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $remaining_payment WHERE id=$user_id");
