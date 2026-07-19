@@ -145,7 +145,8 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type 
+    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type,
+           (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid 
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
     WHERE e.user_id = ? 
@@ -154,7 +155,15 @@ $stmt = mysqli_prepare($conn, "
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $elec_res = mysqli_stmt_get_result($stmt);
-$elecs = []; while ($row = mysqli_fetch_assoc($elec_res)) $elecs[] = $row;
+$elecs = []; 
+while ($row = mysqli_fetch_assoc($elec_res)) {
+    $rem = max(0, (float)$row['amount'] - (float)$row['total_paid']);
+    if ($row['status'] == 'Paid') {
+        $rem = 0;
+    }
+    $row['remaining_amount'] = $rem;
+    $elecs[] = $row;
+}
 mysqli_stmt_close($stmt);
 
 // Calculate advance paid
