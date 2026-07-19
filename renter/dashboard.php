@@ -47,7 +47,7 @@ $stmt = mysqli_prepare($conn, "SELECT
     ), 0) as elec_total, 
     IFNULL(SUM(
         CASE WHEN rent_status IN ('Due', 'Partial') OR (rent_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND rent_status != 'Paid')
-        THEN (rent_amount + maintenance) - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='elec_rent' AND p.bill_id=e.id), 0) 
+        THEN (rent_amount + maintenance + dues) - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='elec_rent' AND p.bill_id=e.id), 0) 
         ELSE 0 END
     ), 0) as rent_portion_total 
 FROM electricity e WHERE user_id = ?");
