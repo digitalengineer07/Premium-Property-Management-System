@@ -160,7 +160,7 @@
                 $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
                 $icon = ($row['status'] == 'Approved') ? 'bx-check-circle' : (($row['status'] == 'Rejected') ? 'bx-x-circle' : 'bx-time-five');
                 
-                $title = 'Consolidated Payment';
+                $title = 'Online Payment';
                 if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
                 if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
                 
@@ -169,8 +169,8 @@
                     'color' => $color,
                     'icon' => $icon,
                     'title' => $title,
-                    'subtitle' => 'SysID: ' . ($row['sys_tx_id'] ?: 'N/A') . ' | UTR: ' . ($row['transaction_id'] ?: 'N/A'),
-                    'period' => $row['month'] ?: 'Multiple',
+                    'subtitle' => 'Ref: ' . ($row['transaction_id'] ?: 'N/A'),
+                    'period' => ($row['month'] == 'Advance' || $row['month'] == 'Advance/General') ? 'Advance Balance' : ($row['month'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
@@ -212,9 +212,9 @@
                     'filter_type' => 'approved',
                     'color' => 'green',
                     'icon' => 'bx-check-double',
-                    'title' => 'Admin Manual Payment',
-                    'subtitle' => 'SysID: ' . ($row['sys_tx_id'] ?: 'N/A') . ' | Ref: ' . ($row['transaction_id'] ?: 'Offline'),
-                    'period' => $row['period'] ?: 'Multiple',
+                    'title' => 'Cash / Offline Payment',
+                    'subtitle' => 'Ref: ' . ($row['transaction_id'] ?: 'Offline'),
+                    'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
