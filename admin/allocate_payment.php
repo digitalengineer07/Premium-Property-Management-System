@@ -109,7 +109,8 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         $da = strtotime($a['month'] . '-01');
         $db = strtotime($b['month'] . '-01');
         if ($da == $db) {
-            return ($a['type'] == 'elec_rent' || $a['type'] == 'rent') ? -1 : 1; // Prioritize rent over elec for same month
+            // User requested electricity to be paid first if there are advance credits
+            return ($a['type'] == 'electricity') ? -1 : 1; 
         }
         return $da - $db;
     });
