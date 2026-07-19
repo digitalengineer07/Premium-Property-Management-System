@@ -159,12 +159,16 @@
                     if ($row['bill_type'] == 'elec_rent') $title = 'Bill Component (Rent)';
                     if ($row['bill_type'] == 'advance') $title = 'Advance Application';
                     
+                    $ref = trim($row['transaction_id'] ?? '');
+                    $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                    $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                    
                     $all_bills[] = [
                         'filter_type' => 'paid',
                         'color' => 'green',
                         'icon' => 'bx-layer',
                         'title' => $title,
-                        'subtitle' => (($row['transaction_id'] ?: '') === ($row['sys_tx_id'] ?: '') || !trim($row['transaction_id'])) ? 'ID: ' . ($row['sys_tx_id'] ?: 'N/A') : 'Ref: ' . $row['transaction_id'] . ' | ID: ' . ($row['sys_tx_id'] ?: 'N/A'),
+                        'subtitle' => $subtitle,
                         'period' => $row['month'],
                         'bill_date' => date('d M Y', strtotime($row['p_date'])),
                         'due_date' => '-',
@@ -188,12 +192,16 @@
                 if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
                 if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
                 
+                $ref = trim($row['transaction_id'] ?? '');
+                $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                
                 $all_bills[] = [
                     'filter_type' => strtolower($row['status']),
                     'color' => $color,
                     'icon' => $icon,
                     'title' => $title,
-                    'subtitle' => (($row['transaction_id'] ?: '') === ($row['sys_tx_id'] ?: '') || !trim($row['transaction_id'])) ? 'ID: ' . ($row['sys_tx_id'] ?: 'N/A') : 'Ref: ' . $row['transaction_id'] . ' | ID: ' . ($row['sys_tx_id'] ?: 'N/A'),
+                    'subtitle' => $subtitle,
                     'period' => ($row['month'] == 'Advance' || $row['month'] == 'Advance/General') ? 'Advance Balance' : ($row['month'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
@@ -225,12 +233,16 @@
         
         if ($q_m) {
             while ($row = mysqli_fetch_assoc($q_m)) {
+                $ref = trim($row['transaction_id'] ?? '');
+                $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                
                 $all_bills[] = [
                     'filter_type' => 'approved',
                     'color' => 'green',
                     'icon' => 'bx-check-double',
                     'title' => 'Cash / Offline Payment',
-                    'subtitle' => (($row['transaction_id'] ?: 'Offline') === ($row['sys_tx_id'] ?: '') || ($row['transaction_id'] ?: 'Offline') === 'Offline') ? 'ID: ' . ($row['sys_tx_id'] ?: 'N/A') : 'Ref: ' . ($row['transaction_id'] ?: 'Offline') . ' | ID: ' . ($row['sys_tx_id'] ?: 'N/A'),
+                    'subtitle' => $subtitle,
                     'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
