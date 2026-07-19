@@ -521,6 +521,7 @@ function filterMobileByYear(year) {
                                 $monthly_aggregates[$p] = [
                                     'period' => $p,
                                     'amount' => 0,
+                                    'remaining_amount' => 0,
                                     'due_date' => $bill['due_date'],
                                     'paid_on' => '-',
                                     'has_unpaid' => false,
@@ -529,6 +530,7 @@ function filterMobileByYear(year) {
                                 ];
                             }
                             $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
+                            $monthly_aggregates[$p]['remaining_amount'] += isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
                             
                             $st = strtolower($bill['status']);
                             if($st == 'unpaid' || $st == 'due') {
@@ -579,13 +581,13 @@ function filterMobileByYear(year) {
                                             <a href="payment-history.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
                                         <?php elseif ($agg['status'] == 'Partial'): ?>
                                             <div style="display: flex; gap: 2px; align-items: center;">
-                                                <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
+                                                <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['remaining_amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
                                                     <i class='bx bx-credit-card-alt'></i> Pay Now
                                                 </button>
                                                 <a href="payment-history.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
                                             </div>
                                         <?php else: ?>
-                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['remaining_amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
                                                 <i class='bx bx-credit-card-alt'></i> Pay Now
                                             </button>
                                         <?php endif; ?>
@@ -614,13 +616,13 @@ function filterMobileByYear(year) {
                                         <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
                                     <?php elseif ($bill['status'] == 'Partial'): ?>
                                         <div style="display: flex; gap: 2px; align-items: center;">
-                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
                                                 <i class='bx bx-credit-card-alt'></i> Pay Now
                                             </button>
                                             <a href="payment-history.php?month=<?php echo urlencode($bill['period']); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
                                         </div>
                                     <?php else: ?>
-                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
+                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
                                             <i class='bx bx-credit-card-alt'></i> Pay Now
                                         </button>
                                     <?php endif; ?>
