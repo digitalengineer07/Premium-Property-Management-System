@@ -1,5 +1,5 @@
 <?php
-require 'db_connect.php';
+require 'includes/db_connect.php';
 $user_id = 6;
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
@@ -80,7 +80,7 @@ foreach($elecs as $e) {
         'icon' => 'bx-layer',
         'color' => 'yellow',
         'amount' => $e['amount'],
-        'remaining_amount' => $e['remaining_amount'],
+        'remaining_amount' => isset($e['remaining_amount']) ? $e['remaining_amount'] : $e['amount'], // simulate whatever my-payments.php does
         'status' => $e['status'],
         'period' => $e['month']
     ];
