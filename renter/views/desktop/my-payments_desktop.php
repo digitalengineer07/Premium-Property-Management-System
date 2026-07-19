@@ -206,16 +206,8 @@
                 
                 // Rent + Maint Component
                 $r1_status = $orig_status;
-                $r1_amount = $rent_maint_amt;
-                if ($orig_status == 'Paid') {
-                    $r1_amount = $rent_maint_amt;
-                } else if ($orig_status == 'Partial') {
-                    if ($rent_remaining == 0) {
-                        $r1_amount = $rent_maint_amt;
-                        $r1_status = 'Paid';
-                    } else if ($paid_for_rent > 0) {
-                        $r1_amount = $rent_remaining;
-                    }
+                if ($orig_status == 'Partial' && $rent_remaining == 0) {
+                    $r1_status = 'Paid';
                 }
                 
                 $all_bills[] = [
@@ -224,23 +216,15 @@
                     'period' => $m['month'],
                     'bill_date' => date('01 M Y', strtotime($m['month'])),
                     'due_date' => date('07 M Y', strtotime($m['month'])),
-                    'amount' => $r1_amount, 'status' => $r1_status,
+                    'amount' => $rent_maint_amt, 'remaining_amount' => $rent_remaining, 'status' => $r1_status,
                     'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
                     'icon' => 'bx-home', 'color' => 'purple'
                 ];
                 
                 // Arrears / Dues Component
                 $r2_status = $orig_status;
-                $r2_amount = $dues_amt;
-                if ($orig_status == 'Paid') {
-                    $r2_amount = $dues_amt;
-                } else if ($orig_status == 'Partial') {
-                    if ($arrears_remaining == 0) {
-                        $r2_amount = $dues_amt;
-                        $r2_status = 'Paid';
-                    } else if ($total_paid > 0) {
-                        $r2_amount = $arrears_remaining;
-                    }
+                if ($orig_status == 'Partial' && $arrears_remaining == 0) {
+                    $r2_status = 'Paid';
                 }
                 
                 $all_bills[] = [
@@ -249,7 +233,7 @@
                     'period' => $m['month'],
                     'bill_date' => date('01 M Y', strtotime($m['month'])),
                     'due_date' => date('07 M Y', strtotime($m['month'])),
-                    'amount' => $r2_amount, 'status' => $r2_status,
+                    'amount' => $dues_amt, 'remaining_amount' => $arrears_remaining, 'status' => $r2_status,
                     'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
                     'icon' => 'bx-history', 'color' => 'orange'
                 ];
@@ -264,7 +248,7 @@
                     'period' => $m['month'],
                     'bill_date' => date('01 M Y', strtotime($m['month'])),
                     'due_date' => date('07 M Y', strtotime($m['month'])),
-                    'amount' => ($orig_status == 'Partial' && $rem > 0) ? $rem : $rent_maint_amt, 'status' => $st,
+                    'amount' => $rent_maint_amt, 'remaining_amount' => $rem, 'status' => $st,
                     'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
                     'icon' => 'bx-home', 'color' => 'purple'
                 ];
