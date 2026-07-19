@@ -81,7 +81,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     }
     
     // 2. Electricity (elec_rent part and electricity part)
-    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
         // Elec part
         $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
