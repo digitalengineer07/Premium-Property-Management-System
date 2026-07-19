@@ -126,13 +126,21 @@
                     'item_type' => 'aggregate',
                     'month' => $m,
                     'amount' => 0,
+                    'remaining_amount' => 0,
                     'status' => 'Paid',
                     'has_unpaid' => false,
                     'has_partial' => false,
                     'has_paid' => false
                 ];
             }
-            $mobile_aggregates[$m]['amount'] += (float)$t['amount'];
+            
+            // EXCLUDE arrears from the monthly aggregate sum
+            if (isset($t['split_type']) && $t['split_type'] === 'dues_only') {
+                // Do not add arrears/dues amount to the "Total Payment" row for this month
+            } else {
+                $mobile_aggregates[$m]['amount'] += (float)$t['amount'];
+                $mobile_aggregates[$m]['remaining_amount'] += isset($t['remaining_amount']) ? (float)$t['remaining_amount'] : (float)$t['amount'];
+            }
             $st = strtolower($t['status'] ?? 'paid');
             if($st == 'unpaid' || $st == 'due') $mobile_aggregates[$m]['has_unpaid'] = true;
             elseif($st == 'partial') $mobile_aggregates[$m]['has_partial'] = true;

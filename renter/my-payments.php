@@ -115,54 +115,37 @@ while ($row = mysqli_fetch_assoc($elec_rent_res)) {
 
         // Component 1: Rent + Maint (goes to 'Rent' tab)
         $r1 = $row;
-        if ($row['status'] == 'Paid') {
-            $r1['amount'] = $rent_maint_amt;
-            $r1['status'] = 'Paid';
-        } else if ($row['status'] == 'Due') {
-            $r1['amount'] = $rent_maint_amt;
-            $r1['status'] = 'Due';
-        } else { // Partial
-            if ($rent_remaining == 0) {
-                $r1['amount'] = $rent_maint_amt;
-                $r1['status'] = 'Paid';
-            } else if ($paid_for_rent > 0) {
-                $r1['amount'] = $rent_remaining;
-                $r1['status'] = 'Partial';
-            } else {
-                $r1['amount'] = $rent_maint_amt;
-                $r1['status'] = 'Due';
-            }
+        $r1_status = $row['status'];
+        if ($row['status'] == 'Partial' && $rent_remaining == 0) {
+            $r1_status = 'Paid';
         }
+        $r1['amount'] = $rent_maint_amt;
+        $r1['remaining_amount'] = $rent_remaining;
+        $r1['status'] = $r1_status;
         $r1['source'] = 'elec_table';
         $r1['split_type'] = 'rent_only';
         $merged_rents[] = $r1;
         
         // Component 2: Dues (goes to 'Other Charges' tab)
         $r2 = $row;
-        if ($row['status'] == 'Paid') {
-            $r2['amount'] = $dues_amt;
-            $r2['status'] = 'Paid';
-        } else if ($row['status'] == 'Due') {
-            $r2['amount'] = $dues_amt;
-            $r2['status'] = 'Due';
-        } else { // Partial
-            if ($arrears_remaining == 0) {
-                $r2['amount'] = $dues_amt;
-                $r2['status'] = 'Paid';
-            } else if ($total_paid > 0) {
-                $r2['amount'] = $arrears_remaining;
-                $r2['status'] = 'Partial';
-            } else {
-                $r2['amount'] = $dues_amt;
-                $r2['status'] = 'Due';
-            }
+        $r2_status = $row['status'];
+        if ($row['status'] == 'Partial' && $arrears_remaining == 0) {
+            $r2_status = 'Paid';
         }
+        $r2['amount'] = $dues_amt;
+        $r2['remaining_amount'] = $arrears_remaining;
+        $r2['status'] = $r2_status;
         $r2['source'] = 'elec_table';
         $r2['split_type'] = 'dues_only';
         $merged_rents[] = $r2;
     } else {
-        $row['amount'] = $row['status'] == 'Partial' ? max(0, $rent_maint_amt - $total_paid) : $rent_maint_amt;
-        if ($row['status'] == 'Partial' && $row['amount'] == 0) $row['status'] = 'Paid';
+        $rem = max(0, $rent_maint_amt - $total_paid);
+        $r_status = $row['status'];
+        if ($row['status'] == 'Partial' && $rem == 0) $r_status = 'Paid';
+        
+        $row['amount'] = $rent_maint_amt;
+        $row['remaining_amount'] = $rem;
+        $row['status'] = $r_status;
         $row['source'] = 'elec_table';
         $row['split_type'] = 'combined';
         $merged_rents[] = $row;

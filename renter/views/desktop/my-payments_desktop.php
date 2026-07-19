@@ -529,8 +529,14 @@ function filterMobileByYear(year) {
                                     'has_paid' => false,
                                 ];
                             }
-                            $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
-                            $monthly_aggregates[$p]['remaining_amount'] += isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            
+                            // EXCLUDE arrears from the monthly aggregate sum
+                            if (isset($bill['filter_type']) && $bill['filter_type'] === 'other' && isset($bill['type']) && $bill['type'] === 'elec_rent') {
+                                // Do not add arrears/dues amount to the "Total Payment" row for this month
+                            } else {
+                                $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
+                                $monthly_aggregates[$p]['remaining_amount'] += isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            }
                             
                             $st = strtolower($bill['status']);
                             if($st == 'unpaid' || $st == 'due') {
