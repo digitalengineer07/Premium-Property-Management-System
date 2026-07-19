@@ -196,7 +196,20 @@
                                        FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($m = mysqli_fetch_assoc($maint_q)) {
-            $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'];
+            $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'] + (float)$m['extra_charges'];
+            
+            $summary = [
+                'Monthly Rent' => (float)$m['rent_amount'],
+                'Maintenance Charge' => (float)$m['maintenance']
+            ];
+            
+            if ((float)$m['extra_charges'] > 0) {
+                $summary['Other Charges'] = (float)$m['extra_charges'];
+            }
+            if ((float)$m['dues'] != 0) {
+                $summary['Advance Applied'] = (float)$m['dues'];
+            }
+            
             $all_bills[] = [
                 'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : ($m['status'] == 'Due' ? 'unpaid' : 'unpaid')),
                 'title' => 'Rent for ' . $m['month'], 'subtitle' => 'Room ' . $room_no,
@@ -206,27 +219,8 @@
                 'amount' => $rent_maint_amt, 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
-                'summary' => [
-                    'Monthly Rent' => $m['rent_amount'],
-                    'Maintenance Charge' => $m['maintenance']
-                ]
+                'summary' => $summary
             ];
-            
-            if ((float)$m['extra_charges'] > 0) {
-                $all_bills[] = [
-                    'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : ($m['status'] == 'Due' ? 'unpaid' : 'unpaid')),
-                    'title' => 'Other Charges', 'subtitle' => $m['extra_charges_desc'] ? $m['extra_charges_desc'] : 'Miscellaneous',
-                    'period' => $m['month'],
-                    'bill_date' => date('01 M Y', strtotime($m['month'])),
-                    'due_date' => date('07 M Y', strtotime($m['month'])),
-                    'amount' => (float)$m['extra_charges'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
-                    'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-                    'icon' => 'bx-receipt', 'color' => 'orange',
-                    'summary' => [
-                        'Other Charges' => $m['extra_charges']
-                    ]
-                ];
-            }
         }
         
         // Sort by Period Descending
