@@ -237,10 +237,10 @@
         <?php elseif ($t['item_type'] === 'rent_or_other'):
                 // Determine icons based on source
                 if (isset($t['split_type']) && $t['split_type'] === 'dues_only') {
-                    $icon = "<i class='bx bx-history'></i>";
+                    $icon = "<i class='bx bx-receipt'></i>";
                     $iconStyle = "background: rgba(245, 158, 11, 0.1); color: #F59E0B;";
-                    $title = "Arrears / Remaining";
-                    $subtitle = 'Carried forward';
+                    $title = "Other Charges";
+                    $subtitle = isset($t['extra_charges_desc']) && !empty($t['extra_charges_desc']) ? $t['extra_charges_desc'] : 'Miscellaneous';
                     $dataType = 'other';
                 } else if ($t['source'] === 'rent_table' || $t['source'] === 'elec_table' && $amount > 0) {
                     $icon = "<i class='bx bx-home-alt'></i>";
