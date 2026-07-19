@@ -180,10 +180,14 @@
         // 1. Fetch user-applied transactions from payment_notifications
         $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id ORDER BY id DESC LIMIT 50");
         $sys_tx_ids = [];
+        $txn_ids = [];
         if ($q_n) {
             while ($row = mysqli_fetch_assoc($q_n)) {
                 if (!empty($row['sys_tx_id'])) {
                     $sys_tx_ids[] = "'" . mysqli_real_escape_string($conn, $row['sys_tx_id']) . "'";
+                }
+                if (!empty($row['transaction_id'])) {
+                    $txn_ids[] = "'" . mysqli_real_escape_string($conn, $row['transaction_id']) . "'";
                 }
                 
                 $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
@@ -211,13 +215,10 @@
             }
         }
 
-        // 2. Fetch admin manual transactions from payments (where sys_tx_id not in notifications)
-        $not_in_clause = "";
-        if (count($sys_tx_ids) > 0) {
-            $not_in_clause = "AND (sys_tx_id IS NULL OR sys_tx_id = '' OR sys_tx_id NOT IN (" . implode(',', $sys_tx_ids) . "))";
-        } else {
-            $not_in_clause = "AND (sys_tx_id IS NULL OR sys_tx_id = '')";
-        }
+        // 2. Fetch admin manual transactions from payments (where sys_tx_id and transaction_id not in notifications)
+        $exclude_sys = (count($sys_tx_ids) > 0) ? "(sys_tx_id IS NULL OR sys_tx_id = '' OR sys_tx_id NOT IN (" . implode(',', $sys_tx_ids) . "))" : "1=1";
+        $exclude_txn = (count($txn_ids) > 0) ? "(transaction_id IS NULL OR transaction_id = '' OR transaction_id NOT IN (" . implode(',', $txn_ids) . "))" : "1=1";
+        $not_in_clause = "AND ($exclude_sys) AND ($exclude_txn)";
 
         $q_m = mysqli_query($conn, "
             SELECT 
