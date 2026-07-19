@@ -385,7 +385,7 @@
                     <?php if ($bill['status'] == 'Paid'): ?>
                         <div class="m-pci-date"><?php echo $bill['paid_on']; ?></div>
                     <?php else: ?>
-                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo max(0, min((float)$bill['amount'], (float)$total_due)); ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
                             <i class='bx bx-credit-card'></i> Pay Now
                         </button>
                     <?php endif; ?>
