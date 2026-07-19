@@ -105,48 +105,18 @@ mysqli_stmt_execute($stmt);
 $elec_rent_res = mysqli_stmt_get_result($stmt);
 while ($row = mysqli_fetch_assoc($elec_rent_res)) {
     $total_paid = (float)$row['total_paid'];
-    $extra_charges = (float)$row['extra_charges'];
-    $rent_maint_amt = (float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues'];
+    $rent_maint_amt = (float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues'] + (float)$row['extra_charges'];
+
+    $rem = max(0, $rent_maint_amt - $total_paid);
+    $r_status = $row['status'];
+    if ($row['status'] == 'Partial' && $rem == 0) $r_status = 'Paid';
     
-    if ($extra_charges > 0) {
-        $extra_remaining = max(0, $extra_charges - $total_paid);
-        $paid_for_rent = max(0, $total_paid - $extra_charges);
-        $rent_remaining = max(0, $rent_maint_amt - $paid_for_rent);
-        
-        $r1_status = $row['status'];
-        if ($row['status'] == 'Partial' && $rent_remaining == 0) $r1_status = 'Paid';
-        
-        $row1 = $row;
-        $row1['amount'] = $rent_maint_amt;
-        $row1['remaining_amount'] = $rent_remaining;
-        $row1['status'] = $r1_status;
-        $row1['source'] = 'elec_table';
-        $row1['split_type'] = 'combined';
-        $merged_rents[] = $row1;
-        
-        $r2_status = $row['status'];
-        if ($row['status'] == 'Partial' && $extra_remaining == 0) $r2_status = 'Paid';
-        
-        $row2 = $row;
-        $row2['amount'] = $extra_charges;
-        $row2['remaining_amount'] = $extra_remaining;
-        $row2['status'] = $r2_status;
-        $row2['source'] = 'elec_table';
-        $row2['split_type'] = 'dues_only'; // Keep 'dues_only' string since mobile views might rely on it for styling
-        $merged_rents[] = $row2;
-        
-    } else {
-        $rem = max(0, $rent_maint_amt - $total_paid);
-        $r_status = $row['status'];
-        if ($row['status'] == 'Partial' && $rem == 0) $r_status = 'Paid';
-        
-        $row['amount'] = $rent_maint_amt;
-        $row['remaining_amount'] = $rem;
-        $row['status'] = $r_status;
-        $row['source'] = 'elec_table';
-        $row['split_type'] = 'combined';
-        $merged_rents[] = $row;
-    }
+    $row['amount'] = $rent_maint_amt;
+    $row['remaining_amount'] = $rem;
+    $row['status'] = $r_status;
+    $row['source'] = 'elec_table';
+    $row['split_type'] = 'combined';
+    $merged_rents[] = $row;
 }
 mysqli_stmt_close($stmt);
 
