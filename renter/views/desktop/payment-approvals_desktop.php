@@ -521,6 +521,10 @@
                                 <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
                                     <?php echo htmlspecialchars($ap['transaction_id']); ?>
                                 </span>
+                            <?php elseif (!empty($ap['sys_tx_id'])): ?>
+                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
+                                    <?php echo htmlspecialchars($ap['sys_tx_id']); ?>
+                                </span>
                             <?php else: ?>
                                 <span style="color: var(--text-gray); font-style: italic;">N/A</span>
                             <?php endif; ?>

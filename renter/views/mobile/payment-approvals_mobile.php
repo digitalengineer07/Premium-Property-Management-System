@@ -252,7 +252,11 @@
                     <div style="text-align: right;">
                         <div class="ac-label">Ref / UTR No</div>
                         <div class="ac-value" style="font-family: monospace;">
-                            <?php echo !empty($ap['transaction_id']) ? htmlspecialchars($ap['transaction_id']) : 'N/A'; ?>
+                            <?php 
+                                if (!empty($ap['transaction_id'])) echo htmlspecialchars($ap['transaction_id']);
+                                else if (!empty($ap['sys_tx_id'])) echo htmlspecialchars($ap['sys_tx_id']);
+                                else echo 'N/A'; 
+                            ?>
                         </div>
                     </div>
                 </div>

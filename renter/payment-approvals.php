@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $tr_id = trim($_POST['transaction_id'] ?? '');
         $p_month = !empty($_POST['bill_month']) ? date('F Y', strtotime($_POST['bill_month'].'-01')) : 'Advance/General';
         $payment_method = $_POST['payment_method'] ?? 'UPI';
+        $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
 
         if ($payment_method === 'UPI' && empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";
@@ -42,6 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             if ($payment_method === 'UPI' && !empty($tr_id)) {
                 $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE transaction_id = ?");
                 mysqli_stmt_bind_param($check_stmt, "s", $tr_id);
+                mysqli_stmt_execute($check_stmt);
+                $check_res = mysqli_stmt_get_result($check_stmt);
+                if (mysqli_num_rows($check_res) > 0) {
+                    $is_duplicate = true;
+                }
+            } else if ($payment_method === 'Cash' || $payment_method === 'Bank Transfer') {
+                // Check for duplicate cash/bank applications within the last 5 minutes to prevent spam
+                $check_stmt = mysqli_prepare($conn, "SELECT id FROM payment_notifications WHERE user_id = ? AND amount = ? AND payment_method = ? AND created_at >= NOW() - INTERVAL 5 MINUTE");
+                mysqli_stmt_bind_param($check_stmt, "ids", $user_id, $amt, $payment_method);
                 mysqli_stmt_execute($check_stmt);
                 $check_res = mysqli_stmt_get_result($check_stmt);
                 if (mysqli_num_rows($check_res) > 0) {
@@ -92,8 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             } else if ($is_duplicate_request) {
                 $payment_error = $duplicate_msg;
             } else {
-                $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "isidsss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method);
+                $stmt = mysqli_prepare($conn, "INSERT INTO payment_notifications (user_id, bill_type, bill_id, amount, transaction_id, month, payment_method, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "isidssss", $user_id, $b_type, $b_id, $amt, $tr_id, $p_month, $payment_method, $sys_tx_id);
                 if (mysqli_stmt_execute($stmt)) {
                     $payment_success = "Payment approval request submitted successfully!";
                 } else {
