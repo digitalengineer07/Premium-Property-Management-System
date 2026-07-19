@@ -146,12 +146,14 @@ if ($conn) {
             'agreement_expiry_date' => "date DEFAULT NULL",
             'pending_adjustment' => "decimal(10,2) DEFAULT '0.00'",
             'advance_payment' => "decimal(10,2) DEFAULT '0.00'",
+            'security_deposit' => "decimal(10,2) DEFAULT '0.00'",
             'advance_updated_at' => "timestamp NULL DEFAULT NULL",
             'fixed_rent' => "decimal(10,2) DEFAULT '0.00'",
             'fixed_maintenance' => "decimal(10,2) DEFAULT '0.00'",
             'rent_maint_updated_at' => "timestamp NULL DEFAULT NULL",
             'rent_maint_updated_by' => "int(11) DEFAULT NULL",
-            'base_reading' => "int(11) DEFAULT '0'"
+            'base_reading' => "int(11) DEFAULT '0'",
+            'must_change_password' => "tinyint(1) DEFAULT '0'"
         ],
         'electricity' => [
             'extra_charges' => "decimal(10,2) DEFAULT '0.00'",
@@ -166,9 +168,18 @@ if ($conn) {
         'rent' => [
             'paid_date' => "date DEFAULT NULL"
         ],
+        'payments' => [
+            'adjustment_amount' => "decimal(10,2) DEFAULT '0.00'",
+            'adjustment_type' => "enum('None','Advance Deduction') DEFAULT 'None'",
+            'sys_tx_id' => "varchar(50) DEFAULT NULL",
+            'admin_name' => "varchar(100) DEFAULT NULL"
+        ],
         'payment_notifications' => [
             'verified_by' => "varchar(100) DEFAULT NULL",
-            'verified_at' => "datetime DEFAULT NULL"
+            'verified_at' => "datetime DEFAULT NULL",
+            'is_dismissed' => "tinyint(1) DEFAULT '0'",
+            'month' => "varchar(50) DEFAULT NULL",
+            'sys_tx_id' => "varchar(50) DEFAULT NULL"
         ]
     ];
 
