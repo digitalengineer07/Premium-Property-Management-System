@@ -1,7 +1,7 @@
 <?php
 require_once "db.php";
 
-$q = mysqli_query($conn, "SELECT id, name FROM users WHERE role='renter'");
+$q = mysqli_query($conn, "SELECT id, name FROM users");
 while ($u = mysqli_fetch_assoc($q)) {
     $uid = $u['id'];
     $name = $u['name'];
