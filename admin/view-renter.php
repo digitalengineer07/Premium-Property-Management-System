@@ -360,7 +360,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                       <div style="text-align: right;">
                           <div style="font-weight: 800; font-size: 22px; color: var(--primary-purple);">
                               <?php 
-                              $total_paid = array_sum(array_column($payment_history, 'amount'));
+                              $total_paid = array_sum(array_column($payment_history, 'paid_amount'));
                               echo '₹' . number_format($total_paid, 2); 
                               ?>
                           </div>
