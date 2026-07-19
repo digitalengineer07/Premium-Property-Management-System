@@ -1,5 +1,5 @@
 <?php
-require 'includes/db_connect.php';
+require 'db.php';
 $user_id = 6;
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
