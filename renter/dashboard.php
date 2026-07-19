@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $month = $_POST['month'] ?? '';
 
         $payment_method = $_POST['payment_method'] ?? 'UPI';
-        $sys_tx_id = 'PAY-' . strtoupper(bin2hex(random_bytes(4)));
+        $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
 
         if ($payment_method === 'UPI' && empty($tr_id)) {
             $payment_error = "Please enter the Transaction ID / UTR.";

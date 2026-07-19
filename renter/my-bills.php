@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         if (empty($tr_id)) {
             $tr_id = 'SYS-' . strtoupper(bin2hex(random_bytes(6)));
         }
-        $sys_tx_id = 'PAY-' . strtoupper(bin2hex(random_bytes(4)));
+        $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
 
         $bill_valid = true;
         if ($b_id > 0 && $b_type === 'rent') {
