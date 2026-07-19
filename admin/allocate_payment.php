@@ -27,10 +27,10 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
         }
     } elseif ($bill_type === 'electricity' || $bill_type === 'elec_rent') {
         // electricity table stores combined rent and electricity
-        $qBill = mysqli_query($conn, "SELECT amount, rent_amount, maintenance, dues, total_amount, user_id FROM electricity WHERE id=$bill_id");
+        $qBill = mysqli_query($conn, "SELECT amount, rent_amount, maintenance, dues, extra_charges, total_amount, user_id FROM electricity WHERE id=$bill_id");
         if ($b = mysqli_fetch_assoc($qBill)) {
             $elec_part = (float)$b['amount'];
-            $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'];
+            $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'] + (float)$b['extra_charges'];
             
             $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
             $total_elec_paid = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
@@ -81,7 +81,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     }
     
     // 2. Electricity (elec_rent part and electricity part)
-    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
         // Elec part
         $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
