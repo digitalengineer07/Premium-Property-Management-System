@@ -72,15 +72,7 @@ $rent_res = mysqli_stmt_get_result($stmt);
 $rents = []; while ($r = mysqli_fetch_assoc($rent_res)) $rents[] = $r;
 mysqli_stmt_close($stmt);
 
-// Calculate advance paid
-$stmt = mysqli_prepare($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = ? AND bill_type = 'advance'");
-mysqli_stmt_bind_param($stmt, "i", $id);
-mysqli_stmt_execute($stmt);
-$adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-$adv_paid = (float)$adv_paid_res['adv_paid'];
-mysqli_stmt_close($stmt);
-
-$advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
+// (Obsolete advance calculations removed as advance_payment is now a floating wallet)
 
 /* Fetch detailed payment history log */
 $stmt = mysqli_prepare($conn, "SELECT p.*, 'Admin' as admin_name FROM payments p WHERE p.user_id = ? ORDER BY p.id DESC");
@@ -282,22 +274,17 @@ $admin_user = s($_SESSION['admin'] ?? '');
             
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                   
-                  <!-- Security Deposit -->
+                  <!-- Advance Wallet -->
                   <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
-                          <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; color: #10B981; font-size: 28px; flex-shrink: 0;"><i class='bx bx-check-shield'></i></div>
+                          <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card-front'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                              <?php if ($advance_due > 0): ?>
-                                  <div style="color: #EF4444; font-size: 13px; font-weight: 600;">Due: ₹<?php echo number_format($advance_due, 2); ?></div>
-                                  <button onclick="openPaymentModal('advance', <?php echo $user['id']; ?>, <?php echo $advance_due; ?>, 'Advance Security')" class="btn-primary" style="margin-top: 10px; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 8px;">Mark Paid</button>
-                              <?php else: ?>
-                                  <div style="color: #10B981; font-size: 13px; font-weight: 600; background: #ECFDF5; padding: 4px 10px; border-radius: 6px; display: inline-block;">Fully Paid</div>
-                              <?php endif; ?>
+                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Advance Wallet</div>
+                              <div style="color: #64748B; font-size: 13px; font-weight: 500;">Available Credit</div>
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: #10B981;">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: var(--primary-purple);">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
                       </div>
                   </div>
                     
