@@ -15,7 +15,7 @@ if ($id <= 0) {
 }
 
 /* Fetch user */
-$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, electricity_document, electricity_upload_date, about, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date, emergency_contact_name, emergency_contact_relation, emergency_contact_phone, emergency_contact_address FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, electricity_document, electricity_upload_date, about, pending_adjustment, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date, emergency_contact_name, emergency_contact_relation, emergency_contact_phone, emergency_contact_address FROM users WHERE id = ?");
 
 if (!$stmt) {
     die("<div style='padding:20px; background:#ffebeb; color:#d32f2f; border:1px solid #d32f2f; margin:20px;'><strong>Database Query Failed!</strong><br>Error details: " . mysqli_error($conn) . "</div>");
@@ -299,6 +299,21 @@ $admin_user = s($_SESSION['admin'] ?? '');
                       <div style="text-align: right;">
                           <div style="font-weight: 800; font-size: 22px; color: #10B981;">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
                       </div>
+                  </div>
+                    
+                    <!-- Security Deposit -->
+                    <div style="background: white; border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); grid-column: 1 / -1;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; color: #F59E0B; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
+                            <div>
+                                <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
+                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Refundable at move out</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 800; font-size: 22px; color: #F59E0B;">₹<?php echo number_format($user['security_deposit'] ?? 0, 2); ?></div>
+                        </div>
+                    </div>    </div>
                   </div>
   
                   <!-- Fixed Charges -->

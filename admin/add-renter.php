@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
                 $base_reading = (int)($_POST['base_reading'] ?? 0);
                 $advance_payment = (float)($_POST['advance_payment'] ?? 0);
+                $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
                 
@@ -46,9 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $block = trim($_POST['block'] ?? '');
                 $floor = trim($_POST['floor'] ?? '');
                 $parking = trim($_POST['parking'] ?? '');
-                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssidddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
+                mysqli_stmt_bind_param($stmt, "ssssssiddidddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
@@ -219,13 +220,24 @@ $admin_user = s($_SESSION['admin']);
                     <div style="margin-bottom: 30px;">
                         <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Financial Initial Setup</h4>
                         <div class="form-group">
-                            <label>Advance Payment</label>
-                            <div style="display: flex; gap: 10px; align-items: stretch;">
-                                <div style="position: relative; flex: 1; display: flex; align-items: center;">
-                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                            <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
+                                <div style="flex: 1;">
+                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Advance Wallet (₹)</label>
+                                <div style="position: relative; height: 48px;">
+                                    <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
                                     <input type="number" step="0.01" name="advance_payment" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
-                                <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
+                            </div>
+                                <div style="flex: 1;">
+                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Security Deposit (₹)</label>
+                                <div style="position: relative; height: 48px;">
+                                    <i class='bx bx-lock-alt' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
+                                    <input type="number" step="0.01" name="security_deposit" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                </div>
+                            </div>
+                                <div style="display: flex; align-items: flex-end;">
+                                    <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
+                                </div>
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the security/advance deposit received from the renter.</p>
                             <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
@@ -270,6 +282,17 @@ $admin_user = s($_SESSION['admin']);
 <script>
 function generateAdvanceQR() {
     let amount = document.getElementsByName('advance_payment')[0].value;
+    if (amount === '' || parseFloat(amount) < 0) {
+        alert('Advance Payment must be 0 or greater');
+        return;
+    }
+    
+    let secAmount = document.getElementsByName('security_deposit')[0].value;
+    if (secAmount === '' || parseFloat(secAmount) < 0) {
+        alert('Security Deposit must be 0 or greater');
+        return;
+    }
+    
     if(amount > 0) {
         let upiId = "nikhil119124-1@oksbi"; 
         let name = "Nikhil Kumar";

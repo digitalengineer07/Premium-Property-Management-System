@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $about = trim($_POST['about'] ?? '');
         $joining_date = $_POST['joining_date'] ?? null;
         $advance_payment = (float)($_POST['advance_payment'] ?? 0);
+        $security_deposit = (float)($_POST['security_deposit'] ?? 0);
         $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
         $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
         
@@ -57,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $aadhaar_update = "";
             $agreement_update = "";
-            $types = "sssssssddddssss";
-            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $advance_payment, $advance_payment, $fixed_rent, $fixed_maintenance, $emg_name, $emg_rel, $emg_phone, $emg_addr];
+            $types = "sssssssdddddssss";
+            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $advance_payment, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $emg_name, $emg_rel, $emg_phone, $emg_addr];
 
             // Handle Aadhaar Upload
             if (isset($_FILES['aadhaar_file']) && $_FILES['aadhaar_file']['error'] === UPLOAD_ERR_OK) {
@@ -89,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // If advance_payment is changed, update advance_updated_at
-            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, advance_updated_at = IF(advance_payment != ?, NOW(), advance_updated_at), advance_payment=?, fixed_rent=?, fixed_maintenance=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? {$aadhaar_update} {$agreement_update}";
+            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, advance_updated_at = IF(advance_payment != ?, NOW(), advance_updated_at), advance_payment=?, security_deposit=?, fixed_rent=?, fixed_maintenance=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? {$aadhaar_update} {$agreement_update}";
 
             if ($rent_maint_changed) {
                 $sql .= ", rent_maint_updated_at=NOW(), rent_maint_updated_by=?";
@@ -278,10 +279,17 @@ $admin_user = s($_SESSION['admin']);
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Deposit / Adv.</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Advance Wallet</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'], 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Security Dep.</label>
+                                    <div style="position: relative; display: flex; align-items: center;">
+                                        <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                        <input type="number" step="0.01" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: #ffffff; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
