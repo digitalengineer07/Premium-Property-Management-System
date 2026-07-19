@@ -846,10 +846,10 @@ $admin_user = s($_SESSION['admin']);
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Past Dues</label>
+                                <label>Advance Applied (Auto)</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" id="dues" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                    <input type="number" id="dues" placeholder="0" readonly style="padding-left: 40px; background-color: #f1f5f9; cursor: not-allowed; color: #10B981; font-weight: 700;">
                                 </div>
                             </div>
                         </div>
@@ -930,7 +930,7 @@ $admin_user = s($_SESSION['admin']);
                                         <span style="color: rgba(255,255,255,0.8);">Maintenance</span><strong id="calcMaintenance">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Arrears/Dues</span><strong id="calcDues">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8);">Advance Applied</span><strong id="calcDues">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between;" id="extraChargesDiv">
                                         <span style="color: rgba(255,255,255,0.8);">Extra Charges</span><strong id="calcExtraCharges">₹0</strong>
@@ -1304,10 +1304,8 @@ $admin_user = s($_SESSION['admin']);
                     balanceDiv.style.color = 'rgba(255,255,255,0.7)';
                 }
 
-                // Auto-fill Dues field (Dues = -Adjustment)
-                // If adj is -2000 (Remaining), dues = 2000
-                // If adj is 2000 (Extra), dues = -2000
-                document.getElementById('dues').value = adj === 0 ? '' : -adj;
+                // Auto-fill Advance Applied (dues = -Adjustment, but only if adj is > 0 meaning they have advance)
+                document.getElementById('dues').value = adj > 0 ? -adj : '';
 
                 const prevInput = document.getElementById('previousReading');
                 prevInput.value = lastReading;
