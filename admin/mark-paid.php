@@ -72,10 +72,15 @@ if ($paid_amount <= 0) {
 
 
 /* 2. Process via Unified Engine */
+$sys_prefix = 'SYS_MAN_';
+if ($payment_mode === 'Cash') $sys_prefix = 'SYS_OFF_';
+else if ($payment_mode === 'UPI') $sys_prefix = 'SYS_UPI_';
+$sys_tx_id = $sys_prefix . strtoupper(bin2hex(random_bytes(6)));
+
 if ($type === 'advance') {
     // Direct deposit into advance_payment
-    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time);
+    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "idsdsss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id);
     mysqli_stmt_execute($stmt);
     
     mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $paid_amount WHERE id=$user_id");
@@ -91,8 +96,8 @@ if ($type === 'advance') {
     
     // Insert core payment
     if ($amount_to_apply > 0) {
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisdsdss", $user_id, $type, $id, $bill['month'], $bill_amount, $payment_mode, $amount_to_apply, $payment_date, $payment_time);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "isisdsdsss", $user_id, $type, $id, $bill['month'], $bill_amount, $payment_mode, $amount_to_apply, $payment_date, $payment_time, $sys_tx_id);
         mysqli_stmt_execute($stmt);
         
         // Use central engine to recalculate status mathematically
@@ -101,8 +106,8 @@ if ($type === 'advance') {
     
     // Deposit any excess into advance_payment automatically
     if ($excess > 0) {
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "idsdsss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id);
         mysqli_stmt_execute($stmt);
         
         mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$user_id");
