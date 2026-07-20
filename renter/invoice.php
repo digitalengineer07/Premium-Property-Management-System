@@ -937,7 +937,9 @@ $email = $bill['email'] ?? 'renter@example.com';
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-calendar-exclamation'></i> Due Date</div>
-                            <div class="summary-item-val" <?php if($is_overdue) echo 'style="color:var(--danger);"'; ?>><?php echo $due_date; ?></div>
+                            <div class="summary-item-val">
+                                <span style="background: #FEF2F2; color: #EF4444; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.2);"><?php echo $due_date; ?></span>
+                            </div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-receipt'></i> Total Billed</div>
@@ -948,8 +950,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                             <div class="summary-item-val">₹ <?php echo number_format((float)$bill['dues'] + (float)$bill['extra_charges'], 2); ?></div>
                         </div>
                         <div class="summary-item remaining">
-                            <div class="summary-item-label"><i class='bx bx-wallet'></i> Remaining Amount</div>
-                            <div class="summary-item-val">₹ <?php echo number_format($remaining_amount, 2); ?></div>
+                            <div class="summary-item-label"><i class='bx bx-credit-card-front'></i> Payment Method</div>
+                            <div class="summary-item-val" style="color: var(--primary);">UPI Preferred</div>
                         </div>
                     </div>
                 </div>
