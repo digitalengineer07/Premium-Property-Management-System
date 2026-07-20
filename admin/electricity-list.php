@@ -357,13 +357,13 @@ $admin_user = s($_SESSION['admin']);
                         <td><?php echo htmlspecialchars($r['units']); ?></td>
                         <td style="font-weight: 700; color: var(--text-dark);">₹<?php echo number_format($r['amount'], 2); ?></td>
                         <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;">Slip</a>
-                                <a href="update-electricity.php?user_id=<?php echo $r['user_id'] ?? 0; ?>&id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px;"><i class='bx bx-edit'></i></a>
+                        <td style="white-space: nowrap;">
+                            <div style="display: flex; gap: 4px; align-items: center; flex-wrap: nowrap;">
+                                <a href="slip.php?elec_id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 4px 8px; font-size: 11px; height: auto;">Slip</a>
+                                <a href="update-electricity.php?user_id=<?php echo $r['user_id'] ?? 0; ?>&id=<?php echo $r['id']; ?>" class="btn-outline" style="padding: 4px 8px; font-size: 11px; height: auto;"><i class='bx bx-edit'></i></a>
                                 <?php if($r['status'] != 'Paid'): ?>
-                                    <a href="delete-bill.php?id=<?php echo $r['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" class="btn-outline" style="padding: 6px 8px; font-size: 11px; color: #EF4444; border-color: #FCA5A5;" onclick="return confirm('Delete this utility bill completely?');"><i class='bx bx-trash'></i></a>
-                                    <button onclick="openPaymentModal(<?php echo $r['id']; ?>, <?php echo $r['amount']; ?>, '<?php echo addslashes($r['month']); ?>', '<?php echo addslashes($r['name']); ?>')" class="btn-primary" style="padding: 6px 12px; font-size: 11px;">Mark Paid</button>
+                                    <a href="delete-bill.php?id=<?php echo $r['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" class="btn-outline" style="padding: 4px 8px; font-size: 11px; color: #EF4444; border-color: #FCA5A5; height: auto;" onclick="return confirm('Delete this utility bill completely?');"><i class='bx bx-trash'></i></a>
+                                    <button onclick="openPaymentModal(<?php echo $r['id']; ?>, <?php echo $r['amount']; ?>, '<?php echo addslashes($r['month']); ?>', '<?php echo addslashes($r['name']); ?>')" class="btn-primary" style="padding: 4px 8px; font-size: 11px; height: auto; white-space: nowrap;">Mark Paid</button>
                                 <?php endif; ?>
                             </div>
                         </td>
