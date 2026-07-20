@@ -8,6 +8,10 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
+if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+    die("<script>alert('Security validation failed. Access denied.'); window.history.back();</script>");
+}
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($id > 0) {
