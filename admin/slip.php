@@ -522,10 +522,26 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         }
 
         @media print {
-            body { background: white; }
+            body { background: white; margin: 0; }
+            @page { margin: 0.5cm; } /* Reduce default browser margins */
             .invoice-wrapper {
-                margin: 0; padding: 10px; box-shadow: none; max-width: 100%;
+                margin: 0; padding: 0; box-shadow: none; max-width: 100%;
             }
+            /* Compress spacing to fit one page */
+            .header { margin-bottom: 12px; }
+            .contact-info { margin-bottom: 12px; padding-bottom: 12px; }
+            .meta-grid { margin-bottom: 16px; gap: 12px; }
+            .meta-card { padding: 12px 16px; }
+            .section-card { margin-bottom: 16px; }
+            .meter-flow { padding: 16px 20px; }
+            .meter-meta { padding: 12px 20px; gap: 12px; }
+            .photo-body { padding: 12px 20px; gap: 20px; }
+            .photo-img { height: 110px; width: 240px; }
+            .charges-table { margin-bottom: 16px; }
+            .charges-table th, .charges-table td { padding: 10px 16px; }
+            .total-box { padding: 16px 24px; }
+            .footer { margin-top: 20px; }
+            
             .actions { display: none; }
             .meta-card, .flow-item.highlight, .meter-meta-item i, .total-box, .total-icon {
                 -webkit-print-color-adjust: exact;
