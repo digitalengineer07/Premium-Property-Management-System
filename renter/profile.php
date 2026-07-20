@@ -177,36 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     }
 }
 
-/* Handle residence details updates */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_residence_details'])) {
-    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-        $errmsg = "Invalid form submission (CSRF).";
-    } else {
-        $r_room_no = trim($_POST['room_no'] ?? '');
-        $r_join_date = trim($_POST['join_date'] ?? '');
-        $r_rent_amount = trim($_POST['rent_amount'] ?? '');
-        
-        $r_join_date = empty($r_join_date) ? null : $r_join_date;
-        $r_rent_amount = empty($r_rent_amount) ? 0 : (float)$r_rent_amount;
-
-        $stmt = mysqli_prepare($conn, "UPDATE users SET room_no=?, joining_date=?, fixed_rent=? WHERE id=?");
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssdi", $r_room_no, $r_join_date, $r_rent_amount, $user_id);
-            if (mysqli_stmt_execute($stmt)) {
-                $success = "Residence details updated successfully.";
-                // update local variable so it reflects immediately
-                $user['room_no'] = $r_room_no;
-                $user['joining_date'] = $r_join_date;
-                $user['fixed_rent'] = $r_rent_amount;
-            } else {
-                $errmsg = "Database update failed.";
-            }
-            mysqli_stmt_close($stmt);
-        } else {
-            $errmsg = "Database prepare failed.";
-        }
-    }
-}
+/* Removed insecure residence details updater */
 
 /* Fetch user info */
 $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
