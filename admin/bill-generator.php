@@ -1143,13 +1143,13 @@ $admin_user = s($_SESSION['admin']);
             cropper = new Cropper(image, {
                 aspectRatio: 300 / 140, // Lock crop ratio to match the 300x140 electrical bill display
                 viewMode: 1, // Restrict crop box to not exceed the size of the canvas (image)
-                autoCropArea: 0.8,
+                autoCropArea: 1, // Maximize the initial crop area
                 guides: true,
                 highlight: true,
                 dragMode: 'move',
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: true,
+                cropBoxMovable: false, // Fix the crop box position
+                cropBoxResizable: false, // Prevent admin from shrinking or enlarging the crop box
+                toggleDragModeOnDblclick: false,
             });
         }
 
