@@ -741,6 +741,17 @@ $email = $bill['email'] ?? 'renter@example.com';
             .table-section { margin-bottom: 20px; }
             td, th { padding: 8px 12px !important; }
             
+            /* Prevent table footer components from stacking vertically in print */
+            .table-footer-wrapper {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: flex-end !important;
+                gap: 16px !important;
+            }
+            .totals-box { width: 300px !important; }
+            .warning-box { max-width: 60% !important; margin-bottom: 0 !important; }
+            
             .bottom-section { 
                 display: grid !important;
                 grid-template-columns: 1.5fr 1fr !important;
