@@ -41,10 +41,8 @@ $amount_paid = (float)($pay_res['total_paid'] ?? 0);
 $total_payable = (float)$bill['amount'] + (float)$bill['rent_amount'] + (float)$bill['maintenance'] + (float)$bill['dues'] + (float)$bill['extra_charges'];
 $remaining_amount = max(0, $total_payable - $amount_paid);
 
-$status = $bill['status']; // 'Due', 'Paid', 'Partial' (though standard uses Due/Paid)
-if ($amount_paid > 0 && $amount_paid < $total_payable) {
-    $status = 'Partial';
-} elseif ($amount_paid >= $total_payable && $total_payable > 0) {
+$status = $bill['status']; 
+if ($amount_paid >= $total_payable && $total_payable > 0) {
     $status = 'Paid';
 }
 
@@ -53,11 +51,9 @@ $status_bg = '#FEF3C7';
 if (strtolower($status) === 'paid') {
     $status_color = '#10B981';
     $status_bg = '#D1FAE5';
-} elseif (strtolower($status) === 'unpaid' || strtolower($status) === 'due') {
+} elseif (strtolower($status) === 'unpaid' || strtolower($status) === 'due' || strtolower($status) === 'partial') {
     $status = 'Pending';
-    $status_color = '#F59E0B'; // Matches image 'PENDING' color which is green in image? Wait, image shows 'PENDING' in green background? Ah, image shows Payment Status 'PENDING' with a light green background and darker green text (#10B981). Wait, normally green is Paid. Let's use green for paid, yellow/orange for pending. But I will follow the image which uses a soft green for Pending (or maybe it's just a general status pill style). Let's use standard: Pending=Yellow/Orange, Paid=Green.
-
-    // Actually, looking at image 1: Payment Status is "PENDING" in a light green box. I'll just use a neutral or warning color for pending. Let's use #10B981 for Paid, #F59E0B for pending.
+    $status_color = '#F59E0B'; 
 }
 
 $bill_invoice_id = !empty($bill['bill_invoice_id']) ? $bill['bill_invoice_id'] : 'BIL-'.date('Ym', strtotime($bill['month'])).'-'.str_pad($bill['id'], 6, '0', STR_PAD_LEFT);
