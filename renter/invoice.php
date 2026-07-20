@@ -42,19 +42,15 @@ $total_payable = (float)$bill['amount'] + (float)$bill['rent_amount'] + (float)$
 $remaining_amount = max(0, $total_payable - $amount_paid);
 
 $status = $bill['status']; 
-if ($amount_paid >= $total_payable && $total_payable > 0) {
-    $status = 'Paid';
-}
 
 $status_color = '#F59E0B'; // Pending
 $status_bg = '#FEF3C7';
-if (strtolower($status) === 'paid') {
-    $status_color = '#10B981';
-    $status_bg = '#D1FAE5';
-} elseif (strtolower($status) === 'unpaid' || strtolower($status) === 'due' || strtolower($status) === 'partial') {
-    $status = 'Pending';
-    $status_color = '#F59E0B'; 
-}
+
+// If for some reason the DB says paid, still force it to Pending for the invoice static view
+$status = 'Pending';
+$status_color = '#F59E0B'; 
+$status_bg = '#FEF3C7';
+
 
 $bill_invoice_id = !empty($bill['bill_invoice_id']) ? $bill['bill_invoice_id'] : 'BIL-'.date('Ym', strtotime($bill['month'])).'-'.str_pad($bill['id'], 6, '0', STR_PAD_LEFT);
 $bill_date = date('d M Y', strtotime($bill['created_at']));
