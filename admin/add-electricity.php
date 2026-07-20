@@ -43,8 +43,9 @@ if (isset($_POST['save'])) {
         exit;
     }
 
-    $i_stmt = mysqli_prepare($conn, "INSERT INTO electricity (user_id, month, units, amount, status, due_date) VALUES (?, ?, ?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 10 DAY))");
-    mysqli_stmt_bind_param($i_stmt, "isiss", $user_id, $month, $units, $amount, $status);
+    $bill_id_str = "BILL-" . date("Ymd") . "-" . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+    $i_stmt = mysqli_prepare($conn, "INSERT INTO electricity (user_id, month, units, amount, status, due_date, bill_invoice_id, created_at) VALUES (?, ?, ?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, NOW())");
+    mysqli_stmt_bind_param($i_stmt, "isisss", $user_id, $month, $units, $amount, $status, $bill_id_str);
     mysqli_stmt_execute($i_stmt);
     mysqli_stmt_close($i_stmt);
 

@@ -257,7 +257,7 @@ $total_bills_count = count($mobile_all_bills);
         </div>
 
 
-        <button class="m-btn-outline" onclick="window.location.href='#'">
+        <button id="mBtnDownloadBill" class="m-btn-outline" style="display: none;" onclick="">
             <i class='bx bx-download'></i> Download Bill
         </button>
     </div>
@@ -288,7 +288,7 @@ $total_bills_count = count($mobile_all_bills);
                         <?php echo money($bill['amount']); ?>
                         <div class="m-bill-action">
                             <?php if($bill['status'] === 'Paid'): ?>
-                                <i class='bx bx-download m-download-btn-mini' onclick="event.stopPropagation(); window.location.href='#'"></i>
+                                <i class='bx bx-download m-download-btn-mini' onclick="event.stopPropagation(); window.location.href='invoice.php?id=<?php echo $bill['id']; ?>'"></i>
                             <?php else: ?>
                                 <i class='bx bx-chevron-right' style="font-size: 16px;"></i>
                             <?php endif; ?>
@@ -371,6 +371,17 @@ $total_bills_count = count($mobile_all_bills);
             document.getElementById('mSummaryTotal').style.color = 'var(--text-dark)';
         } else {
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
+        }
+        
+        const downloadBtn = document.getElementById('mBtnDownloadBill');
+        if (downloadBtn) {
+            downloadBtn.style.display = 'flex';
+            if (bill.status === 'Unpaid') {
+                downloadBtn.innerHTML = "<i class='bx bx-receipt'></i> View Bill";
+            } else {
+                downloadBtn.innerHTML = "<i class='bx bx-download'></i> Download Bill";
+            }
+            downloadBtn.onclick = () => window.location.href = 'invoice.php?id=' + bill.id;
         }
         
         showMobileBillSummary();

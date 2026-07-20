@@ -200,14 +200,16 @@ if (isset($_FILES['meter_crop']) && $_FILES['meter_crop']['error'] === UPLOAD_ER
     }
 }
 
+$bill_id_str = "BILL-" . date("Ymd") . "-" . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+
 // Insert into electricity table
 $stmt = mysqli_prepare($conn, 
     "INSERT INTO electricity (
         user_id, month, payment_date, units, previous_reading, current_reading, 
         units_consumed, rate_per_unit, amount, rent_amount, maintenance, 
         dues, total_amount, meter_screenshot, meter_screenshot_orig, meter_screenshot_thumb,
-        status, created_at, due_date, extra_charges, extra_charges_desc
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, ?)"
+        status, created_at, due_date, extra_charges, extra_charges_desc, bill_invoice_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, ?, ?)"
 );
 
 if (!$stmt) {
@@ -215,7 +217,7 @@ if (!$stmt) {
     exit;
 }
 
-mysqli_stmt_bind_param($stmt, "issiiiiddddddsssds", 
+mysqli_stmt_bind_param($stmt, "issiiiiddddddsssdss", 
     $user_id, 
     $month_display, 
     $bill_date,
@@ -233,7 +235,8 @@ mysqli_stmt_bind_param($stmt, "issiiiiddddddsssds",
     $meter_screenshot_orig,
     $meter_screenshot_thumb,
     $extra_charges,
-    $extra_charges_desc
+    $extra_charges_desc,
+    $bill_id_str
 );
 
 if (mysqli_stmt_execute($stmt)) {

@@ -391,9 +391,14 @@
                 document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
-                // Pay button is removed
+                const downloadBtns = document.querySelectorAll('#bdBtnDownload');
+                if (downloadBtns) {
+                    downloadBtns.forEach(btn => {
+                        btn.onclick = () => window.open('invoice.php?id=' + bill.id, '_blank');
+                    });
+                }
             }
-
+            
             function goToPage(page, e) {
                 if(e) e.preventDefault();
                 currentPage = page;
@@ -435,9 +440,9 @@
                     
                     let actionBtn = '';
                     if (bill.status === 'Unpaid') {
-                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
+                        actionBtn = `<button onclick="window.open('invoice.php?id=${bill.id}', '_blank'); event.stopPropagation();" style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
                     } else {
-                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size: 13px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
+                        actionBtn = `<button onclick="window.open('invoice.php?id=${bill.id}', '_blank'); event.stopPropagation();" style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size: 13px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
 
                     let displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
