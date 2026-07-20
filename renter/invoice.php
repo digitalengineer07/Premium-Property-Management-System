@@ -920,7 +920,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                             $b_types = [];
                             if ((float)$bill['rent_amount'] > 0) $b_types[] = 'Rent';
                             if ((float)$bill['amount'] > 0) $b_types[] = 'Electricity';
-                            if (empty($b_types) && (float)$bill['maintenance'] > 0) $b_types[] = 'Maintenance';
+                            if ((float)$bill['maintenance'] > 0) $b_types[] = 'Maintenance';
                             $dynamic_type = !empty($b_types) ? implode(' + ', $b_types) : 'Standard Invoice';
                         ?>
                         <div class="summary-item">
@@ -944,8 +944,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                             <div class="summary-item-val">₹ <?php echo number_format($total_payable, 2); ?></div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-item-label"><i class='bx bx-money'></i> Amount Paid</div>
-                            <div class="summary-item-val">₹ <?php echo number_format($amount_paid, 2); ?></div>
+                            <div class="summary-item-label"><i class='bx bx-error-circle'></i> Extra Charges</div>
+                            <div class="summary-item-val">₹ <?php echo number_format((float)$bill['dues'] + (float)$bill['extra_charges'], 2); ?></div>
                         </div>
                         <div class="summary-item remaining">
                             <div class="summary-item-label"><i class='bx bx-wallet'></i> Remaining Amount</div>
