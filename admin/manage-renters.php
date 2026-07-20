@@ -332,8 +332,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             </div>
                         </td>
                         <td style="padding: 12px 10px;">
-                            <div style="font-weight: 700; color: var(--text-dark); font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-door-open' style="color: var(--primary-purple);"></i> <?php echo htmlspecialchars($u['room_no'] ?: 'N/A'); ?></div>
-                            <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad($u['id'], 4, '0', STR_PAD_LEFT); ?></div>
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 16px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-door-open' style="color: var(--primary-purple);"></i> <?php echo htmlspecialchars($u['room_no'] ?: 'N/A'); ?></div>
+                            <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad($u['id'], 4, '0', STR_PAD_LEFT); ?></div>
                         </td>
                         <td style="padding: 12px 10px;">
                             <div style="font-size: 12px;">
