@@ -701,12 +701,23 @@ $email = $bill['email'] ?? 'renter@example.com';
         @media print {
             @page {
                 size: A4;
-                margin: 10mm;
+                margin: 8mm;
             }
             body { background: white; padding: 0; margin: 0; }
             .invoice-container { box-shadow: none; border: none; max-width: 100%; border-radius: 0; margin: 0; padding: 0; }
-            .invoice-content { padding: 0; zoom: 0.95; }
+            .invoice-content { padding: 0; zoom: 0.85; }
             .actions-bar { display: none !important; }
+            
+            /* Squeeze margins and paddings for print to fit on fewer pages */
+            .header-section { margin-bottom: 20px; }
+            .info-cards { margin-bottom: 20px; gap: 12px; }
+            .info-card { padding: 16px; }
+            .table-section { margin-bottom: 20px; }
+            td, th { padding: 10px 16px; }
+            .bottom-section { margin-bottom: 20px; gap: 12px; }
+            .payment-info, .bill-summary { padding: 16px; }
+            .footer-banner { margin-bottom: 0; padding: 16px; }
+
             .footer-banner { background: #f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             th { background: #f8f9fa !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .month-badge { background: #f8f9fa !important; border: 1px solid #ccc; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
@@ -990,14 +1001,20 @@ $email = $bill['email'] ?? 'renter@example.com';
 
     <script>
         function shareBill() {
+            const shareData = {
+                title: 'Bill Invoice - <?php echo $bill_invoice_id; ?>',
+                text: 'Please find my latest rent & utility bill invoice for <?php echo date('F Y', strtotime($bill['month'])); ?>.',
+                url: window.location.href
+            };
+
             if (navigator.share) {
-                navigator.share({
-                    title: 'Bill Invoice - <?php echo $bill_invoice_id; ?>',
-                    text: 'Please find my latest rent & utility bill invoice for <?php echo date('F Y', strtotime($bill['month'])); ?>.',
-                    url: window.location.href
-                }).catch((error) => console.log('Error sharing:', error));
+                navigator.share(shareData).catch((error) => console.log('Error sharing:', error));
             } else {
-                alert("Sharing is not supported on this browser. You can copy the URL to share.");
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert("Bill link copied to clipboard! You can now paste it anywhere to share.");
+                }).catch(() => {
+                    alert("Sharing is not supported on this browser. Please copy the URL manually.");
+                });
             }
         }
     </script>
