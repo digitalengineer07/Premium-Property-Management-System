@@ -287,7 +287,7 @@ $admin_user = s($_SESSION['admin']);
                             <i class='bx bx-log-in-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
                         </span>
                         <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
-                        <?php if ($row['logout_time']): ?>
+                        <?php if (!empty($row['logout_time'])): ?>
                             <span class="log-time">
                                 <i class='bx bx-log-out-circle' style="color: #64748B;"></i> <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
                             </span>
