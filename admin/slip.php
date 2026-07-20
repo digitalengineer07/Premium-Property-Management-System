@@ -529,7 +529,8 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             }
             /* Compress spacing to fit one page */
             .header { margin-bottom: 12px; }
-            .contact-info { margin-bottom: 12px; padding-bottom: 12px; }
+            .contact-info { margin-bottom: 12px; padding-bottom: 12px; font-size: 10px; gap: 12px; }
+            .contact-item { white-space: nowrap; }
             .meta-grid { margin-bottom: 16px; gap: 12px; }
             .meta-card { padding: 12px 16px; }
             .section-card { margin-bottom: 16px; }
