@@ -1141,7 +1141,7 @@ $admin_user = s($_SESSION['admin']);
             if (cropper) cropper.destroy();
 
             cropper = new Cropper(image, {
-                aspectRatio: NaN, // Free crop for meter display
+                aspectRatio: 300 / 140, // Lock crop ratio to match the 300x140 electrical bill display
                 viewMode: 1, // Restrict crop box to not exceed the size of the canvas (image)
                 autoCropArea: 0.8,
                 guides: true,
