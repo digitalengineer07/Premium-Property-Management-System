@@ -343,6 +343,156 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         @media (min-width: 769px) {
             .hide-desktop { display: none !important; }
         }
+
+        /* PREMIUM DASHBOARD ENHANCEMENTS */
+        .welcome-header {
+            background: linear-gradient(135deg, #624BFF 0%, #8B5CF6 100%) !important;
+            color: white !important;
+            padding: 32px 40px !important;
+            border-radius: 24px !important;
+            box-shadow: 0 20px 40px rgba(98, 75, 255, 0.2) !important;
+            margin-bottom: 40px !important;
+            position: relative;
+            overflow: hidden;
+            border: none !important;
+        }
+        .welcome-header::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: url('../assets/img/pattern.svg') no-repeat right center;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .welcome-text h1 {
+            color: white !important;
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            margin-bottom: 8px !important;
+        }
+        .welcome-text p {
+            color: rgba(255,255,255,0.9) !important;
+            font-size: 15px !important;
+        }
+        .welcome-header .btn-outline {
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            color: white !important;
+            backdrop-filter: blur(10px) !important;
+            transition: all 0.3s ease !important;
+        }
+        .welcome-header .btn-outline:hover {
+            background: rgba(255,255,255,0.25) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255,255,255,0.5) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+            border-radius: 20px !important;
+            padding: 24px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+            border-color: rgba(98, 75, 255, 0.2) !important;
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(98, 75, 255, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+        .kpi-value {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            background: linear-gradient(90deg, #0F172A, #334155);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 12px 0 4px 0 !important;
+        }
+        .kpi-label {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #64748B !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi-icon {
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 24px !important;
+        }
+        
+        .panel {
+            background: white !important;
+            border-radius: 24px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.01) !important;
+            border: 1px solid rgba(226, 232, 240, 0.6) !important;
+            padding: 28px !important;
+            transition: all 0.3s ease !important;
+        }
+        .panel:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02) !important;
+        }
+        .panel-header h2 {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            color: #1E293B !important;
+        }
+        
+        /* Table enhancements */
+        table {
+            border-collapse: separate !important;
+            border-spacing: 0 8px !important;
+        }
+        th {
+            background: transparent !important;
+            color: #64748B !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            border: none !important;
+            padding: 0 16px 8px 16px !important;
+        }
+        td {
+            background: #F8FAFC !important;
+            border: none !important;
+            padding: 16px !important;
+            transition: background 0.2s ease !important;
+        }
+        td:first-child { border-radius: 12px 0 0 12px !important; }
+        td:last-child { border-radius: 0 12px 12px 0 !important; }
+        tr:hover td {
+            background: #F1F5F9 !important;
+        }
+        
+        /* Status Badges Premium */
+        .status-badge {
+            border-radius: 8px !important;
+            font-weight: 700 !important;
+            padding: 6px 12px !important;
+            font-size: 11px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
     </style>
 
     <div class="kpi-grid animate-up">
