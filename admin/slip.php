@@ -742,7 +742,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <!-- Footer -->
         <div class="footer">
             <div class="thank-you">♥ Thank you for your timely payment! ♥</div>
-            <div class="footer-query">For any queries, contact <?php echo (strpos(trim($phone), '+91') === 0) ? htmlspecialchars(trim($phone)) : '+91 ' . htmlspecialchars(trim($phone)); ?></div>
+            <div class="footer-query">For any queries, contact +91 7667184920</div>
         </div>
 
     </div>
