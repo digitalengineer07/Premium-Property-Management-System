@@ -359,7 +359,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             </div>
                         </td>
                         <td style="padding: 12px 16px; border-radius: 0 12px 12px 0;">
-                            <div style="display: flex; gap: 4px; justify-content: flex-end;">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
                                 <a href="view-renter.php?id=<?php echo $u['id']; ?>" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none;" title="View Profile">
                                     <i class='bx bx-user'></i>
                                 </a>
@@ -377,11 +377,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Delete Resident">
                                     <i class='bx bx-trash'></i>
                                 </button>
-                                <?php if ($u['status'] === 'active'): ?>
-                                <a href="../onboarding-guide.php?id=<?php echo $u['id']; ?>" target="_blank" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); color: #64748B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; text-decoration: none;" title="Download Guide">
-                                    Guide
-                                </a>
-                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>
