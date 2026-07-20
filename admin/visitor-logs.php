@@ -28,8 +28,8 @@ $logs = mysqli_query($conn, "
     LIMIT $limit OFFSET $offset
 ");
 
-$admin_user = s($_SESSION['admin'])
-    ?>
+$admin_user = s($_SESSION['admin']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 

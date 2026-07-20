@@ -95,33 +95,48 @@ $receipt['bill_id'] = 'BIL-' . date('Ym', strtotime("1 " . $payment['month'])) .
 
 $charges = [];
 $due_date = 'N/A';
+$total_paid_so_far = 0;
+
+if ($bill_id_param) {
+    $all_pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? AND bill_id = ? AND bill_type = ? ORDER BY id ASC");
+    mysqli_stmt_bind_param($all_pay_stmt, "isis", $user_id, $month, $bill_id_param, $payment['bill_type']);
+} else {
+    $all_pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? ORDER BY id ASC");
+    mysqli_stmt_bind_param($all_pay_stmt, "is", $user_id, $month);
+}
+mysqli_stmt_execute($all_pay_stmt);
+$all_pay_res = mysqli_stmt_get_result($all_pay_stmt);
+
+$pay_count = 1;
+while ($p = mysqli_fetch_assoc($all_pay_res)) {
+    $tx_id = $p['sys_tx_id'] ?: 'SYS_TX_' . $p['id'];
+    $charges[] = [
+        'particular' => 'Payment ' . $pay_count . ' (' . $tx_id . ')',
+        'amount' => number_format($p['paid_amount'], 2)
+    ];
+    $total_paid_so_far += $p['paid_amount'];
+    $pay_count++;
+}
 
 if ($payment['bill_type'] == 'electricity' || $payment['bill_type'] == 'elec_rent') {
     $receipt['bill_type'] = 'Monthly Maintenance';
-    $bill_stmt = mysqli_prepare($conn, "SELECT * FROM electricity WHERE id = ?");
+    $bill_stmt = mysqli_prepare($conn, "SELECT due_date FROM electricity WHERE id = ?");
     $bid = $payment['bill_id'];
     mysqli_stmt_bind_param($bill_stmt, "i", $bid);
     mysqli_stmt_execute($bill_stmt);
     $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($bill_stmt));
     if ($bill) {
         $due_date = $bill['due_date'] ? date('d M Y', strtotime($bill['due_date'])) : 'N/A';
-        
-        if ($bill['rent_amount'] > 0) $charges[] = ['particular' => 'Rent', 'amount' => number_format($bill['rent_amount'], 2)];
-        if ($bill['amount'] > 0) $charges[] = ['particular' => 'Electricity Charges', 'amount' => number_format($bill['amount'], 2)];
-        if ($bill['maintenance'] > 0) $charges[] = ['particular' => 'Maintenance Charges', 'amount' => number_format($bill['maintenance'], 2)];
-        if ($bill['dues'] > 0) $charges[] = ['particular' => 'Previous Dues', 'amount' => number_format($bill['dues'], 2), 'is_red' => true];
-        if ($bill['extra_charges'] > 0) $charges[] = ['particular' => 'Extra Charges (' . $bill['extra_charges_desc'] . ')', 'amount' => number_format($bill['extra_charges'], 2)];
     }
 } elseif ($payment['bill_type'] == 'rent') {
     $receipt['bill_type'] = 'Rent Bill';
-    $bill_stmt = mysqli_prepare($conn, "SELECT * FROM rent WHERE id = ?");
+    $bill_stmt = mysqli_prepare($conn, "SELECT due_date FROM rent WHERE id = ?");
     $bid = $payment['bill_id'];
     mysqli_stmt_bind_param($bill_stmt, "i", $bid);
     mysqli_stmt_execute($bill_stmt);
     $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($bill_stmt));
     if ($bill) {
         $due_date = $bill['due_date'] ? date('d M Y', strtotime($bill['due_date'])) : 'N/A';
-        $charges[] = ['particular' => 'Rent', 'amount' => number_format($bill['rent_amount'], 2)];
     }
 } else {
     $receipt['bill_type'] = ucfirst($payment['bill_type']);
@@ -133,13 +148,13 @@ if ($payment['adjustment_amount'] > 0) {
     if ($payment['adjustment_type'] == 'extra') {
         $charges[] = ['particular' => 'Extra Paid (Added to Advance)', 'amount' => '+' . number_format($payment['adjustment_amount'], 2)];
     } else if ($payment['adjustment_type'] == 'remaining') {
-        $charges[] = ['particular' => 'Used from Advance', 'amount' => '-' . number_format($payment['adjustment_amount'], 2)];
+        $charges[] = ['particular' => 'Used from Advance', 'amount' => number_format($payment['adjustment_amount'], 2)];
+        $total_paid_so_far += $payment['adjustment_amount'];
     }
 }
 
-if (empty($charges)) {
-    $charges[] = ['particular' => 'Payment', 'amount' => number_format($payment['paid_amount'], 2)];
-}
+$receipt['total_amount'] = number_format($total_paid_so_far, 2);
+$receipt['amount_words'] = numberToWords($total_paid_so_far);
 
 $receipt['charges'] = $charges;
 
