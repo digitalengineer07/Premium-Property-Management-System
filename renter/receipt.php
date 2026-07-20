@@ -100,111 +100,47 @@ $receipt = [
         }
 
         .logo-text {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary);
-            color: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-        }
-
-        .logo-text h1 {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--text-dark);
-            line-height: 1.2;
-            letter-spacing: 1px;
-        }
-
-        .logo-text h1 span {
-            display: block;
-            font-size: 11px;
-            color: var(--text-gray);
-            font-weight: 500;
-            letter-spacing: 4px;
+            margin-bottom: 20px;
         }
 
         .address-info {
             font-size: 13px;
-            color: var(--text-gray);
+            color: #374151;
             line-height: 1.6;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
+            font-weight: 500;
         }
 
         .contact-info {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             font-size: 13px;
-            color: var(--text-dark);
-            font-weight: 500;
+            color: #374151;
+            font-weight: 600;
         }
 
         .contact-info i {
             color: var(--primary);
-            font-size: 16px;
+            font-size: 18px;
         }
         
         .contact-info span {
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .h-center .badge-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--primary-light);
-            color: var(--primary);
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            margin-bottom: 12px;
-        }
-
-        .h-center h2 {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .h-center p {
-            font-size: 14px;
-            color: var(--text-gray);
-        }
-        
-        .h-center .dash-line {
-            width: 40px;
-            height: 3px;
-            background: var(--primary);
-            margin: 12px auto 0;
-            border-radius: 2px;
+            gap: 8px;
         }
 
         .stamp {
             width: 140px;
             height: 140px;
-            border: 4px solid var(--success);
+            border: 3px solid #10B981;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--success);
+            color: #10B981;
             font-weight: 800;
             transform: rotate(-15deg);
             margin-bottom: 20px;
@@ -214,38 +150,45 @@ $receipt = [
         .stamp::before {
             content: '';
             position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 1px dashed var(--success);
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
+            border: 1px dashed #10B981;
             border-radius: 50%;
         }
 
-        .stamp .s-top { font-size: 14px; letter-spacing: 2px; margin-bottom: 4px; }
-        .stamp .s-main { font-size: 32px; background: var(--success); color: white; padding: 2px 20px; border-radius: 4px; z-index: 1; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
-        .stamp .s-bottom { font-size: 11px; letter-spacing: 1px; margin-top: 4px; }
+        .stamp .s-top { position: absolute; top: 12px; font-size: 13px; letter-spacing: 1px; font-weight: 800; }
+        .stamp .s-main { font-size: 28px; font-weight: 900; background: #10B981; color: white; padding: 4px 20px; border-radius: 4px; z-index: 1; letter-spacing: 2px; }
+        .stamp .s-bottom { position: absolute; bottom: 12px; font-size: 11px; letter-spacing: 1px; font-weight: 800; }
+        .stamp .s-stars { position: absolute; display: flex; gap: 8px; font-size: 10px; width: 100%; justify-content: center; }
+        .stamp .s-stars.top { top: 32px; }
+        .stamp .s-stars.bottom { bottom: 32px; }
 
         .receipt-date {
-            text-align: right;
-        }
-        
-        .receipt-date p {
-            font-size: 12px;
-            color: var(--text-dark);
-            font-weight: 700;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            gap: 12px;
             justify-content: flex-end;
-            gap: 6px;
-            margin-bottom: 4px;
         }
         
-        .receipt-date p i {
+        .receipt-date i {
             color: var(--primary);
-            font-size: 16px;
+            font-size: 20px;
+            margin-top: 2px;
         }
 
-        .receipt-date span {
+        .receipt-date .rd-text {
+            text-align: left;
+        }
+
+        .receipt-date .rd-text h5 {
+            font-size: 13px;
+            color: #000;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .receipt-date .rd-text p {
             font-size: 14px;
-            color: var(--text-gray);
+            color: #4B5563;
             font-weight: 500;
         }
 
@@ -662,11 +605,33 @@ $receipt = [
         <div class="header">
             <div class="h-left">
                 <div class="logo-text">
-                    <div class="logo-icon">
-                        <i class='bx bx-building-house'></i>
-                    </div>
-                    <div>
-                        <h1>MADHAV KUNJ<br><span>RESIDENCE</span></h1>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <!-- SVG Logo -->
+                        <div style="width: 70px; height: 60px;">
+                            <svg width="100%" height="100%" viewBox="0 0 100 80">
+                                <!-- Roof & Body -->
+                                <path d="M 10 50 L 50 10 L 90 50" fill="none" stroke="#4A3AFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M 30 40 L 30 70 L 70 70 L 70 40" fill="none" stroke="#4A3AFF" stroke-width="8"/>
+                                <path d="M 20 40 L 20 20 L 30 20 L 30 30" fill="none" stroke="#4A3AFF" stroke-width="6"/>
+                                <rect x="42" y="42" width="16" height="16" fill="none" stroke="#4A3AFF" stroke-width="4"/>
+                                <line x1="50" y1="42" x2="50" y2="58" stroke="#4A3AFF" stroke-width="4"/>
+                                <line x1="42" y1="50" x2="58" y2="50" stroke="#4A3AFF" stroke-width="4"/>
+                                <!-- Leaves -->
+                                <path d="M 15 70 Q 25 60 30 70 Q 25 80 15 70" fill="#10B981"/>
+                                <path d="M 25 75 Q 35 65 40 75 Q 35 85 25 75" fill="#10B981"/>
+                                <path d="M 85 70 Q 75 60 70 70 Q 75 80 85 70" fill="#10B981"/>
+                                <path d="M 75 75 Q 65 65 60 75 Q 65 85 75 75" fill="#10B981"/>
+                                <path d="M 30 73 Q 50 83 70 73" fill="none" stroke="#10B981" stroke-width="3"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 style="font-size: 22px; font-weight: 900; color: #000; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px;">MADHAV KUNJ</h1>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="height: 1px; background: #9CA3AF; flex: 1;"></div>
+                                <span style="font-size: 11px; color: #4B5563; font-weight: 600; letter-spacing: 4px;">RESIDENCE</span>
+                                <div style="height: 1px; background: #9CA3AF; flex: 1;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="address-info">
@@ -674,28 +639,47 @@ $receipt = [
                     Indore, Madhya Pradesh - 452001
                 </div>
                 <div class="contact-info">
-                    <span><i class='bx bxs-phone'></i> +91 98765 43210</span>
-                    <span style="color: var(--border);">|</span>
+                    <span><i class='bx bx-phone-call'></i> +91 98765 43210</span>
+                    <span style="color: #D1D5DB;">|</span>
                     <span><i class='bx bx-envelope'></i> madhavkunj@example.com</span>
                 </div>
             </div>
 
             <div class="h-center">
-                <div class="badge-icon"><i class='bx bxs-award'></i></div>
-                <h2>PAYMENT RECEIPT</h2>
-                <p>Thank you for your payment!</p>
-                <div class="dash-line"></div>
+                <div style="position: relative; width: 64px; height: 64px; margin: 0 auto 16px;">
+                    <!-- Wavy Ribbon Base -->
+                    <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; color: #EEF2FF;">
+                        <path fill="currentColor" d="M50 0 L58 8 L69 5 L75 14 L86 15 L88 26 L98 31 L95 41 L100 50 L95 59 L98 69 L88 74 L86 85 L75 86 L69 95 L58 92 L50 100 L42 92 L31 95 L25 86 L14 85 L12 74 L2 69 L5 59 L0 50 L5 41 L2 31 L12 26 L14 15 L25 14 L31 5 L42 8 Z"/>
+                    </svg>
+                    <!-- Inner Checkmark -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; background: #4A3AFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold;">
+                        <i class='bx bx-check'></i>
+                    </div>
+                    <!-- Ribbon Tails -->
+                    <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: -1;">
+                        <div style="width: 12px; height: 24px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
+                        <div style="width: 12px; height: 24px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
+                    </div>
+                </div>
+                <h2 style="font-size: 24px; font-weight: 900; color: #000; letter-spacing: 0.5px; margin-bottom: 8px;">PAYMENT RECEIPT</h2>
+                <p style="font-size: 14px; color: #4B5563; font-weight: 500;">Thank you for your payment!</p>
+                <div style="width: 32px; height: 2px; background: #4A3AFF; margin: 16px auto 0; border-radius: 2px;"></div>
             </div>
 
             <div class="h-right">
                 <div class="stamp">
                     <div class="s-top">PAYMENT</div>
+                    <div class="s-stars top"><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i></div>
                     <div class="s-main">PAID</div>
+                    <div class="s-stars bottom"><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i></div>
                     <div class="s-bottom">SUCCESSFUL</div>
                 </div>
                 <div class="receipt-date">
-                    <p><i class='bx bx-calendar'></i> Receipt Date</p>
-                    <span><?= $receipt['date'] ?></span>
+                    <i class='bx bx-calendar'></i>
+                    <div class="rd-text">
+                        <h5>Receipt Date</h5>
+                        <p><?= $receipt['date'] ?></p>
+                    </div>
                 </div>
             </div>
         </div>
