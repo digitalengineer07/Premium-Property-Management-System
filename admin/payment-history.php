@@ -136,7 +136,10 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                         </div>
                                         
                                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                                            <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: #F8FAFC; border: 1px solid #E2E8F0; color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
+                                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                                            </div>
                                             <div style="font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px;">
                                                 <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
                                                 <?php if ($p['admin_name']): ?>

@@ -2,12 +2,16 @@
 session_start();
 require_once "../db.php";
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin'])) {
     header("Location: ../login.php");
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = (isset($_SESSION['admin']) && isset($_GET['uid'])) ? intval($_GET['uid']) : ($_SESSION['user_id'] ?? 0);
+
+if (!$user_id) {
+    die("Invalid access.");
+}
 $month = $_GET['month'] ?? '';
 $bill_id_param = $_GET['bill_id'] ?? null;
 
