@@ -585,7 +585,12 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 <td data-label="Ref/ID">
                                     <code style="font-size: 10px; background: var(--bg-main); padding: 2px 4px; border-radius: 4px;">#<?php echo $tx['id']; ?></code>
                                 </td>
-                                <td data-label="Amount" style="font-weight: 700;">₹<?php echo number_format($tx['amount']); ?></td>
+                                <td data-label="Amount">
+                                    <div style="font-weight: 700;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                    <?php if ($tx['adjustment_amount'] < 0): ?>
+                                    <div style="font-size: 10px; color: #10B981; font-weight: 600; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet</div>
+                                    <?php endif; ?>
+                                </td>
                                 <td data-label="Type" style="font-size: 11px;">
                                     <span style="text-transform: capitalize;"><?php echo $tx['type']; ?></span>
                                     <div style="font-size: 9px; opacity: 0.7;"><?php echo $tx['mode']; ?></div>
