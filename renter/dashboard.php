@@ -480,7 +480,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         .kpi-sparkline { position: absolute; right: -5%; bottom: -5%; width: 70%; height: 60%; opacity: 0.9; z-index: 1; pointer-events: none; }
 
         /* 3-Col Main Grid */
-        .dashboard-3col { display: grid; grid-template-columns: 1.2fr 1.1fr 1.5fr; gap: 24px; margin-bottom: 32px; align-items: stretch; }
+        .dashboard-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; align-items: stretch; }
         .dash-panel { background: white; border-radius: 20px; padding: 24px; border: 1px solid var(--border); box-shadow: var(--card-shadow); display: flex; flex-direction: column; }
         .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .panel-title { display: flex; align-items: center; gap: 2px; font-size: 16px; font-weight: 800; margin: 0; color: var(--text-dark); }
@@ -554,7 +554,7 @@ $show_banner = ($is_late && !empty($overdue_list));
 
         /* Mobile overrides */
         @media (max-width: 1400px) {
-            .dashboard-3col { grid-template-columns: 1fr 1fr; }
+            .dashboard-2col { grid-template-columns: 1fr 1fr; }
             .dash-panel:nth-child(3) { grid-column: 1 / -1; }
         }
         @media (max-width: 992px) {
@@ -569,7 +569,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .sidebar { display: none; }
             .main-content { margin-left: 0; max-width: 100%; padding: 20px; }
             .kpi-grid { grid-template-columns: 1fr; }
-            .dashboard-3col { grid-template-columns: 1fr; }
+            .dashboard-2col { grid-template-columns: 1fr; }
             .dash-panel:nth-child(3) { grid-column: auto; }
             .footer-widgets { grid-template-columns: 1fr; }
             .tx-right { gap: 12px; }
@@ -588,7 +588,7 @@ $show_banner = ($is_late && !empty($overdue_list));
         /* EXCLUSIVE MOBILE VIEW MODE STYLES - ZERO IMPACT ON DESKTOP */
         @media screen and (max-width: 991px) {
             .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 14px !important; }
-            .grid-2-1, .dashboard-3col { grid-template-columns: 1fr !important; gap: 20px !important; }
+            .grid-2-1, .dashboard-2col { grid-template-columns: 1fr !important; gap: 20px !important; }
             .sidebar { width: 80px !important; padding: 24px 10px !important; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none !important; }
             .nav-item { justify-content: center !important; padding: 10px 16px; }
@@ -605,7 +605,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 padding-bottom: 86px !important; /* Space for bottom nav */
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
-            .grid-2-1, .dashboard-3col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+            .grid-2-1, .dashboard-2col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
             .header-renter, .top-header { 
                 flex-direction: column !important; 
                 align-items: flex-start !important; 
@@ -832,7 +832,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .top-header,
             .reminder-banner,
             .kpi-grid,
-            .dashboard-3col {
+            .dashboard-2col {
                 display: none !important;
             }
 

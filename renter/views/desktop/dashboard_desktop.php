@@ -237,8 +237,8 @@
             </div>
         </div>
 
-        <!-- 3-Col Main Dashboard Grid -->
-        <div class="dashboard-3col animate-up">
+        <!-- 2-Col Main Dashboard Grid -->
+        <div class="dashboard-2col animate-up">
             <!-- Col 1: Upcoming Bills -->
             <div class="dash-panel">
                 <div class="panel-head">
@@ -336,9 +336,10 @@
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Col 3: Recent Transactions -->
-            <div class="dash-panel">
+        <!-- Full Width: Recent Transactions -->
+        <div class="dash-panel animate-up" style="margin-bottom: 32px;">
                 <div class="panel-head">
                     <h3 class="panel-title"><i class='bx bx-receipt'></i> Recent Transactions</h3>
                     <a href="payment-history.php" class="panel-link">View All</a>
