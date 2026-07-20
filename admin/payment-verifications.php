@@ -953,5 +953,6 @@ include "sidebar.php";
         });
     });
 </script>
+<script src="../assets/js/dark-mode.js"></script>
 </body>
 </html>
