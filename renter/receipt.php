@@ -1015,7 +1015,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         <!-- Footer Info -->
         <div class="footer-info">
             <div class="fi-item">
-                <div class="fi-icon"><i class='bx bx-shield-check'></i></div>
+                <div class="fi-icon"><i class='bx bx-check-shield'></i></div>
                 <div class="fi-text">
                     <h4>Secure Payment</h4>
                     <p>This is a system generated receipt and does not require signature.</p>
