@@ -528,10 +528,18 @@ $email = $bill['email'] ?? 'renter@example.com';
             margin-bottom: 24px;
         }
 
-        .payment-info, .bill-summary {
+        .payment-info {
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 24px;
+        }
+
+        .bill-summary {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
         }
         
         .section-title {
@@ -584,7 +592,8 @@ $email = $bill['email'] ?? 'renter@example.com';
         .summary-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            flex: 1;
+            justify-content: space-between;
         }
 
         .summary-item {
@@ -690,14 +699,21 @@ $email = $bill['email'] ?? 'renter@example.com';
 
         /* Print Styles */
         @media print {
+            @page {
+                size: A4;
+                margin: 10mm;
+            }
             body { background: white; padding: 0; margin: 0; }
-            .invoice-container { box-shadow: none; border: none; max-width: 100%; border-radius: 0; }
+            .invoice-container { box-shadow: none; border: none; max-width: 100%; border-radius: 0; margin: 0; padding: 0; }
+            .invoice-content { padding: 0; zoom: 0.95; }
             .actions-bar { display: none !important; }
-            .invoice-content { padding: 20px; }
             .footer-banner { background: #f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             th { background: #f8f9fa !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .month-badge { background: #f8f9fa !important; border: 1px solid #ccc; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             .info-card, .table-section, .payment-info, .bill-summary { break-inside: avoid; }
+            
+            /* Ensure background colors print properly */
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
         
         @media (max-width: 768px) {
