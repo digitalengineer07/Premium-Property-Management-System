@@ -969,7 +969,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div>
                         <h4>Need Help?</h4>
                         <p style="font-size: 13px;">+91 6206936907 &amp; +91 7667184920</p>
-                        <span>Mon - Sat (10:00 AM - 6:00 PM)</span>
+                        <span>nikhil119124@gmail.com</span>
                     </div>
                 </div>
             </div>
