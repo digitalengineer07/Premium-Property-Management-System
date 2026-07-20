@@ -56,20 +56,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         
                         if ($ck_p && mysqli_num_rows($ck_p) == 0) {
                             $p_month = date('F Y');
+                            $bill_amount = $p_amt;
+                            $remaining_amount = $p_amt;
+                            
                             if ($p_bid > 0) {
                                 if ($p_btype == 'rent') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$p_bid"));
-                                    if ($mr) $p_month = $mr['month'];
-                                } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$p_bid"));
-                                    if ($mr) $p_month = $mr['month'];
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
+                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['rent_amount']; }
+                                } elseif ($p_btype == 'electricity') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, total_amount FROM electricity WHERE id=$p_bid"));
+                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['total_amount']; }
                                 }
+                                
+                                $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$p_btype' AND bill_id=$p_bid");
+                                $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
+                                $remaining_amount = max(0, $bill_amount - $already_paid);
                             }
-                            // Insert into payments ledger
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx', '$p_sys_tx')");
                             
-                            // Recalculate bill status mathematically
-                            recalculate_bill_status($conn, $p_btype, $p_bid);
+                            $excess = 0;
+                            $amount_to_apply = $p_amt;
+                            
+                            if ($p_amt > $remaining_amount) {
+                                $amount_to_apply = $remaining_amount;
+                                $excess = $p_amt - $remaining_amount;
+                            }
+                            
+                            // Insert core payment if any due is left
+                            if ($amount_to_apply > 0) {
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $bill_amount, '$p_pmode', $amount_to_apply, CURDATE(), '$p_tx', '$p_sys_tx')");
+                                recalculate_bill_status($conn, $p_btype, $p_bid);
+                            }
+                            
+                            // Route overpayments directly to the wallet safely
+                            if ($excess > 0) {
+                                $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance', $excess, '$p_pmode', $excess, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                                mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$p_uid");
+                            }
                         }
                     }
 
