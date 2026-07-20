@@ -807,23 +807,11 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-icon"><i class='bx bx-building-house'></i></div>
                     <div class="info-card-body">
                         <span class="info-title">Property Details</span>
-                        <div class="info-content prop-grid">
-                            <div class="prop-item">
-                                <span class="prop-label">Building</span>
-                                <span class="prop-val"><?php echo HOUSE_NAME; ?></span>
-                            </div>
-                            <div class="prop-item">
-                                <span class="prop-label">Block / Wing</span>
-                                <span class="prop-val"><?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span>
-                            </div>
-                            <div class="prop-item">
-                                <span class="prop-label">Room No.</span>
-                                <span class="prop-val"><?php echo htmlspecialchars($room_no); ?></span>
-                            </div>
-                            <div class="prop-item">
-                                <span class="prop-label">Type</span>
-                                <span class="prop-val">Family</span>
-                            </div>
+                        <div class="info-content">
+                            <div class="prop-row"><span class="prop-label">Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?></span></div>
+                            <div class="prop-row"><span class="prop-label">Block / Wing</span><span class="prop-val">: <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span></div>
+                            <div class="prop-row"><span class="prop-label">Room No.</span><span class="prop-val">: <?php echo htmlspecialchars($room_no); ?></span></div>
+                            <div class="prop-row"><span class="prop-label">Resident Type</span><span class="prop-val">: Family</span></div>
                         </div>
                     </div>
                 </div>
