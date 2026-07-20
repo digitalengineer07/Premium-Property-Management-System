@@ -361,33 +361,14 @@ $email = $bill['email'] ?? 'renter@example.com';
             margin-top: 12px;
         }
 
-        .prop-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px 12px;
-            margin-top: 4px;
-        }
-        
-        .prop-item {
+        .prop-row {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .prop-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-gray);
-            font-weight: 600;
-        }
-
-        .prop-val {
+            margin-bottom: 10px;
             font-size: 13px;
-            font-weight: 700;
-            color: var(--text-dark);
-            white-space: nowrap;
         }
+        .prop-row:last-child { margin-bottom: 0; }
+        .prop-label { width: 105px; color: var(--text-gray); font-weight: 500; flex-shrink: 0; }
+        .prop-val { font-weight: 600; color: var(--text-dark); white-space: nowrap; }
 
         .payment-status-card {
             background: #F8FAFC;
