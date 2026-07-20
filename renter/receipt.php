@@ -1025,7 +1025,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                 <div class="fi-icon"><i class='bx bx-headphone'></i></div>
                 <div class="fi-text">
                     <h4>Need Help?</h4>
-                    <p><?= $receipt['phone'] ?><br>Mon - Sat (10:00 AM - 6:00 PM)</p>
+                    <p><?= $receipt['phone'] ?></p>
                 </div>
             </div>
             <div class="fi-item" onclick="window.print()">
