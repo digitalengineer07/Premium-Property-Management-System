@@ -828,8 +828,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                         </div>
                         <p class="brand-address"><?php echo htmlspecialchars(HOUSE_ADDRESS); ?></p>
                         <div class="brand-contact">
-                            <span><i class='bx bxs-phone'></i> +91 98765 43210</span>
-                            <span><i class='bx bxs-envelope'></i> contact@example.com</span>
+                            <span><i class='bx bxs-phone'></i> +91 7667184920</span>
+                            <span><i class='bx bxs-envelope'></i> nikhil119124@gmail.com</span>
                         </div>
                     </div>
                 </div>
