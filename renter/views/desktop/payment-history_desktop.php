@@ -159,8 +159,8 @@
                     if ($row['bill_type'] == 'elec_rent') $title = 'Bill Component (Rent)';
                     if ($row['bill_type'] == 'advance') $title = 'Advance Application';
                     
-                    $ref = trim($row['transaction_id'] ?? '');
-                    $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                    $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                    $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
                     $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
                     
                     $all_bills[] = [
@@ -192,8 +192,8 @@
                 if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
                 if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
                 
-                $ref = trim($row['transaction_id'] ?? '');
-                $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
                 $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
                 
                 $all_bills[] = [
@@ -234,8 +234,8 @@
         
         if ($q_m) {
             while ($row = mysqli_fetch_assoc($q_m)) {
-                $ref = trim($row['transaction_id'] ?? '');
-                $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
+                $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
                 $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
                 
                 $wallet_used = (float)($row['wallet_used'] ?? 0);
@@ -396,7 +396,7 @@
                                         <div class="td-icon <?php echo $bill['color']; ?>"><i class='bx <?php echo $bill['icon']; ?>'></i></div>
                                         <div class="td-info">
                                             <h4><?php echo htmlspecialchars($bill['title']); ?></h4>
-                                            <p><?php echo htmlspecialchars($bill['subtitle']); ?></p>
+                                            <p><?php echo $bill['subtitle']; ?></p>
                                         </div>
                                     </div>
                                 </td>
