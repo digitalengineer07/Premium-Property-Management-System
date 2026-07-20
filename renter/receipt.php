@@ -130,7 +130,7 @@ if (count($unique_modes) > 1) {
     $receipt['payment_method_display'] = 'Multiple Modes';
     $receipt['payment_method_type'] = 'Multiple';
 } else {
-    $single_mode = count($unique_modes) == 1 ? array_values($unique_modes)[0] : 'Unknown';
+    $single_mode = count($unique_modes) == 1 ? array_values($unique_modes)[0] : 'System Adjusted';
     $receipt['payment_method_display'] = $single_mode;
     $receipt['payment_method_type'] = $single_mode;
 }
@@ -620,6 +620,20 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             border-right: 1px solid var(--border);
             padding: 0 30px;
             margin: 0 30px;
+        }
+
+        .pm-item {
+            position: relative;
+        }
+        
+        .pm-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: #E2E8F0;
         }
 
         .pm-item h5 {
