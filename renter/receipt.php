@@ -1,38 +1,151 @@
 <?php
-// Dummy data for initial design phase as requested
+session_start();
+require_once "../db.php";
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$month = $_GET['month'] ?? '';
+$bill_id_param = $_GET['bill_id'] ?? null;
+
+// Fetch user info
+$user_stmt = mysqli_prepare($conn, "SELECT name, room_no, phone FROM users WHERE id = ?");
+mysqli_stmt_bind_param($user_stmt, "i", $user_id);
+mysqli_stmt_execute($user_stmt);
+$user_res = mysqli_stmt_get_result($user_stmt);
+$user = mysqli_fetch_assoc($user_res);
+
 $receipt = [
-    'date' => '20 Jul 2026, 10:35 AM',
-    'user_name' => 'Test User',
-    'room_no' => 'Room No. 502, Block B',
+    'user_name' => $user['name'] ?? 'N/A',
+    'room_no' => 'Room No. ' . ($user['room_no'] ?? 'N/A'),
+    'phone' => '+91 ' . ltrim(str_replace('+91', '', $user['phone']), ' '),
     'residence' => 'Madhav Kunj Residence',
-    'phone' => '+91 98765 43210',
-    
-    'bill_id' => 'BIL-202607-000156',
-    'bill_month' => 'July 2026',
-    'bill_type' => 'Monthly Maintenance',
-    'due_date' => '20 Jul 2026',
-    
-    'payment_id' => 'SYS_UPI_6A5D1EEEE485D',
-    'payment_method' => 'UPI',
-    'utr' => '516032108117',
-    
-    'total_amount' => '13,788.00',
-    'amount_words' => '(Rupees Thirteen Thousand Seven Hundred Eighty Eight Only)',
-    
-    'charges' => [
-        ['particular' => 'Rent', 'amount' => '10,000.00'],
-        ['particular' => 'Electricity Charges', 'amount' => '2,856.00'],
-        ['particular' => 'Maintenance Charges', 'amount' => '800.00'],
-        ['particular' => 'Water Charges', 'amount' => '300.00'],
-        ['particular' => 'Garbage Collection', 'amount' => '150.00'],
-        ['particular' => 'Previous Dues (June 2026)', 'amount' => '1,482.00', 'is_red' => true],
-        ['particular' => 'Late Payment Fee', 'amount' => '200.00'],
-    ],
-    
-    'upi_id' => 'madhavkunj@upi',
-    'bank_name' => 'HDFC Bank',
-    'account_holder' => 'Madhav Kunj Residence'
+    'charges' => []
 ];
+
+// Fetch payment record
+if ($bill_id_param) {
+    $pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? AND bill_id = ? ORDER BY id DESC LIMIT 1");
+    mysqli_stmt_bind_param($pay_stmt, "isi", $user_id, $month, $bill_id_param);
+} else {
+    $pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? ORDER BY id DESC LIMIT 1");
+    mysqli_stmt_bind_param($pay_stmt, "is", $user_id, $month);
+}
+mysqli_stmt_execute($pay_stmt);
+$pay_res = mysqli_stmt_get_result($pay_stmt);
+$payment = mysqli_fetch_assoc($pay_res);
+
+if (!$payment) {
+    echo "<div style='padding:40px; text-align:center; font-family:sans-serif;'><h3>Receipt Not Found!</h3><p>Payment record for the requested month could not be located.</p><a href='my-payments.php'>Go Back</a></div>";
+    exit;
+}
+
+$receipt['date'] = date('d M Y, h:i A', strtotime($payment['payment_date'] . ' ' . ($payment['payment_time'] ?? '00:00:00')));
+$receipt['payment_id'] = $payment['sys_tx_id'] ?: 'SYS_TX_' . $payment['id'];
+$receipt['payment_method'] = $payment['payment_mode'] ?? 'UPI';
+$receipt['utr'] = $payment['transaction_id'] ?: 'N/A';
+$receipt['total_amount'] = number_format($payment['paid_amount'], 2);
+
+function numberToWords($number) {
+    $no = floor($number);
+    $point = round($number - $no, 2) * 100;
+    $hundred = null;
+    $digits_1 = strlen($no);
+    $i = 0;
+    $str = array();
+    $words = array('0' => '', '1' => 'One', '2' => 'Two',
+    '3' => 'Three', '4' => 'Four', '5' => 'Five', '6' => 'Six',
+    '7' => 'Seven', '8' => 'Eight', '9' => 'Nine',
+    '10' => 'Ten', '11' => 'Eleven', '12' => 'Twelve',
+    '13' => 'Thirteen', '14' => 'Fourteen',
+    '15' => 'Fifteen', '16' => 'Sixteen', '17' => 'Seventeen',
+    '18' => 'Eighteen', '19' =>'Nineteen', '20' => 'Twenty',
+    '30' => 'Thirty', '40' => 'Forty', '50' => 'Fifty',
+    '60' => 'Sixty', '70' => 'Seventy',
+    '80' => 'Eighty', '90' => 'Ninety');
+    $digits = array('', 'Hundred', 'Thousand', 'Lakh', 'Crore');
+    while ($i < $digits_1) {
+      $divider = ($i == 2) ? 10 : 100;
+      $number = floor($no % $divider);
+      $no = floor($no / $divider);
+      $i += ($divider == 10) ? 1 : 2;
+      if ($number) {
+        $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
+        $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+        $str [] = ($number < 21) ? $words[$number] .
+            " " . $digits[$counter] . $plural . " " . $hundred
+            :
+            $words[floor($number / 10) * 10]
+            . " " . $words[$number % 10] . " "
+            . $digits[$counter] . $plural . " " . $hundred;
+      } else $str[] = null;
+    }
+    $str = array_reverse($str);
+    $result = implode('', $str);
+    $points = ($point) ? " and " . $words[$point / 10] . " " . $words[$point = $point % 10] . " Paise" : '';
+    return '(Rupees ' . trim($result . $points) . ' Only)';
+}
+
+$receipt['amount_words'] = numberToWords($payment['paid_amount']);
+$receipt['bill_month'] = $payment['month'];
+$receipt['bill_id'] = 'BIL-' . date('Ym', strtotime("1 " . $payment['month'])) . '-' . str_pad($payment['bill_id'] ?? $payment['id'], 6, '0', STR_PAD_LEFT);
+
+$charges = [];
+$due_date = 'N/A';
+
+if ($payment['bill_type'] == 'electricity' || $payment['bill_type'] == 'elec_rent') {
+    $receipt['bill_type'] = 'Monthly Maintenance';
+    $bill_stmt = mysqli_prepare($conn, "SELECT * FROM electricity WHERE id = ?");
+    $bid = $payment['bill_id'];
+    mysqli_stmt_bind_param($bill_stmt, "i", $bid);
+    mysqli_stmt_execute($bill_stmt);
+    $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($bill_stmt));
+    if ($bill) {
+        $due_date = $bill['due_date'] ? date('d M Y', strtotime($bill['due_date'])) : 'N/A';
+        
+        if ($bill['rent_amount'] > 0) $charges[] = ['particular' => 'Rent', 'amount' => number_format($bill['rent_amount'], 2)];
+        if ($bill['amount'] > 0) $charges[] = ['particular' => 'Electricity Charges', 'amount' => number_format($bill['amount'], 2)];
+        if ($bill['maintenance'] > 0) $charges[] = ['particular' => 'Maintenance Charges', 'amount' => number_format($bill['maintenance'], 2)];
+        if ($bill['dues'] > 0) $charges[] = ['particular' => 'Previous Dues', 'amount' => number_format($bill['dues'], 2), 'is_red' => true];
+        if ($bill['extra_charges'] > 0) $charges[] = ['particular' => 'Extra Charges (' . $bill['extra_charges_desc'] . ')', 'amount' => number_format($bill['extra_charges'], 2)];
+    }
+} elseif ($payment['bill_type'] == 'rent') {
+    $receipt['bill_type'] = 'Rent Bill';
+    $bill_stmt = mysqli_prepare($conn, "SELECT * FROM rent WHERE id = ?");
+    $bid = $payment['bill_id'];
+    mysqli_stmt_bind_param($bill_stmt, "i", $bid);
+    mysqli_stmt_execute($bill_stmt);
+    $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($bill_stmt));
+    if ($bill) {
+        $due_date = $bill['due_date'] ? date('d M Y', strtotime($bill['due_date'])) : 'N/A';
+        $charges[] = ['particular' => 'Rent', 'amount' => number_format($bill['rent_amount'], 2)];
+    }
+} else {
+    $receipt['bill_type'] = ucfirst($payment['bill_type']);
+}
+
+$receipt['due_date'] = $due_date;
+
+if ($payment['adjustment_amount'] > 0) {
+    if ($payment['adjustment_type'] == 'extra') {
+        $charges[] = ['particular' => 'Extra Paid (Added to Advance)', 'amount' => '+' . number_format($payment['adjustment_amount'], 2)];
+    } else if ($payment['adjustment_type'] == 'remaining') {
+        $charges[] = ['particular' => 'Used from Advance', 'amount' => '-' . number_format($payment['adjustment_amount'], 2)];
+    }
+}
+
+if (empty($charges)) {
+    $charges[] = ['particular' => 'Payment', 'amount' => number_format($payment['paid_amount'], 2)];
+}
+
+$receipt['charges'] = $charges;
+
+$receipt['upi_id'] = 'madhavkunj@upi';
+$receipt['bank_name'] = 'HDFC Bank';
+$receipt['account_holder'] = 'Madhav Kunj Residence';
 ?>
 <!DOCTYPE html>
 <html lang="en">
