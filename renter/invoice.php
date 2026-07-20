@@ -916,13 +916,20 @@ $email = $bill['email'] ?? 'renter@example.com';
                 <div class="bill-summary">
                     <div class="section-title"><i class='bx bx-receipt'></i> Bill Summary</div>
                     <div class="summary-list">
+                        <?php
+                            $b_types = [];
+                            if ((float)$bill['rent_amount'] > 0) $b_types[] = 'Rent';
+                            if ((float)$bill['amount'] > 0) $b_types[] = 'Electricity';
+                            if (empty($b_types) && (float)$bill['maintenance'] > 0) $b_types[] = 'Maintenance';
+                            $dynamic_type = !empty($b_types) ? implode(' + ', $b_types) : 'Standard Invoice';
+                        ?>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-calendar'></i> Bill Month</div>
                             <div class="summary-item-val"><?php echo date('F Y', strtotime($bill['month'])); ?></div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-file'></i> Bill Type</div>
-                            <div class="summary-item-val">Monthly Invoice</div>
+                            <div class="summary-item-val"><?php echo $dynamic_type; ?></div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-time-five'></i> Generated On</div>
@@ -933,10 +940,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                             <div class="summary-item-val" <?php if($is_overdue) echo 'style="color:var(--danger);"'; ?>><?php echo $due_date; ?></div>
                         </div>
                         <div class="summary-item">
-                            <div class="summary-item-label"><i class='bx bx-check-shield'></i> Payment Status</div>
-                            <div class="summary-item-val">
-                                <span style="background:<?php echo $status_bg; ?>; color:<?php echo $status_color; ?>; padding: 2px 10px; border-radius: 12px; font-size:11px;"><?php echo $status; ?></span>
-                            </div>
+                            <div class="summary-item-label"><i class='bx bx-receipt'></i> Total Billed</div>
+                            <div class="summary-item-val">₹ <?php echo number_format($total_payable, 2); ?></div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-money'></i> Amount Paid</div>
