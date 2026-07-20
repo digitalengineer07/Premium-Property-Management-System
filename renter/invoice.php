@@ -775,10 +775,10 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-card-body">
                         <span class="info-title">Billed To</span>
                         <div class="info-content">
-                            <h3><?php echo htmlspecialchars($name); ?></h3>
+                            <h3 style="word-break: break-word; hyphens: auto; font-size: clamp(14px, 1.2vw, 16px);"><?php echo htmlspecialchars($name); ?></h3>
                             <p>Room No. <?php echo htmlspecialchars($room_no); ?>, <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?><br><?php echo HOUSE_NAME; ?> Residence</p>
                             <div class="info-contact">
-                                <i class='bx bxs-phone-call'></i> +91 <?php echo htmlspecialchars($phone); ?>
+                                <i class='bx bxs-phone-call'></i> <?php echo (strpos(trim($phone), '+91') === 0) ? htmlspecialchars(trim($phone)) : '+91 ' . htmlspecialchars(trim($phone)); ?>
                             </div>
                         </div>
                     </div>
@@ -789,7 +789,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-card-body">
                         <span class="info-title">Property Details</span>
                         <div class="info-content">
-                            <div class="prop-row"><span class="prop-label">Property Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?> Residence</span></div>
+                            <div class="prop-row"><span class="prop-label">Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?></span></div>
                             <div class="prop-row"><span class="prop-label">Block / Wing</span><span class="prop-val">: <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span></div>
                             <div class="prop-row"><span class="prop-label">Room No.</span><span class="prop-val">: <?php echo htmlspecialchars($room_no); ?></span></div>
                             <div class="prop-row"><span class="prop-label">Resident Type</span><span class="prop-val">: Family</span></div>
