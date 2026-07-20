@@ -1142,7 +1142,7 @@ $admin_user = s($_SESSION['admin']);
 
             cropper = new Cropper(image, {
                 aspectRatio: NaN, // Free crop for meter display
-                viewMode: 2,
+                viewMode: 1, // Restrict crop box to not exceed the size of the canvas (image)
                 autoCropArea: 0.8,
                 guides: true,
                 highlight: true,
