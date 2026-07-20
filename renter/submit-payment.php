@@ -12,6 +12,10 @@ $bill_id = (int)$_POST['bill_id'];
 $amount = (float)$_POST['amount'];
 $ref = trim($_POST['upi_txn_ref'] ?? '');
 
+if ($amount <= 0) {
+    die("Payment amount must be greater than zero.");
+}
+
 /* Upload screenshot */
 $uploadDir = "../uploads/payments/";
 if (!is_dir($uploadDir)) {
