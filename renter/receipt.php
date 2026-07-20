@@ -664,10 +664,10 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         }
         
         .pm-status p {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-dark);
             font-weight: 600;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* FOOTER INFO */
@@ -999,7 +999,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             <?php endif; ?>
             <div class="pm-status">
                 <i class='bx bxs-check-circle'></i>
-                <p>Your payment has been received successfully. Thank you!</p>
+                <p>Payment successfully received. Thank you!</p>
             </div>
         </div>
 
