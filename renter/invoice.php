@@ -896,8 +896,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <span class="status-pill"><?php echo $status; ?></span>
                     <span class="info-title" style="margin-bottom:16px;">Payment Status</span>
                     <div class="info-content">
-                        <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Payable</p>
-                        <div class="payable-amount">₹ <?php echo number_format($remaining_amount, 2); ?></div>
+                        <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Billed Amount</p>
+                        <div class="payable-amount">₹ <?php echo number_format($total_payable, 2); ?></div>
                         <p class="payable-note">Please make the payment before<br><strong><?php echo $due_date; ?></strong> to avoid late fee.</p>
                     </div>
                 </div>
@@ -950,19 +950,9 @@ $email = $bill['email'] ?? 'renter@example.com';
                         <p>Kindly clear your dues before the due date to avoid additional late fees.</p>
                     </div>
                     <div class="totals-box">
-                        <div class="total-row">
-                            <span>Subtotal</span>
+                        <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none;">
+                            <span>Total Billed Amount</span>
                             <span>₹ <?php echo number_format($total_payable, 2); ?></span>
-                        </div>
-                        <?php if ($amount_paid > 0): ?>
-                        <div class="total-row discount">
-                            <span>Amount Paid</span>
-                            <span>- ₹ <?php echo number_format($amount_paid, 2); ?></span>
-                        </div>
-                        <?php endif; ?>
-                        <div class="total-row final">
-                            <span>Total Payable</span>
-                            <span>₹ <?php echo number_format($remaining_amount, 2); ?></span>
                         </div>
                     </div>
                 </div>
@@ -976,7 +966,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                         
                         <div style="background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 2px; border-radius: 14px; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);">
                             <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $remaining_amount; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $total_payable; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px;">
                             </div>
                         </div>
 
@@ -1090,7 +1080,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             if (isMobile) {
                 // Try to open UPI app directly
-                window.location.href = "upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $remaining_amount; ?>";
+                window.location.href = "upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $total_payable; ?>";
                 
                 // Fallback scroll after a tiny delay in case UPI intent fails
                 setTimeout(() => {
