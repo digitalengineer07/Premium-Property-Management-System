@@ -795,6 +795,9 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         .btn-close-receipt:hover {
             background: #F8FAFC;
         }
+        .btn-close-receipt:active {
+            transform: scale(0.95);
+        }
 
     </style>
 </head>
