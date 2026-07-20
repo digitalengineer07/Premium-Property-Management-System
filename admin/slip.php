@@ -515,11 +515,16 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         .btn {
             background: var(--primary); color: white; border: none; padding: 12px 24px;
             border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; font-size: 14px;
+            text-decoration: none; font-size: 14px; transition: all 0.2s ease;
         }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(70, 52, 255, 0.2); }
+        .btn:active { transform: scale(0.96); box-shadow: none; }
+        
         .btn-outline {
             background: white; border: 1px solid var(--border); color: var(--text-dark);
         }
+        .btn-outline:hover { background: #f8f9fa; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-outline:active { background: #e9ecef; transform: scale(0.96); box-shadow: none; }
 
         @media print {
             body { background: white; margin: 0; }
@@ -561,7 +566,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <button type="button" onclick="window.print()" class="btn">
             <i class='bx bx-printer'></i> Print Bill
         </button>
-        <button type="button" onclick="if(window.opener) { window.close(); } else if (window.history.length > 1 || document.referrer) { window.history.back(); } else { window.location.href='<?php echo $back_url; ?>'; }" class="btn btn-outline">
+        <button type="button" onclick="window.location.href='<?php echo $back_url; ?>';" class="btn btn-outline">
             <i class='bx bx-arrow-back'></i> Close
         </button>
     </div>
