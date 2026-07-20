@@ -963,10 +963,9 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <i class='bx bxs-quote-alt-left'></i>
                     <p>Thank you for being a valued resident.<br><span>Timely payments help us serve you better.</span></p>
                 </div>
-                <div class="signatory">
-                    <img src="../assets/img/signature.png" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<h3 style=\'font-family:cursive;color:var(--text-dark);margin:0;\'>Authorized</h3>');" alt="Signature" class="signatory-img">
-                    <p>Authorized Signatory</p>
-                    <p class="sig-name"><?php echo HOUSE_NAME; ?> Residence</p>
+                <div class="signatory" style="text-align: center;">
+                    <h4 style="font-size: 13px; color: var(--primary); margin: 0 0 6px 0; text-transform: uppercase; letter-spacing: 0.5px;">Contact Property</h4>
+                    <p style="font-size: 15px; color: var(--text-dark); font-weight: 700; margin: 0;">+91 6206936907 &nbsp;&nbsp;&nbsp; +91 7667184920</p>
                 </div>
                 <div class="support-info">
                     <i class='bx bx-support'></i>
