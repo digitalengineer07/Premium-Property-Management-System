@@ -16,12 +16,17 @@ while ($r = mysqli_fetch_assoc($q_rent)) {
     // Check if this bill already has a payments row
     $check = mysqli_query($conn, "SELECT id FROM payments WHERE bill_type = 'rent' AND bill_id = $bill_id LIMIT 1");
     if (mysqli_num_rows($check) == 0) {
-        // Insert missing payment
-        $sys_id = 'SYS_MAN_' . strtoupper(bin2hex(random_bytes(6)));
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, sys_tx_id, transaction_id) VALUES (?, 'rent', ?, ?, ?, 'System Migration', ?, ?, ?, 'Legacy Paid Bill')");
-        mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $r['month'], $amount, $amount, $p_date, $sys_id);
-        mysqli_stmt_execute($stmt);
-        $rent_count++;
+        $month = mysqli_real_escape_string($conn, $r['month']);
+        $check3 = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = $user_id AND bill_type = 'monthly' AND month = '$month' LIMIT 1");
+        
+        if (mysqli_num_rows($check3) == 0) {
+            // Insert missing payment
+            $sys_id = 'SYS_MAN_' . strtoupper(bin2hex(random_bytes(6)));
+            $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, sys_tx_id, transaction_id) VALUES (?, 'rent', ?, ?, ?, 'System Migration', ?, ?, ?, 'Legacy Paid Bill')");
+            mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $r['month'], $amount, $amount, $p_date, $sys_id);
+            mysqli_stmt_execute($stmt);
+            $rent_count++;
+        }
     }
 }
 echo "Successfully backfilled $rent_count missing RENT payments.\n";
@@ -48,11 +53,17 @@ while ($r = mysqli_fetch_assoc($q_elec)) {
         // We also check for 'total' bill type just in case
         $check2 = mysqli_query($conn, "SELECT id FROM payments WHERE bill_type = 'total' AND bill_id = $bill_id LIMIT 1");
         if (mysqli_num_rows($check2) == 0) {
-            $sys_id = 'SYS_MAN_' . strtoupper(bin2hex(random_bytes(6)));
-            $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, sys_tx_id, transaction_id) VALUES (?, 'electricity', ?, ?, ?, 'System Migration', ?, ?, ?, 'Legacy Paid Bill')");
-            mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $r['month'], $amount, $amount, $p_date, $sys_id);
-            mysqli_stmt_execute($stmt);
-            $elec_count++;
+            // CRITICAL: We also need to check for 'monthly' bill type which covers the whole month!
+            $month = mysqli_real_escape_string($conn, $r['month']);
+            $check3 = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = $user_id AND bill_type = 'monthly' AND month = '$month' LIMIT 1");
+            
+            if (mysqli_num_rows($check3) == 0) {
+                $sys_id = 'SYS_MAN_' . strtoupper(bin2hex(random_bytes(6)));
+                $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, sys_tx_id, transaction_id) VALUES (?, 'electricity', ?, ?, ?, 'System Migration', ?, ?, ?, 'Legacy Paid Bill')");
+                mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $r['month'], $amount, $amount, $p_date, $sys_id);
+                mysqli_stmt_execute($stmt);
+                $elec_count++;
+            }
         }
     }
 }
