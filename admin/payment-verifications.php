@@ -685,7 +685,7 @@ include "sidebar.php";
             <button class="pv-btn-export"><i class='bx bx-download'></i> Export CSV</button>
         </div>
         
-        <div style="width: 100%;">
+        <div style="width: 100%; overflow-x: auto;">
             <table class="pv-table">
                 <thead>
                     <tr>
