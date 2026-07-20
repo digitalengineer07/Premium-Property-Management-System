@@ -303,27 +303,28 @@ $email = $bill['email'] ?? 'renter@example.com';
 
         .info-card {
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 24px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
         }
 
-        .info-card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+        .info-card-body {
+            flex: 1;
         }
 
         .info-icon {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: var(--primary-light);
             color: var(--primary);
-            border-radius: 10px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
         .info-title {
@@ -332,19 +333,22 @@ $email = $bill['email'] ?? 'renter@example.com';
             color: var(--text-gray);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 12px;
         }
 
         .info-content h3 {
             font-size: 16px;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .info-content p {
             font-size: 13px;
             color: var(--text-gray);
             line-height: 1.6;
+            margin: 0;
         }
         
         .info-contact {
@@ -359,14 +363,16 @@ $email = $bill['email'] ?? 'renter@example.com';
 
         .prop-row {
             display: flex;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-size: 13px;
         }
-        .prop-label { width: 100px; color: var(--text-gray); font-weight: 500; }
+        .prop-row:last-child { margin-bottom: 0; }
+        .prop-label { width: 105px; color: var(--text-gray); font-weight: 500; }
         .prop-val { font-weight: 600; color: var(--text-dark); }
 
         .payment-status-card {
-            background: #FAFBFC;
+            background: #F8FAFC;
+            display: block;
         }
 
         .status-pill {
@@ -765,37 +771,37 @@ $email = $bill['email'] ?? 'renter@example.com';
             <!-- Info Cards -->
             <div class="info-cards">
                 <div class="info-card">
-                    <div class="info-card-header">
-                        <div class="info-icon"><i class='bx bxs-user'></i></div>
+                    <div class="info-icon"><i class='bx bxs-user'></i></div>
+                    <div class="info-card-body">
                         <span class="info-title">Billed To</span>
-                    </div>
-                    <div class="info-content">
-                        <h3><?php echo htmlspecialchars($name); ?></h3>
-                        <p>Room No. <?php echo htmlspecialchars($room_no); ?><br><?php echo HOUSE_NAME; ?> Residence</p>
-                        <div class="info-contact">
-                            <i class='bx bxs-phone-call'></i> <?php echo htmlspecialchars($phone); ?>
+                        <div class="info-content">
+                            <h3><?php echo htmlspecialchars($name); ?></h3>
+                            <p>Room No. <?php echo htmlspecialchars($room_no); ?>, <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?><br><?php echo HOUSE_NAME; ?> Residence</p>
+                            <div class="info-contact">
+                                <i class='bx bxs-phone-call'></i> +91 <?php echo htmlspecialchars($phone); ?>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="info-card">
-                    <div class="info-card-header">
-                        <div class="info-icon"><i class='bx bx-building-house'></i></div>
+                    <div class="info-icon"><i class='bx bx-building-house'></i></div>
+                    <div class="info-card-body">
                         <span class="info-title">Property Details</span>
-                    </div>
-                    <div class="info-content">
-                        <div class="prop-row"><span class="prop-label">Property Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?> Residence</span></div>
-                        <div class="prop-row"><span class="prop-label">Block / Wing</span><span class="prop-val">: Main Block</span></div>
-                        <div class="prop-row"><span class="prop-label">Room No.</span><span class="prop-val">: <?php echo htmlspecialchars($room_no); ?></span></div>
-                        <div class="prop-row"><span class="prop-label">Resident Type</span><span class="prop-val">: Standard</span></div>
+                        <div class="info-content">
+                            <div class="prop-row"><span class="prop-label">Property Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?> Residence</span></div>
+                            <div class="prop-row"><span class="prop-label">Block / Wing</span><span class="prop-val">: <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span></div>
+                            <div class="prop-row"><span class="prop-label">Room No.</span><span class="prop-val">: <?php echo htmlspecialchars($room_no); ?></span></div>
+                            <div class="prop-row"><span class="prop-label">Resident Type</span><span class="prop-val">: Family</span></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="info-card payment-status-card">
                     <span class="status-pill"><?php echo $status; ?></span>
-                    <span class="info-title" style="display:block; margin-bottom:12px;">Payment Status</span>
+                    <span class="info-title" style="margin-bottom:16px;">Payment Status</span>
                     <div class="info-content">
-                        <p style="margin-bottom: 0;">Total Payable</p>
+                        <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Payable</p>
                         <div class="payable-amount">₹ <?php echo number_format($remaining_amount, 2); ?></div>
                         <p class="payable-note">Please make the payment before<br><strong><?php echo $due_date; ?></strong> to avoid late fee.</p>
                     </div>
