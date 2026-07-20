@@ -112,6 +112,7 @@ mysqli_stmt_execute($all_pay_stmt);
 $all_pay_res = mysqli_stmt_get_result($all_pay_stmt);
 
 $pay_count = 1;
+$modes = [];
 while ($p = mysqli_fetch_assoc($all_pay_res)) {
     $tx_id = $p['sys_tx_id'] ?: 'SYS_TX_' . $p['id'];
     $charges[] = [
@@ -119,8 +120,21 @@ while ($p = mysqli_fetch_assoc($all_pay_res)) {
         'amount' => number_format($p['paid_amount'], 2)
     ];
     $total_paid_so_far += $p['paid_amount'];
+    if (!empty($p['payment_mode'])) {
+        $modes[] = $p['payment_mode'];
+    }
     $pay_count++;
 }
+$unique_modes = array_unique($modes);
+if (count($unique_modes) > 1) {
+    $receipt['payment_method_display'] = 'Multiple Modes';
+    $receipt['payment_method_type'] = 'Multiple';
+} else {
+    $single_mode = count($unique_modes) == 1 ? array_values($unique_modes)[0] : 'Unknown';
+    $receipt['payment_method_display'] = $single_mode;
+    $receipt['payment_method_type'] = $single_mode;
+}
+$receipt['payment_method'] = $receipt['payment_method_display'];
 
 if ($payment['bill_type'] == 'electricity' || $payment['bill_type'] == 'elec_rent') {
     $receipt['bill_type'] = 'Monthly Maintenance';
@@ -601,6 +615,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             flex: 1;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             padding: 0 30px;
@@ -910,24 +925,64 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         <!-- Payment Method Details -->
         <div class="payment-method-box">
             <div class="pm-title">PAYMENT METHOD DETAILS</div>
-            <div class="pm-logo">
-                UPI<span>&#9658;</span>
-                <div style="font-size: 8px; font-weight: 500; font-style: normal; color: #666;">UNIFIED PAYMENTS INTERFACE</div>
-            </div>
-            <div class="pm-details">
-                <div class="pm-item">
-                    <h5>UPI ID</h5>
-                    <p><?= $receipt['upi_id'] ?></p>
+            <?php if (strtolower($receipt['payment_method_type']) == 'online' || strtolower($receipt['payment_method_type']) == 'upi'): ?>
+                <div class="pm-logo">
+                    UPI<span>&#9658;</span>
+                    <div style="font-size: 8px; font-weight: 500; font-style: normal; color: #666;">UNIFIED PAYMENTS INTERFACE</div>
                 </div>
-                <div class="pm-item">
-                    <h5>Bank Name</h5>
-                    <p><?= $receipt['bank_name'] ?></p>
+                <div class="pm-details">
+                    <div class="pm-item">
+                        <h5>UPI ID</h5>
+                        <p><?= $receipt['upi_id'] ?></p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Bank Name</h5>
+                        <p><?= $receipt['bank_name'] ?></p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Account Holder</h5>
+                        <p><?= $receipt['account_holder'] ?></p>
+                    </div>
                 </div>
-                <div class="pm-item">
-                    <h5>Account Holder</h5>
-                    <p><?= $receipt['account_holder'] ?></p>
+            <?php elseif (strtolower($receipt['payment_method_type']) == 'cash'): ?>
+                <div class="pm-logo" style="color: #10B981; font-style: normal; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -10px;">
+                    <i class='bx bx-money' style="font-size: 42px;"></i>
+                    <div style="font-size: 10px; font-weight: 700; color: #666; margin-top: 4px; letter-spacing: 1px;">CASH PAYMENT</div>
                 </div>
-            </div>
+                <div class="pm-details">
+                    <div class="pm-item">
+                        <h5>Payment Mode</h5>
+                        <p>Cash</p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Status</h5>
+                        <p style="color: #10B981;">Received</p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Verified By</h5>
+                        <p>Admin</p>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="pm-logo" style="color: #4A3AFF; font-style: normal; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: -10px;">
+                    <i class='bx bx-layer' style="font-size: 42px;"></i>
+                    <div style="font-size: 10px; font-weight: 700; color: #666; margin-top: 4px; letter-spacing: 1px;">SPLIT MODES</div>
+                </div>
+                <div class="pm-details">
+                    <div class="pm-item">
+                        <h5>Payment Modes</h5>
+                        <p><?= $receipt['payment_method_display'] ?></p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Status</h5>
+                        <p style="color: #10B981;">Received</p>
+                    </div>
+                    <div class="pm-item">
+                        <h5>Verified By</h5>
+                        <p>Admin</p>
+                    </div>
+                </div>
+            <?php endif; ?>
             <div class="pm-status">
                 <i class='bx bxs-check-circle'></i>
                 <p>Your payment has been received successfully. Thank you!</p>
