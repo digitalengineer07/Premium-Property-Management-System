@@ -418,7 +418,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
 
         .dl-grid {
             display: grid;
-            grid-template-columns: 100px 1fr;
+            grid-template-columns: 125px 1fr;
             gap: 12px 16px;
             font-size: 13px;
         }
@@ -653,7 +653,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             display: flex;
             align-items: center;
             gap: 16px;
-            width: 250px;
+            width: 280px;
         }
         
         .pm-status i {
