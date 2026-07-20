@@ -64,7 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle Aadhaar Upload
             if (isset($_FILES['aadhaar_file']) && $_FILES['aadhaar_file']['error'] === UPLOAD_ERR_OK) {
                 $ext = strtolower(pathinfo($_FILES['aadhaar_file']['name'], PATHINFO_EXTENSION));
-                if (in_array($ext, ['pdf','png','jpg','jpeg'])) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $_FILES['aadhaar_file']['tmp_name']);
+                finfo_close($finfo);
+                $allowed_mimes = ['application/pdf', 'image/png', 'image/jpeg', 'image/pjpeg', 'image/webp'];
+                
+                if (in_array($ext, ['pdf','png','jpg','jpeg','webp']) && in_array($mime, $allowed_mimes)) {
                     $new_name = "uploads/aadhaar/{$id}_aadhaar_" . time() . ".{$ext}";
                     if(!is_dir("../uploads/aadhaar/")) mkdir("../uploads/aadhaar/", 0777, true);
                     if(move_uploaded_file($_FILES['aadhaar_file']['tmp_name'], "../".$new_name)) {
@@ -78,7 +83,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle Agreement Upload
             if (isset($_FILES['agreement_document']) && $_FILES['agreement_document']['error'] === UPLOAD_ERR_OK) {
                 $ext = strtolower(pathinfo($_FILES['agreement_document']['name'], PATHINFO_EXTENSION));
-                if (in_array($ext, ['pdf','png','jpg','jpeg'])) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $_FILES['agreement_document']['tmp_name']);
+                finfo_close($finfo);
+                $allowed_mimes = ['application/pdf', 'image/png', 'image/jpeg', 'image/pjpeg', 'image/webp'];
+                
+                if (in_array($ext, ['pdf','png','jpg','jpeg','webp']) && in_array($mime, $allowed_mimes)) {
                     $new_name = $id . "_agreement_" . time() . "." . $ext;
                     if(!is_dir("../uploads/agreements/")) mkdir("../uploads/agreements/", 0777, true);
                     if(move_uploaded_file($_FILES['agreement_document']['tmp_name'], "../uploads/agreements/".$new_name)) {
