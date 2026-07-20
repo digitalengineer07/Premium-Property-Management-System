@@ -710,20 +710,36 @@ $email = $bill['email'] ?? 'renter@example.com';
             
             /* Squeeze margins and paddings for print to fit on fewer pages */
             .header-section { margin-bottom: 20px; }
-            .info-cards { margin-bottom: 20px; gap: 12px; }
-            .info-card { padding: 16px; }
+            
+            /* Force Side-by-Side layout in print to save vertical space */
+            .info-cards { 
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+                align-items: stretch;
+            }
+            .info-card { padding: 12px !important; }
+            
             .table-section { margin-bottom: 20px; }
-            td, th { padding: 10px 16px; }
-            .bottom-section { margin-bottom: 20px; gap: 12px; }
-            .payment-info, .bill-summary { padding: 16px; }
+            td, th { padding: 8px 12px !important; }
+            
+            .bottom-section { 
+                display: grid !important;
+                grid-template-columns: 1.5fr 1fr !important;
+                gap: 16px !important;
+                margin-bottom: 20px !important;
+                align-items: stretch;
+            }
+            .payment-info, .bill-summary { padding: 16px !important; }
             .footer-banner { margin-bottom: 0; padding: 16px; }
 
             .footer-banner { background: #f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             th { background: #f8f9fa !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .month-badge { background: #f8f9fa !important; border: 1px solid #ccc; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
-            .info-card, .table-section, .payment-info, .bill-summary { break-inside: avoid; }
+            .month-badge { background: #f8f9fa !important; border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             
-            /* Ensure background colors print properly */
+            /* Allow internal breaks if needed but keep components intact */
+            .info-card, .table-section, .payment-info, .bill-summary, .footer-banner { break-inside: avoid; page-break-inside: avoid; }
             * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
         
