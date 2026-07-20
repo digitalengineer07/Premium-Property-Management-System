@@ -708,8 +708,25 @@ $email = $bill['email'] ?? 'renter@example.com';
             .invoice-content { padding: 0; zoom: 0.85; }
             .actions-bar { display: none !important; }
             
-            /* Squeeze margins and paddings for print to fit on fewer pages */
-            .header-section { margin-bottom: 20px; }
+            /* Force side-by-side header in print to save huge vertical space */
+            .header-section { 
+                display: flex !important; 
+                flex-direction: row !important; 
+                justify-content: space-between !important; 
+                align-items: center !important;
+                text-align: left !important;
+                gap: 16px !important;
+            }
+            .brand-section { 
+                display: flex !important; 
+                flex-direction: row !important; 
+                align-items: center !important; 
+                text-align: left !important;
+            }
+            .title-section { padding-top: 0 !important; }
+            .title-section h2 { font-size: 20px !important; }
+            
+            .meta-section { width: auto !important; min-width: 220px !important; padding: 12px 16px !important; margin-left: auto !important; }
             
             /* Force Side-by-Side layout in print to save vertical space */
             .info-cards { 
@@ -744,16 +761,22 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
         
         @media (max-width: 768px) {
-            .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
-            .brand-section { flex-direction: column; align-items: center; text-align: center; }
             .info-cards { grid-template-columns: 1fr; }
-            .meta-section { width: 100%; }
             .table-footer-wrapper { flex-direction: column; gap: 20px; align-items: stretch; }
             .totals-box { width: 100%; }
             .bottom-section { grid-template-columns: 1fr; }
             .footer-banner { flex-direction: column; gap: 24px; text-align: center; }
             .support-info { text-align: center; flex-direction: column; }
             .actions-bar { flex-direction: column; }
+        }
+
+        @media (max-width: 600px) {
+            .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
+            .brand-section { flex-direction: column; align-items: center; text-align: center; }
+            .meta-section { width: 100%; }
+        }
+        
+        @media (max-width: 500px) {
             th, td { padding: 12px; font-size: 13px; }
         }
     </style>
