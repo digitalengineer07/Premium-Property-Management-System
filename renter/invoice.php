@@ -367,8 +367,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             font-size: 13px;
         }
         .prop-row:last-child { margin-bottom: 0; }
-        .prop-label { width: 105px; color: var(--text-gray); font-weight: 500; }
-        .prop-val { font-weight: 600; color: var(--text-dark); }
+        .prop-label { width: 105px; color: var(--text-gray); font-weight: 500; flex-shrink: 0; }
+        .prop-val { font-weight: 600; color: var(--text-dark); white-space: nowrap; }
 
         .payment-status-card {
             background: #F8FAFC;
