@@ -202,6 +202,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .title-section {
