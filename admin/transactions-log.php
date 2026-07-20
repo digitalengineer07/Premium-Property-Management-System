@@ -45,12 +45,12 @@ $unified_tx_sql = "
     SELECT combined_tx.*, u.name as renter_name, u.room_no 
     FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, adjustment_amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
         SELECT 
-            id, user_id, bill_type as type, bill_id, amount, payment_method as mode, 
+            id, user_id, bill_type as type, bill_id, amount, 0 as adjustment_amount, payment_method as mode, 
             DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
         FROM payment_notifications
     ) as combined_tx
@@ -66,12 +66,12 @@ $count_sql = "
     SELECT COUNT(*) as total 
     FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, adjustment_amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
         SELECT 
-            id, user_id, bill_type as type, bill_id, amount, payment_method as mode, 
+            id, user_id, bill_type as type, bill_id, amount, 0 as adjustment_amount, payment_method as mode, 
             DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
         FROM payment_notifications
     ) as combined_tx
@@ -203,7 +203,12 @@ $total_pages = ceil($total_rows / $limit);
                                 </span>
                             </div>
                         </td>
-                        <td data-label="Amount" style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount']); ?></td>
+                        <td data-label="Amount">
+                            <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                            <?php if ($tx['adjustment_amount'] < 0): ?>
+                            <div style="font-size: 10px; color: var(--primary-purple); font-weight: 600; margin-top: 4px;">(+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet)</div>
+                            <?php endif; ?>
+                        </td>
                         <td data-label="Type & Mode" style="font-size: 12px;">
                             <span style="text-transform: capitalize; font-weight: 600;"><?php echo $tx['type']; ?></span>
                             <div style="color: var(--text-gray); font-size: 11px;"><?php echo $tx['mode'] ?: 'Unknown'; ?></div>

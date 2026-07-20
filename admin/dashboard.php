@@ -131,12 +131,12 @@ elseif ($transaction_range === '30d') $tx_where = "WHERE payment_date >= DATE_SU
 $unified_tx_sql = "
     SELECT * FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, paid_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, adjustment_amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
         SELECT 
-            id, user_id, bill_type as type, bill_id, amount, 'UPI' as mode, 
+            id, user_id, bill_type as type, bill_id, amount, 0 as adjustment_amount, 'UPI' as mode, 
             DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
         FROM payment_notifications
     ) as combined_tx
@@ -576,7 +576,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                             <?php else: while ($tx = mysqli_fetch_assoc($recent_transactions)): ?>
                             <tr>
                                 <td data-label="Resident">
-                                    <div style="font-weight: 600;"><?php echo s($tx['name']); ?></div>
+                                    <div style="font-weight: 600;"><?php echo htmlspecialchars($tx['name']); ?></div>
                                     <div style="font-size: 10px; color: var(--text-gray);">
                                         <?php echo date('M d, H:i', strtotime($tx['payment_date'].' '.$tx['payment_time'])); ?>
                                         <i class="bx <?php echo $tx['source'] == 'admin' ? 'bx-user-check' : 'bx-globe'; ?>" title="<?php echo $tx['source'] == 'admin' ? 'Manual' : 'Online'; ?>" style="margin-left:5px; opacity:0.6;"></i>
@@ -626,7 +626,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                     <i class='bx <?php echo $tx['type'] == 'rent' ? 'bx-home' : 'bx-bulb'; ?>'></i>
                                 </div>
                                 <div>
-                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo s($tx['name']); ?></div>
+                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($tx['name']); ?></div>
                                     <div style="font-size: 11px; color: var(--text-gray); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
                                         <?php echo date('M d, H:i', strtotime($tx['payment_date'].' '.$tx['payment_time'])); ?>
                                         <i class="bx <?php echo $tx['source'] == 'admin' ? 'bx-user-check' : 'bx-globe'; ?>" style="opacity:0.6;"></i>
@@ -634,7 +634,10 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($tx['amount']); ?></div>
+                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                <?php if($tx['adjustment_amount'] < 0): ?>
+                                    <div style="font-size: 9px; color: #10B981; font-weight: 700; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> WALLET</div>
+                                <?php endif; ?>
                                 <div style="font-size: 10px; color: var(--text-gray); text-transform: uppercase; margin-top: 2px; font-weight: 600;">
                                     <?php echo $tx['type']; ?> &bull; <?php echo $tx['mode']; ?>
                                 </div>
