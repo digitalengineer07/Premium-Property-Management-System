@@ -361,14 +361,33 @@ $email = $bill['email'] ?? 'renter@example.com';
             margin-top: 12px;
         }
 
-        .prop-row {
-            display: flex;
-            margin-bottom: 10px;
-            font-size: 13px;
+        .prop-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 12px;
+            margin-top: 4px;
         }
-        .prop-row:last-child { margin-bottom: 0; }
-        .prop-label { width: 105px; color: var(--text-gray); font-weight: 500; flex-shrink: 0; }
-        .prop-val { font-weight: 600; color: var(--text-dark); white-space: nowrap; }
+        
+        .prop-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .prop-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .prop-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
 
         .payment-status-card {
             background: #F8FAFC;
@@ -788,11 +807,23 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-icon"><i class='bx bx-building-house'></i></div>
                     <div class="info-card-body">
                         <span class="info-title">Property Details</span>
-                        <div class="info-content">
-                            <div class="prop-row"><span class="prop-label">Name</span><span class="prop-val">: <?php echo HOUSE_NAME; ?></span></div>
-                            <div class="prop-row"><span class="prop-label">Block / Wing</span><span class="prop-val">: <?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span></div>
-                            <div class="prop-row"><span class="prop-label">Room No.</span><span class="prop-val">: <?php echo htmlspecialchars($room_no); ?></span></div>
-                            <div class="prop-row"><span class="prop-label">Resident Type</span><span class="prop-val">: Family</span></div>
+                        <div class="info-content prop-grid">
+                            <div class="prop-item">
+                                <span class="prop-label">Building</span>
+                                <span class="prop-val"><?php echo HOUSE_NAME; ?></span>
+                            </div>
+                            <div class="prop-item">
+                                <span class="prop-label">Block / Wing</span>
+                                <span class="prop-val"><?php echo htmlspecialchars($room['block_wing'] ?? 'Block B'); ?></span>
+                            </div>
+                            <div class="prop-item">
+                                <span class="prop-label">Room No.</span>
+                                <span class="prop-val"><?php echo htmlspecialchars($room_no); ?></span>
+                            </div>
+                            <div class="prop-item">
+                                <span class="prop-label">Type</span>
+                                <span class="prop-val">Family</span>
+                            </div>
                         </div>
                     </div>
                 </div>
