@@ -877,19 +877,13 @@ $email = $bill['email'] ?? 'renter@example.com';
             <div class="bottom-section">
                 <div class="payment-info">
                     <div class="section-title"><i class='bx bx-wallet-alt'></i> Payment Information</div>
-                    <div class="qr-section">
-                        <div class="qr-code">
+                    <div class="qr-section" style="justify-content: center; text-align: center; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0;">
+                        <div class="qr-code" style="margin: 0 auto;">
                             <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=madhavkunj@upi&pn=Madhav%20Kunj%20Residence&cu=INR&am=<?php echo $remaining_amount; ?>" alt="UPI QR Code">
                         </div>
                         <div class="bank-details">
-                            <p><strong>Scan & Pay (UPI)</strong></p>
-                            <p>UPI ID: madhavkunj@upi</p>
-                            <div style="height: 8px;"></div>
-                            <p><strong>Bank Transfer Details</strong></p>
-                            <p>Account Name: <?php echo HOUSE_NAME; ?> Residence</p>
-                            <p>Bank: HDFC Bank</p>
-                            <p>A/C No.: 50200012345678</p>
-                            <p>IFSC: HDFC0005020</p>
+                            <p style="font-size: 13px; color: var(--text-gray); font-weight: 500; margin-bottom: 4px;">Scan & Pay (UPI)</p>
+                            <p style="font-size: 16px; color: var(--primary); font-weight: 700; letter-spacing: 0.5px;">madhavkunj@upi</p>
                         </div>
                     </div>
                     <p class="qr-note">Note: After payment, please upload screenshot or enter UTR number for verification.</p>
