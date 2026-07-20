@@ -503,9 +503,10 @@ if ($res) {
             .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
         }
         /* Dark Mode Overrides */
-        .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td { color: var(--text-dark); }
-        .dark-theme .pv-header-text p, .dark-theme .pv-kpi-label, .dark-theme .pv-kpi-sub, .dark-theme .pv-filter-group label { color: var(--text-gray); }
-        .dark-theme .pv-kpi-card, .dark-theme .pv-filter-panel, .dark-theme .pv-table-container, .dark-theme .pv-pagination-container { background: var(--white); border-color: var(--border); box-shadow: none; }
+        .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td, .dark-theme .pv-table-title, .dark-theme .pv-bill-info-type, .dark-theme .pv-utr-text, .dark-theme .pv-date-text, .dark-theme .pv-mode-text, .dark-theme .pv-user-name { color: var(--text-dark) !important; }
+        .dark-theme .pv-header-text p, .dark-theme .pv-kpi-label, .dark-theme .pv-kpi-sub, .dark-theme .pv-filter-group label, .dark-theme .pv-bill-info-inv, .dark-theme .pv-time-text, .dark-theme .pv-page-info { color: var(--text-gray); }
+        .dark-theme .pv-kpi-card, .dark-theme .pv-filter-panel, .dark-theme .pv-table-panel, .dark-theme .pv-table th, .dark-theme .pv-table td { background: var(--white); border-color: var(--border); box-shadow: none; }
+        .dark-theme .pv-pagination-footer { border-color: var(--border); background: var(--bg-main); }
         .dark-theme .pv-header-icon-box { background: rgba(108, 77, 255, 0.1); }
         .dark-theme .pv-kpi-blue { background: rgba(99, 102, 241, 0.1); }
         .dark-theme .pv-kpi-yellow { background: rgba(234, 179, 8, 0.1); }
@@ -743,7 +744,7 @@ include "sidebar.php";
                                     $name_parts = explode(' ', $raw_name);
                                     $display_name = count($name_parts) > 2 ? $name_parts[0] . ' ' . $name_parts[1] . '...' : $raw_name;
                                     ?>
-                                    <div title="<?php echo s($raw_name); ?>" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
+                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
                                         <?php echo s($display_name); ?>
                                     </div>
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
