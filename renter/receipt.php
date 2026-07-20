@@ -418,7 +418,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
 
         .dl-grid {
             display: grid;
-            grid-template-columns: 100px 1fr;
+            grid-template-columns: max-content 1fr;
             gap: 12px 16px;
             font-size: 13px;
         }
@@ -432,6 +432,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             color: var(--text-dark);
             font-weight: 700;
             text-align: right;
+            white-space: nowrap;
         }
         
         .text-danger { color: var(--danger); }
@@ -912,7 +913,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     <div class="card-title">BILL DETAILS</div>
                 </div>
                 <div class="dl-grid">
-                    <div class="dl-label">Bill ID</div><div class="dl-value" style="font-size: 11px;"><?= $receipt['bill_id'] ?></div>
+                    <div class="dl-label">Bill ID</div><div class="dl-value"><?= $receipt['bill_id'] ?></div>
                     <div class="dl-label">Bill Month</div><div class="dl-value"><?= $receipt['bill_month'] ?></div>
                     <div class="dl-label">Bill Type</div><div class="dl-value"><?= $receipt['bill_type'] ?></div>
                     <div class="dl-label">Due Date</div><div class="dl-value text-danger"><?= $receipt['due_date'] ?></div>
