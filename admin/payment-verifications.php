@@ -503,27 +503,27 @@ if ($res) {
             .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
         }
         /* Dark Mode Overrides */
-        .dark-mode .pv-header-text h1, .dark-mode .pv-kpi-value, .dark-mode .pv-table th, .dark-mode .pv-table td { color: var(--text-dark); }
-        .dark-mode .pv-header-text p, .dark-mode .pv-kpi-label, .dark-mode .pv-kpi-sub, .dark-mode .pv-filter-group label { color: var(--text-gray); }
-        .dark-mode .pv-kpi-card, .dark-mode .pv-filter-panel, .dark-mode .pv-table-container, .dark-mode .pv-pagination-container { background: var(--bg-card); border-color: var(--border); box-shadow: none; }
-        .dark-mode .pv-header-icon-box { background: rgba(108, 77, 255, 0.1); }
-        .dark-mode .pv-kpi-blue { background: rgba(99, 102, 241, 0.1); }
-        .dark-mode .pv-kpi-yellow { background: rgba(234, 179, 8, 0.1); }
-        .dark-mode .pv-kpi-green { background: rgba(16, 185, 129, 0.1); }
-        .dark-mode .pv-kpi-red { background: rgba(239, 68, 68, 0.1); }
-        .dark-mode .pv-filter-group input, .dark-mode .pv-filter-group select { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
-        .dark-mode .pv-filter-group input:focus, .dark-mode .pv-filter-group select:focus { border-color: var(--primary); }
-        .dark-mode .pv-table tr { border-bottom-color: var(--border); }
-        .dark-mode .pv-table tr:hover { background: rgba(255, 255, 255, 0.02); }
-        .dark-mode .pv-btn-clear { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
-        .dark-mode .pv-btn-clear:hover { background: rgba(255, 255, 255, 0.05); }
-        .dark-mode .pv-status-badge.pending { background: rgba(234, 179, 8, 0.15); border-color: rgba(234, 179, 8, 0.2); }
-        .dark-mode .pv-status-badge.approved { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.2); }
-        .dark-mode .pv-status-badge.rejected { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.2); }
-        .dark-mode .pv-page-btn { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
-        .dark-mode .pv-page-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
-        .dark-mode .pv-action-btn.approve { background: rgba(16, 185, 129, 0.15); color: #10B981; }
-        .dark-mode .pv-action-btn.reject { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
+        .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td { color: var(--text-dark); }
+        .dark-theme .pv-header-text p, .dark-theme .pv-kpi-label, .dark-theme .pv-kpi-sub, .dark-theme .pv-filter-group label { color: var(--text-gray); }
+        .dark-theme .pv-kpi-card, .dark-theme .pv-filter-panel, .dark-theme .pv-table-container, .dark-theme .pv-pagination-container { background: var(--bg-card); border-color: var(--border); box-shadow: none; }
+        .dark-theme .pv-header-icon-box { background: rgba(108, 77, 255, 0.1); }
+        .dark-theme .pv-kpi-blue { background: rgba(99, 102, 241, 0.1); }
+        .dark-theme .pv-kpi-yellow { background: rgba(234, 179, 8, 0.1); }
+        .dark-theme .pv-kpi-green { background: rgba(16, 185, 129, 0.1); }
+        .dark-theme .pv-kpi-red { background: rgba(239, 68, 68, 0.1); }
+        .dark-theme .pv-filter-group input, .dark-theme .pv-filter-group select { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-filter-group input:focus, .dark-theme .pv-filter-group select:focus { border-color: var(--primary); }
+        .dark-theme .pv-table tr { border-bottom-color: var(--border); }
+        .dark-theme .pv-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .dark-theme .pv-btn-clear { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-btn-clear:hover { background: rgba(255, 255, 255, 0.05); }
+        .dark-theme .pv-status-badge.pending { background: rgba(234, 179, 8, 0.15); border-color: rgba(234, 179, 8, 0.2); }
+        .dark-theme .pv-status-badge.approved { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.2); }
+        .dark-theme .pv-status-badge.rejected { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.2); }
+        .dark-theme .pv-page-btn { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-page-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .dark-theme .pv-action-btn.approve { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+        .dark-theme .pv-action-btn.reject { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
     </style>
 </head>
 <body>
@@ -953,6 +953,5 @@ include "sidebar.php";
         });
     });
 </script>
-<script src="../assets/js/dark-mode.js"></script>
 </body>
 </html>
