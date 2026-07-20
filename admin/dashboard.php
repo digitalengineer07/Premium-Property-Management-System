@@ -18,32 +18,25 @@ if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
 }
 
 // 1) Rent Collected: overall total rent amount collected
-$r_coll_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM electricity WHERE status='Paid'"))['total'];
-$r_coll_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'"))['total'];
-$rent_collected_total = $r_coll_elec + $r_coll_rent;
+$rent_collected_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type IN ('rent', 'elec_rent')"))['total'];
 
-// 2) Total Dues: total due amount of all renters combined (subtracts partial payments)
-$d_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid'"))['total'];
-$d_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status!='Paid'"))['total'];
-$p_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='electricity' AND e.status='Partial'"))['total'];
-$p_elec_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='elec_rent' AND e.status='Partial'"))['total'];
-$p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial'"))['total'];
+// 2) Total Dues: total due amount of all renters combined
+$d_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity"))['total'];
+$d_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent"))['total'];
+$p_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type IN ('electricity', 'elec_rent')"))['total'];
+$p_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
 
 // Include pending negative adjustments (money users owe)
-$d_adj = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(ABS(pending_adjustment)),0) AS total FROM users WHERE pending_adjustment < 0"))['total'];
-// Include pending positive adjustments (advances that offset dues)
-$adv_adj = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(pending_adjustment),0) AS total FROM users WHERE pending_adjustment > 0"))['total'];
-
-$total_dues_total = max(0, ($d_elec + $d_rent + $d_adj) - ($p_elec + $p_elec_rent + $p_rent + $adv_adj));
+$d_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(ABS(pending_adjustment)),0) AS total FROM users WHERE pending_adjustment < 0"))['total'];
+// User wallets (advances) reduce total dues
+$adv_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(advance_payment),0) AS total FROM users"))['total'];
+$total_dues_total = max(0, (($d_elec_total + $d_rent_total + $d_adj) - ($p_elec_total + $p_rent_total)) - $adv_adj);
 
 // 3) Electricity Paid: sum of all electricity amounts paid for the selected month
-$elec_collected_total = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount),0) AS total FROM electricity WHERE status='Paid' AND month='$prev_month_str'"))['total'];
+$elec_collected_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND month='$prev_month_str'"))['total'];
 
-// 5) Total Revenue: combined total of all paid renter amounts (rent + elec + advance + partials)
-$rev_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status='Paid'"))['total'];
-$rev_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'"))['total'];
-$rev_adv = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type='advance'"))['total'];
-$total_revenue_total = $rev_elec + $rev_rent + $p_elec + $p_rent + $rev_adv;
+// 5) Total Revenue: actual cash/bank/UPI received (excluding wallet auto-deductions)
+$total_revenue_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE payment_mode NOT LIKE '%Wallet Auto-Deduction%' AND sys_tx_id NOT LIKE 'SYS_ADV_%' AND payment_mode != 'wallet'"))['total'];
 
 $renters = mysqli_query($conn, "SELECT * FROM users WHERE status = 'active' ORDER BY id ASC");
 $elec_records = mysqli_query($conn, "SELECT e.*, u.name as renter_name FROM electricity e JOIN users u ON e.user_id = u.id ORDER BY e.id DESC LIMIT 6");
