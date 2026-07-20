@@ -766,9 +766,42 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             font-weight: 700;
         }
 
+        @media print {
+            .btn-close-receipt { display: none !important; }
+            body { background: white; }
+        }
+        
+        .btn-close-receipt {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: 0.2s;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        .btn-close-receipt:hover {
+            background: #F8FAFC;
+        }
+
     </style>
 </head>
 <body>
+    
+    <button onclick="if(window.history.length > 1) { window.history.back(); } else { window.close(); }" class="btn-close-receipt">
+        <i class='bx bx-x' style="font-size: 20px;"></i> Close
+    </button>
 
     <div class="receipt-container">
         
@@ -879,7 +912,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     <div class="card-title">BILL DETAILS</div>
                 </div>
                 <div class="dl-grid">
-                    <div class="dl-label">Bill ID</div><div class="dl-value"><?= $receipt['bill_id'] ?></div>
+                    <div class="dl-label">Bill ID</div><div class="dl-value" style="font-size: 11px;"><?= $receipt['bill_id'] ?></div>
                     <div class="dl-label">Bill Month</div><div class="dl-value"><?= $receipt['bill_month'] ?></div>
                     <div class="dl-label">Bill Type</div><div class="dl-value"><?= $receipt['bill_type'] ?></div>
                     <div class="dl-label">Due Date</div><div class="dl-value text-danger"><?= $receipt['due_date'] ?></div>
