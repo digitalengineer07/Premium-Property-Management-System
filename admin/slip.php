@@ -570,7 +570,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <div class="contact-info">
             <div class="contact-item">
                 <i class='bx bx-map'></i>
-                <?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav Kunj'; ?> Residence, Indore, MP - 452001
+                Vastu Estate colony Madhav Kunj apartment behind RPS School
             </div>
             <div class="contact-item">
                 <i class='bx bx-phone-call'></i>
