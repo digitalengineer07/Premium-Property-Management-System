@@ -114,21 +114,22 @@ $receipt = [
         .contact-info {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 13px;
+            gap: 10px;
+            font-size: 12px;
             color: #374151;
             font-weight: 600;
         }
 
         .contact-info i {
             color: var(--primary);
-            font-size: 18px;
+            font-size: 16px;
         }
         
         .contact-info span {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            white-space: nowrap;
         }
 
         .stamp {
