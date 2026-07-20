@@ -223,6 +223,7 @@
                 transaction_id,
                 sys_tx_id,
                 SUM(paid_amount) as amount,
+                SUM(CASE WHEN adjustment_amount < 0 THEN ABS(adjustment_amount) ELSE 0 END) as wallet_used,
                 GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
             FROM payments 
             WHERE user_id = $user_id
@@ -236,6 +237,12 @@
                 $ref = trim($row['transaction_id'] ?? '');
                 $sys_id = trim($row['sys_tx_id'] ?? 'N/A');
                 $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                
+                $wallet_used = (float)($row['wallet_used'] ?? 0);
+                if ($wallet_used > 0) {
+                    $total_settled = (float)$row['amount'] + $wallet_used;
+                    $subtitle .= ' | <span style="color: #10B981; font-weight: 500;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
+                }
                 
                 $all_bills[] = [
                     'filter_type' => 'approved',
