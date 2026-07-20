@@ -672,47 +672,56 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
 
         /* FOOTER INFO */
         .footer-info {
-            background: var(--primary-light);
-            border-radius: 12px;
-            padding: 24px;
+            background: #F8F8FC;
+            border-radius: 8px;
+            padding: 18px 24px;
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 20px;
             margin-bottom: 30px;
+            border: 1px solid #EDEDF5;
         }
 
         .fi-item {
             display: flex;
             align-items: flex-start;
             gap: 16px;
-            border-right: 1px solid rgba(74, 58, 255, 0.1);
-            padding-right: 20px;
+            position: relative;
+        }
+
+        .fi-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 15%;
+            height: 70%;
+            width: 1px;
+            background: rgba(49, 27, 146, 0.15);
         }
         
-        .fi-item:last-child { border: none; padding-right: 0; cursor: pointer; transition: 0.2s; }
+        .fi-item:last-child { cursor: pointer; transition: 0.2s; }
         .fi-item:last-child:hover { opacity: 0.8; }
 
         .fi-icon {
-            width: 40px; height: 40px;
-            background: white;
-            color: var(--primary);
+            width: 42px; height: 42px;
+            background: #EBE8FA;
+            color: #311B92;
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(74, 58, 255, 0.1);
         }
 
         .fi-text h4 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--primary);
+            color: #311B92;
             margin-bottom: 4px;
         }
 
         .fi-text p {
-            font-size: 13px;
-            color: var(--text-dark);
+            font-size: 12px;
+            color: #4B5563;
             line-height: 1.5;
             font-weight: 500;
         }
