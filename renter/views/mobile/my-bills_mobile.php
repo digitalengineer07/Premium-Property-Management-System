@@ -29,51 +29,32 @@ while($r = mysqli_fetch_assoc($rent_q)) {
     ];
 }
 
-// 2. Electricity (Usage)
-$elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
-                                WHERE e.user_id=$user_id AND e.amount > 0");
-while($e = mysqli_fetch_assoc($elec_q)) {
+// 2. Combined Bill (Electricity + Rent + Maintenance)
+$comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+                                FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+                                WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
+while($c = mysqli_fetch_assoc($comb_q)) {
+    $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['dues'] + (float)$c['extra_charges'];
+    
+    $summary = [];
+    if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
+    if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
+    if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
+    if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
+    if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
+    
     $mobile_all_bills[] = [
-        'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : (strtotime('+1 month', strtotime($e['month'].'-05')) < time() ? 'overdue' : 'unpaid')),
-        'real_title' => date('F Y', strtotime($e['month'])),
+        'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : (strtotime($c['month'].'-05') < time() ? 'overdue' : 'unpaid')),
+        'real_title' => date('F Y', strtotime($c['month'])),
         'subtitle' => 'Room ' . $room_no,
-        'period' => $e['month'],
-        'bill_date' => date('01 F Y', strtotime($e['month'])),
-        'due_date' => date('d F Y', strtotime('+1 month', strtotime($e['month'] . '-05'))),
-        'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
-        'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
-        'icon' => 'bx-bolt-circle', 'icon_bg' => 'rgba(245, 158, 11, 0.1)', 'icon_color' => '#F59E0B',
-        'badge' => 'Electricity', 'badge_bg' => 'rgba(245, 158, 11, 0.1)', 'badge_color' => '#F59E0B',
-        'summary' => [
-            'Electricity Usage' => $e['amount'],
-            'Maintenance Charge' => 0,
-            'Other Charges' => 0
-        ]
-    ];
-}
-
-// 3. Rent & Maintenance (From Electricity)
-$maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, (e.rent_amount + e.maintenance + e.dues) as combined_amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
-                                WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
-while($m = mysqli_fetch_assoc($maint_q)) {
-    $mobile_all_bills[] = [
-        'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : (strtotime($m['month'].'-05') < time() ? 'overdue' : 'unpaid')),
-        'real_title' => date('F Y', strtotime($m['month'])),
-        'subtitle' => 'Room ' . $room_no,
-        'period' => $m['month'],
-        'bill_date' => date('01 F Y', strtotime($m['month'])),
-        'due_date' => date('d F Y', strtotime($m['month'] . '-05')),
-        'amount' => $m['combined_amount'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
-        'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-        'icon' => 'bx-wrench', 'icon_bg' => 'rgba(59, 130, 246, 0.1)', 'icon_color' => '#3B82F6',
-        'badge' => 'Maintenance', 'badge_bg' => 'rgba(59, 130, 246, 0.1)', 'badge_color' => '#3B82F6',
-        'summary' => [
-            'Monthly Rent' => $m['rent_amount'],
-            'Maintenance Charge' => $m['maintenance'],
-            'Other Charges' => $m['dues']
-        ]
+        'period' => $c['month'],
+        'bill_date' => date('01 F Y', strtotime($c['month'])),
+        'due_date' => date('d F Y', strtotime($c['month'] . '-07')),
+        'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
+        'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
+        'icon' => 'bx-layer', 'icon_bg' => 'rgba(98, 75, 255, 0.1)', 'icon_color' => 'var(--primary-purple)',
+        'badge' => 'Rent + Utility', 'badge_bg' => 'rgba(98, 75, 255, 0.1)', 'badge_color' => 'var(--primary-purple)',
+        'summary' => $summary
     ];
 }
 

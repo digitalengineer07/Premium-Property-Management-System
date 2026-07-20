@@ -169,55 +169,28 @@
             ];
         }
 
-        // 2. Electricity (Usage)
-        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.amount > 0");
-        while($e = mysqli_fetch_assoc($elec_q)) {
-            $all_bills[] = [
-                'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : ($e['status'] == 'Due' ? 'unpaid' : 'unpaid')),
-                'title' => 'Electricity for ' . $e['month'], 'subtitle' => 'Room ' . $room_no,
-                'period' => $e['month'],
-                'bill_date' => date('01 M Y', strtotime($e['month'])),
-                'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
-                'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
-                'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
-                'icon' => 'bx-bulb', 'color' => 'yellow',
-                'summary' => [
-                    'Electricity Usage' => $e['amount'],
-                    'Maintenance Charge' => 0,
-                    'Other Charges' => 0
-                ]
-            ];
-        }
-
-        // 3. Rent & Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
-        while($m = mysqli_fetch_assoc($maint_q)) {
-            $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'] + (float)$m['extra_charges'];
+        // 2. Combined Bill (Electricity + Rent + Maintenance)
+        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
+        while($c = mysqli_fetch_assoc($comb_q)) {
+            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['dues'] + (float)$c['extra_charges'];
             
-            $summary = [
-                'Monthly Rent' => (float)$m['rent_amount'],
-                'Maintenance Charge' => (float)$m['maintenance']
-            ];
-            
-            if ((float)$m['extra_charges'] > 0) {
-                $summary['Other Charges'] = (float)$m['extra_charges'];
-            }
-            if ((float)$m['dues'] != 0) {
-                $summary['Advance Applied'] = (float)$m['dues'];
-            }
+            $summary = [];
+            if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
+            if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
+            if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
+            if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
+            if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
             
             $all_bills[] = [
-                'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : ($m['status'] == 'Due' ? 'unpaid' : 'unpaid')),
-                'title' => 'Rent for ' . $m['month'], 'subtitle' => 'Room ' . $room_no,
-                'period' => $m['month'],
-                'bill_date' => date('01 M Y', strtotime($m['month'])),
-                'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $rent_maint_amt, 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
-                'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
+                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($c['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'title' => 'Monthly Bill for ' . $c['month'], 'subtitle' => 'Room ' . $room_no,
+                'period' => $c['month'],
+                'bill_date' => date('01 M Y', strtotime($c['month'])),
+                'due_date' => date('07 M Y', strtotime($c['month'])),
+                'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
+                'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
                 'summary' => $summary
             ];
@@ -451,11 +424,11 @@
                     const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
                     const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                     
-                    const typeColor = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'var(--primary-purple)' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
-                    const typeBg = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'rgba(98, 75, 255, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
+                    const typeColor = (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') ? 'var(--primary-purple)' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
+                    const typeBg = (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') ? 'rgba(98, 75, 255, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
                     
                     let iconHtml = '';
-                    if (bill.type === 'rent' || bill.type === 'elec_rent') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(98, 75, 255, 0.1);color:var(--primary-purple);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
+                    if (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(98, 75, 255, 0.1);color:var(--primary-purple);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
                     else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bulb'></i></div>`;
                     else iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-wrench'></i></div>`;
 
@@ -467,7 +440,8 @@
                         actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size: 13px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
 
-                    const displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
+                    let displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
+                    if (bill.type === 'combined') displayTypeLabel = 'Rent + Utility';
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
