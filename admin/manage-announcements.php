@@ -14,9 +14,13 @@ $error = "";
 
 // Handle Delete
 if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    mysqli_query($conn, "DELETE FROM announcements WHERE id = $id");
-    $success = "Announcement deleted successfully.";
+    if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+        $error = "Security validation failed for deletion.";
+    } else {
+        $id = (int)$_GET['delete'];
+        mysqli_query($conn, "DELETE FROM announcements WHERE id = $id");
+        $success = "Announcement deleted successfully.";
+    }
 }
 
 // Handle Add
@@ -158,7 +162,7 @@ while ($row = mysqli_fetch_assoc($res)) $announcements[] = $row;
                                 </td>
                                 <td style="font-size: 13px; color: var(--text-gray); font-weight: 500;"><?php echo date('M d, Y', strtotime($a['created_at'])); ?><br><small><?php echo date('h:i A', strtotime($a['created_at'])); ?></small></td>
                                 <td>
-                                    <a href="?delete=<?php echo $a['id']; ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.1); padding: 8px; border-radius: 10px; width: 36px; height: 36px; justify-content: center;" onclick="return confirm('Note: This will remove the notice for all renters. Continue?')">
+                                    <a href="?delete=<?php echo $a['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.1); padding: 8px; border-radius: 10px; width: 36px; height: 36px; justify-content: center;" onclick="return confirm('Note: This will remove the notice for all renters. Continue?')">
                                         <i class='bx bx-trash' style="font-size: 18px;"></i>
                                     </a>
                                 </td>
