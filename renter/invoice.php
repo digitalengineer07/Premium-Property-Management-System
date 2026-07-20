@@ -877,21 +877,21 @@ $email = $bill['email'] ?? 'renter@example.com';
             <div class="bottom-section">
                 <div class="payment-info">
                     <div class="section-title"><i class='bx bx-wallet-alt'></i> Payment Information</div>
-                    <div class="qr-section" style="justify-content: center; text-align: center; flex-direction: column; align-items: center; gap: 16px; padding: 32px 0;">
+                    <div class="qr-section" style="justify-content: center; text-align: center; flex-direction: column; align-items: center; gap: 12px; padding: 12px 0;">
                         
-                        <div style="background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 3px; border-radius: 24px; box-shadow: 0 12px 30px rgba(79, 70, 229, 0.2);">
-                            <div style="background: white; padding: 16px; border-radius: 21px; display: inline-block;">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $remaining_amount; ?>" alt="UPI QR Code" style="display: block; border-radius: 8px;">
+                        <div style="background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 2px; border-radius: 14px; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);">
+                            <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $remaining_amount; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px;">
                             </div>
                         </div>
 
-                        <div class="bank-details" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                            <div style="display: inline-flex; align-items: center; gap: 6px; background: #EEF2FF; padding: 6px 16px; border-radius: 20px;">
-                                <i class='bx bx-check-shield' style="color: #4F46E5; font-size: 16px;"></i>
-                                <span style="font-size: 12px; color: #4F46E5; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Verified UPI</span>
+                        <div class="bank-details" style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                            <div style="display: inline-flex; align-items: center; gap: 4px; background: #EEF2FF; padding: 4px 12px; border-radius: 12px;">
+                                <i class='bx bx-check-shield' style="color: #4F46E5; font-size: 14px;"></i>
+                                <span style="font-size: 11px; color: #4F46E5; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Verified UPI</span>
                             </div>
-                            <p style="font-size: 18px; color: var(--text-dark); font-weight: 800; letter-spacing: 0.5px; margin-top: 8px;">nikhil119124-1@oksbi</p>
-                            <p style="font-size: 13px; color: var(--text-gray); font-weight: 500;">Scan with any UPI App (GPay, PhonePe, Paytm)</p>
+                            <p style="font-size: 15px; color: var(--text-dark); font-weight: 800; letter-spacing: 0.5px; margin-top: 4px;">nikhil119124-1@oksbi</p>
+                            <p style="font-size: 11px; color: var(--text-gray); font-weight: 500;">Scan with any UPI App (GPay, PhonePe, Paytm)</p>
                         </div>
                     </div>
                     <p class="qr-note">Note: After payment, please upload screenshot or enter UTR number for verification.</p>
