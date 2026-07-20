@@ -703,9 +703,20 @@ $email = $bill['email'] ?? 'renter@example.com';
                 size: A4;
                 margin: 8mm;
             }
-            body { background: white; padding: 0; margin: 0; }
-            .invoice-container { box-shadow: none; border: none; max-width: 100%; border-radius: 0; margin: 0; padding: 0; }
-            .invoice-content { padding: 0; zoom: 0.85; }
+            body, html { background: white; padding: 0; margin: 0; height: 100%; }
+            .invoice-container { 
+                box-shadow: none; border: none; max-width: 100%; border-radius: 0; margin: 0; padding: 0; 
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .invoice-content { 
+                padding: 0; zoom: 0.85; 
+                flex: 1;
+                display: flex !important;
+                flex-direction: column !important;
+                min-height: 110vh !important; /* Accounting for zoom to stretch full page */
+            }
             .actions-bar { display: none !important; }
             
             /* Force side-by-side header in print to save huge vertical space */
@@ -760,9 +771,16 @@ $email = $bill['email'] ?? 'renter@example.com';
                 align-items: stretch;
             }
             .payment-info, .bill-summary { padding: 16px !important; }
-            .footer-banner { margin-bottom: 0; padding: 16px; }
+            
+            .footer-banner { 
+                margin-top: auto !important; 
+                margin-bottom: 0 !important; 
+                padding: 16px !important; 
+                background: #f8f9fa !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
 
-            .footer-banner { background: #f8f9fa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             th { background: #f8f9fa !important; color: #000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .month-badge { background: #f8f9fa !important; border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
             
