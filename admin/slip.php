@@ -58,7 +58,7 @@ $dues = (float)($row['dues'] ?? 0);
 $extra_charges = (float)($row['extra_charges'] ?? 0);
 $extra_charges_desc = $row['extra_charges_desc'] ?? '';
 
-$total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
+$total_amount = $electricity_amount + $dues + $extra_charges;
 
 // Back URL for fallback
 $back_url = "dashboard.php";
@@ -719,19 +719,6 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 </tr>
                 
                 <!-- Display dynamically based on DB values -->
-                <?php if ($rent_amount > 0): ?>
-                <tr>
-                    <td>Room Rent</td>
-                    <td>₹<?php echo number_format($rent_amount, 2); ?></td>
-                </tr>
-                <?php endif; ?>
-                
-                <?php if ($maintenance > 0): ?>
-                <tr>
-                    <td>Maintenance Charges</td>
-                    <td>₹<?php echo number_format($maintenance, 2); ?></td>
-                </tr>
-                <?php endif; ?>
                 
                 <?php if ($dues != 0): ?>
                 <tr>
