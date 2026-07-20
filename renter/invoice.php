@@ -970,7 +970,7 @@ $email = $bill['email'] ?? 'renter@example.com';
 
             <!-- Bottom Section -->
             <div class="bottom-section">
-                <div class="payment-info">
+                <div class="payment-info" id="payment-qr-section">
                     <div class="section-title"><i class='bx bx-wallet-alt'></i> Payment Information</div>
                     <div class="qr-section" style="justify-content: center; text-align: center; flex-direction: column; align-items: center; gap: 12px; padding: 12px 0;">
                         
@@ -1058,7 +1058,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                 <button class="btn btn-outline" onclick="window.print()"><i class='bx bx-download'></i> Download PDF</button>
                 <button class="btn btn-outline" onclick="shareBill()"><i class='bx bx-share-alt'></i> Share Bill</button>
                 <?php if ($remaining_amount > 0): ?>
-                <button class="btn btn-primary" onclick="window.location.href='dashboard.php'"><i class='bx bx-credit-card'></i> Pay Now</button>
+                <button class="btn btn-primary" onclick="payNow()"><i class='bx bx-credit-card'></i> Pay Now</button>
                 <?php else: ?>
                 <button class="btn btn-primary" style="background:var(--success);"><i class='bx bx-check-circle'></i> Paid Successfully</button>
                 <?php endif; ?>
@@ -1083,6 +1083,37 @@ $email = $bill['email'] ?? 'renter@example.com';
                 }).catch(() => {
                     alert("Sharing is not supported on this browser. Please copy the URL manually.");
                 });
+            }
+        }
+
+        function payNow() {
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            if (isMobile) {
+                // Try to open UPI app directly
+                window.location.href = "upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $remaining_amount; ?>";
+                
+                // Fallback scroll after a tiny delay in case UPI intent fails
+                setTimeout(() => {
+                    scrollToQR();
+                }, 1000);
+            } else {
+                // Desktop: smoothly scroll to QR code
+                scrollToQR();
+            }
+        }
+
+        function scrollToQR() {
+            const qrSection = document.getElementById('payment-qr-section');
+            if(qrSection) {
+                qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                qrSection.style.transition = "box-shadow 0.5s ease-in-out, transform 0.3s";
+                qrSection.style.boxShadow = "0 0 0 4px rgba(79, 70, 229, 0.3)";
+                qrSection.style.transform = "scale(1.02)";
+                
+                setTimeout(() => {
+                    qrSection.style.boxShadow = "none";
+                    qrSection.style.transform = "scale(1)";
+                }, 1200);
             }
         }
     </script>
