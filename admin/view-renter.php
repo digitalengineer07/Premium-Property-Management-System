@@ -523,7 +523,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
@@ -541,7 +541,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
@@ -559,7 +559,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
