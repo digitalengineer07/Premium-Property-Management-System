@@ -616,14 +616,14 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             </div>
             <div class="meter-flow">
                 <div class="flow-item">
-                    <h4>Previous Reading</h4>
-                    <div class="val"><?php echo $previous_reading; ?></div>
-                    <div class="unit">Units</div>
-                </div>
-                <div class="flow-arrow"><i class='bx bx-right-arrow-alt'></i></div>
-                <div class="flow-item">
                     <h4>Current Reading</h4>
                     <div class="val"><?php echo $current_reading; ?></div>
+                    <div class="unit">Units</div>
+                </div>
+                <div class="flow-arrow"><i class='bx bx-minus'></i></div>
+                <div class="flow-item">
+                    <h4>Previous Reading</h4>
+                    <div class="val"><?php echo $previous_reading; ?></div>
                     <div class="unit">Units</div>
                 </div>
                 <div class="flow-arrow">=</div>
@@ -635,10 +635,10 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             </div>
             <div class="meter-meta">
                 <div class="meter-meta-item">
-                    <i class='bx bx-hdd'></i>
+                    <i class='bx bx-money'></i>
                     <div class="meta-sm">
-                        <h5>Meter No.</h5>
-                        <p>MT-85671234</p>
+                        <h5>Unit Rate</h5>
+                        <p>₹<?php echo number_format($rate_per_unit, 2); ?></p>
                     </div>
                 </div>
                 <div class="meter-meta-item">
@@ -649,10 +649,10 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                     </div>
                 </div>
                 <div class="meter-meta-item">
-                    <i class='bx bx-x-circle'></i>
+                    <i class='bx bx-calendar-check'></i>
                     <div class="meta-sm">
-                        <h5>Multiplier</h5>
-                        <p>1</p>
+                        <h5>Reading Date</h5>
+                        <p><?php echo date("d M Y", strtotime($row['created_at'])); ?></p>
                     </div>
                 </div>
                 <div class="meter-meta-item">
