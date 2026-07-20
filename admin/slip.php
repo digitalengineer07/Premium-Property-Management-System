@@ -58,7 +58,7 @@ $dues = (float)($row['dues'] ?? 0);
 $extra_charges = (float)($row['extra_charges'] ?? 0);
 $extra_charges_desc = $row['extra_charges_desc'] ?? '';
 
-$total_amount = $electricity_amount + $dues + $extra_charges;
+$total_amount = $electricity_amount + $extra_charges;
 
 // Back URL for fallback
 $back_url = "dashboard.php";
@@ -719,13 +719,6 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 </tr>
                 
                 <!-- Display dynamically based on DB values -->
-                
-                <?php if ($dues != 0): ?>
-                <tr>
-                    <td><?php echo $dues > 0 ? 'Arrears / Pending Dues' : 'Advance Adjustment'; ?></td>
-                    <td><?php echo $dues < 0 ? '-' : ''; ?>₹<?php echo number_format(abs($dues), 2); ?></td>
-                </tr>
-                <?php endif; ?>
                 
                 <?php if ($extra_charges > 0): ?>
                 <tr>
