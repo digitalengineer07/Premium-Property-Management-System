@@ -675,11 +675,14 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 font-size: 26px;
             }
             /* Action buttons at the top should stack */
-            .action-buttons {
+            .actions {
                 flex-direction: column;
                 width: 100%;
+                margin: 10px auto 20px auto;
+                padding: 0 15px;
+                box-sizing: border-box;
             }
-            .action-buttons .btn {
+            .actions .btn {
                 width: 100%;
                 justify-content: center;
             }
