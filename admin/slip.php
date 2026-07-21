@@ -558,6 +558,73 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 print-color-adjust: exact;
             }
         }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .slip-container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .title-section {
+                text-align: left;
+                align-items: flex-start;
+            }
+            .contact-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+            .photo-details-grid {
+                grid-template-columns: 1fr;
+            }
+            .charges-table th, .charges-table td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+            .charges-table th:first-child, .charges-table td:first-child {
+                padding-left: 10px;
+            }
+            .charges-table th:last-child, .charges-table td:last-child {
+                padding-right: 10px;
+            }
+            .footer {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+                align-items: center;
+            }
+            .footer-signature {
+                text-align: center;
+                align-items: center;
+            }
+            .footer-signature::before {
+                margin: 0 auto 12px auto;
+            }
+            .brand-text h2 {
+                font-size: 22px;
+            }
+            .title-section h1 {
+                font-size: 26px;
+            }
+            /* Action buttons at the top should stack */
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
