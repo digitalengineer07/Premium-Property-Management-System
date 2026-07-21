@@ -840,9 +840,12 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             .pm-item p { font-size: 11px; word-break: break-word; }
             .pm-status { width: 100%; justify-content: center; }
 
-            .footer-info { grid-template-columns: 1fr; gap: 15px; padding: 15px; margin-bottom: 20px; }
-            .fi-item { flex-direction: column; align-items: center; text-align: center; }
-            .fi-item:not(:last-child)::after { display: none; }
+            .footer-info { grid-template-columns: 1fr 1fr 1fr; gap: 5px; padding: 15px 5px; margin-bottom: 20px; }
+            .fi-item { flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+            .fi-icon { width: 32px; height: 32px; font-size: 16px; }
+            .fi-text h4 { font-size: 9px; margin-bottom: 2px; }
+            .fi-text p { font-size: 8px; line-height: 1.2; }
+            .fi-item:not(:last-child)::after { display: block; right: -2px; top: 10%; height: 80%; }
             
             .btn-close-receipt { position: static; display: block; width: 100%; text-align: center; margin-bottom: 20px; box-shadow: none; }
         }
