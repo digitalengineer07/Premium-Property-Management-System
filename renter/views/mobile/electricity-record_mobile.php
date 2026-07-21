@@ -226,13 +226,13 @@
                 </div>
                 
                 <?php if($status_text === 'Unpaid'): ?>
-                    <button style="width: 100%; background: rgba(98, 75, 255, 0.05); border: 1px dashed rgba(98, 75, 255, 0.3); color: var(--primary-purple); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <button onclick="if(typeof openPaymentModal === 'function') openPaymentModal(<?php echo $rec['amount']; ?>, 'Electricity Bill for <?php echo htmlspecialchars($rec['month']); ?>', 'electricity', <?php echo $rec['id']; ?>, '<?php echo addslashes($rec['month']); ?>'); else window.location.href='my-payments.php';" style="width: 100%; background: rgba(98, 75, 255, 0.05); border: 1px dashed rgba(98, 75, 255, 0.3); color: var(--primary-purple); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
                         <i class='bx bx-credit-card' style="font-size: 14px;"></i> Pay Now
                     </button>
                 <?php else: ?>
-                    <button style="width: 100%; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                    <a href="../admin/slip.php?elec_id=<?php echo $rec['id']; ?>" style="text-decoration: none; width: 100%; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                         <i class='bx bx-receipt' style="font-size: 14px;"></i> View Bill
-                    </button>
+                    </a>
                 <?php endif; ?>
             </div>
             <?php endforeach; ?>
