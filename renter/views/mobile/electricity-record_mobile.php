@@ -188,61 +188,54 @@
             </div>
         </div>
 
-        <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <th style="text-align: left; padding: 0 0 12px 0; font-size: 10px; font-weight: 600; color: var(--text-gray); white-space: nowrap;">Month / Year</th>
-                        <th style="text-align: center; padding: 0 4px 12px 4px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Units</th>
-                        <th style="text-align: right; padding: 0 4px 12px 4px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Amount</th>
-                        <th style="text-align: center; padding: 0 4px 12px 4px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Status</th>
-                        <th style="text-align: right; padding: 0 0 12px 4px; font-size: 10px; font-weight: 600; color: var(--text-gray);">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $counter = 1;
-                    foreach($electricity_records as $idx => $rec): 
-                        if ($idx >= 5) break;
-                        $is_current = ($idx === 0);
-                        $status_class = strtolower($rec['status']);
-                        if ($status_class == 'due') $status_class = 'unpaid';
-                        $status_text = ucfirst($status_class);
-                        if ($status_text == 'Due') $status_text = 'Unpaid';
-                    ?>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 14px 0;">
-                            <div style="display: flex; align-items: center; gap: 4px;">
-                                <span style="font-size: 11px; font-weight: <?php echo $is_current ? '800' : '700'; ?>; color: var(--text-dark); white-space: nowrap;"><?php echo htmlspecialchars($rec['month']); ?></span>
-                                <?php if($is_current): ?>
-                                    <span style="background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 2px 4px; border-radius: 12px;">Current</span>
-                                <?php endif; ?>
-                            </div>
-                        </td>
-                        <td style="padding: 14px 4px; text-align: center; font-size: 11px; font-weight: <?php echo $is_current ? '800' : '600'; ?>; color: var(--text-dark);"><?php echo number_format($rec['units_consumed']); ?></td>
-                        <td style="padding: 14px 4px; text-align: right; font-size: 11px; font-weight: 800; color: var(--text-dark);"><?php echo money($rec['amount']); ?></td>
-                        <td style="padding: 14px 4px; text-align: center;">
-                            <?php if($status_text === 'Unpaid'): ?>
-                                <span style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 12px;">Unpaid</span>
-                            <?php else: ?>
-                                <span style="background: rgba(16, 185, 129, 0.1); color: #10B981; font-size: 9px; font-weight: 700; padding: 4px 6px; border-radius: 12px;">Paid</span>
-                            <?php endif; ?>
-                        </td>
-                        <td style="padding: 14px 0 14px 4px; text-align: right;">
-                            <?php if($status_text === 'Unpaid'): ?>
-                                <button style="background: var(--bg-main); border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap;">
-                                    <i class='bx bx-credit-card' style="font-size: 12px;"></i> Pay Now
-                                </button>
-                            <?php else: ?>
-                                <button style="background: var(--bg-main); border: 1px solid rgba(98, 75, 255, 0.2); color: var(--primary-purple); font-size: 9px; font-weight: 700; padding: 5px 8px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 2px; white-space: nowrap;">
-                                    <i class='bx bx-receipt' style="font-size: 12px;"></i> View Bill
-                                </button>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;">
+            <?php 
+            $counter = 1;
+            foreach($electricity_records as $idx => $rec): 
+                if ($idx >= 5) break;
+                $is_current = ($idx === 0);
+                $status_class = strtolower($rec['status']);
+                if ($status_class == 'due') $status_class = 'unpaid';
+                $status_text = ucfirst($status_class);
+                if ($status_text == 'Due') $status_text = 'Unpaid';
+            ?>
+            <div style="background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 13px; font-weight: 800; color: var(--text-dark);"><?php echo htmlspecialchars($rec['month']); ?></span>
+                        <?php if($is_current): ?>
+                            <span style="background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px;">Current</span>
+                        <?php endif; ?>
+                    </div>
+                    <?php if($status_text === 'Unpaid'): ?>
+                        <span style="background: rgba(245, 158, 11, 0.1); color: #F59E0B; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px;">Unpaid</span>
+                    <?php else: ?>
+                        <span style="background: rgba(16, 185, 129, 0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px;">Paid</span>
+                    <?php endif; ?>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--white); padding: 12px; border-radius: 8px;">
+                    <div>
+                        <div style="font-size: 10px; font-weight: 600; color: var(--text-gray); margin-bottom: 2px;">UNITS</div>
+                        <div style="font-size: 14px; font-weight: 800; color: var(--text-dark);"><?php echo number_format($rec['units_consumed']); ?></div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 10px; font-weight: 600; color: var(--text-gray); margin-bottom: 2px;">AMOUNT</div>
+                        <div style="font-size: 16px; font-weight: 800; color: var(--primary-purple);"><?php echo money($rec['amount']); ?></div>
+                    </div>
+                </div>
+                
+                <?php if($status_text === 'Unpaid'): ?>
+                    <button style="width: 100%; background: rgba(98, 75, 255, 0.05); border: 1px dashed rgba(98, 75, 255, 0.3); color: var(--primary-purple); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                        <i class='bx bx-credit-card' style="font-size: 14px;"></i> Pay Now
+                    </button>
+                <?php else: ?>
+                    <button style="width: 100%; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); font-size: 12px; font-weight: 700; padding: 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                        <i class='bx bx-receipt' style="font-size: 14px;"></i> View Bill
+                    </button>
+                <?php endif; ?>
+            </div>
+            <?php endforeach; ?>
         </div>
         <div style="text-align: center; margin-top: 12px;">
             <button style="background: none; border: none; color: var(--primary-purple); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; cursor: pointer;">
