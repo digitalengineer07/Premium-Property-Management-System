@@ -676,15 +676,20 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             }
             /* Action buttons at the top should stack */
             .actions {
-                flex-direction: column;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
                 width: 100%;
                 margin: 10px auto 20px auto;
                 padding: 0 15px;
                 box-sizing: border-box;
             }
             .actions .btn {
-                width: 100%;
+                width: auto;
                 justify-content: center;
+                padding: 10px 20px;
+                font-size: 13px;
             }
             /* Structure Adjustments */
             .meter-flow {
