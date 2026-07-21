@@ -776,6 +776,22 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             font-weight: 700;
         }
 
+        @media screen and (max-width: 768px) {
+            body { padding: 10px; }
+            .receipt-container { padding: 20px; border-radius: 12px; }
+            .header { flex-direction: column; align-items: center; text-align: center; gap: 15px; }
+            .h-left { align-items: center; text-align: center; }
+            .logo-text > div { justify-content: center; }
+            .info-section { flex-direction: column; gap: 15px; }
+            .info-box { align-items: center; text-align: center; }
+            .summary-card { flex-direction: column; text-align: center; }
+            .summary-amount { align-items: center; justify-content: center; }
+            .table-container { overflow-x: auto; }
+            .bottom-stamp { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+            .btn-close-receipt { position: static; display: block; width: 100%; text-align: center; margin-bottom: 20px; }
+            .amount-words { text-align: center; }
+        }
+
         @media print {
             .btn-close-receipt { display: none !important; }
             body { background: white; }
