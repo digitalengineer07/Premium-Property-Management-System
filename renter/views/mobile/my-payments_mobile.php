@@ -315,7 +315,7 @@
                             <div style="display: flex; align-items: center; gap: 2px;">
                                 <span style="font-size: 10px; color: var(--text-gray);"><?php echo date('d M Y', strtotime($t['month']. '-05')); ?></span>
                                 <?php if(!empty($t['id']) && isset($t['source']) && $t['source'] === 'elec_table'): ?>
-                                    <a href="../admin/slip.php?elec_id=<?php echo $t['id']; ?>" style="text-decoration: none; background: rgba(98, 75, 255, 0.05); border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download' style="font-size: 16px;"></i></a>
+                                    <a href="receipt.php?month=<?php echo urlencode(date('F Y', strtotime($t['month'].'-01'))); ?>" style="text-decoration: none; background: rgba(98, 75, 255, 0.05); border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download' style="font-size: 16px;"></i></a>
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
