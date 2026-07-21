@@ -568,17 +568,35 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             }
             .header {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
+                align-items: center;
+                text-align: center;
+                gap: 16px;
+            }
+            .brand-section {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .brand-icon {
+                font-size: 36px;
             }
             .title-section {
-                text-align: left;
-                align-items: flex-start;
+                text-align: center;
+                align-items: center;
             }
             .contact-info {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
+                text-align: center;
                 gap: 12px;
+            }
+            .contact-item {
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                font-size: 12px;
+            }
+            .contact-item i {
+                font-size: 18px;
             }
             .meta-grid {
                 grid-template-columns: 1fr;
