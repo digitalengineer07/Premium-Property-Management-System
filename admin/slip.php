@@ -685,13 +685,13 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 margin: 0 auto;
             }
             .meter-meta {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px 12px;
             }
             .meter-meta-item {
                 border-right: none;
-                border-bottom: 1px solid var(--border);
-                padding-bottom: 12px;
+                border-bottom: none;
+                padding-bottom: 0;
             }
             .meter-meta-item:last-child {
                 border-bottom: none;
