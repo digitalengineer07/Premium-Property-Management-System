@@ -146,8 +146,9 @@
                           <p class="pm-timer-text" style="font-size: 11px; color: var(--text-gray); margin: 0; text-align: center; white-space: nowrap; letter-spacing: -0.2px;">Transfer within this time to ensure amount accuracy.</p>
                       </div>
 
-                      <form method="POST" id="paymentNotifyForm" style="text-align: left;">
+                      <form method="POST" action="process_payment.php" id="paymentNotifyForm" style="text-align: left;">
                           <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf']); ?>">
+                          <input type="hidden" name="return_url" value="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>">
                           <input type="hidden" name="bill_type" id="hiddenBillType">
                           <input type="hidden" name="bill_id" id="hiddenBillId">
                           <input type="hidden" name="amount" id="hiddenAmount">
