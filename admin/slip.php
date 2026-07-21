@@ -624,6 +624,41 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 width: 100%;
                 justify-content: center;
             }
+            /* Structure Adjustments */
+            .meter-flow {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 0 auto;
+            }
+            .meter-meta {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .meter-meta-item {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 12px;
+            }
+            .meter-meta-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .photo-body {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .photo-img {
+                width: 100% !important;
+                height: auto !important;
+            }
+            .total-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
         }
     </style>
 </head>
