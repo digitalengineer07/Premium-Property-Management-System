@@ -811,17 +811,40 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         @media screen and (max-width: 768px) {
             body { padding: 10px; }
             .receipt-container { padding: 20px; border-radius: 12px; }
-            .header { flex-direction: column; align-items: center; text-align: center; gap: 15px; }
-            .h-left { align-items: center; text-align: center; }
+            .header { flex-direction: column; align-items: center; text-align: center; gap: 20px; padding-bottom: 20px; }
+            .h-left, .h-center, .h-right { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; }
             .logo-text > div { justify-content: center; }
-            .info-section { flex-direction: column; gap: 15px; }
-            .info-box { align-items: center; text-align: center; }
-            .summary-card { flex-direction: column; text-align: center; }
-            .summary-amount { align-items: center; justify-content: center; }
+            .address-info { text-align: center; }
+            .contact-info { flex-direction: column; gap: 5px; }
+            .contact-info span:nth-child(2) { display: none; }
+            .stamp { transform: scale(0.8) rotate(-15deg); margin-bottom: 0; }
+            .receipt-date { justify-content: center; text-align: center; margin-top: 10px; }
+            .receipt-date .rd-text { text-align: center; }
+
+            .meta-grid { grid-template-columns: 1fr; gap: 15px; margin-bottom: 20px; }
+            .total-section { flex-direction: column; text-align: center; gap: 20px; padding: 20px; margin-bottom: 20px; }
+            .ts-divider { width: 100%; height: 1px; margin: 0; }
+            .ts-right { flex-direction: column; justify-content: center; width: 100%; gap: 15px; }
+
+            .table-section { margin-bottom: 20px; }
             .table-container { overflow-x: auto; }
-            .bottom-stamp { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+            .receipt-table th, .receipt-table td { padding: 12px 10px; font-size: 12px; }
+            .table-footer { padding: 15px; flex-direction: column; gap: 5px; text-align: center; justify-content: center; }
+            
+            .payment-method-box { flex-direction: column; text-align: center; padding: 30px 10px 20px; }
+            .pm-title { left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; }
+            .pm-logo { margin-bottom: 15px; width: 100%; }
+            .pm-details { grid-template-columns: 1fr 1fr 1fr; border-left: none; border-right: none; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 15px 0; margin: 0 0 15px 0; width: 100%; gap: 5px; }
+            .pm-item:not(:last-child)::after { display: block; right: -2px; }
+            .pm-item h5 { font-size: 10px; }
+            .pm-item p { font-size: 11px; word-break: break-word; }
+            .pm-status { width: 100%; justify-content: center; }
+
+            .footer-info { grid-template-columns: 1fr; gap: 15px; padding: 15px; margin-bottom: 20px; }
+            .fi-item { flex-direction: column; align-items: center; text-align: center; }
+            .fi-item:not(:last-child)::after { display: none; }
+            
             .btn-close-receipt { position: static; display: block; width: 100%; text-align: center; margin-bottom: 20px; box-shadow: none; }
-            .amount-words { text-align: center; }
         }
 
     </style>
