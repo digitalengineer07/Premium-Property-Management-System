@@ -126,12 +126,16 @@
                     'item_type' => 'aggregate',
                     'month' => $m,
                     'amount' => 0,
+                    'id' => 0,
                     'remaining_amount' => 0,
                     'status' => 'Paid',
                     'has_unpaid' => false,
                     'has_partial' => false,
                     'has_paid' => false
                 ];
+            }
+            if (!empty($t['id']) && (!isset($mobile_aggregates[$m]['id']) || empty($mobile_aggregates[$m]['id']))) {
+                $mobile_aggregates[$m]['id'] = $t['id'];
             }
             
             // EXCLUDE arrears from the monthly aggregate sum
@@ -228,7 +232,9 @@
                         <?php else: ?>
                             <div style="display: flex; align-items: center; gap: 2px;">
                                 <span style="font-size: 10px; color: var(--text-gray);"><?php echo date('d M Y', strtotime($t['month']. '-05')); ?></span>
-                                <button style="background: none; border: 1px solid var(--border); border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download'></i></button>
+                                <?php if(!empty($t['id'])): ?>
+                                    <a href="../admin/slip.php?elec_id=<?php echo $t['id']; ?>" style="text-decoration: none; background: rgba(98, 75, 255, 0.05); border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download' style="font-size: 16px;"></i></a>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -308,7 +314,9 @@
                         <?php else: ?>
                             <div style="display: flex; align-items: center; gap: 2px;">
                                 <span style="font-size: 10px; color: var(--text-gray);"><?php echo date('d M Y', strtotime($t['month']. '-05')); ?></span>
-                                <button style="background: none; border: 1px solid var(--border); border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download'></i></button>
+                                <?php if(!empty($t['id']) && isset($t['source']) && $t['source'] === 'elec_table'): ?>
+                                    <a href="../admin/slip.php?elec_id=<?php echo $t['id']; ?>" style="text-decoration: none; background: rgba(98, 75, 255, 0.05); border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download' style="font-size: 16px;"></i></a>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -356,7 +364,9 @@
                         <?php else: ?>
                             <div style="display: flex; align-items: center; gap: 2px;">
                                 <span style="font-size: 10px; color: var(--text-gray);"><?php echo date('d M Y', strtotime($t['month']. '-03')); ?></span>
-                                <button style="background: none; border: 1px solid var(--border); border-radius: 8px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download'></i></button>
+                                <?php if(!empty($t['id'])): ?>
+                                    <a href="../admin/slip.php?elec_id=<?php echo $t['id']; ?>" style="text-decoration: none; background: rgba(98, 75, 255, 0.05); border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 8px; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; color: #624BFF; cursor: pointer;"><i class='bx bx-download' style="font-size: 16px;"></i></a>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                     </div>
