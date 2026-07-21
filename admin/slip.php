@@ -568,35 +568,68 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             }
             .header {
                 flex-direction: column;
-                align-items: center;
-                text-align: center;
+                align-items: flex-start;
                 gap: 16px;
+                background: rgba(98, 75, 255, 0.04);
+                padding: 20px;
+                border-radius: 16px;
+                border: 1px solid rgba(98, 75, 255, 0.1);
             }
             .brand-section {
-                flex-direction: column;
-                gap: 6px;
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
             }
             .brand-icon {
-                font-size: 36px;
+                font-size: 28px;
+                background: white;
+                width: 48px;
+                height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             }
             .title-section {
-                text-align: center;
-                align-items: center;
+                text-align: left;
+                align-items: flex-start;
+                width: 100%;
+                border-top: 1px dashed rgba(98, 75, 255, 0.2);
+                padding-top: 16px;
+                margin-top: 4px;
+            }
+            .title-section h1 {
+                font-size: 20px;
+                flex-wrap: wrap;
+                gap: 6px;
             }
             .contact-info {
                 flex-direction: column;
-                align-items: center;
-                text-align: center;
+                align-items: flex-start;
+                text-align: left;
+                background: var(--bg-light);
+                padding: 16px;
+                border-radius: 16px;
+                border: 1px solid var(--border);
                 gap: 12px;
+                margin-bottom: 24px;
             }
             .contact-item {
-                flex-direction: column;
-                align-items: center;
-                gap: 4px;
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 10px;
                 font-size: 12px;
+                line-height: 1.4;
             }
             .contact-item i {
-                font-size: 18px;
+                font-size: 16px;
+                margin-top: 1px;
+                color: var(--primary);
+                background: white;
+                padding: 6px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
             }
             .meta-grid {
                 grid-template-columns: 1fr;
