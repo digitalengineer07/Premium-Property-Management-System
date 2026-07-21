@@ -558,7 +558,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 print-color-adjust: exact;
             }
         }
-        @media (max-width: 768px) {
+        @media screen and (max-width: 768px) {
             body {
                 padding: 10px;
             }
