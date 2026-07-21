@@ -653,6 +653,14 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 text-align: center;
                 align-items: center;
             }
+            .thank-you {
+                font-size: 18px;
+                gap: 6px;
+                white-space: nowrap;
+            }
+            .thank-you::before, .thank-you::after {
+                width: 20px;
+            }
             .footer-signature {
                 text-align: center;
                 align-items: center;
