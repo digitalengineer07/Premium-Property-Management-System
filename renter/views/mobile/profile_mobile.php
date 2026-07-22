@@ -356,7 +356,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <?php endif; ?>
             </div>
             <a href="#" class="header-profile-btn"
-                onclick="document.getElementById('profilePicInputMobile').click(); return false;"
+                onclick="openMobileProfile(); return false;"
                 style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                     <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile"

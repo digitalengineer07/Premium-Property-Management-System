@@ -446,7 +446,7 @@
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInputMobile').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="openMobileProfile(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
