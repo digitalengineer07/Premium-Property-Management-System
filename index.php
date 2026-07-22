@@ -93,6 +93,15 @@ if (isset($_SESSION['user_id'])) {
     }
 
     /* Top Header */
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #10875c 0%, #1e3a8a 100%);
+        z-index: 20;
+    }
+
     .top-header {
         display: flex;
         justify-content: space-between;
@@ -103,16 +112,17 @@ if (isset($_SESSION['user_id'])) {
         width: 100%;
         z-index: 10;
         position: relative;
+        margin-top: 6px; /* Space for the top border */
     }
 
     .brand-logo {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
     }
     .brand-logo-icon {
-        color: var(--primary);
-        font-size: 38px;
+        color: #10875c;
+        font-size: 42px;
     }
     .brand-logo-text {
         display: flex;
@@ -121,54 +131,64 @@ if (isset($_SESSION['user_id'])) {
     .brand-logo-title {
         font-family: 'Outfit', sans-serif;
         font-weight: 800;
-        font-size: 22px;
-        color: #0b1c3c;
+        font-size: 24px;
+        color: #0f172a;
         line-height: 1;
+        letter-spacing: -0.5px;
     }
     .brand-logo-sub {
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 3px;
-        color: #718096;
+        font-weight: 700;
+        letter-spacing: 5px;
+        color: #10875c; /* Changed to green to match image */
         text-transform: uppercase;
-        margin-top: 4px;
+        margin-top: 5px;
     }
 
     .header-links {
         display: flex;
         align-items: center;
-        gap: 30px;
+        gap: 32px;
         font-size: 14px;
-        font-weight: 500;
-        color: var(--text-gray);
+        font-weight: 600;
+        color: #475569;
     }
     .header-links .link-item {
         display: flex;
         align-items: center;
         gap: 8px;
         text-decoration: none;
-        color: var(--text-gray);
+        color: #475569;
         transition: color 0.2s;
     }
-    .header-links .link-item:hover { color: var(--primary); }
-    .header-links .link-item i { font-size: 18px; color: var(--primary); }
-    .header-divider { width: 1px; height: 16px; background: var(--border-light); }
+    .header-links .link-item:hover { color: #10875c; }
+    .header-links .link-item i { font-size: 20px; color: #10875c; }
+    
+    .header-divider { 
+        width: 1px; 
+        height: 18px; 
+        background: #e2e8f0; 
+    }
     
     .btn-help {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 10px 20px;
+        padding: 10px 24px;
         border-radius: 100px;
-        border: 1px solid rgba(16, 135, 92, 0.3);
-        background: rgba(16, 135, 92, 0.05);
-        color: var(--primary);
+        border: 1px solid #6ee7b7; /* Light green border */
+        background: #f8fafc;
+        color: #10875c;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 14px;
         transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(16, 135, 92, 0.05);
+        margin-left: 10px;
     }
     .btn-help:hover {
-        background: rgba(16, 135, 92, 0.1);
+        background: #ecfdf5;
+        box-shadow: 0 4px 12px rgba(16, 135, 92, 0.1);
     }
 
     /* Main Container */
