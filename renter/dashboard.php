@@ -530,12 +530,13 @@ $show_banner = ($is_late && !empty($overdue_list));
         }
 
         @media screen and (max-width: 768px) {
+            .app-container { min-height: auto !important; }
             .sidebar { display: none !important; }
             .main-content { 
                 margin-left: 0 !important; 
                 max-width: 100% !important; 
                 padding: 16px !important; 
-                padding-bottom: 68px !important; /* Restore space for bottom nav */
+                padding-bottom: 0 !important; /* Zero padding at the bottom */
                 display: flex !important;
                 flex-direction: column !important;
             }
