@@ -123,8 +123,8 @@ if (isset($_SESSION['user_id'])) {
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #9333ea; }
     .mini-feat-text { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; }
 
-    .hero-image-wrapper { position: relative; width: 100%; max-width: 580px; margin-top: 20px; animation: floatImg 6s ease-in-out infinite; }
-    .hero-image-wrapper img { width: 100%; height: auto; max-height: 45vh; object-fit: contain; mix-blend-mode: multiply; }
+    .hero-image-wrapper { position: relative; width: 100%; max-width: 750px; margin-top: 20px; animation: floatImg 6s ease-in-out infinite; margin-left: -20px; }
+    .hero-image-wrapper img { width: 100%; height: auto; object-fit: contain; mix-blend-mode: multiply; transform: scale(1.1); transform-origin: left center; }
 
     /* Right side - Login Card */
     .login-section { display: flex; align-items: center; justify-content: flex-end; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
@@ -178,7 +178,7 @@ if (isset($_SESSION['user_id'])) {
 
     /* Bottom Features Strip */
     .bottom-features {
-        width: 100%; max-width: 1250px; margin: -60px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
+        width: 100%; max-width: 1250px; margin: -80px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
         border-radius: 24px; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; 
         box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02); flex-shrink: 0; position: relative; z-index: 20;
         animation: fadeUp 0.8s ease-out 0.4s forwards; opacity: 0;
