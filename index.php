@@ -327,8 +327,19 @@ if (isset($_SESSION['user_id'])) {
       padding: 3rem;
       width: 100%;
       max-width: 460px;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
       position: relative;
+    }
+
+    /* Top gradient border for the card */
+    .login-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10875c 0%, #3b82f6 100%);
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;
     }
 
     .login-header-wrap {
@@ -336,46 +347,59 @@ if (isset($_SESSION['user_id'])) {
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 2rem;
+        position: relative;
     }
 
     .login-header h4 {
-        font-size: 14px;
-        color: var(--primary);
+        font-size: 15px;
+        color: #10875c;
         font-weight: 700;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
     .login-header h2 {
       font-family: "Outfit", sans-serif;
       font-weight: 800;
-      font-size: 32px;
+      font-size: 34px;
       color: #0b1c3c;
-      margin: 0 0 4px 0;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.5px;
     }
     .login-header p {
-      color: var(--text-gray); 
-      font-size: 13px; 
+      color: #64748b; 
+      font-size: 14px; 
       font-weight: 500;
       margin: 0;
     }
 
+    /* Dot Pattern Background for Shield */
+    .shield-badge-wrapper {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .shield-badge-dots {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(#cbd5e1 2px, transparent 2px);
+        background-size: 10px 10px;
+        border-radius: 50%;
+        opacity: 0.6;
+    }
     .shield-badge {
-        width: 50px;
-        height: 50px;
+        width: 52px;
+        height: 52px;
         background: #e6f6f0;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        color: var(--primary);
-        font-size: 24px;
+        color: #10b981;
+        font-size: 28px;
         position: relative;
-    }
-    /* Dotted background effect around shield */
-    .shield-badge::after {
-        content: '';
-        position: absolute;
-        inset: -10px;
-        border: 2px dotted #cbd5e1;
-        border-radius: 50%;
-        opacity: 0.5;
+        z-index: 2;
+        box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+        border: 2px solid #ffffff;
     }
 
     /* Ultra-modern Role Toggle */
@@ -425,12 +449,13 @@ if (isset($_SESSION['user_id'])) {
     .role-toggle button i { font-size: 18px; }
     
     .role-toggle button.active {
-      color: var(--primary);
+      color: #10875c;
     }
 
     /* Role Info Box */
     .role-info-box {
-        background: #e6f6f0;
+        background: #f0fdf4;
+        border: 1px solid #dcfce7;
         border-radius: 12px;
         padding: 16px;
         display: flex;
@@ -438,28 +463,32 @@ if (isset($_SESSION['user_id'])) {
         gap: 16px;
         margin-bottom: 1.5rem;
     }
-    .role-info-box.admin-mode { background: #eff6ff; }
+    .role-info-box.admin-mode { 
+        background: #f8fafc; 
+        border: 1px solid #e2e8f0; 
+    }
     .role-info-icon {
         width: 36px; height: 36px;
-        background: rgba(16, 135, 92, 0.15);
-        color: var(--primary);
+        background: #d1fae5;
+        color: #059669;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-size: 18px;
         flex-shrink: 0;
     }
-    .admin-mode .role-info-icon { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .admin-mode .role-info-icon { background: #e2e8f0; color: #475569; }
     
     .role-info-text {
         font-size: 13px;
-        color: #0b1c3c;
-        font-weight: 500;
+        color: #064e3b;
+        font-weight: 600;
         line-height: 1.4;
     }
+    .admin-mode .role-info-text { color: #1e293b; }
 
     /* Buttons */
     .btn-proceed {
-      background: var(--primary);
+      background: linear-gradient(90deg, #166534 0%, #0d9488 100%);
       color: white;
       border: none;
       width: 100%;
@@ -474,11 +503,12 @@ if (isset($_SESSION['user_id'])) {
       justify-content: center;
       gap: 10px;
       text-decoration: none;
+      box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
     }
     .btn-proceed:hover {
-      background: var(--primary-hover);
+      background: linear-gradient(90deg, #14532d 0%, #0f766e 100%);
       color: white;
-      box-shadow: 0 10px 20px rgba(16, 135, 92, 0.2);
+      box-shadow: 0 8px 16px rgba(13, 148, 136, 0.25);
     }
 
     .divider {
@@ -487,13 +517,13 @@ if (isset($_SESSION['user_id'])) {
         text-align: center;
         margin: 1.5rem 0;
         color: #94a3b8;
-        font-size: 12px;
+        font-size: 13px;
         font-weight: 500;
     }
     .divider::before, .divider::after {
         content: '';
         flex: 1;
-        border-bottom: 1px solid var(--border-light);
+        border-bottom: 1px solid #e2e8f0;
     }
     .divider:not(:empty)::before { margin-right: 1em; }
     .divider:not(:empty)::after { margin-left: 1em; }
@@ -501,7 +531,7 @@ if (isset($_SESSION['user_id'])) {
     .btn-switch {
       background: transparent;
       color: #475569;
-      border: 1px solid var(--border-light);
+      border: 1px solid #e2e8f0;
       width: 100%;
       padding: 14px;
       border-radius: 12px;
@@ -522,12 +552,12 @@ if (isset($_SESSION['user_id'])) {
 
     .terms-note {
       text-align: center;
-      margin-top: 1.5rem;
-      font-size: 12px;
-      color: var(--text-gray);
+      margin-top: 2rem;
+      font-size: 13px;
+      color: #64748b;
       line-height: 1.5;
     }
-    .terms-note a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    .terms-note a { color: #0d9488; text-decoration: none; font-weight: 600; }
     .terms-note a:hover { text-decoration: underline; }
 
     /* Bottom Features Strip */
@@ -708,8 +738,11 @@ if (isset($_SESSION['user_id'])) {
                         <h2>Sign In</h2>
                         <p>Choose your role to continue</p>
                     </div>
-                    <div class="shield-badge">
-                        <i class='bx bx-check-shield'></i>
+                    <div class="shield-badge-wrapper">
+                        <div class="shield-badge-dots"></div>
+                        <div class="shield-badge">
+                            <i class='bx bxs-check-shield'></i>
+                        </div>
                     </div>
                 </div>
 
@@ -725,7 +758,7 @@ if (isset($_SESSION['user_id'])) {
 
                 <div class="role-info-box" id="role-info-box">
                     <div class="role-info-icon">
-                        <i class='bx bxs-user-detail'></i>
+                        <i class='bx bxs-user-circle'></i>
                     </div>
                     <div class="role-info-text" id="role-info-text">
                         Access your resident portal to<br>view and pay bills, and more.
@@ -739,7 +772,7 @@ if (isset($_SESSION['user_id'])) {
                 <div class="divider">or</div>
                 
                 <a id="switch-btn" href="admin/login.php" class="btn-switch">
-                    <i class='bx bx-refresh'></i> Switch to Admin Login
+                    <i class='bx bx-user'></i> Switch to Admin Login
                 </a>
                 
                 <div class="terms-note">
@@ -809,13 +842,13 @@ if (isset($_SESSION['user_id'])) {
       btnAdmin.classList.remove('active');
       
       infoBox.classList.remove('admin-mode');
-      infoBox.querySelector('i').className = 'bx bxs-user-detail';
+      infoBox.querySelector('i').className = 'bx bxs-user-circle';
       infoText.innerHTML = 'Access your resident portal to<br>view and pay bills, and more.';
       
       proceedBtn.href = 'login.php';
       
       switchBtn.href = 'admin/login.php';
-      switchBtn.innerHTML = "<i class='bx bx-refresh'></i> Switch to Admin Login";
+      switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Admin Login";
       
     } else {
       toggleContainer.classList.add('admin-active');
@@ -829,7 +862,7 @@ if (isset($_SESSION['user_id'])) {
       proceedBtn.href = 'admin/login.php';
       
       switchBtn.href = 'login.php';
-      switchBtn.innerHTML = "<i class='bx bx-refresh'></i> Switch to Resident Login";
+      switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Resident Login";
     }
   }
 
