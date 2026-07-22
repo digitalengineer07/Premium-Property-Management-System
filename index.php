@@ -97,7 +97,7 @@ if (isset($_SESSION['user_id'])) {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 6px;
+        height: 4px;
         background: linear-gradient(90deg, #10875c 0%, #1e3a8a 100%);
         z-index: 20;
     }
@@ -106,23 +106,23 @@ if (isset($_SESSION['user_id'])) {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 1.5rem 4rem;
-        max-width: 1400px;
+        padding: 1rem 3rem;
+        max-width: 1300px;
         margin: 0 auto;
         width: 100%;
         z-index: 10;
         position: relative;
-        margin-top: 6px; /* Space for the top border */
+        margin-top: 4px; /* Space for the top border */
     }
 
     .brand-logo {
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 12px;
     }
     .brand-logo-icon {
         color: #10875c;
-        font-size: 42px;
+        font-size: 36px;
     }
     .brand-logo-text {
         display: flex;
@@ -131,60 +131,60 @@ if (isset($_SESSION['user_id'])) {
     .brand-logo-title {
         font-family: 'Outfit', sans-serif;
         font-weight: 800;
-        font-size: 24px;
+        font-size: 20px;
         color: #0f172a;
         line-height: 1;
         letter-spacing: -0.5px;
     }
     .brand-logo-sub {
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 700;
-        letter-spacing: 5px;
-        color: #10875c; /* Changed to green to match image */
+        letter-spacing: 4px;
+        color: #10875c; 
         text-transform: uppercase;
-        margin-top: 5px;
+        margin-top: 4px;
     }
 
     .header-links {
         display: flex;
         align-items: center;
-        gap: 32px;
-        font-size: 14px;
+        gap: 24px;
+        font-size: 13px;
         font-weight: 600;
         color: #475569;
     }
     .header-links .link-item {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         text-decoration: none;
         color: #475569;
         transition: color 0.2s;
     }
     .header-links .link-item:hover { color: #10875c; }
-    .header-links .link-item i { font-size: 20px; color: #10875c; }
+    .header-links .link-item i { font-size: 18px; color: #10875c; }
     
     .header-divider { 
         width: 1px; 
-        height: 18px; 
+        height: 16px; 
         background: #e2e8f0; 
     }
     
     .btn-help {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 24px;
+        gap: 6px;
+        padding: 8px 18px;
         border-radius: 100px;
-        border: 1px solid #6ee7b7; /* Light green border */
+        border: 1px solid #6ee7b7;
         background: #f8fafc;
         color: #10875c;
         text-decoration: none;
         font-weight: 700;
-        font-size: 14px;
+        font-size: 13px;
         transition: all 0.2s;
         box-shadow: 0 4px 10px rgba(16, 135, 92, 0.05);
-        margin-left: 10px;
+        margin-left: 5px;
     }
     .btn-help:hover {
         background: #ecfdf5;
@@ -197,49 +197,48 @@ if (isset($_SESSION['user_id'])) {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       width: 100%;
-      max-width: 1400px;
+      max-width: 1300px;
       margin: 0 auto;
-      padding: 0 4rem;
+      padding: 0 3rem;
       position: relative;
     }
 
     .content-grid {
         display: grid;
         grid-template-columns: 1.1fr 1fr;
-        gap: 40px;
+        gap: 30px;
         width: 100%;
-        margin-top: 1rem;
     }
 
     /* Left side - Hero */
     .hero-section {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: center;
       position: relative;
-      padding-top: 1rem;
     }
 
     .welcome-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 14px;
+      padding: 5px 12px;
       background: #e6f6f0;
       color: #0b704b;
       font-weight: 600;
-      font-size: 12px;
+      font-size: 11px;
       border-radius: 100px;
-      margin-bottom: 1.25rem;
+      margin-bottom: 0.75rem;
       width: fit-content;
     }
-    .welcome-badge i { font-size: 14px; }
+    .welcome-badge i { font-size: 12px; }
 
     .hero-section h1 { 
       font-family: "Outfit", sans-serif;
       margin: 0; 
-      font-size: 52px; 
+      font-size: 42px; 
       font-weight: 800;
       color: #0b1c3c;
       line-height: 1.15;
@@ -255,79 +254,78 @@ if (isset($_SESSION['user_id'])) {
 
     .deco-dash {
         display: flex;
-        gap: 6px;
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
+        gap: 4px;
+        margin-top: 0.75rem;
+        margin-bottom: 1rem;
     }
-    .deco-dash span:first-child { width: 30px; height: 4px; border-radius: 2px; background: var(--primary); }
-    .deco-dash span:last-child { width: 10px; height: 4px; border-radius: 2px; background: #e2e8f0; }
+    .deco-dash span:first-child { width: 25px; height: 3px; border-radius: 2px; background: var(--primary); }
+    .deco-dash span:last-child { width: 8px; height: 3px; border-radius: 2px; background: #e2e8f0; }
 
     .hero-section p.hero-desc { 
       color: var(--text-gray); 
-      font-size: 16px; 
-      line-height: 1.6;
-      max-width: 480px;
+      font-size: 14px; 
+      line-height: 1.5;
+      max-width: 440px;
       font-weight: 500;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     /* Hero mini features */
     .hero-mini-features {
         display: flex;
-        gap: 16px;
-        margin-bottom: 2rem;
+        gap: 12px;
+        margin-bottom: 1.5rem;
         flex-wrap: wrap;
     }
     .mini-feat {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
     .mini-feat-icon {
-        width: 40px; height: 40px;
-        border-radius: 10px;
+        width: 34px; height: 34px;
+        border-radius: 8px;
         display: flex; align-items: center; justify-content: center;
-        font-size: 20px;
+        font-size: 18px;
     }
     .mf-1 .mini-feat-icon { background: #e6f6f0; color: #10875c; }
     .mf-2 .mini-feat-icon { background: #eff6ff; color: #3b82f6; }
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #a855f7; }
     
     .mini-feat-text {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
         color: #0b1c3c;
-        line-height: 1.3;
-        width: 80px;
+        line-height: 1.2;
+        width: 70px;
     }
 
     .hero-image-wrapper {
       position: relative;
       width: 100%;
-      max-width: 480px;
+      max-width: 380px;
     }
 
     .hero-image-wrapper img {
       width: 100%;
       height: auto;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.06));
+      filter: drop-shadow(0 15px 30px rgba(0,0,0,0.06));
     }
 
     /* Right side - Login Card */
     .login-section {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: flex-end;
-      padding-top: 1rem;
     }
 
     .login-card {
       background: #ffffff;
-      border-radius: 30px;
-      padding: 3rem;
+      border-radius: 24px;
+      padding: 2rem 2.5rem;
       width: 100%;
-      max-width: 460px;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
       position: relative;
     }
 
@@ -336,37 +334,37 @@ if (isset($_SESSION['user_id'])) {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
-        height: 4px;
+        height: 3px;
         background: linear-gradient(90deg, #10875c 0%, #3b82f6 100%);
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
     }
 
     .login-header-wrap {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 2rem;
+        margin-bottom: 1.25rem;
         position: relative;
     }
 
     .login-header h4 {
-        font-size: 15px;
+        font-size: 13px;
         color: #10875c;
         font-weight: 700;
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
     .login-header h2 {
       font-family: "Outfit", sans-serif;
       font-weight: 800;
-      font-size: 34px;
+      font-size: 28px;
       color: #0b1c3c;
-      margin: 0 0 6px 0;
+      margin: 0 0 4px 0;
       letter-spacing: -0.5px;
     }
     .login-header p {
       color: #64748b; 
-      font-size: 14px; 
+      font-size: 13px; 
       font-weight: 500;
       margin: 0;
     }
@@ -374,8 +372,8 @@ if (isset($_SESSION['user_id'])) {
     /* Dot Pattern Background for Shield */
     .shield-badge-wrapper {
         position: relative;
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -383,19 +381,19 @@ if (isset($_SESSION['user_id'])) {
     .shield-badge-dots {
         position: absolute;
         inset: 0;
-        background-image: radial-gradient(#cbd5e1 2px, transparent 2px);
-        background-size: 10px 10px;
+        background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+        background-size: 8px 8px;
         border-radius: 50%;
         opacity: 0.6;
     }
     .shield-badge {
-        width: 52px;
-        height: 52px;
+        width: 42px;
+        height: 42px;
         background: #e6f6f0;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         color: #10b981;
-        font-size: 28px;
+        font-size: 24px;
         position: relative;
         z-index: 2;
         box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
@@ -406,21 +404,21 @@ if (isset($_SESSION['user_id'])) {
     .role-toggle {
       display: flex;
       background: #f1f5f9;
-      padding: 6px; 
-      border-radius: 14px;
+      padding: 5px; 
+      border-radius: 12px;
       position: relative;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
     
     .toggle-glider {
         position: absolute;
-        top: 6px;
-        left: 6px;
-        width: calc(50% - 6px);
-        height: calc(100% - 12px);
+        top: 5px;
+        left: 5px;
+        width: calc(50% - 5px);
+        height: calc(100% - 10px);
         background: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         z-index: 1;
     }
@@ -432,9 +430,9 @@ if (isset($_SESSION['user_id'])) {
     .role-toggle button {
       flex: 1;
       border: 0;
-      padding: 12px;
+      padding: 10px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       background: transparent;
       cursor: pointer;
       color: #64748b;
@@ -444,9 +442,9 @@ if (isset($_SESSION['user_id'])) {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .role-toggle button i { font-size: 18px; }
+    .role-toggle button i { font-size: 16px; }
     
     .role-toggle button.active {
       color: #10875c;
@@ -456,33 +454,33 @@ if (isset($_SESSION['user_id'])) {
     .role-info-box {
         background: #f0fdf4;
         border: 1px solid #dcfce7;
-        border-radius: 12px;
-        padding: 16px;
+        border-radius: 10px;
+        padding: 12px 14px;
         display: flex;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 1.5rem;
+        gap: 12px;
+        margin-bottom: 1.25rem;
     }
     .role-info-box.admin-mode { 
         background: #f8fafc; 
         border: 1px solid #e2e8f0; 
     }
     .role-info-icon {
-        width: 36px; height: 36px;
+        width: 32px; height: 32px;
         background: #d1fae5;
         color: #059669;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 18px;
+        font-size: 16px;
         flex-shrink: 0;
     }
     .admin-mode .role-info-icon { background: #e2e8f0; color: #475569; }
     
     .role-info-text {
-        font-size: 13px;
+        font-size: 12px;
         color: #064e3b;
         font-weight: 600;
-        line-height: 1.4;
+        line-height: 1.3;
     }
     .admin-mode .role-info-text { color: #1e293b; }
 
@@ -492,16 +490,16 @@ if (isset($_SESSION['user_id'])) {
       color: white;
       border: none;
       width: 100%;
-      padding: 16px;
-      border-radius: 12px;
+      padding: 14px;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
     }
@@ -515,9 +513,9 @@ if (isset($_SESSION['user_id'])) {
         display: flex;
         align-items: center;
         text-align: center;
-        margin: 1.5rem 0;
+        margin: 1.25rem 0;
         color: #94a3b8;
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 500;
     }
     .divider::before, .divider::after {
@@ -533,16 +531,16 @@ if (isset($_SESSION['user_id'])) {
       color: #475569;
       border: 1px solid #e2e8f0;
       width: 100%;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       text-decoration: none;
     }
     .btn-switch:hover {
@@ -552,10 +550,10 @@ if (isset($_SESSION['user_id'])) {
 
     .terms-note {
       text-align: center;
-      margin-top: 2rem;
-      font-size: 13px;
+      margin-top: 1.5rem;
+      font-size: 11px;
       color: #64748b;
-      line-height: 1.5;
+      line-height: 1.4;
     }
     .terms-note a { color: #0d9488; text-decoration: none; font-weight: 600; }
     .terms-note a:hover { text-decoration: underline; }
@@ -565,25 +563,25 @@ if (isset($_SESSION['user_id'])) {
         width: 100%;
         background: #ffffff;
         border-radius: 100px;
-        padding: 24px 40px;
+        padding: 16px 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-        margin-top: 2rem;
-        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     .bf-item {
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
     }
     .bf-icon {
-        width: 44px; height: 44px;
+        width: 38px; height: 38px;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 22px;
+        font-size: 18px;
     }
     .bf-item:nth-child(1) .bf-icon { background: #e6f6f0; color: #10875c; }
     .bf-item:nth-child(2) .bf-icon { background: #eff6ff; color: #3b82f6; }
@@ -591,29 +589,29 @@ if (isset($_SESSION['user_id'])) {
     .bf-item:nth-child(4) .bf-icon { background: #fff7ed; color: #f97316; }
 
     .bf-text h5 {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 700;
         color: #0b1c3c;
         margin: 0 0 2px 0;
     }
     .bf-text p {
-        font-size: 11px;
+        font-size: 10px;
         color: var(--text-gray);
         margin: 0;
         font-weight: 500;
-        line-height: 1.4;
+        line-height: 1.3;
     }
     .bf-divider {
-        width: 1px; height: 30px; background: var(--border-light);
+        width: 1px; height: 24px; background: var(--border-light);
     }
 
     /* Page Footer */
     footer {
-      padding: 0 0 24px 0;
+      padding: 0 0 12px 0;
       text-align: center;
     }
     footer .copyright {
-      font-size: 12px;
+      font-size: 11px;
       color: #94a3b8;
       font-weight: 500;
     }
