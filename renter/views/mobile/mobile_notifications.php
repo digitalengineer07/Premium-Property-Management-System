@@ -6,7 +6,7 @@
 .m-notif-dropdown { position: fixed; top: 70px; right: 16px; width: 320px; max-width: calc(100vw - 32px); background: var(--bg-color, #ffffff); border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); z-index: 10000; display: flex; flex-direction: column; max-height: 70vh; border: 1px solid var(--border); opacity: 0; transform: translateY(-10px) scale(0.95); transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
 .m-notif-dropdown.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .dark-theme .m-notif-dropdown { background: #1a1d24; border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
-.m-notif-dropdown::before { content: ''; position: absolute; top: -6px; right: 24px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
+.m-notif-dropdown::before { content: ''; position: absolute; top: -6px; right: 70px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
 
 .m-notif-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .m-notif-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 2px; }
