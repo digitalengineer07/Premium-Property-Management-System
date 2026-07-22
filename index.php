@@ -195,11 +195,19 @@ if (isset($_SESSION['user_id'])) {
     .bf-text p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; line-height: 1.4; max-width: 180px; }
     .bf-divider { width: 1px; height: 40px; background: #e2e8f0; }
 
-    .leaf-blur-overlay {
-        position: absolute; bottom: 5%; left: -100px; width: 350px; height: 500px;
-        background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 40%, transparent 70%);
-        filter: blur(40px); pointer-events: none; z-index: 15; border-radius: 50%; transform: rotate(30deg);
+    .leaf-blur-container {
+        position: absolute; bottom: 0; left: -100px; width: 350px; height: 75%; 
+        z-index: 30; pointer-events: none; filter: blur(24px); opacity: 0.9;
+        transform: scale(1.2); transform-origin: bottom left;
     }
+    .blur-blob { position: absolute; border-radius: 50%; }
+    .blur-blob.stem { width: 45px; height: 110%; bottom: -10%; left: 140px; transform: rotate(-8deg); background: #14532d; }
+    .blur-blob.l1 { width: 200px; height: 110px; bottom: 15%; left: 120px; transform: rotate(25deg); background: #15803d; border-radius: 0 120px 0 120px; }
+    .blur-blob.l2 { width: 160px; height: 90px; bottom: 40%; left: 110px; transform: rotate(35deg); background: #16a34a; border-radius: 0 100px 0 100px; }
+    .blur-blob.l3 { width: 150px; height: 80px; bottom: 65%; left: 100px; transform: rotate(20deg); background: #15803d; border-radius: 0 100px 0 100px; }
+    .blur-blob.l4 { width: 180px; height: 100px; bottom: 25%; left: 0px; transform: rotate(150deg); background: #166534; border-radius: 0 120px 0 120px; }
+    .blur-blob.l5 { width: 140px; height: 80px; bottom: 50%; left: 20px; transform: rotate(165deg); background: #14532d; border-radius: 0 100px 0 100px; }
+    .blur-blob.l6 { width: 130px; height: 70px; bottom: 75%; left: 30px; transform: rotate(145deg); background: #16a34a; border-radius: 0 100px 0 100px; }
 
     /* Page Footer */
     footer { padding: 0 0 10px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; }
@@ -267,7 +275,15 @@ if (isset($_SESSION['user_id'])) {
 </header>
 
 <div class="main-wrap">
-    <div class="leaf-blur-overlay"></div>
+    <div class="leaf-blur-container">
+        <div class="blur-blob stem"></div>
+        <div class="blur-blob l1"></div>
+        <div class="blur-blob l2"></div>
+        <div class="blur-blob l3"></div>
+        <div class="blur-blob l4"></div>
+        <div class="blur-blob l5"></div>
+        <div class="blur-blob l6"></div>
+    </div>
     <div class="content-grid">
         
         <!-- Left Hero Section -->
