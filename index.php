@@ -178,21 +178,26 @@ if (isset($_SESSION['user_id'])) {
 
     /* Bottom Features Strip */
     .bottom-features {
-        width: 100%; background: #ffffff; border-radius: 100px; padding: 16px 30px; display: flex; justify-content: space-between; align-items: center; 
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04); flex-shrink: 0; margin-bottom: 1rem; position: relative; z-index: 5;
+        width: 100%; max-width: 900px; margin: -60px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
+        border-radius: 24px; padding: 24px 60px; display: flex; justify-content: center; align-items: center; gap: 80px;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02); flex-shrink: 0; position: relative; z-index: 20;
         animation: fadeUp 0.8s ease-out 0.4s forwards; opacity: 0;
     }
-    .bf-item { display: flex; align-items: center; gap: 12px; transition: transform 0.3s ease; }
+    .bf-item { display: flex; align-items: center; gap: 16px; transition: transform 0.3s ease; }
     .bf-item:hover { transform: translateY(-2px); }
-    .bf-icon { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: box-shadow 0.3s ease; }
-    .bf-item:hover .bf-icon { box-shadow: 0 6px 12px rgba(0,0,0,0.06); }
-    .bf-item:nth-child(1) .bf-icon { background: #e6f6f0; color: #10875c; }
-    .bf-item:nth-child(2) .bf-icon { background: #eff6ff; color: #3b82f6; }
-    .bf-item:nth-child(3) .bf-icon { background: #faf5ff; color: #a855f7; }
-    .bf-item:nth-child(4) .bf-icon { background: #fff7ed; color: #f97316; }
-    .bf-text h5 { font-size: 12px; font-weight: 700; color: #0b1c3c; margin: 0 0 2px 0; }
-    .bf-text p { font-size: 10px; color: var(--text-gray); margin: 0; font-weight: 500; line-height: 1.3; max-width: 150px; }
-    .bf-divider { width: 1px; height: 24px; background: var(--border-light); }
+    .bf-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; transition: box-shadow 0.3s ease; }
+    .bf-item:hover .bf-icon { box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+    .bf-item.secure .bf-icon { background: #ecfdf5; color: #059669; border: 2px solid #a7f3d0; }
+    .bf-item.access .bf-icon { background: #eff6ff; color: #2563eb; border: 2px solid #bfdbfe; }
+    .bf-text h5 { font-size: 14px; font-weight: 700; color: #0b1c3c; margin: 0 0 4px 0; }
+    .bf-text p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; line-height: 1.4; max-width: 180px; }
+    .bf-divider { width: 1px; height: 40px; background: #e2e8f0; }
+
+    .leaf-blur-overlay {
+        position: absolute; bottom: 5%; left: -100px; width: 350px; height: 500px;
+        background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.05) 40%, transparent 70%);
+        filter: blur(40px); pointer-events: none; z-index: 15; border-radius: 50%; transform: rotate(30deg);
+    }
 
     /* Page Footer */
     footer { padding: 0 0 10px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; }
@@ -260,6 +265,7 @@ if (isset($_SESSION['user_id'])) {
 </header>
 
 <div class="main-wrap">
+    <div class="leaf-blur-overlay"></div>
     <div class="content-grid">
         
         <!-- Left Hero Section -->
@@ -354,35 +360,19 @@ if (isset($_SESSION['user_id'])) {
 
     <!-- Bottom Features Strip -->
     <div class="bottom-features">
-        <div class="bf-item">
-            <div class="bf-icon"><i class='bx bx-shield-quarter'></i></div>
+        <div class="bf-item secure">
+            <div class="bf-icon"><i class='bx bx-check-shield'></i></div>
             <div class="bf-text">
                 <h5>Secure & Reliable</h5>
                 <p>Your data is protected<br>with advanced security</p>
             </div>
         </div>
         <div class="bf-divider"></div>
-        <div class="bf-item">
+        <div class="bf-item access">
             <div class="bf-icon"><i class='bx bx-time-five'></i></div>
             <div class="bf-text">
                 <h5>24/7 Access</h5>
                 <p>Access your account<br>anytime, anywhere</p>
-            </div>
-        </div>
-        <div class="bf-divider"></div>
-        <div class="bf-item">
-            <div class="bf-icon"><i class='bx bx-bell'></i></div>
-            <div class="bf-text">
-                <h5>Instant Notifications</h5>
-                <p>Get real-time updates<br>on bills and payments</p>
-            </div>
-        </div>
-        <div class="bf-divider"></div>
-        <div class="bf-item">
-            <div class="bf-icon"><i class='bx bx-headphone'></i></div>
-            <div class="bf-text">
-                <h5>Dedicated Support</h5>
-                <p>We're here to help you<br>whenever you need</p>
             </div>
         </div>
     </div>
