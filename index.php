@@ -154,8 +154,8 @@ if (isset($_SESSION['user_id'])) {
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #a855f7; }
     .mini-feat-text { font-size: 11px; font-weight: 700; color: #0b1c3c; line-height: 1.2; width: 70px; }
 
-    .hero-image-wrapper { position: relative; width: 100%; max-width: 450px; margin-top: -10px; animation: floatImg 6s ease-in-out infinite; }
-    .hero-image-wrapper img { width: 100%; max-height: 35vh; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.08)); }
+    .hero-image-wrapper { position: relative; width: 100%; max-width: 550px; margin-top: 0px; animation: floatImg 6s ease-in-out infinite; }
+    .hero-image-wrapper img { width: 100%; max-height: 45vh; object-fit: contain; mix-blend-mode: multiply; }
     
     .leaf-blur-overlay {
         position: absolute; bottom: 0; left: -10%; width: 250px; height: 300px;
