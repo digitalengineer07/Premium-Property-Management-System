@@ -414,7 +414,7 @@
         </div>
 
         <!-- App Footer -->
-        <div class="app-footer">
-            <p>© 2026 <?php echo htmlspecialchars(HOUSE_NAME); ?>. All rights reserved.</p>
+        <div class="app-footer" style="display: flex !important; flex-direction: row !important; justify-content: space-between !important; margin-top: auto !important; padding-top: 20px !important; padding-bottom: 0px !important;">
+            <p style="text-align: left; margin: 0;">© 2026 <?php echo htmlspecialchars(HOUSE_NAME); ?>. All rights reserved.</p>
             <p>Last updated: <?php echo date('d M Y, h:i A'); ?> <i class='bx bx-refresh' style="cursor:pointer;" onclick="location.reload()"></i></p>
         </div>

@@ -1693,6 +1693,24 @@ body.dark-theme thead th:last-child {
         line-height: 1.5 !important;
     }
 }
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
+        padding-bottom: 110px !important; 
+        border-top: 1px solid var(--border) !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+
+    /* Adjust font size to prevent any horizontal overflow */
+    .app-footer p {
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+    }
+}
 
 /* ==========================================================================
    ULTRA-PREMIUM FLOATING PILL DOCK OVERRIDE
@@ -1866,25 +1884,7 @@ body.dark-theme thead th:last-child {
         align-items: center !important;
     }
 
-    /* Stack app footer copyright and last updated text */
-    .app-footer {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        gap: 12px !important;
-        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
-        padding-bottom: 110px !important; 
-        border-top: 1px solid var(--border) !important;
-        margin-top: 20px !important;
-        padding-top: 20px !important;
-    }
 
-    /* Adjust font size to prevent any horizontal overflow */
-    .app-footer p {
-        font-size: 11px !important;
-        line-height: 1.5 !important;
-    }
 
 /* ==========================================================================
    ULTRA-PREMIUM FLOATING PILL DOCK OVERRIDE
