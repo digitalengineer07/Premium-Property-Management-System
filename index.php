@@ -124,7 +124,12 @@ if (isset($_SESSION['user_id'])) {
     .mini-feat-text { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; }
 
     .hero-image-wrapper { position: relative; width: 100%; max-width: 750px; margin-top: 20px; animation: floatImg 6s ease-in-out infinite; margin-left: -20px; }
-    .hero-image-wrapper img { width: 100%; height: auto; object-fit: contain; mix-blend-mode: multiply; transform: scale(1.1); transform-origin: left center; }
+    .hero-image-wrapper img { 
+        width: 100%; height: auto; object-fit: contain; 
+        mix-blend-mode: darken; transform: scale(1.1); transform-origin: left center;
+        -webkit-mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
+        mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
+    }
 
     /* Right side - Login Card */
     .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
