@@ -178,8 +178,8 @@ if (isset($_SESSION['user_id'])) {
 
     /* Bottom Features Strip */
     .bottom-features {
-        width: 100%; max-width: 900px; margin: -60px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
-        border-radius: 24px; padding: 24px 60px; display: flex; justify-content: center; align-items: center; gap: 80px;
+        width: 100%; max-width: 1250px; margin: -60px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
+        border-radius: 24px; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; 
         box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02); flex-shrink: 0; position: relative; z-index: 20;
         animation: fadeUp 0.8s ease-out 0.4s forwards; opacity: 0;
     }
@@ -189,6 +189,8 @@ if (isset($_SESSION['user_id'])) {
     .bf-item:hover .bf-icon { box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
     .bf-item.secure .bf-icon { background: #ecfdf5; color: #059669; border: 2px solid #a7f3d0; }
     .bf-item.access .bf-icon { background: #eff6ff; color: #2563eb; border: 2px solid #bfdbfe; }
+    .bf-item.notif .bf-icon { background: #faf5ff; color: #9333ea; border: 2px solid #e9d5ff; }
+    .bf-item.support .bf-icon { background: #fff7ed; color: #ea580c; border: 2px solid #fed7aa; }
     .bf-text h5 { font-size: 14px; font-weight: 700; color: #0b1c3c; margin: 0 0 4px 0; }
     .bf-text p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; line-height: 1.4; max-width: 180px; }
     .bf-divider { width: 1px; height: 40px; background: #e2e8f0; }
@@ -373,6 +375,22 @@ if (isset($_SESSION['user_id'])) {
             <div class="bf-text">
                 <h5>24/7 Access</h5>
                 <p>Access your account<br>anytime, anywhere</p>
+            </div>
+        </div>
+        <div class="bf-divider"></div>
+        <div class="bf-item notif">
+            <div class="bf-icon"><i class='bx bx-bell'></i></div>
+            <div class="bf-text">
+                <h5>Instant Notifications</h5>
+                <p>Get real-time updates<br>on bills and payments</p>
+            </div>
+        </div>
+        <div class="bf-divider"></div>
+        <div class="bf-item support">
+            <div class="bf-icon"><i class='bx bx-headphone'></i></div>
+            <div class="bf-text">
+                <h5>Dedicated Support</h5>
+                <p>We're here to help you<br>whenever you need</p>
             </div>
         </div>
     </div>
