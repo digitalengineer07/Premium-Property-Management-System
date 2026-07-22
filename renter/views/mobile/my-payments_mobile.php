@@ -217,7 +217,7 @@
                             <?php echo $subtitle; ?>
                         </p>
                         <?php if ($t['status'] === 'Partial'): ?>
-                            <div style="display: flex; gap: 6px;">
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                                 <button onclick="openPaymentModal(<?php echo max(0, min((float)$displayAmount, (float)$total_due)); ?>, 'Total Payment', 'monthly', 0, '<?php echo addslashes(date('F Y', strtotime($t['month'].'-01'))); ?>')" style="background: white; border: 1px solid rgba(255, 75, 107, 0.3); color: #FF4B6B; border-radius: 12px; padding: 4px 10px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; cursor: pointer;">
                                     <i class='bx bx-revision'></i> Pay Now
                                 </button>
