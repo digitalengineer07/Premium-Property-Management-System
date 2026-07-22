@@ -195,19 +195,17 @@ if (isset($_SESSION['user_id'])) {
     .bf-text p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; line-height: 1.4; max-width: 180px; }
     .bf-divider { width: 1px; height: 40px; background: #e2e8f0; }
 
-    .leaf-blur-container {
-        position: fixed; bottom: -10vh; left: -5vw; width: 450px; height: 110vh; 
-        z-index: 30; pointer-events: none; filter: blur(12px); opacity: 0.95;
-        transform: scale(1.1); transform-origin: bottom left;
+    /* Abstract Glowing Orbs */
+    .premium-glow-left {
+        position: fixed; bottom: -10vh; left: -10vw; width: 60vw; height: 60vw;
+        background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+        z-index: 0; pointer-events: none; border-radius: 50%;
     }
-    .blur-blob { position: absolute; border-radius: 50%; }
-    .blur-blob.stem { width: 50px; height: 100%; bottom: 0; left: 100px; transform: rotate(-5deg); background: #064e3b; }
-    .blur-blob.l1 { width: 250px; height: 140px; bottom: 10%; left: 80px; transform: rotate(35deg); background: #022c22; border-radius: 0 150px 0 150px; }
-    .blur-blob.l2 { width: 200px; height: 120px; bottom: 35%; left: 90px; transform: rotate(45deg); background: #065f46; border-radius: 0 120px 0 120px; }
-    .blur-blob.l3 { width: 180px; height: 100px; bottom: 60%; left: 80px; transform: rotate(25deg); background: #064e3b; border-radius: 0 120px 0 120px; }
-    .blur-blob.l4 { width: 220px; height: 130px; bottom: 25%; left: -30px; transform: rotate(140deg); background: #065f46; border-radius: 0 150px 0 150px; }
-    .blur-blob.l5 { width: 170px; height: 100px; bottom: 50%; left: 0px; transform: rotate(155deg); background: #022c22; border-radius: 0 120px 0 120px; }
-    .blur-blob.l6 { width: 160px; height: 90px; bottom: 75%; left: 10px; transform: rotate(135deg); background: #064e3b; border-radius: 0 120px 0 120px; }
+    .premium-glow-right {
+        position: fixed; top: -10vh; right: -10vw; width: 50vw; height: 50vw;
+        background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+        z-index: 0; pointer-events: none; border-radius: 50%;
+    }
 
     /* Page Footer */
     footer { padding: 0 0 10px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; }
@@ -247,16 +245,9 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body>
 
-<!-- Realistic Leaf Overlay -->
-<div class="leaf-blur-container">
-    <div class="blur-blob stem"></div>
-    <div class="blur-blob l1"></div>
-    <div class="blur-blob l2"></div>
-    <div class="blur-blob l3"></div>
-    <div class="blur-blob l4"></div>
-    <div class="blur-blob l5"></div>
-    <div class="blur-blob l6"></div>
-</div>
+<!-- Abstract Premium Glows -->
+<div class="premium-glow-left"></div>
+<div class="premium-glow-right"></div>
 
 <!-- Top Header -->
 <header class="top-header">
