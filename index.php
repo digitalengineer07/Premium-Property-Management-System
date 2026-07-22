@@ -129,15 +129,15 @@ if (isset($_SESSION['user_id'])) {
     /* Right side - Login Card */
     .login-section { display: flex; align-items: center; justify-content: flex-end; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
     .login-card {
-      background: #ffffff; border-radius: 32px; padding: 2.5rem 3rem; width: 100%; max-width: 480px; 
+      background: #ffffff; border-radius: 32px; padding: 2rem 2.5rem; width: 100%; max-width: 480px; 
       box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.02); position: relative;
       transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .login-card:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02); transform: translateY(-4px); }
     
-    .login-header-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; position: relative; }
+    .login-header-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; position: relative; }
     .login-header h4 { font-size: 14px; color: #059669; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
-    .login-header h2 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 34px; color: #0f172a; margin: 0 0 6px 0; letter-spacing: -0.5px; }
+    .login-header h2 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 32px; color: #0f172a; margin: 0 0 4px 0; letter-spacing: -0.5px; }
     .login-header p { color: #64748b; font-size: 14px; font-weight: 500; margin: 0; }
     
     .shield-badge-wrapper { position: relative; width: 68px; height: 68px; display: flex; align-items: center; justify-content: center; }
@@ -145,34 +145,34 @@ if (isset($_SESSION['user_id'])) {
     .shield-badge { width: 44px; height: 44px; background: #ecfdf5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 24px; position: relative; z-index: 2; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1); border: 2px solid #ffffff; }
 
     /* Ultra-modern Role Toggle */
-    .role-toggle { display: flex; background: #f8fafc; padding: 6px; border-radius: 16px; position: relative; margin-bottom: 1.5rem; border: 1px solid #f1f5f9; }
+    .role-toggle { display: flex; background: #f8fafc; padding: 6px; border-radius: 16px; position: relative; margin-bottom: 1rem; border: 1px solid #f1f5f9; }
     .toggle-glider { position: absolute; top: 6px; left: 6px; width: calc(50% - 6px); height: calc(100% - 12px); background: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1); z-index: 1; }
     .role-toggle.admin-active .toggle-glider { transform: translateX(100%); }
-    .role-toggle button { flex: 1; border: 0; padding: 14px; font-weight: 600; font-size: 14px; background: transparent; cursor: pointer; color: #64748b; position: relative; z-index: 2; transition: color 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .role-toggle button { flex: 1; border: 0; padding: 12px; font-weight: 600; font-size: 14px; background: transparent; cursor: pointer; color: #64748b; position: relative; z-index: 2; transition: color 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .role-toggle button i { font-size: 18px; }
     .role-toggle button.active { color: #10875c; }
 
     /* Role Info Box */
-    .role-info-box { background: #ecfdf5; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 1.5rem; transition: all 0.3s ease; }
-    .role-info-box.admin-mode { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px 19px; }
+    .role-info-box { background: #ecfdf5; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; transition: all 0.3s ease; }
+    .role-info-box.admin-mode { background: #f8fafc; border: 1px solid #e2e8f0; padding: 11px 15px; }
     .role-info-icon { width: 40px; height: 40px; background: #d1fae5; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: all 0.3s ease; }
     .admin-mode .role-info-icon { background: #e2e8f0; color: #475569; }
     .role-info-text { font-size: 13px; color: #064e3b; font-weight: 500; line-height: 1.4; transition: all 0.3s ease; }
     .admin-mode .role-info-text { color: #475569; }
 
     /* Buttons */
-    .btn-proceed { background: linear-gradient(90deg, #166534 0%, #0d9488 100%); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2); }
+    .btn-proceed { background: linear-gradient(90deg, #166534 0%, #0d9488 100%); color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2); }
     .btn-proceed:hover { background: linear-gradient(90deg, #14532d 0%, #0f766e 100%); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3); transform: translateY(-2px); }
 
-    .divider { display: flex; align-items: center; text-align: center; margin: 1.5rem 0; color: #94a3b8; font-size: 12px; font-weight: 500; }
+    .divider { display: flex; align-items: center; text-align: center; margin: 1rem 0; color: #94a3b8; font-size: 12px; font-weight: 500; }
     .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
     .divider:not(:empty)::before { margin-right: 1em; }
     .divider:not(:empty)::after { margin-left: 1em; }
 
-    .btn-switch { background: #ffffff; color: #475569; border: 1px solid #e2e8f0; width: 100%; padding: 16px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+    .btn-switch { background: #ffffff; color: #475569; border: 1px solid #e2e8f0; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
     .btn-switch:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
 
-    .terms-note { text-align: center; margin-top: 2rem; font-size: 12px; color: #64748b; line-height: 1.6; }
+    .terms-note { text-align: center; margin-top: 1.25rem; font-size: 12px; color: #64748b; line-height: 1.5; }
     .terms-note a { color: #0d9488; text-decoration: none; font-weight: 600; transition: color 0.2s; }
     .terms-note a:hover { color: #0f766e; text-decoration: underline; }
 
