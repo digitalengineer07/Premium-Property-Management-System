@@ -535,7 +535,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 margin-left: 0 !important; 
                 max-width: 100% !important; 
                 padding: 16px !important; 
-                padding-bottom: 86px !important; /* Space for bottom nav */
+                padding-bottom: 70px !important; /* Space for bottom nav */
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .grid-2-1, .dashboard-2col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -564,6 +564,8 @@ $show_banner = ($is_late && !empty($overdue_list));
             .footer-widget .btn-fw { width: 100% !important; justify-content: center !important; }
             .tx-right { gap: 12px !important; }
             .tx-date { display: none !important; }
+            
+            .app-footer { flex-direction: column !important; gap: 8px !important; padding-top: 16px !important; margin-top: 0 !important; text-align: center; }
             
             /* Show Universal Mobile Bottom Navigation */
             .mobile-bottom-nav { display: flex !important; }
