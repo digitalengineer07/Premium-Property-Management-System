@@ -376,18 +376,18 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     <div class="mp-container animate-up" style="padding-top: 114px;">
         <div class="mp-user-card">
             <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()"
-                style="cursor: pointer; width: 80px; height: 80px; flex-shrink: 0;">
+                style="cursor: pointer; width: 80px; height: 80px; min-width: 80px; min-height: 80px; max-width: 80px; max-height: 80px; flex-shrink: 0; flex-basis: 80px; position: relative;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                     <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main"
                         id="profileAvatarImgMobile"
-                        style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
+                        style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; background: #F1F5F9; display: block;">
                 <?php else: ?>
                     <div class="mp-avatar-fallback" id="profileAvatarFallbackMobile"
-                        style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-purple, #624BFF); color: white; flex-shrink: 0; font-size: 28px; font-weight: 700;">
+                        style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-purple, #624BFF); color: white; flex-shrink: 0; font-size: 28px; font-weight: 700;">
                         <?php echo $avatar_initials; ?>
                     </div>
                     <img src="" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile"
-                        style="display: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
+                        style="display: none; width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
                 <?php endif; ?>
                 <div class="mp-camera-btn">
                     <i class='bx bx-camera'></i>
