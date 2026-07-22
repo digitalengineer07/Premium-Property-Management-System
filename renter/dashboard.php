@@ -560,6 +560,8 @@ $show_banner = ($is_late && !empty($overdue_list));
             .table-header { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
             .table-header > div { width: 100% !important; justify-content: space-between !important; }
             .footer-widgets { grid-template-columns: 1fr !important; gap: 16px !important; }
+            .footer-widget { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+            .footer-widget .btn-fw { width: 100% !important; justify-content: center !important; }
             .tx-right { gap: 12px !important; }
             .tx-date { display: none !important; }
             
