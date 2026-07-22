@@ -169,35 +169,55 @@ if (isset($_SESSION['user_id'])) {
     }
 
     .welcome-badge {
-      display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; background: #e6f6f0; color: #0b704b; font-weight: 600; font-size: 11px; border-radius: 100px; margin-bottom: 0.5rem; width: fit-content;
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background: #e6f6f0; color: #10875c; font-weight: 600; font-size: 12px; border-radius: 100px; margin-bottom: 1rem; width: fit-content;
     }
-    .welcome-badge i { font-size: 11px; }
+    .welcome-badge i { font-size: 14px; }
 
     .hero-section h1 { 
-      font-family: "Outfit", sans-serif; font-size: 38px; font-weight: 800; color: #0b1c3c; line-height: 1.1; letter-spacing: -1px;
+      font-family: "Outfit", sans-serif; font-size: 52px; font-weight: 800; color: #0b1c3c; line-height: 1.1; letter-spacing: -1px;
     }
-    .hero-section h1 span { background: linear-gradient(90deg, #10875c 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+    .hero-section h1 span { 
+      background: linear-gradient(90deg, #10875c 0%, #3b82f6 100%); 
+      -webkit-background-clip: text; 
+      -webkit-text-fill-color: transparent; 
+      display: block; 
+    }
 
-    .deco-dash { display: flex; gap: 4px; margin-top: 0.5rem; margin-bottom: 0.75rem; }
-    .deco-dash span:first-child { width: 25px; height: 3px; border-radius: 2px; background: var(--primary); }
-    .deco-dash span:last-child { width: 8px; height: 3px; border-radius: 2px; background: #e2e8f0; }
+    .deco-dash { display: flex; gap: 6px; margin-top: 1rem; margin-bottom: 1.25rem; }
+    .deco-dash span:first-child { width: 36px; height: 4px; border-radius: 2px; background: #10875c; }
+    .deco-dash span:last-child { width: 12px; height: 4px; border-radius: 2px; background: #e2e8f0; }
 
     .hero-section p.hero-desc { 
-      color: var(--text-gray); font-size: 13px; line-height: 1.4; max-width: 440px; font-weight: 500; margin-bottom: 1rem;
+      color: #475569; font-size: 15px; line-height: 1.6; max-width: 480px; font-weight: 500; margin-bottom: 1.5rem;
     }
 
     /* Hero mini features */
-    .hero-mini-features { display: flex; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
-    .mini-feat { display: flex; align-items: center; gap: 6px; }
-    .mini-feat-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .hero-mini-features { display: flex; gap: 16px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .mini-feat { display: flex; align-items: center; gap: 10px; }
+    .mini-feat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
     .mf-1 .mini-feat-icon { background: #e6f6f0; color: #10875c; }
     .mf-2 .mini-feat-icon { background: #eff6ff; color: #3b82f6; }
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #a855f7; }
     
-    .mini-feat-text { font-size: 10px; font-weight: 700; color: #0b1c3c; line-height: 1.2; width: 65px; }
+    .mini-feat-text { font-size: 12px; font-weight: 700; color: #0b1c3c; line-height: 1.3; width: 80px; }
 
-    .hero-image-wrapper { position: relative; width: 100%; max-width: 320px; }
-    .hero-image-wrapper img { width: 100%; max-height: 25vh; object-fit: contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.06)); }
+    .hero-image-wrapper { position: relative; width: 100%; max-width: 500px; margin-top: -10px; }
+    .hero-image-wrapper img { width: 100%; max-height: 40vh; object-fit: contain; filter: drop-shadow(0 15px 30px rgba(0,0,0,0.06)); }
+    
+    /* Blurry Green Leaf Effect for bottom left */
+    .leaf-blur-overlay {
+        position: absolute;
+        bottom: 0;
+        left: -10%;
+        width: 300px;
+        height: 400px;
+        background: radial-gradient(ellipse at center, rgba(16, 135, 92, 0.15) 0%, transparent 70%);
+        filter: blur(20px);
+        pointer-events: none;
+        z-index: 0;
+        border-radius: 50%;
+        transform: rotate(45deg);
+    }
 
     /* Right side - Login Card */
     .login-section { display: flex; align-items: center; justify-content: flex-end; }
@@ -294,7 +314,7 @@ if (isset($_SESSION['user_id'])) {
 <body>
 
 <div class="bg-wave"></div>
-<!-- <div class="leaf-overlay"></div> -->
+<div class="leaf-blur-overlay"></div>
 
 <!-- Top Header -->
 <header class="top-header">
@@ -326,7 +346,7 @@ if (isset($_SESSION['user_id'])) {
         <!-- Left Hero Section -->
         <div class="hero-section">
             <div class="welcome-badge">
-                <i class='bx bxs-magic-wand'></i> Welcome to <?php echo HOUSE_NAME; ?>
+                <i class='bx bx-sparkles'></i> Welcome to <?php echo HOUSE_NAME; ?>
             </div>
             
             <h1>Smart Property<br><span>Management</span></h1>
