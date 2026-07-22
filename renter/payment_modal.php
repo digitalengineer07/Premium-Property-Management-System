@@ -282,3 +282,71 @@
               </div>
           </div>
       </div>
+      <script>
+      let paymentTimerInterval;
+      function openPaymentModal(amount, title, type, id = 0, month = '') {
+          if (amount <= 0) {
+              if (typeof showToast === 'function') {
+                  showToast("No outstanding balance to pay for this item.", "info");
+              } else {
+                  alert("No outstanding balance to pay for this item.");
+              }
+              return;
+          }
+          
+          document.getElementById('paymentAmountDisplay').innerText = Math.round(amount).toString();
+          document.getElementById('paymentTitle').innerText = title;
+          document.getElementById('hiddenBillType').value = type;
+          document.getElementById('hiddenBillId').value = id;
+          document.getElementById('hiddenAmount').value = amount;
+          document.getElementById('hiddenMonth').value = month;
+          
+          const upiId = "nikhil119124-1@oksbi";
+          const payeeName = "Premium Property Management";
+          const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(title)}`;
+          
+          const qrImage = document.getElementById('dynamicQR');
+          if (qrImage) {
+              qrImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(upiUrl);
+          }
+          
+          const deepLinkBtn = document.getElementById('upiDeepLinkBtn');
+          if (deepLinkBtn) {
+              deepLinkBtn.href = upiUrl;
+              if (window.innerWidth <= 767) {
+                  deepLinkBtn.style.display = 'flex';
+              }
+          }
+          
+          startPaymentTimer();
+          document.getElementById('paymentModal').style.display = 'flex';
+      }
+
+      function closePaymentModal() {
+          document.getElementById('paymentModal').style.display = 'none';
+          if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+      }
+
+      function startPaymentTimer() {
+          if (paymentTimerInterval) clearInterval(paymentTimerInterval);
+          let timeLeft = 300;
+          const timerDisplay = document.getElementById('paymentTimer');
+          
+          paymentTimerInterval = setInterval(() => {
+              timeLeft--;
+              let m = Math.floor(timeLeft / 60);
+              let s = Math.floor(timeLeft % 60);
+              if (timerDisplay) timerDisplay.innerText = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+              
+              if (timeLeft <= 0) {
+                  clearInterval(paymentTimerInterval);
+                  closePaymentModal();
+                  if (typeof showToast === 'function') {
+                      showToast("Payment session expired.", "warning");
+                  } else {
+                      alert("Payment session expired. Please try again.");
+                  }
+              }
+          }, 1000);
+      }
+      </script>
