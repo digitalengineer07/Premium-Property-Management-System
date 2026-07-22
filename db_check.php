@@ -1,1 +1,0 @@
-<?php $conn = mysqli_connect('localhost', 'root', '', 'renter_system'); $res = mysqli_query($conn, 'SELECT * FROM rent'); while($r=mysqli_fetch_assoc($res)) print_r($r); $res = mysqli_query($conn, 'SELECT * FROM electricity'); while($r=mysqli_fetch_assoc($res)) print_r($r);
