@@ -196,18 +196,18 @@ if (isset($_SESSION['user_id'])) {
     .bf-divider { width: 1px; height: 40px; background: #e2e8f0; }
 
     .leaf-blur-container {
-        position: absolute; bottom: 0; left: -100px; width: 350px; height: 75%; 
-        z-index: 30; pointer-events: none; filter: blur(24px); opacity: 0.9;
-        transform: scale(1.2); transform-origin: bottom left;
+        position: fixed; bottom: -10vh; left: -5vw; width: 450px; height: 110vh; 
+        z-index: 30; pointer-events: none; filter: blur(12px); opacity: 0.95;
+        transform: scale(1.1); transform-origin: bottom left;
     }
     .blur-blob { position: absolute; border-radius: 50%; }
-    .blur-blob.stem { width: 45px; height: 110%; bottom: -10%; left: 140px; transform: rotate(-8deg); background: #14532d; }
-    .blur-blob.l1 { width: 200px; height: 110px; bottom: 15%; left: 120px; transform: rotate(25deg); background: #15803d; border-radius: 0 120px 0 120px; }
-    .blur-blob.l2 { width: 160px; height: 90px; bottom: 40%; left: 110px; transform: rotate(35deg); background: #16a34a; border-radius: 0 100px 0 100px; }
-    .blur-blob.l3 { width: 150px; height: 80px; bottom: 65%; left: 100px; transform: rotate(20deg); background: #15803d; border-radius: 0 100px 0 100px; }
-    .blur-blob.l4 { width: 180px; height: 100px; bottom: 25%; left: 0px; transform: rotate(150deg); background: #166534; border-radius: 0 120px 0 120px; }
-    .blur-blob.l5 { width: 140px; height: 80px; bottom: 50%; left: 20px; transform: rotate(165deg); background: #14532d; border-radius: 0 100px 0 100px; }
-    .blur-blob.l6 { width: 130px; height: 70px; bottom: 75%; left: 30px; transform: rotate(145deg); background: #16a34a; border-radius: 0 100px 0 100px; }
+    .blur-blob.stem { width: 50px; height: 100%; bottom: 0; left: 100px; transform: rotate(-5deg); background: #064e3b; }
+    .blur-blob.l1 { width: 250px; height: 140px; bottom: 10%; left: 80px; transform: rotate(35deg); background: #022c22; border-radius: 0 150px 0 150px; }
+    .blur-blob.l2 { width: 200px; height: 120px; bottom: 35%; left: 90px; transform: rotate(45deg); background: #065f46; border-radius: 0 120px 0 120px; }
+    .blur-blob.l3 { width: 180px; height: 100px; bottom: 60%; left: 80px; transform: rotate(25deg); background: #064e3b; border-radius: 0 120px 0 120px; }
+    .blur-blob.l4 { width: 220px; height: 130px; bottom: 25%; left: -30px; transform: rotate(140deg); background: #065f46; border-radius: 0 150px 0 150px; }
+    .blur-blob.l5 { width: 170px; height: 100px; bottom: 50%; left: 0px; transform: rotate(155deg); background: #022c22; border-radius: 0 120px 0 120px; }
+    .blur-blob.l6 { width: 160px; height: 90px; bottom: 75%; left: 10px; transform: rotate(135deg); background: #064e3b; border-radius: 0 120px 0 120px; }
 
     /* Page Footer */
     footer { padding: 0 0 10px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; }
@@ -247,6 +247,17 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body>
 
+<!-- Realistic Leaf Overlay -->
+<div class="leaf-blur-container">
+    <div class="blur-blob stem"></div>
+    <div class="blur-blob l1"></div>
+    <div class="blur-blob l2"></div>
+    <div class="blur-blob l3"></div>
+    <div class="blur-blob l4"></div>
+    <div class="blur-blob l5"></div>
+    <div class="blur-blob l6"></div>
+</div>
+
 <!-- Top Header -->
 <header class="top-header">
     <div class="brand-logo">
@@ -275,15 +286,6 @@ if (isset($_SESSION['user_id'])) {
 </header>
 
 <div class="main-wrap">
-    <div class="leaf-blur-container">
-        <div class="blur-blob stem"></div>
-        <div class="blur-blob l1"></div>
-        <div class="blur-blob l2"></div>
-        <div class="blur-blob l3"></div>
-        <div class="blur-blob l4"></div>
-        <div class="blur-blob l5"></div>
-        <div class="blur-blob l6"></div>
-    </div>
     <div class="content-grid">
         
         <!-- Left Hero Section -->
