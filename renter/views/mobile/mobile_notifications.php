@@ -31,6 +31,19 @@
 
 /* Global overlay invisible just to catch outside clicks */
 .m-notif-click-catcher { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9998; display: none; }
+
+/* Profile Dropdown */
+.m-profile-dropdown { position: fixed; top: 70px; right: 16px; width: 200px; max-width: calc(100vw - 32px); background: var(--bg-color, #ffffff); border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); z-index: 10000; display: flex; flex-direction: column; border: 1px solid var(--border); opacity: 0; transform: translateY(-10px) scale(0.95); transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
+.m-profile-dropdown.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.dark-theme .m-profile-dropdown { background: #1a1d24; border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
+.m-profile-dropdown::before { content: ''; position: absolute; top: -6px; right: 24px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
+
+.m-profile-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; font-size: 14px; font-weight: 600; color: var(--text-dark); text-decoration: none; border-bottom: 1px solid var(--border); transition: background 0.2s ease; }
+.m-profile-menu-item:last-child { border-bottom: none; }
+.m-profile-menu-item:active { background: rgba(0,0,0,0.03); }
+.dark-theme .m-profile-menu-item:active { background: rgba(255,255,255,0.05); }
+.m-profile-menu-item.text-danger { color: #EF4444; }
+.m-profile-menu-item i { font-size: 20px; }
 </style>
 
 <div class="m-notif-click-catcher" id="mNotifClickCatcher" onclick="closeMobileNotif()"></div>
@@ -67,6 +80,11 @@
     </div>
 </div>
 
+<div id="mobileProfileDropdown" class="m-profile-dropdown">
+    <a href="profile.php" class="m-profile-menu-item"><i class='bx bx-user'></i> My Profile</a>
+    <a href="logout.php" class="m-profile-menu-item text-danger"><i class='bx bx-log-out'></i> Logout</a>
+</div>
+
 <?php include __DIR__ . '/global_profile_upload.php'; ?>
 
 <script>
@@ -77,18 +95,32 @@ function openMobileNotif() {
         if(dropdown.classList.contains('active')) {
             closeMobileNotif();
         } else {
+            closeMobileNotif(); // close others
+            dropdown.classList.add('active');
+            catcher.style.display = 'block';
+        }
+    }
+}
+function openMobileProfile() {
+    let dropdown = document.getElementById('mobileProfileDropdown');
+    let catcher = document.getElementById('mNotifClickCatcher');
+    if(dropdown && catcher) {
+        if(dropdown.classList.contains('active')) {
+            closeMobileNotif();
+        } else {
+            closeMobileNotif(); // close others
             dropdown.classList.add('active');
             catcher.style.display = 'block';
         }
     }
 }
 function closeMobileNotif() {
-    let dropdown = document.getElementById('mobileNotifDropdown');
+    let notifDropdown = document.getElementById('mobileNotifDropdown');
+    let profileDropdown = document.getElementById('mobileProfileDropdown');
     let catcher = document.getElementById('mNotifClickCatcher');
-    if(dropdown && catcher) {
-        dropdown.classList.remove('active');
-        catcher.style.display = 'none';
-    }
+    if(notifDropdown) notifDropdown.classList.remove('active');
+    if(profileDropdown) profileDropdown.classList.remove('active');
+    if(catcher) catcher.style.display = 'none';
 }
 function dismissNotificationMobile(id) {
     let item = document.getElementById('m-notif-' + id);
