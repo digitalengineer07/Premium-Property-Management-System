@@ -58,7 +58,7 @@ if (isset($_SESSION['user_id'])) {
 
     .top-header {
         display: flex; justify-content: space-between; align-items: center; 
-        padding: 2.5rem 4rem; max-width: 1400px; margin: 0 auto; width: 100%; 
+        padding: 1.5rem 4rem; max-width: 1400px; margin: 0 auto; width: 100%; 
         z-index: 10; position: relative; flex-shrink: 0;
     }
 
@@ -127,7 +127,7 @@ if (isset($_SESSION['user_id'])) {
     .hero-image-wrapper img { width: 100%; height: auto; object-fit: contain; mix-blend-mode: multiply; transform: scale(1.1); transform-origin: left center; }
 
     /* Right side - Login Card */
-    .login-section { display: flex; align-items: center; justify-content: flex-end; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
     .login-card {
       background: #ffffff; border-radius: 32px; padding: 2rem 2.5rem; width: 100%; max-width: 480px; 
       box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.02); position: relative;
