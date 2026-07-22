@@ -535,7 +535,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 margin-left: 0 !important; 
                 max-width: 100% !important; 
                 padding: 16px !important; 
-                padding-bottom: 68px !important; /* Exactly match bottom nav height */
+                padding-bottom: 24px !important; /* Reduced significantly per user request */
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .grid-2-1, .dashboard-2col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
