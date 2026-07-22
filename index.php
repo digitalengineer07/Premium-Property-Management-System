@@ -134,7 +134,7 @@ if (isset($_SESSION['user_id'])) {
     /* Right side - Login Card */
     .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
     .login-card {
-      background: #ffffff; border-radius: 32px; padding: 2rem 2.5rem; width: 100%; max-width: 480px; 
+      background: #ffffff; border-radius: 32px; padding: 2rem 2.5rem 1.25rem 2.5rem; width: 100%; max-width: 480px; 
       box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.02); position: relative;
       transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
@@ -177,7 +177,7 @@ if (isset($_SESSION['user_id'])) {
     .btn-switch { background: #ffffff; color: #475569; border: 1px solid #e2e8f0; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
     .btn-switch:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
 
-    .terms-note { text-align: center; margin-top: 1.25rem; font-size: 12px; color: #64748b; line-height: 1.5; }
+    .terms-note { text-align: center; margin-top: 1.25rem; margin-bottom: 0; font-size: 12px; color: #64748b; line-height: 1.5; }
     .terms-note a { color: #0d9488; text-decoration: none; font-weight: 600; transition: color 0.2s; }
     .terms-note a:hover { color: #0f766e; text-decoration: underline; }
 
