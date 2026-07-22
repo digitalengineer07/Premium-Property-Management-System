@@ -34,59 +34,25 @@ if (isset($_SESSION['user_id'])) {
       --accent: #0ea5e9;        /* Sky 500 */
       --text-main: #0f172a;
       --text-muted: #64748b;
-      --glass-bg: rgba(255, 255, 255, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.5);
+      --bg-color: #f0fdfa;
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body { 
       font-family: "Inter", system-ui, sans-serif; 
-      margin: 0;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       overflow-x: hidden;
-      
-      /* Animated Mesh Gradient Background */
-      background: radial-gradient(circle at 15% 50%, #dcfce7, transparent 25%),
-                  radial-gradient(circle at 85% 30%, #e0f2fe, transparent 25%),
-                  radial-gradient(circle at 50% 80%, #f3e8ff, transparent 25%);
+      background: radial-gradient(circle at 10% 10%, #dcfce7, transparent 30%),
+                  radial-gradient(circle at 90% 10%, #e0f2fe, transparent 30%),
+                  radial-gradient(circle at 50% 90%, #f5f3ff, transparent 40%);
       background-color: #f8fafc;
-      background-size: 100% 100%;
-      animation: gradientBg 15s ease infinite;
-    }
-
-    @keyframes gradientBg {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    /* Abstract shapes behind the glass */
-    .shape {
-        position: absolute;
-        filter: blur(60px);
-        z-index: -1;
-        opacity: 0.6;
-        border-radius: 50%;
-        animation: float 20s infinite alternate;
-    }
-    .shape-1 {
-        top: -10%; left: -10%; width: 500px; height: 500px; background: #6ee7b7;
-    }
-    .shape-2 {
-        bottom: -20%; right: -10%; width: 600px; height: 600px; background: #7dd3fc; animation-delay: -5s;
-    }
-    .shape-3 {
-        top: 40%; left: 40%; width: 400px; height: 400px; background: #c4b5fd; animation-delay: -10s;
-    }
-
-    @keyframes float {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        100% { transform: translate(100px, 50px) rotate(20deg); }
     }
 
     .wrap {
@@ -96,121 +62,105 @@ if (isset($_SESSION['user_id'])) {
       justify-content: center;
       padding: 2rem;
       width: 100%;
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
-      position: relative;
-      z-index: 1;
     }
 
-    /* Main Glassmorphism Container */
+    /* Main Container */
     .glass-panel {
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: #ffffff;
       border-radius: 32px;
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255,255,255,1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: 1fr 480px;
       overflow: hidden;
       width: 100%;
-      min-height: 600px;
+      min-height: 650px;
     }
 
     /* Left side - Branding & Illustration */
     .hero-section {
-      padding: 3rem 4rem;
+      padding: 4rem 5rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       position: relative;
     }
 
     .brand-badge {
       display: inline-block;
-      padding: 8px 16px;
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--primary-dark);
+      padding: 8px 18px;
+      background: #d1fae5;
+      color: #065f46;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       border-radius: 100px;
-      margin-bottom: 1.5rem;
-      letter-spacing: 0.5px;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      margin-bottom: 2rem;
+      border: 1px solid #a7f3d0;
       width: fit-content;
     }
 
     .hero-section h1 { 
       font-family: "Outfit", sans-serif;
       margin: 0; 
-      font-size: 48px; 
+      font-size: 54px; 
       font-weight: 800;
       color: var(--text-main);
-      line-height: 1.1;
+      line-height: 1.15;
       letter-spacing: -1px;
     }
     
     .hero-section h1 span {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      background: linear-gradient(90deg, #047857 0%, #06b6d4 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: block;
     }
 
     .hero-section p { 
       color: var(--text-muted); 
       margin-top: 1.5rem; 
-      font-size: 16px; 
+      font-size: 17px; 
       line-height: 1.6;
-      max-width: 480px;
+      max-width: 500px;
+      font-weight: 400;
     }
 
     .hero-image-wrapper {
-      margin-top: 2rem;
-      position: relative;
+      margin-top: 3rem;
       width: 100%;
-      max-width: 400px;
-      animation: floatImg 6s ease-in-out infinite;
-    }
-
-    @keyframes floatImg {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-15px); }
-        100% { transform: translateY(0px); }
+      max-width: 480px;
     }
 
     .hero-image-wrapper img {
       width: 100%;
       height: auto;
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+      border-radius: 16px;
     }
 
-    /* Right side - Login Card */
+    /* Right side - Login Card Wrapper */
     .login-section {
-      padding: 3rem 4rem;
+      padding: 4rem 4rem 4rem 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.4);
-      border-left: 1px solid var(--glass-border);
     }
 
     .login-card {
       background: #ffffff;
       border-radius: 24px;
-      padding: 2.5rem;
+      padding: 3rem;
       width: 100%;
-      max-width: 420px;
-      box-shadow: 0 20px 48px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(15, 23, 42, 0.03);
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02);
       position: relative;
-      overflow: hidden;
     }
     
     .login-card::before {
         content: '';
         position: absolute;
-        top: 0; left: 0; right: 0; height: 4px;
-        background: linear-gradient(90deg, var(--primary), var(--accent));
+        top: 0; left: 10%; right: 10%; height: 4px;
+        background: linear-gradient(90deg, #047857, #0ea5e9);
+        border-radius: 4px 4px 0 0;
     }
 
     .login-header {
@@ -222,22 +172,22 @@ if (isset($_SESSION['user_id'])) {
 
     .login-header h2 {
       font-family: "Outfit", sans-serif;
-      font-weight: 700;
+      font-weight: 800;
       font-size: 28px;
-      color: var(--text-main);
+      color: #0f172a;
       margin: 0;
     }
 
-    .small-muted { color: var(--text-muted); font-size: 13px; font-weight: 500; }
+    .small-muted { color: #64748b; font-size: 13px; font-weight: 500; }
 
     /* Ultra-modern Role Toggle */
     .role-toggle {
       display: flex;
       background: #f1f5f9;
       padding: 6px; 
-      border-radius: 16px;
+      border-radius: 12px;
       position: relative;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
     
     .toggle-glider {
@@ -247,8 +197,8 @@ if (isset($_SESSION['user_id'])) {
         width: calc(50% - 6px);
         height: calc(100% - 12px);
         background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         z-index: 1;
     }
@@ -265,32 +215,32 @@ if (isset($_SESSION['user_id'])) {
       font-size: 15px;
       background: transparent;
       cursor: pointer;
-      color: var(--text-muted);
+      color: #64748b;
       position: relative;
       z-index: 2;
       transition: color 0.3s ease;
     }
     
     .role-toggle button.active {
-      color: var(--primary-dark);
+      color: #047857;
     }
 
     /* Action Area */
     .login-desc {
       font-size: 14px;
-      color: var(--text-main);
-      font-weight: 500;
+      color: #0f172a;
+      font-weight: 600;
       margin-bottom: 1.5rem;
       text-align: center;
     }
 
     .btn-proceed {
-      background: var(--primary);
+      background: #047857;
       color: white;
       border: none;
       width: 100%;
       padding: 16px;
-      border-radius: 14px;
+      border-radius: 12px;
       font-weight: 600;
       font-size: 16px;
       cursor: pointer;
@@ -298,23 +248,21 @@ if (isset($_SESSION['user_id'])) {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       text-decoration: none;
-      box-shadow: 0 8px 20px rgba(4, 120, 87, 0.2);
     }
     
     .btn-proceed:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(4, 120, 87, 0.3);
+      background: #065f46;
       color: white;
     }
 
     .footer-note {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
       font-size: 13px;
-      color: var(--text-muted);
+      color: #64748b;
+      line-height: 1.5;
     }
 
     /* Page Footer */
@@ -322,8 +270,7 @@ if (isset($_SESSION['user_id'])) {
       padding: 24px;
       text-align: center;
       background: transparent;
-      position: relative;
-      z-index: 2;
+      margin-top: auto;
     }
     
     footer .links {
@@ -337,7 +284,6 @@ if (isset($_SESSION['user_id'])) {
       color: var(--text-main);
       text-decoration: none;
       margin: 0 12px;
-      transition: color 0.2s;
     }
     
     footer .links a:hover {
@@ -351,41 +297,21 @@ if (isset($_SESSION['user_id'])) {
 
     /* Responsive Design */
     @media (max-width: 1024px) {
-      .glass-panel { grid-template-columns: 1fr 1fr; }
-      .hero-section { padding: 2.5rem; }
-      .login-section { padding: 2.5rem; }
-      .hero-section h1 { font-size: 40px; }
+      .glass-panel { grid-template-columns: 1fr; }
+      .login-section { padding: 0 4rem 4rem 4rem; }
+      .hero-image-wrapper { display: none; }
     }
-
     @media (max-width: 768px) {
-      body { height: auto; overflow-y: auto; }
-      .wrap { padding: 1rem; margin-top: 1rem; }
-      .glass-panel { 
-        grid-template-columns: 1fr; 
-        border-radius: 24px;
-      }
-      .hero-section { 
-        padding: 2rem; 
-        text-align: center;
-        align-items: center;
-      }
+      .wrap { padding: 1rem; }
+      .hero-section { padding: 2.5rem; text-align: center; align-items: center; }
       .hero-section p { text-align: center; }
-      .login-section { 
-        padding: 2rem 1.5rem; 
-        border-left: none;
-        border-top: 1px solid var(--glass-border);
-      }
-      .hero-image-wrapper { max-width: 300px; }
-      .hero-section h1 { font-size: 32px; }
+      .login-section { padding: 0 1.5rem 2.5rem 1.5rem; }
+      .login-card { padding: 2rem; }
+      .hero-section h1 { font-size: 36px; }
     }
   </style>
 </head>
 <body>
-
-<!-- Abstract Animated Shapes -->
-<div class="shape shape-1"></div>
-<div class="shape shape-2"></div>
-<div class="shape shape-3"></div>
 
 <div class="wrap">
   <div class="glass-panel">
@@ -420,9 +346,9 @@ if (isset($_SESSION['user_id'])) {
           <p class="login-desc" id="login-desc-text">Access your resident portal to view and pay bills.</p>
           <a id="proceed-btn" href="login.php" class="btn-proceed">
             Proceed to Login
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><path d="M12 5l7 7-7 7"></path></svg>
           </a>
-          <div class="footer-note">Administrators, please switch to the Admin role to access the management dashboard.</div>
+          <div class="footer-note" id="footer-note-text">Administrators, please switch to the Admin role to<br>access the management dashboard.</div>
         </div>
 
       </div>
@@ -449,6 +375,7 @@ if (isset($_SESSION['user_id'])) {
   const btnAdmin = document.getElementById('btn-admin');
   const proceedBtn = document.getElementById('proceed-btn');
   const descText = document.getElementById('login-desc-text');
+  const footerNote = document.getElementById('footer-note-text');
 
   function setRole(role) {
     if (role === 'renter') {
@@ -457,12 +384,14 @@ if (isset($_SESSION['user_id'])) {
       btnAdmin.classList.remove('active');
       proceedBtn.href = 'login.php';
       descText.innerText = 'Access your resident portal to view and pay bills.';
+      footerNote.innerHTML = 'Administrators, please switch to the Admin role to<br>access the management dashboard.';
     } else {
       toggleContainer.classList.add('admin-active');
       btnAdmin.classList.add('active');
       btnRenter.classList.remove('active');
       proceedBtn.href = 'admin/login.php';
       descText.innerText = 'Access the comprehensive property management suite.';
+      footerNote.innerHTML = 'Residents, please switch to the Resident role to<br>access your personal portal.';
     }
   }
 
