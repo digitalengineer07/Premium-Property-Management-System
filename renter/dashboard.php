@@ -535,7 +535,7 @@ $show_banner = ($is_late && !empty($overdue_list));
                 margin-left: 0 !important; 
                 max-width: 100% !important; 
                 padding: 16px !important; 
-                padding-bottom: 70px !important; /* Space for bottom nav */
+                padding-bottom: 68px !important; /* Exactly match bottom nav height */
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .grid-2-1, .dashboard-2col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -559,13 +559,13 @@ $show_banner = ($is_late && !empty($overdue_list));
             .tab-btn { white-space: nowrap !important; flex-shrink: 0 !important; }
             .table-header { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; }
             .table-header > div { width: 100% !important; justify-content: space-between !important; }
-            .footer-widgets { grid-template-columns: 1fr !important; gap: 16px !important; }
+            .footer-widgets { grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 8px !important; }
             .footer-widget { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
             .footer-widget .btn-fw { width: 100% !important; justify-content: center !important; }
             .tx-right { gap: 12px !important; }
             .tx-date { display: none !important; }
             
-            .app-footer { flex-direction: column !important; gap: 8px !important; padding-top: 16px !important; margin-top: 0 !important; text-align: center; }
+            .app-footer { flex-direction: column !important; gap: 4px !important; padding-top: 12px !important; margin-top: 0 !important; text-align: center; }
             
             /* Show Universal Mobile Bottom Navigation */
             .mobile-bottom-nav { display: flex !important; }
