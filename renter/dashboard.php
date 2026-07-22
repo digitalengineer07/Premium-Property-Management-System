@@ -535,7 +535,14 @@ $show_banner = ($is_late && !empty($overdue_list));
                 margin-left: 0 !important; 
                 max-width: 100% !important; 
                 padding: 16px !important; 
-                padding-bottom: 10px !important; /* Extremely reduced per user request */
+                padding-bottom: 68px !important; /* Restore space for bottom nav */
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            .desktop-view-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 !important;
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
             .grid-2-1, .dashboard-2col, .cmd-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
@@ -565,7 +572,7 @@ $show_banner = ($is_late && !empty($overdue_list));
             .tx-right { gap: 12px !important; }
             .tx-date { display: none !important; }
             
-            .app-footer { flex-direction: column !important; gap: 4px !important; padding-top: 12px !important; margin-top: 0 !important; text-align: center; }
+            .app-footer { flex-direction: column !important; gap: 4px !important; padding-top: 12px !important; margin-top: auto !important; text-align: center; }
             
             /* Show Universal Mobile Bottom Navigation */
             .mobile-bottom-nav { display: flex !important; }
