@@ -763,11 +763,11 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 <i class='bx bx-map'></i>
                 Vastu Estate colony Madhav Kunj apartment behind RPS School
             </div>
-            <div class="contact-item">
+            <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-phone-call'></i>
-                <?php echo (strpos(trim($phone), '+91') === 0) ? htmlspecialchars(trim($phone)) : '+91 ' . htmlspecialchars(trim($phone)); ?>
+                <?php echo (strpos(trim($phone), '+91') === 0) ? htmlspecialchars(trim($phone)) : '+91&nbsp;' . htmlspecialchars(trim($phone)); ?>
             </div>
-            <div class="contact-item">
+            <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-envelope'></i>
                 <?php echo htmlspecialchars(trim($email)); ?>
             </div>
