@@ -273,7 +273,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         <div class="panel">
             <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(98,75,255,0.1); color: var(--primary-purple); border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-wallet'></i></div> Financial Snapshot</h4>
             
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
                   
                   <!-- Advance Wallet -->
                   <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
@@ -290,7 +290,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                   </div>
                     
                     <!-- Security Deposit -->
-                    <div style="background: white; border-radius: 20px; padding: 24px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); grid-column: 1 / -1;">
+                    <div style="background: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
                         <div style="display: flex; align-items: center; gap: 16px;">
                             <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; color: #F59E0B; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
@@ -301,11 +301,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <div style="text-align: right;">
                             <div style="font-weight: 800; font-size: 22px; color: #F59E0B;">₹<?php echo number_format($user['security_deposit'] ?? 0, 2); ?></div>
                         </div>
-                    </div>    </div>
-                  </div>
-
-                  <!-- Three column grid for Fixed Charges, Outstanding, and Payment History -->
-                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 24px;">
+                    </div>
                   <!-- Fixed Charges -->
                   <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
