@@ -1525,7 +1525,7 @@ $admin_user = s($_SESSION['admin']);
             window.alertTimeout = setTimeout(() => { box.style.display = 'none'; }, 6000);
         }
 
-        function resetForm() {
+        function resetForm(showMessage = true) {
             // Clear only the specified data fields
             document.getElementById('currentReading').value = '';
             document.getElementById('dues').value = '';
@@ -1545,7 +1545,9 @@ $admin_user = s($_SESSION['admin']);
             // Update the form state in localStorage so the cleared values persist
             saveFormState();
 
-            showMsg('Form reset successfully!', 'success');
+            if (showMessage) {
+                showMsg('Form reset successfully!', 'success');
+            }
         }
 
         function saveFormState() {
@@ -1628,7 +1630,7 @@ $admin_user = s($_SESSION['admin']);
             } else {
                 localStorage.removeItem('billFormState');
                 selectRenterDropdown('');
-                if (typeof resetForm === 'function') resetForm();
+                if (typeof resetForm === 'function') resetForm(false);
             }
         });
 
