@@ -179,6 +179,15 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.remove('show');
     });
 
+    // Auto scroll to active sidebar item
+    const activeNavItem = document.querySelector('.nav-item.active');
+    if (activeNavItem) {
+        // Delay slightly to ensure layout is complete
+        setTimeout(() => {
+            activeNavItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+
 
 });
 </script>
