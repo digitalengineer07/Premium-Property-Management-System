@@ -143,17 +143,19 @@ if (isset($_SESSION['user_id'])) {
             font-family: 'Outfit', sans-serif;
             font-weight: 800;
             font-size: 24px;
-            color: #0b1c3c;
+            color: #ffffff;
             line-height: 1.1;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
         .brand-logo-sub {
             font-size: 10px;
             font-weight: 700;
             letter-spacing: 5px;
-            color: #64748b;
+            color: #e2e8f0;
             margin-top: 1px;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
         .header-links {
@@ -277,10 +279,11 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .hero-section h1 span {
-            background: var(--primary-gradient);
+            background: linear-gradient(90deg, #A78BFA 0%, #C084FC 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: block;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
         }
 
         .deco-dash {
@@ -367,8 +370,9 @@ if (isset($_SESSION['user_id'])) {
         .mini-feat-text {
             font-size: 13px;
             font-weight: 700;
-            color: #0f172a;
+            color: #ffffff;
             line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         .hero-image-wrapper {
