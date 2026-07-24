@@ -56,6 +56,9 @@ if (!isset($current_page)) {
         <?php
             $pending_pay_q = mysqli_query($conn, "SELECT COUNT(id) as total FROM payment_notifications WHERE status = 'Pending'");
             $pending_pay_count = mysqli_fetch_assoc($pending_pay_q)['total'] ?? 0;
+            
+            $pending_queries_q = mysqli_query($conn, "SELECT COUNT(id) as total FROM queries WHERE status = 'Pending'");
+            $pending_queries_count = mysqli_fetch_assoc($pending_queries_q)['total'] ?? 0;
         ?>
         <a href="payment-verifications.php" class="nav-item <?php echo $current_page == 'payment-verifications.php' ? 'active' : ''; ?>" style="position: relative;">
             <i class='bx bx-check-shield'></i> <span>Verifications</span>
@@ -66,8 +69,11 @@ if (!isset($current_page)) {
         <a href="manage-announcements.php" class="nav-item <?php echo $current_page == 'manage-announcements.php' ? 'active' : ''; ?>">
             <i class='bx bxs-megaphone'></i> <span>Announcements</span>
         </a>
-        <a href="manage-queries.php" class="nav-item <?php echo $current_page == 'manage-queries.php' ? 'active' : ''; ?>">
+        <a href="manage-queries.php" class="nav-item <?php echo $current_page == 'manage-queries.php' ? 'active' : ''; ?>" style="position: relative;">
             <i class='bx bx-message-square-detail'></i> <span>Support Queries</span>
+            <?php if ($pending_queries_count > 0): ?>
+                <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #624BFF; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid var(--white);"><?php echo $pending_queries_count; ?></span>
+            <?php endif; ?>
         </a>
         <a href="about-dev.php" class="nav-item <?php echo $current_page == 'about-dev.php' ? 'active' : ''; ?>">
             <i class='bx bx-info-circle'></i> About Developer
