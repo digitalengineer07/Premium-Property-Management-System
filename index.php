@@ -239,7 +239,7 @@ if (isset($_SESSION['user_id'])) {
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 1350px;
+            max-width: 1536px;
             margin: 0 auto;
             padding: 1rem 4rem 3rem 4rem;
             position: relative;
@@ -248,8 +248,8 @@ if (isset($_SESSION['user_id'])) {
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 450px;
-            gap: 60px;
+            grid-template-columns: 1fr 400px;
+            gap: 120px;
             width: 100%;
             align-items: center;
             justify-content: center;
@@ -286,7 +286,7 @@ if (isset($_SESSION['user_id'])) {
 
         .hero-section h1 {
             font-family: "Outfit", sans-serif;
-            font-size: 58px;
+            font-size: 46px;
             font-weight: 800;
             color: #ffffff;
             line-height: 1.15;
@@ -326,9 +326,9 @@ if (isset($_SESSION['user_id'])) {
 
         .hero-section p.hero-desc {
             color: #e2e8f0;
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
-            max-width: 480px;
+            max-width: 420px;
             font-weight: 500;
             margin-bottom: 2.5rem;
             text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
@@ -354,13 +354,13 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .mini-feat-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             transition: box-shadow 0.3s ease;
         }
 
@@ -384,7 +384,7 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .mini-feat-text {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: #ffffff;
             line-height: 1.3;
@@ -413,9 +413,9 @@ if (isset($_SESSION['user_id'])) {
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 32px;
-            padding: 2.5rem;
+            padding: 2rem;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2);
             position: relative;
             transition: box-shadow 0.4s ease, transform 0.4s ease;
