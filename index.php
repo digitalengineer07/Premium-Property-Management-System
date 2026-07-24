@@ -67,26 +67,30 @@ if (isset($_SESSION['user_id'])) {
             background: #ffffff;
         }
 
-        /* Video Background */
-        .bg-video-wrapper {
-            position: fixed;
+        .bg-slider .slide {
+            position: absolute;
             inset: 0;
-            z-index: -3;
-            overflow: hidden;
-            background: #0b1c3c;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.95);
+            transition: opacity 2s ease-in-out;
         }
 
-        .bg-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            filter: brightness(0.85); /* Slightly darken for text readability */
+        .bg-slider .slide-1 {
+            background-image: url('assets/img/vector_house_bg.png');
+            /* Sunset Vector House */
+        }
+
+        .bg-slider .slide-2 {
+            background-image: url('assets/img/vector_house_bg_2.png');
+            /* Daytime Vector House */
+            animation: fadeSlide 16s infinite alternate;
+        }
+
+        .bg-slider .slide-3 {
+            background-image: url('assets/img/vector_house_bg_3.png');
+            /* Daytime Vector House */
+            animation: fadeSlide 16s infinite alternate;
         }
 
         .bg-overlay {
@@ -995,12 +999,11 @@ if (isset($_SESSION['user_id'])) {
 
 <body>
 
-    <!-- Video Background -->
-    <div class="bg-video-wrapper">
-        <!-- Replace this src with your own local video file (e.g., assets/vid/my-video.mp4) -->
-        <video autoplay loop muted playsinline class="bg-video">
-            <source src="https://cdn.pixabay.com/vimeo/328859941/house-23490.mp4?width=1280&hash=0c6b73eb238b1e427ed194a287661b17e4f9b87e" type="video/mp4">
-        </video>
+    <!-- Background Slider -->
+    <div class="bg-slider">
+        <div class="slide slide-1"></div>
+        <div class="slide slide-2"></div>
+        <div class="slide slide-3"></div>
     </div>
     <div class="bg-overlay"></div>
 
