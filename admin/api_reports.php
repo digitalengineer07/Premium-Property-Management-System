@@ -54,8 +54,8 @@ try {
             $total_elec = mysqli_fetch_assoc($qElec)['total'] ?? 0;
 
             // Outstanding Amount
-            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Due' $rent_where");
-            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount) as total FROM electricity WHERE status='Due' $elec_where");
+            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount - IFNULL((SELECT SUM(paid_amount) FROM payments WHERE bill_type='rent' AND bill_id=rent.id), 0)) as total FROM rent WHERE status IN ('Due', 'Partial') $rent_where");
+            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount - IFNULL((SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=electricity.id), 0)) as total FROM electricity WHERE status IN ('Due', 'Partial') $elec_where");
             $outstanding = (mysqli_fetch_assoc($qRentDue)['total'] ?? 0) + (mysqli_fetch_assoc($qElecDue)['total'] ?? 0);
 
             // Renters Due count
