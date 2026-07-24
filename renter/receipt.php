@@ -807,6 +807,24 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             .user-phone {
                 font-size: 12px !important;
             }
+            .pm-details {
+                padding: 0 15px !important;
+                margin: 0 15px !important;
+                gap: 10px !important;
+            }
+            .pm-item h5, .pm-item p {
+                white-space: nowrap !important;
+            }
+            .pm-status {
+                width: auto !important;
+            }
+            .footer-info {
+                padding: 12px 16px !important;
+                gap: 12px !important;
+            }
+            .fi-item {
+                gap: 10px !important;
+            }
             .btn-close-receipt { display: none !important; }
         }
         
