@@ -87,6 +87,12 @@ if (isset($_SESSION['user_id'])) {
             animation: fadeSlide 16s infinite alternate;
         }
 
+        .bg-slider .slide-3 {
+            background-image: url('assets/img/vector_house_bg_3.png');
+            /* Daytime Vector House */
+            animation: fadeSlide 16s infinite alternate;
+        }
+
         .bg-overlay {
             display: none;
         }
@@ -146,7 +152,7 @@ if (isset($_SESSION['user_id'])) {
             color: #ffffff;
             line-height: 1.1;
             letter-spacing: -0.5px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         }
 
         .brand-logo-sub {
@@ -155,7 +161,7 @@ if (isset($_SESSION['user_id'])) {
             letter-spacing: 5px;
             color: #e2e8f0;
             margin-top: 1px;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         }
 
         .header-links {
@@ -174,7 +180,7 @@ if (isset($_SESSION['user_id'])) {
             text-decoration: none;
             color: #e2e8f0;
             transition: color 0.2s;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .header-links .link-item:hover {
@@ -275,7 +281,7 @@ if (isset($_SESSION['user_id'])) {
             color: #ffffff;
             line-height: 1.15;
             letter-spacing: -1px;
-            text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         }
 
         .hero-section h1 span {
@@ -283,7 +289,7 @@ if (isset($_SESSION['user_id'])) {
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: block;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
         }
 
         .deco-dash {
@@ -315,7 +321,7 @@ if (isset($_SESSION['user_id'])) {
             max-width: 480px;
             font-weight: 500;
             margin-bottom: 2.5rem;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
         }
 
         /* Hero mini features */
@@ -372,7 +378,7 @@ if (isset($_SESSION['user_id'])) {
             font-weight: 700;
             color: #ffffff;
             line-height: 1.3;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
         }
 
         .hero-image-wrapper {
@@ -435,7 +441,7 @@ if (isset($_SESSION['user_id'])) {
             color: #ffffff;
             margin: 0 0 4px 0;
             letter-spacing: -0.5px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .login-header p {
