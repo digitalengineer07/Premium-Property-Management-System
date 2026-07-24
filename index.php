@@ -574,6 +574,10 @@ if (isset($_SESSION['user_id'])) {
             color: #4338ca;
         }
 
+        .role-toggle button:active {
+            transform: scale(0.96);
+        }
+
         /* Role Info Box */
         .role-info-box {
             background: #e0e7ff;
@@ -649,6 +653,11 @@ if (isset($_SESSION['user_id'])) {
             transform: translateY(-2px);
         }
 
+        .btn-proceed:active {
+            transform: scale(0.98) translateY(0);
+            box-shadow: 0 2px 10px rgba(98, 75, 255, 0.2);
+        }
+
         .divider {
             display: flex;
             align-items: center;
@@ -696,6 +705,11 @@ if (isset($_SESSION['user_id'])) {
             background: #f8fafc;
             color: #0f172a;
             border-color: #cbd5e1;
+        }
+
+        .btn-switch:active {
+            transform: scale(0.98);
+            background: #e2e8f0;
         }
 
         .terms-note {
