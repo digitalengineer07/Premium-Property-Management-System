@@ -3,6 +3,7 @@
 .env.*
 *credentials.php
 secret*.php
+db.php
 
 # Logs and databases
 *.log
