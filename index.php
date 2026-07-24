@@ -73,24 +73,34 @@ if (isset($_SESSION['user_id'])) {
             background-size: cover;
             background-position: center;
             filter: brightness(0.95);
-            transition: opacity 2s ease-in-out;
+            opacity: 0;
+            animation: fadeSlide 24s infinite;
         }
 
         .bg-slider .slide-1 {
             background-image: url('assets/img/vector_house_bg.png');
-            /* Sunset Vector House */
+            animation-delay: 0s;
         }
 
         .bg-slider .slide-2 {
             background-image: url('assets/img/vector_house_bg_2.png');
-            /* Daytime Vector House */
-            animation: fadeSlide 16s infinite alternate;
+            animation-delay: 6s;
         }
 
         .bg-slider .slide-3 {
             background-image: url('assets/img/vector_house_bg_3.png');
-            /* Daytime Vector House */
-            animation: fadeSlide 16s infinite alternate;
+            animation-delay: 12s;
+        }
+
+        .bg-slider .slide-4 {
+            background-image: url('assets/img/vector_house_bg_4.png');
+            animation-delay: 18s;
+        }
+
+        @keyframes fadeSlide {
+            0%, 20% { opacity: 1; }
+            25%, 95% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .bg-overlay {
@@ -1004,6 +1014,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="slide slide-1"></div>
         <div class="slide slide-2"></div>
         <div class="slide slide-3"></div>
+        <div class="slide slide-4"></div>
     </div>
     <div class="bg-overlay"></div>
 
