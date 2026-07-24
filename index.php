@@ -84,25 +84,25 @@ if (isset($_SESSION['user_id'])) {
 
         .bg-slider .slide-2 {
             background-image: url('assets/img/vector_house_bg_2.png');
-            animation-delay: 6s;
+            animation-delay: -18s;
         }
 
         .bg-slider .slide-3 {
             background-image: url('assets/img/vector_house_bg_3.png');
-            animation-delay: 12s;
+            animation-delay: -12s;
         }
 
         .bg-slider .slide-4 {
             background-image: url('assets/img/vector_house_bg_4.png');
-            animation-delay: 18s;
+            animation-delay: -6s;
         }
 
         @keyframes fadeSlide {
-            0% { opacity: 0; }
-            5% { opacity: 1; }
-            25% { opacity: 1; }
-            30% { opacity: 0; }
-            100% { opacity: 0; }
+            0% { opacity: 1; }
+            20% { opacity: 1; }
+            25% { opacity: 0; }
+            95% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         .bg-overlay {
