@@ -170,23 +170,25 @@ if (isset($_SESSION['user_id'])) {
             align-items: center;
             gap: 8px;
             text-decoration: none;
-            color: #64748b;
+            color: #e2e8f0;
             transition: color 0.2s;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
         .header-links .link-item:hover {
-            color: var(--primary);
+            color: #ffffff;
         }
 
         .header-links .link-item i {
             font-size: 20px;
-            color: #624BFF;
+            color: #c7d2fe;
+            text-shadow: none;
         }
 
         .header-divider {
             width: 1px;
             height: 16px;
-            background: #cbd5e1;
+            background: rgba(255, 255, 255, 0.4);
         }
 
         .btn-help {
@@ -268,9 +270,10 @@ if (isset($_SESSION['user_id'])) {
             font-family: "Outfit", sans-serif;
             font-size: 58px;
             font-weight: 800;
-            color: #0b1c3c;
+            color: #ffffff;
             line-height: 1.15;
             letter-spacing: -1px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.6);
         }
 
         .hero-section h1 span {
@@ -303,12 +306,13 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .hero-section p.hero-desc {
-            color: #64748b;
+            color: #e2e8f0;
             font-size: 15px;
             line-height: 1.6;
             max-width: 480px;
-            font-weight: 400;
+            font-weight: 500;
             margin-bottom: 2.5rem;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
         }
 
         /* Hero mini features */
@@ -412,7 +416,7 @@ if (isset($_SESSION['user_id'])) {
 
         .login-header h4 {
             font-size: 14px;
-            color: #624BFF;
+            color: #c7d2fe;
             font-weight: 700;
             margin-bottom: 4px;
             display: flex;
@@ -424,13 +428,14 @@ if (isset($_SESSION['user_id'])) {
             font-family: "Outfit", sans-serif;
             font-weight: 800;
             font-size: 32px;
-            color: #0f172a;
+            color: #ffffff;
             margin: 0 0 4px 0;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
         .login-header p {
-            color: #64748b;
+            color: #e2e8f0;
             font-size: 14px;
             font-weight: 500;
             margin: 0;
@@ -605,7 +610,7 @@ if (isset($_SESSION['user_id'])) {
             align-items: center;
             text-align: center;
             margin: 1.25rem 0;
-            color: #94a3b8;
+            color: #e2e8f0;
             font-size: 12px;
             font-weight: 500;
         }
@@ -614,7 +619,7 @@ if (isset($_SESSION['user_id'])) {
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .divider:not(:empty):before {
