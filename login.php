@@ -110,27 +110,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     :root {
         --primary-purple: #624BFF;
         --primary-hover: #5038E6;
-        --text-dark: #FFFFFF;
-        --text-gray: rgba(255, 255, 255, 0.7);
-        --border: rgba(255, 255, 255, 0.2);
+        --text-dark: #0F172A;
+        --text-gray: #64748B;
+        --border: #E2E8F0;
         --white: #FFFFFF;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     
     body {
-        background: url('assets/img/vector_house_bg.png') no-repeat center center / cover;
+        background: linear-gradient(135deg, #F8FAFC 0%, #EBF4FF 50%, #E0E7FF 100%);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-    }
-    body::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, rgba(11, 28, 60, 0.8) 0%, rgba(11, 28, 60, 0.4) 100%);
-        z-index: -1;
     }
 
     .split-layout {
@@ -171,26 +164,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .hero-title {
         font-size: 36px; font-weight: 800; color: var(--text-dark);
-        line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px; text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px;
     }
-    .hero-title span { color: #A78BFA; }
+    .hero-title span { color: var(--primary-purple); }
     .hero-subtitle {
         font-size: 15px; color: var(--text-gray); font-weight: 500; line-height: 1.4;
-        margin-bottom: 32px; max-width: 380px; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        margin-bottom: 32px; max-width: 380px;
     }
 
     .feature-list { display: flex; flex-direction: column; gap: 16px; z-index: 2; position: relative; }
     .feature-item { display: flex; align-items: flex-start; gap: 12px; position: relative; z-index: 3; }
     .feature-icon {
-        width: 36px; height: 36px; background: rgba(255,255,255,0.1); color: var(--white);
-        border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);
-        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        width: 36px; height: 36px; background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: var(--white);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
     }
     .feature-text {
         /* Text wrapper */
     }
-    .feature-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-    .feature-text p { font-size: 12px; color: var(--text-gray); font-weight: 600; max-width: 300px; line-height: 1.3; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+    .feature-text h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; text-shadow: 0 0 15px rgba(255,255,255,1); }
+    .feature-text p { font-size: 12px; color: var(--text-gray); font-weight: 600; max-width: 300px; line-height: 1.3; text-shadow: 0 0 15px rgba(255,255,255,1); }
 
     .bg-illustration {
         position: absolute;
@@ -241,21 +234,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .login-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid var(--border);
+        background: var(--white);
         width: 100%; max-width: 440px;
         border-radius: 24px;
-        padding: 32px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        padding: 20px 32px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.06);
         position: relative;
     }
 
     .card-logo {
-        width: 42px; height: 42px; background: rgba(255,255,255,0.1); border-radius: 50%; border: 1px solid var(--border);
-        margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center;
-        color: var(--white); font-size: 22px;
+        width: 42px; height: 42px; background: #F8FAFC; border-radius: 50%;
+        margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .login-header { text-align: center; margin-bottom: 12px; }
@@ -267,58 +257,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; margin-left: 4px; }
     
     .input-wrapper { position: relative; }
-    .input-wrapper i.icon-left { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 16px; }
+    .input-wrapper i.icon-left { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--primary-purple); font-size: 16px; }
     .input-wrapper i.icon-right { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 16px; cursor: pointer; transition: color 0.2s; }
-    .input-wrapper i.icon-right:hover { color: var(--white); }
+    .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
 
     .form-input {
-        width: 100%; padding: 10px 14px 10px 36px; font-size: 13px; color: var(--white);
-        background: rgba(255,255,255,0.05); border: 1.5px solid var(--border); border-radius: 10px;
+        width: 100%; padding: 8px 14px 8px 36px; font-size: 13px; color: var(--text-dark);
+        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 10px;
         outline: none; transition: all 0.2s ease; font-weight: 500;
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.4); }
-    .form-input:focus { border-color: var(--white); box-shadow: 0 0 0 3px rgba(255,255,255,0.1); background: rgba(255,255,255,0.1); }
+    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: #ffffff; }
 
     .form-options {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; margin-top: 4px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: -2px;
     }
     .remember-me { display: flex; align-items: center; gap: 6px; cursor: pointer; }
     .remember-me input[type="checkbox"] { 
-        appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--text-gray); border-radius: 4px;
-        outline: none; cursor: pointer; position: relative; background: rgba(255,255,255,0.1);
+        appearance: none; width: 16px; height: 16px; border: 1.5px solid var(--primary-purple); border-radius: 4px;
+        outline: none; cursor: pointer; position: relative; background: var(--primary-purple);
         display: flex; align-items: center; justify-content: center;
     }
-    .remember-me input[type="checkbox"]:checked { background: var(--primary-purple); border-color: var(--primary-purple); }
-    .remember-me input[type="checkbox"]:checked::after {
+    .remember-me input[type="checkbox"]::after {
         content: '\eb7b'; font-family: 'boxicons'; color: white; font-size: 12px; font-weight: bold;
     }
     .remember-me span { font-size: 12px; color: var(--text-gray); font-weight: 600; }
     
-    .forgot-link { font-size: 12px; color: var(--white); font-weight: 700; text-decoration: none; }
+    .forgot-link { font-size: 12px; color: var(--primary-purple); font-weight: 700; text-decoration: none; }
     .forgot-link:hover { text-decoration: underline; }
 
     .btn-submit {
-        width: 100%; padding: 12px; background: linear-gradient(90deg, #624BFF 0%, #4F39F6 100%); color: var(--white);
+        width: 100%; padding: 10px; background: var(--primary-purple); color: var(--white);
         border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer;
         transition: all 0.2s ease; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-submit:hover { background: linear-gradient(90deg, #4F39F6 0%, #3730A3 100%); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
 
     .divider {
-        display: flex; align-items: center; margin: 16px 0; color: var(--text-gray); font-size: 11px; font-weight: 600; text-transform: uppercase;
+        display: flex; align-items: center; margin: 12px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
     }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #E2E8F0; }
     .divider::before { margin-right: 12px; }
     .divider::after { margin-left: 12px; }
 
     .btn-resident {
-        width: 100%; padding: 12px; background: rgba(255,255,255,0.05); color: var(--white);
-        border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; font-weight: 700; 
+        width: 100%; padding: 10px; background: transparent; color: var(--primary-purple);
+        border: 1.5px solid var(--primary-purple); border-radius: 10px; font-size: 13.5px; font-weight: 700; 
         cursor: pointer; text-decoration: none; transition: all 0.2s ease;
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-resident:hover { background: rgba(255,255,255,0.1); border-color: var(--white); }
+    .btn-resident:hover { background: rgba(98,75,255,0.05); }
 
     .secure-footer {
         text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -416,6 +404,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
+        
+        <div class="dot-grid"></div>
+        <svg class="birds" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10,20 Q15,10 20,18 Q25,10 30,20" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M45,8 Q50,-2 55,6 Q60,-2 65,8" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M75,25 Q80,15 85,23 Q90,15 95,25" fill="none" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div class="bg-circle"></div>
+        <div class="bg-rings"></div>
+        <img src="assets/img/login_building.png" class="bg-illustration" alt="Building Illustration">
     </div>
 
     <!-- Right Login Card Panel -->
