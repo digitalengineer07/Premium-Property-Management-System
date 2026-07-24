@@ -337,7 +337,6 @@
                         <div id="details-<?php echo $index; ?>" style="display: none; padding: 0 0 20px 64px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
                                 <p style="font-size: 13px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
-                                <a href="?action=delete&id=<?php echo $q['id']; ?>" onclick="return confirm('Are you sure you want to delete this query?');" style="color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 2px; flex-shrink: 0; background: rgba(239, 68, 68, 0.05);"><i class='bx bx-trash'></i> Delete</a>
                             </div>
                             <?php if(!empty($q['admin_remark'])): ?>
                                 <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">

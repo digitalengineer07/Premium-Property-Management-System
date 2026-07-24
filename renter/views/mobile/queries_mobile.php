@@ -260,9 +260,6 @@
                         </div>
                     <?php endif; ?>
                     
-                    <a href="?action=delete&id=<?php echo $q['id']; ?>" onclick="return confirm('Delete this query?');" style="display: inline-flex; align-items: center; gap: 6px; color: #EF4444; background: rgba(239, 68, 68, 0.05); padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; text-decoration: none;">
-                        <i class='bx bx-trash'></i> Delete Query
-                    </a>
                 </div>
             </div>
             <?php endforeach; ?>
