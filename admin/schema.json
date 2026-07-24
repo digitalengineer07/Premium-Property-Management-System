@@ -1,0 +1,270 @@
+{
+    "tables": {
+        "admin": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "username": "varchar(50) DEFAULT NULL",
+                "password": "varchar(255) DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `admin` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `username` varchar(50) DEFAULT NULL,\n  `password` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "announcements": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "title": "varchar(255) NOT NULL",
+                "message": "text NOT NULL",
+                "priority": "enum('Low','Normal','High','Urgent') DEFAULT NULL DEFAULT 'Normal'",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "expires_at": "datetime DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `announcements` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `title` varchar(255) NOT NULL,\n  `message` text NOT NULL,\n  `priority` enum('Low','Normal','High','Urgent') DEFAULT 'Normal',\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  `expires_at` datetime DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "app_notifications": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "title": "varchar(255) NOT NULL",
+                "message": "text NOT NULL",
+                "type": "varchar(50) DEFAULT NULL DEFAULT 'info'",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `app_notifications` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `title` varchar(255) NOT NULL,\n  `message` text NOT NULL,\n  `type` varchar(50) DEFAULT 'info',\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`),\n  KEY `user_id` (`user_id`),\n  CONSTRAINT `app_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "audit_logs": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_type": "varchar(20) NOT NULL",
+                "user_id": "int(11) NOT NULL",
+                "action": "text NOT NULL",
+                "ip_address": "varchar(45) DEFAULT NULL",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `audit_logs` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_type` varchar(20) NOT NULL,\n  `user_id` int(11) NOT NULL,\n  `action` text NOT NULL,\n  `ip_address` varchar(45) DEFAULT NULL,\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "electricity": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "bill_invoice_id": "varchar(50) DEFAULT NULL",
+                "user_id": "int(11) NOT NULL",
+                "month": "varchar(20) NOT NULL",
+                "due_date": "date DEFAULT NULL",
+                "units": "int(10) NOT NULL",
+                "previous_reading": "int(11) DEFAULT NULL",
+                "current_reading": "int(11) DEFAULT NULL",
+                "units_consumed": "int(11) DEFAULT NULL",
+                "rate_per_unit": "decimal(8,2) DEFAULT NULL DEFAULT '0.00'",
+                "total_amount": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "meter_screenshot": "varchar(255) DEFAULT NULL",
+                "bill_file": "varchar(255) DEFAULT NULL",
+                "amount": "int(10) NOT NULL",
+                "status": "varchar(20) NOT NULL",
+                "rent_amount": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "maintenance": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "dues": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "payment_date": "date DEFAULT NULL",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "reminder_status": "enum('Enabled','Disabled') DEFAULT NULL DEFAULT 'Enabled'",
+                "extra_charges": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "extra_charges_desc": "varchar(255) DEFAULT NULL",
+                "meter_screenshot_orig": "varchar(255) DEFAULT NULL",
+                "meter_screenshot_thumb": "varchar(255) DEFAULT NULL",
+                "elec_status": "varchar(20) DEFAULT NULL DEFAULT 'Due'",
+                "rent_status": "varchar(20) DEFAULT NULL DEFAULT 'Due'",
+                "paid_date": "date DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `electricity` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `bill_invoice_id` varchar(50) DEFAULT NULL,\n  `user_id` int(11) NOT NULL,\n  `month` varchar(20) NOT NULL,\n  `due_date` date DEFAULT NULL,\n  `units` int(10) NOT NULL,\n  `previous_reading` int(11) DEFAULT NULL,\n  `current_reading` int(11) DEFAULT NULL,\n  `units_consumed` int(11) DEFAULT NULL,\n  `rate_per_unit` decimal(8,2) DEFAULT 0.00,\n  `total_amount` decimal(10,2) DEFAULT 0.00,\n  `meter_screenshot` varchar(255) DEFAULT NULL,\n  `bill_file` varchar(255) DEFAULT NULL,\n  `amount` int(10) NOT NULL,\n  `status` varchar(20) NOT NULL,\n  `rent_amount` decimal(10,2) DEFAULT 0.00,\n  `maintenance` decimal(10,2) DEFAULT 0.00,\n  `dues` decimal(10,2) DEFAULT 0.00,\n  `payment_date` date DEFAULT NULL,\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  `reminder_status` enum('Enabled','Disabled') DEFAULT 'Enabled',\n  `extra_charges` decimal(10,2) DEFAULT 0.00,\n  `extra_charges_desc` varchar(255) DEFAULT NULL,\n  `meter_screenshot_orig` varchar(255) DEFAULT NULL,\n  `meter_screenshot_thumb` varchar(255) DEFAULT NULL,\n  `elec_status` varchar(20) DEFAULT 'Due',\n  `rent_status` varchar(20) DEFAULT 'Due',\n  `paid_date` date DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `idx_user_bills` (`user_id`,`created_at`),\n  KEY `idx_status` (`status`)\n) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "login_logs": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "user_type": "enum('admin','renter') NOT NULL",
+                "login_time": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "ip_address": "varchar(45) DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `login_logs` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `user_type` enum('admin','renter') NOT NULL,\n  `login_time` timestamp NOT NULL DEFAULT current_timestamp(),\n  `ip_address` varchar(45) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `idx_user_type` (`user_type`),\n  KEY `idx_time` (`login_time`)\n) ENGINE=InnoDB AUTO_INCREMENT=614 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "meter_recharges": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "amount": "decimal(10,2) NOT NULL",
+                "recharge_date": "date NOT NULL",
+                "recharge_time": "time NOT NULL",
+                "notes": "text DEFAULT NULL",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `meter_recharges` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `amount` decimal(10,2) NOT NULL,\n  `recharge_date` date NOT NULL,\n  `recharge_time` time NOT NULL,\n  `notes` text DEFAULT NULL,\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "password_resets": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "email": "varchar(100) NOT NULL",
+                "otp": "varchar(6) NOT NULL",
+                "expires_at": "datetime NOT NULL",
+                "created_at": "timestamp DEFAULT NULL DEFAULT 'current_timestamp()'"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `password_resets` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `email` varchar(100) NOT NULL,\n  `otp` varchar(6) NOT NULL,\n  `expires_at` datetime NOT NULL,\n  `created_at` timestamp NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+        },
+        "payment_notifications": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "bill_type": "varchar(50) NOT NULL",
+                "bill_id": "int(11) DEFAULT NULL",
+                "amount": "decimal(10,2) NOT NULL",
+                "transaction_id": "varchar(50) NOT NULL",
+                "payment_method": "varchar(50) DEFAULT NULL DEFAULT 'UPI'",
+                "status": "enum('Pending','Approved','Rejected') DEFAULT NULL DEFAULT 'Pending'",
+                "admin_note": "text DEFAULT NULL",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "is_dismissed": "tinyint(1) DEFAULT NULL DEFAULT '0'",
+                "verified_by": "varchar(100) DEFAULT NULL",
+                "verified_at": "datetime DEFAULT NULL",
+                "month": "varchar(50) DEFAULT NULL",
+                "sys_tx_id": "varchar(50) DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `payment_notifications` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_type` varchar(50) NOT NULL,\n  `bill_id` int(11) DEFAULT NULL,\n  `amount` decimal(10,2) NOT NULL,\n  `transaction_id` varchar(50) NOT NULL,\n  `payment_method` varchar(50) DEFAULT 'UPI',\n  `status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',\n  `admin_note` text DEFAULT NULL,\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  `is_dismissed` tinyint(1) DEFAULT 0,\n  `verified_by` varchar(100) DEFAULT NULL,\n  `verified_at` datetime DEFAULT NULL,\n  `month` varchar(50) DEFAULT NULL,\n  `sys_tx_id` varchar(50) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `sys_tx_id` (`sys_tx_id`),\n  KEY `user_id` (`user_id`),\n  KEY `idx_status` (`status`),\n  CONSTRAINT `payment_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "payment_reminders": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "bill_id": "int(11) NOT NULL",
+                "bill_type": "enum('Rent','Electricity') NOT NULL",
+                "month": "varchar(50) NOT NULL",
+                "remind_type": "enum('Auto','Manual') DEFAULT NULL DEFAULT 'Auto'",
+                "status": "enum('Sent','Failed') DEFAULT NULL DEFAULT 'Sent'",
+                "sent_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "admin_remark": "text DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `payment_reminders` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_id` int(11) NOT NULL,\n  `bill_type` enum('Rent','Electricity') NOT NULL,\n  `month` varchar(50) NOT NULL,\n  `remind_type` enum('Auto','Manual') DEFAULT 'Auto',\n  `status` enum('Sent','Failed') DEFAULT 'Sent',\n  `sent_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  `admin_remark` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "payment_requests": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "bill_type": "enum('rent','electricity') NOT NULL",
+                "bill_id": "int(11) NOT NULL",
+                "amount": "decimal(10,2) NOT NULL",
+                "upi_txn_ref": "varchar(100) DEFAULT NULL",
+                "screenshot": "varchar(255) DEFAULT NULL",
+                "status": "enum('Pending','Approved','Rejected') DEFAULT NULL DEFAULT 'Pending'",
+                "created_at": "datetime DEFAULT NULL DEFAULT 'current_timestamp()'",
+                "verified_at": "datetime DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `payment_requests` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_type` enum('rent','electricity') NOT NULL,\n  `bill_id` int(11) NOT NULL,\n  `amount` decimal(10,2) NOT NULL,\n  `upi_txn_ref` varchar(100) DEFAULT NULL,\n  `screenshot` varchar(255) DEFAULT NULL,\n  `status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',\n  `created_at` datetime DEFAULT current_timestamp(),\n  `verified_at` datetime DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `user_id` (`user_id`),\n  CONSTRAINT `payment_requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "payments": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "bill_type": "varchar(50) NOT NULL",
+                "bill_id": "int(11) DEFAULT NULL",
+                "month": "varchar(20) NOT NULL",
+                "total_amount": "int(10) NOT NULL",
+                "payment_mode": "enum('Online','Offline') DEFAULT NULL DEFAULT 'Online'",
+                "paid_amount": "decimal(10,2) DEFAULT NULL",
+                "adjustment_amount": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "adjustment_type": "enum('extra','remaining') DEFAULT NULL",
+                "payment_date": "date NOT NULL",
+                "payment_time": "time DEFAULT NULL",
+                "transaction_id": "varchar(100) DEFAULT NULL",
+                "sys_tx_id": "varchar(50) DEFAULT NULL",
+                "admin_name": "varchar(100) DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `payments` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_type` varchar(50) NOT NULL,\n  `bill_id` int(11) DEFAULT NULL,\n  `month` varchar(20) NOT NULL,\n  `total_amount` int(10) NOT NULL,\n  `payment_mode` enum('Online','Offline') DEFAULT 'Online',\n  `paid_amount` decimal(10,2) DEFAULT NULL,\n  `adjustment_amount` decimal(10,2) DEFAULT 0.00,\n  `adjustment_type` enum('extra','remaining') DEFAULT NULL,\n  `payment_date` date NOT NULL,\n  `payment_time` time DEFAULT NULL,\n  `transaction_id` varchar(100) DEFAULT NULL,\n  `sys_tx_id` varchar(50) DEFAULT NULL,\n  `admin_name` varchar(100) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `idx_user_id` (`user_id`),\n  KEY `idx_bill_info` (`bill_type`,`bill_id`)\n) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "queries": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "category": "enum('Apartment','Website','Billing','Other') NOT NULL",
+                "subject": "varchar(255) NOT NULL",
+                "message": "text NOT NULL",
+                "status": "enum('Pending','In Progress','Resolved') DEFAULT NULL DEFAULT 'Pending'",
+                "admin_remark": "text DEFAULT NULL",
+                "created_at": "timestamp NOT NULL DEFAULT 'current_timestamp()'",
+                "updated_at": "timestamp NOT NULL DEFAULT 'current_timestamp()' ON UPDATE CURRENT_TIMESTAMP()"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `queries` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `category` enum('Apartment','Website','Billing','Other') NOT NULL,\n  `subject` varchar(255) NOT NULL,\n  `message` text NOT NULL,\n  `status` enum('Pending','In Progress','Resolved') DEFAULT 'Pending',\n  `admin_remark` text DEFAULT NULL,\n  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),\n  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`),\n  KEY `user_id` (`user_id`),\n  CONSTRAINT `queries_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "rent": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "month": "varchar(20) NOT NULL",
+                "due_date": "date DEFAULT NULL",
+                "rent_amount": "int(10) NOT NULL",
+                "status": "varchar(20) NOT NULL",
+                "reminder_status": "enum('Enabled','Disabled') DEFAULT NULL DEFAULT 'Enabled'",
+                "paid_date": "date DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `rent` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `month` varchar(20) NOT NULL,\n  `due_date` date DEFAULT NULL,\n  `rent_amount` int(10) NOT NULL,\n  `status` varchar(20) NOT NULL,\n  `reminder_status` enum('Enabled','Disabled') DEFAULT 'Enabled',\n  `paid_date` date DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `idx_user_id` (`user_id`),\n  KEY `idx_status` (`status`)\n) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "users": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "name": "varchar(100) NOT NULL",
+                "phone": "varchar(20) DEFAULT NULL",
+                "email": "varchar(150) DEFAULT NULL",
+                "whatsapp": "varchar(20) DEFAULT NULL",
+                "username": "varchar(50) NOT NULL",
+                "password": "varchar(255) NOT NULL",
+                "room_no": "varchar(50) NOT NULL",
+                "profile_pic": "varchar(255) DEFAULT NULL",
+                "must_change_password": "tinyint(1) DEFAULT NULL DEFAULT '0'",
+                "aadhaar_file": "varchar(255) DEFAULT NULL",
+                "about": "text DEFAULT NULL",
+                "last_login": "timestamp DEFAULT NULL",
+                "base_reading": "int(11) DEFAULT NULL DEFAULT '0'",
+                "pending_adjustment": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "agreement_document": "varchar(255) DEFAULT NULL",
+                "agreement_upload_date": "datetime DEFAULT NULL",
+                "agreement_expiry_date": "date DEFAULT NULL",
+                "advance_payment": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "security_deposit": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "advance_updated_at": "timestamp DEFAULT NULL",
+                "fixed_rent": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "fixed_maintenance": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
+                "rent_maint_updated_at": "timestamp DEFAULT NULL",
+                "rent_maint_updated_by": "int(11) DEFAULT NULL",
+                "joining_date": "date DEFAULT NULL",
+                "status": "enum('active','inactive') NOT NULL DEFAULT 'active'",
+                "electricity_document": "varchar(255) DEFAULT NULL",
+                "electricity_upload_date": "datetime DEFAULT NULL",
+                "dob": "date DEFAULT NULL",
+                "gender": "varchar(20) DEFAULT NULL",
+                "address": "text DEFAULT NULL",
+                "emergency_contact_name": "varchar(100) DEFAULT NULL",
+                "emergency_contact_relation": "varchar(50) DEFAULT NULL",
+                "emergency_contact_phone": "varchar(20) DEFAULT NULL",
+                "emergency_contact_address": "text DEFAULT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `users` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `name` varchar(100) NOT NULL,\n  `phone` varchar(20) DEFAULT NULL,\n  `email` varchar(150) DEFAULT NULL,\n  `whatsapp` varchar(20) DEFAULT NULL,\n  `username` varchar(50) NOT NULL,\n  `password` varchar(255) NOT NULL,\n  `room_no` varchar(50) NOT NULL,\n  `profile_pic` varchar(255) DEFAULT NULL,\n  `must_change_password` tinyint(1) DEFAULT 0,\n  `aadhaar_file` varchar(255) DEFAULT NULL,\n  `about` text DEFAULT NULL,\n  `last_login` timestamp NULL DEFAULT NULL,\n  `base_reading` int(11) DEFAULT 0,\n  `pending_adjustment` decimal(10,2) DEFAULT 0.00,\n  `agreement_document` varchar(255) DEFAULT NULL,\n  `agreement_upload_date` datetime DEFAULT NULL,\n  `agreement_expiry_date` date DEFAULT NULL,\n  `advance_payment` decimal(10,2) DEFAULT 0.00,\n  `security_deposit` decimal(10,2) DEFAULT 0.00,\n  `advance_updated_at` timestamp NULL DEFAULT NULL,\n  `fixed_rent` decimal(10,2) DEFAULT 0.00,\n  `fixed_maintenance` decimal(10,2) DEFAULT 0.00,\n  `rent_maint_updated_at` timestamp NULL DEFAULT NULL,\n  `rent_maint_updated_by` int(11) DEFAULT NULL,\n  `joining_date` date DEFAULT NULL,\n  `status` enum('active','inactive') NOT NULL DEFAULT 'active',\n  `electricity_document` varchar(255) DEFAULT NULL,\n  `electricity_upload_date` datetime DEFAULT NULL,\n  `dob` date DEFAULT NULL,\n  `gender` varchar(20) DEFAULT NULL,\n  `address` text DEFAULT NULL,\n  `emergency_contact_name` varchar(100) DEFAULT NULL,\n  `emergency_contact_relation` varchar(50) DEFAULT NULL,\n  `emergency_contact_phone` varchar(20) DEFAULT NULL,\n  `emergency_contact_address` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        },
+        "welcome_logs": {
+            "columns": {
+                "id": "int(11) NOT NULL AUTO_INCREMENT",
+                "user_id": "int(11) NOT NULL",
+                "sent_at": "datetime NOT NULL"
+            },
+            "primary_key": "id",
+            "create_statement": "CREATE TABLE `welcome_logs` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `sent_at` datetime NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `user_id` (`user_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
+        }
+    }
+}
