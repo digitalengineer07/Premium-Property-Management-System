@@ -777,8 +777,23 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         }
 
         @media print {
+            @page {
+                size: A4;
+                margin: 0; /* Removes browser default headers and footers containing the URL */
+            }
+            body {
+                background: white;
+                margin: 0;
+                padding: 1.5cm; /* Physical margin for the content */
+            }
+            .receipt-container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                max-width: 100% !important;
+            }
             .btn-close-receipt { display: none !important; }
-            body { background: white; }
         }
         
         .btn-close-receipt {
