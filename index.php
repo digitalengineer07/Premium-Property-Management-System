@@ -84,25 +84,43 @@ if (isset($_SESSION['user_id'])) {
 
         .bg-slider .slide-2 {
             background-image: url('assets/img/vector_house_bg_2.png');
-            animation-delay: -18s;
+            animation-delay: 6s;
         }
 
         .bg-slider .slide-3 {
             background-image: url('assets/img/vector_house_bg_3.png');
-            animation-delay: -12s;
+            animation-delay: 12s;
         }
 
         .bg-slider .slide-4 {
             background-image: url('assets/img/vector_house_bg_4.png');
-            animation-delay: -6s;
+            animation-delay: 18s;
+        }
+
+        .bg-slider .slide-5 {
+            background-image: url('assets/img/vector_house_bg_5.png');
         }
 
         @keyframes fadeSlide {
-            0% { opacity: 1; }
-            20% { opacity: 1; }
-            25% { opacity: 0; }
-            95% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            5% {
+                opacity: 1;
+            }
+
+            25% {
+                opacity: 1;
+            }
+
+            30% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
         .bg-overlay {
@@ -243,16 +261,15 @@ if (isset($_SESSION['user_id'])) {
             width: 100%;
             max-width: 1536px;
             margin: 0 auto;
-            padding: 2rem clamp(2rem, 5vw, 4rem);
+            padding: 1rem 4rem 3rem 4rem;
             position: relative;
             z-index: 1;
-            min-height: min-content;
         }
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr minmax(320px, 400px);
-            gap: clamp(40px, 8vw, 120px);
+            grid-template-columns: 1fr 400px;
+            gap: 120px;
             width: 100%;
             align-items: center;
             justify-content: center;
@@ -401,9 +418,9 @@ if (isset($_SESSION['user_id'])) {
         /* Right side - Login Card */
         .login-section {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: flex-end;
-            align-self: center;
+            align-self: flex-start;
             margin-top: 0;
             animation: fadeLeft 0.8s ease-out 0.2s forwards;
             opacity: 0;
@@ -416,7 +433,7 @@ if (isset($_SESSION['user_id'])) {
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 32px;
-            padding: clamp(1.5rem, 4vw, 2rem);
+            padding: 2rem;
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2);
