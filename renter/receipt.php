@@ -255,14 +255,14 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         }
 
         .logo-text {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .address-info {
-            font-size: 11px;
+            font-size: 13px;
             color: #374151;
-            line-height: 1.5;
-            margin-bottom: 12px;
+            line-height: 1.6;
+            margin-bottom: 16px;
             font-weight: 500;
         }
 
@@ -270,7 +270,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 10px;
+            font-size: 12px;
             color: #374151;
             font-weight: 600;
         }
@@ -288,9 +288,9 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         }
 
         .stamp {
-            width: 110px;
-            height: 110px;
-            border: 2px solid #10B981;
+            width: 140px;
+            height: 140px;
+            border: 3px solid #10B981;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -299,24 +299,24 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             color: #10B981;
             font-weight: 800;
             transform: rotate(-15deg);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             position: relative;
         }
         
         .stamp::before {
             content: '';
             position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            top: 6px; left: 6px; right: 6px; bottom: 6px;
             border: 1px dashed #10B981;
             border-radius: 50%;
         }
 
-        .stamp .s-top { position: absolute; top: 10px; font-size: 10px; letter-spacing: 1px; font-weight: 800; }
-        .stamp .s-main { font-size: 20px; font-weight: 900; background: #10B981; color: white; padding: 2px 14px; border-radius: 4px; z-index: 1; letter-spacing: 1px; }
-        .stamp .s-bottom { position: absolute; bottom: 10px; font-size: 8px; letter-spacing: 1px; font-weight: 800; }
-        .stamp .s-stars { position: absolute; display: flex; gap: 6px; font-size: 8px; width: 100%; justify-content: center; }
-        .stamp .s-stars.top { top: 24px; }
-        .stamp .s-stars.bottom { bottom: 24px; }
+        .stamp .s-top { position: absolute; top: 12px; font-size: 13px; letter-spacing: 1px; font-weight: 800; }
+        .stamp .s-main { font-size: 28px; font-weight: 900; background: #10B981; color: white; padding: 4px 20px; border-radius: 4px; z-index: 1; letter-spacing: 2px; }
+        .stamp .s-bottom { position: absolute; bottom: 12px; font-size: 11px; letter-spacing: 1px; font-weight: 800; }
+        .stamp .s-stars { position: absolute; display: flex; gap: 8px; font-size: 10px; width: 100%; justify-content: center; }
+        .stamp .s-stars.top { top: 32px; }
+        .stamp .s-stars.bottom { bottom: 32px; }
 
         .receipt-date {
             display: flex;
@@ -882,9 +882,9 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
         <div class="header">
             <div class="h-left">
                 <div class="logo-text">
-                    <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 16px;">
                         <!-- SVG Logo -->
-                        <div style="width: 50px; height: 45px;">
+                        <div style="width: 70px; height: 60px;">
                             <svg width="100%" height="100%" viewBox="0 0 100 80">
                                 <!-- Roof & Body -->
                                 <path d="M 10 50 L 50 10 L 90 50" fill="none" stroke="#4A3AFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -902,10 +902,10 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                             </svg>
                         </div>
                         <div>
-                            <h1 style="font-size: 18px; font-weight: 900; color: #000; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px;">MADHAV KUNJ</h1>
+                            <h1 style="font-size: 22px; font-weight: 900; color: #000; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px;">MADHAV KUNJ</h1>
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <div style="height: 1px; background: #9CA3AF; flex: 1;"></div>
-                                <span style="font-size: 9px; color: #4B5563; font-weight: 600; letter-spacing: 4px;">RESIDENCE</span>
+                                <span style="font-size: 11px; color: #4B5563; font-weight: 600; letter-spacing: 4px;">RESIDENCE</span>
                                 <div style="height: 1px; background: #9CA3AF; flex: 1;"></div>
                             </div>
                         </div>
@@ -923,24 +923,24 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             </div>
 
             <div class="h-center">
-                <div style="position: relative; width: 48px; height: 48px; margin: 0 auto 12px;">
+                <div style="position: relative; width: 64px; height: 64px; margin: 0 auto 16px;">
                     <!-- Wavy Ribbon Base -->
                     <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; color: #EEF2FF;">
                         <path fill="currentColor" d="M50 0 L58 8 L69 5 L75 14 L86 15 L88 26 L98 31 L95 41 L100 50 L95 59 L98 69 L88 74 L86 85 L75 86 L69 95 L58 92 L50 100 L42 92 L31 95 L25 86 L14 85 L12 74 L2 69 L5 59 L0 50 L5 41 L2 31 L12 26 L14 15 L25 14 L31 5 L42 8 Z"/>
                     </svg>
                     <!-- Inner Checkmark -->
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: #4A3AFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: bold;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; background: #4A3AFF; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; font-weight: bold;">
                         <i class='bx bx-check'></i>
                     </div>
                     <!-- Ribbon Tails -->
-                    <div style="position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: -1;">
-                        <div style="width: 8px; height: 16px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
-                        <div style="width: 8px; height: 16px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
+                    <div style="position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: -1;">
+                        <div style="width: 12px; height: 24px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
+                        <div style="width: 12px; height: 24px; background: #4A3AFF; clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);"></div>
                     </div>
                 </div>
-                <h2 style="font-size: 18px; font-weight: 900; color: #000; letter-spacing: 0.5px; margin-bottom: 6px;">PAYMENT RECEIPT</h2>
-                <p style="font-size: 12px; color: #4B5563; font-weight: 500;">Thank you for your payment!</p>
-                <div style="width: 24px; height: 2px; background: #4A3AFF; margin: 12px auto 0; border-radius: 2px;"></div>
+                <h2 style="font-size: 24px; font-weight: 900; color: #000; letter-spacing: 0.5px; margin-bottom: 8px;">PAYMENT RECEIPT</h2>
+                <p style="font-size: 14px; color: #4B5563; font-weight: 500;">Thank you for your payment!</p>
+                <div style="width: 32px; height: 2px; background: #4A3AFF; margin: 16px auto 0; border-radius: 2px;"></div>
             </div>
 
             <div class="h-right">
