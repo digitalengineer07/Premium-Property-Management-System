@@ -336,7 +336,16 @@
                         </div>
                         <div id="details-<?php echo $index; ?>" style="display: none; padding: 0 0 20px 64px;">
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 12px;">
-                                <p style="font-size: 13px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                                <div>
+                                    <p style="font-size: 13px; color: var(--text-dark); margin: 0; line-height: 1.6;"><strong>Full Message:</strong><br><span style="color: var(--text-gray); font-size: 13px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
+                                    <?php if(!empty($q['attachment'])): ?>
+                                        <div style="margin-top: 10px;">
+                                            <a href="../<?php echo htmlspecialchars($q['attachment']); ?>" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 6px 12px; border-radius: 6px; text-decoration: none;">
+                                                <i class='bx bx-image'></i> View Attachment
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             <?php if(!empty($q['admin_remark'])): ?>
                                 <div style="padding: 16px; background: rgba(98, 75, 255, 0.05); border-left: 4px solid var(--primary-purple); border-radius: 8px;">
