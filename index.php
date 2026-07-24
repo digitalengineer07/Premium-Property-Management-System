@@ -40,20 +40,24 @@ if (isset($_SESSION['user_id'])) {
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f8fafc;
+      background: rgba(248, 250, 252, 0.85);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
       scroll-behavior: smooth;
-      background-image: 
-        radial-gradient(circle at 10% 30%, rgba(98, 75, 255, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 90% 70%, rgba(59, 130, 246, 0.03) 0%, transparent 40%),
-        url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg"><path d="M-100,500 C300,50 500,250 1540,-100" fill="none" stroke="rgba(98,75,255,0.15)" stroke-width="1"/><path d="M-100,530 C300,80 500,280 1540,-70" fill="none" stroke="rgba(98,75,255,0.05)" stroke-width="1"/></svg>');
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20px; left: -20px; right: -20px; bottom: -20px; /* Oversize to hide blur edges */
+      background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80');
       background-size: cover;
-      background-position: top center;
-      background-repeat: no-repeat;
+      background-position: center;
+      filter: blur(12px) brightness(1.1);
+      z-index: -2;
     }
 
     .top-header {
@@ -123,13 +127,7 @@ if (isset($_SESSION['user_id'])) {
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #9333ea; }
     .mini-feat-text { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; }
 
-    .hero-image-wrapper { position: relative; width: 100%; max-width: 750px; margin-top: 20px; animation: floatImg 6s ease-in-out infinite; margin-left: -20px; }
-    .hero-image-wrapper img { 
-        width: 100%; height: auto; object-fit: contain; 
-        mix-blend-mode: darken; transform: scale(1.1); transform-origin: left center;
-        -webkit-mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
-        mask-image: radial-gradient(ellipse at center, black 70%, transparent 100%);
-    }
+    .hero-image-wrapper { display: none; }
 
     /* Right side - Login Card */
     .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; width: 100%; }
@@ -320,9 +318,7 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
             
-            <div class="hero-image-wrapper">
-                <img src="assets/img/hero_property_3d.png" alt="Smart Building Illustration">
-            </div>
+
         </div>
 
         <!-- Right Login Section -->
