@@ -64,7 +64,7 @@ if (isset($_SESSION['user_id'])) {
             right: -10px;
             bottom: -10px;
             z-index: -3;
-            background: #ffffff;
+            background: transparent;
         }
 
         .bg-slider .slide {
