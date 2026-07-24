@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
     
     body {
-        background: linear-gradient(135deg, #F8FAFC 0%, #EBF4FF 50%, #E0E7FF 100%);
+        background: linear-gradient(135deg, #F0F4FF 0%, #E2E8F0 50%, #DBEAFE 100%);
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -175,9 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .feature-list { display: flex; flex-direction: column; gap: 16px; z-index: 2; position: relative; }
     .feature-item { display: flex; align-items: flex-start; gap: 12px; position: relative; z-index: 3; }
     .feature-icon {
-        width: 36px; height: 36px; background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%); color: var(--white);
-        border-radius: 10px; display: flex; align-items: center; justify-content: center;
-        font-size: 18px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+        width: 36px; height: 36px; background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%); color: var(--white);
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        font-size: 18px; flex-shrink: 0; box-shadow: 0 6px 16px rgba(124, 58, 237, 0.25);
     }
     .feature-text {
         /* Text wrapper */
@@ -199,13 +199,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .bg-circle {
         position: absolute; width: 480px; height: 480px;
         border-radius: 50%; bottom: 20px; right: -40px; z-index: 0;
-        background: radial-gradient(circle, rgba(167,139,250,0.3) 0%, rgba(139,92,246,0.15) 60%, rgba(139,92,246,0.02) 100%);
+        background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, rgba(124, 58, 237, 0.05) 60%, transparent 100%);
     }
     .bg-rings {
         position: absolute; width: 620px; height: 620px;
         border-radius: 50%; bottom: -50px; right: -110px; z-index: 0;
-        border: 1px solid rgba(139,92,246,0.1);
-        box-shadow: inset 0 0 0 20px transparent, inset 0 0 0 21px rgba(139,92,246,0.08), inset 0 0 0 40px transparent, inset 0 0 0 41px rgba(139,92,246,0.05), inset 0 0 0 60px transparent, inset 0 0 0 61px rgba(139,92,246,0.03);
+        border: 1px solid rgba(124, 58, 237, 0.08);
+        box-shadow: inset 0 0 0 20px transparent, inset 0 0 0 21px rgba(124, 58, 237, 0.06), inset 0 0 0 40px transparent, inset 0 0 0 41px rgba(124, 58, 237, 0.04), inset 0 0 0 60px transparent, inset 0 0 0 61px rgba(124, 58, 237, 0.02);
     }
     .dot-grid {
         position: absolute;
@@ -234,18 +234,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .login-card {
-        background: var(--white);
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
         width: 100%; max-width: 440px;
-        border-radius: 24px;
-        padding: 20px 32px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.06);
+        border-radius: 28px;
+        padding: 36px 40px;
+        box-shadow: 0 24px 60px rgba(98, 75, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
         position: relative;
     }
 
     .card-logo {
-        width: 42px; height: 42px; background: #F8FAFC; border-radius: 50%;
-        margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center;
-        color: var(--primary-purple); font-size: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        width: 48px; height: 48px; background: linear-gradient(135deg, #F4F0FF 0%, #EAE0FF 100%); border-radius: 12px;
+        margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center;
+        color: var(--primary-purple); font-size: 24px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.9);
     }
 
     .login-header { text-align: center; margin-bottom: 12px; }
@@ -262,11 +266,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .input-wrapper i.icon-right:hover { color: var(--primary-purple); }
 
     .form-input {
-        width: 100%; padding: 8px 14px 8px 36px; font-size: 13px; color: var(--text-dark);
-        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 10px;
-        outline: none; transition: all 0.2s ease; font-weight: 500;
+        width: 100%; padding: 10px 14px 10px 40px; font-size: 13.5px; color: var(--text-dark);
+        background: rgba(255, 255, 255, 0.8); border: 1.5px solid rgba(98, 75, 255, 0.15); border-radius: 12px;
+        outline: none; transition: all 0.2s ease; font-weight: 500; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
-    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: #ffffff; }
+    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 4px rgba(98, 75, 255, 0.12); background: #ffffff; }
 
     .form-options {
         display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: -2px;
@@ -286,12 +290,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .forgot-link:hover { text-decoration: underline; }
 
     .btn-submit {
-        width: 100%; padding: 10px; background: var(--primary-purple); color: var(--white);
-        border: none; border-radius: 10px; font-size: 13.5px; font-weight: 700; cursor: pointer;
-        transition: all 0.2s ease; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);
+        width: 100%; padding: 12px; background: linear-gradient(135deg, #624BFF 0%, #4F39F6 100%); color: var(--white);
+        border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;
+        transition: all 0.2s ease; box-shadow: 0 8px 20px rgba(98, 75, 255, 0.25);
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
+    .btn-submit:hover { background: linear-gradient(135deg, #5038E6 0%, #3B28C5 100%); transform: translateY(-2px); box-shadow: 0 12px 24px rgba(98, 75, 255, 0.35); }
 
     .divider {
         display: flex; align-items: center; margin: 12px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;

@@ -17,6 +17,7 @@ secret*.php
 .Trashes
 ehthumbs.db
 Thumbs.db
+*.zip
 
 # IDEs and Editors
 .vscode/
