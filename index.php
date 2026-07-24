@@ -243,15 +243,16 @@ if (isset($_SESSION['user_id'])) {
             width: 100%;
             max-width: 1536px;
             margin: 0 auto;
-            padding: 1rem 4rem 3rem 4rem;
+            padding: 2rem clamp(2rem, 5vw, 4rem);
             position: relative;
             z-index: 1;
+            min-height: min-content;
         }
 
         .content-grid {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 120px;
+            grid-template-columns: 1fr minmax(320px, 400px);
+            gap: clamp(40px, 8vw, 120px);
             width: 100%;
             align-items: center;
             justify-content: center;
@@ -400,9 +401,9 @@ if (isset($_SESSION['user_id'])) {
         /* Right side - Login Card */
         .login-section {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             justify-content: flex-end;
-            align-self: flex-start;
+            align-self: center;
             margin-top: 0;
             animation: fadeLeft 0.8s ease-out 0.2s forwards;
             opacity: 0;
@@ -415,7 +416,7 @@ if (isset($_SESSION['user_id'])) {
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 32px;
-            padding: 2rem;
+            padding: clamp(1.5rem, 4vw, 2rem);
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2);
