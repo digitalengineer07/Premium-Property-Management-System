@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
 
     body {
       font-family: 'Inter', sans-serif;
-      background: rgba(255, 255, 255, 0.85); /* Clean, bright overlay */
+      background: transparent;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -52,21 +52,28 @@ if (isset($_SESSION['user_id'])) {
     .bg-slider {
       position: fixed;
       top: -10px; left: -10px; right: -10px; bottom: -10px;
-      z-index: -2;
+      z-index: -3;
       background: #ffffff;
     }
     .bg-slider .slide {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      filter: blur(3px) brightness(1.1);
+      filter: blur(4px) brightness(1.05);
       transition: opacity 2s ease-in-out;
     }
     .bg-slider .slide-1 {
-      background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80'); /* Clean Modern House */
+      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); /* Misty Forest */
     }
     .bg-slider .slide-2 {
-      background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80'); /* Clean Luxury House */
+      background-image: url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1920&q=80'); /* Magical Forest House */
       animation: fadeSlide 16s infinite alternate;
+    }
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(2px);
+      z-index: -2;
     }
 
     .top-header {
@@ -273,6 +280,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="slide slide-1"></div>
     <div class="slide slide-2"></div>
 </div>
+<div class="bg-overlay"></div>
 
 <!-- Abstract Premium Glows -->
 <div class="premium-glow-left"></div>
