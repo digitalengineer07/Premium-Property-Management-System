@@ -254,6 +254,14 @@
                 <div class="m-query-details">
                     <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 12px 0; line-height: 1.5;"><strong>Message:</strong><br><span style="color: var(--text-gray);"><?php echo nl2br(htmlspecialchars($q['message'])); ?></span></p>
                     
+                    <?php if(!empty($q['attachment'])): ?>
+                        <div style="margin-bottom: 12px;">
+                            <a href="../<?php echo htmlspecialchars($q['attachment']); ?>" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 8px 12px; border-radius: 8px; text-decoration: none; width: 100%; justify-content: center;">
+                                <i class='bx bx-image'></i> View Attached Image
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                    
                     <?php if(!empty($q['admin_remark'])): ?>
                         <div style="padding: 12px; background: rgba(98, 75, 255, 0.05); border-left: 3px solid #624BFF; border-radius: 8px; margin-bottom: 12px;">
                             <p style="font-size: 12px; color: #624BFF; margin: 0; line-height: 1.5;"><strong>Admin Reply:</strong><br><?php echo nl2br(htmlspecialchars($q['admin_remark'])); ?></p>
