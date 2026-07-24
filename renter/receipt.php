@@ -815,6 +815,8 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             .pm-item h5, .pm-item p {
                 white-space: nowrap !important;
             }
+            .pm-item h5 { font-size: 10px !important; }
+            .pm-item p { font-size: 12px !important; }
             .pm-status {
                 width: auto !important;
             }
