@@ -501,12 +501,12 @@ if (isset($_SESSION['user_id'])) {
         /* Ultra-modern Role Toggle */
         .role-toggle {
             display: flex;
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.1);
             padding: 6px;
             border-radius: 16px;
             position: relative;
             margin-bottom: 1rem;
-            border: 1px solid #f1f5f9;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .toggle-glider {
@@ -517,7 +517,7 @@ if (isset($_SESSION['user_id'])) {
             height: calc(100% - 12px);
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 1;
         }
@@ -534,7 +534,7 @@ if (isset($_SESSION['user_id'])) {
             font-size: 14px;
             background: transparent;
             cursor: pointer;
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.7);
             position: relative;
             z-index: 2;
             transition: color 0.3s ease;
@@ -549,7 +549,7 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .role-toggle button.active {
-            color: #624BFF;
+            color: #4338ca;
         }
 
         /* Role Info Box */
