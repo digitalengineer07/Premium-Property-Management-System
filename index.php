@@ -710,8 +710,10 @@ if (isset($_SESSION['user_id'])) {
             width: 100%;
             max-width: 1250px;
             margin: 20px auto 1rem auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: transparent;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 24px;
             padding: 24px 40px;
             display: flex;
@@ -778,13 +780,13 @@ if (isset($_SESSION['user_id'])) {
         .bf-text h5 {
             font-size: 14px;
             font-weight: 700;
-            color: #0b1c3c;
+            color: #ffffff;
             margin: 0 0 4px 0;
         }
 
         .bf-text p {
             font-size: 12px;
-            color: var(--text-gray);
+            color: rgba(255, 255, 255, 0.7);
             margin: 0;
             font-weight: 500;
             line-height: 1.4;
@@ -794,7 +796,7 @@ if (isset($_SESSION['user_id'])) {
         .bf-divider {
             width: 1px;
             height: 40px;
-            background: #e2e8f0;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Abstract Glowing Orbs */
@@ -1072,14 +1074,6 @@ if (isset($_SESSION['user_id'])) {
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 16px;
-            }
-
-            .bf-text h5 {
-                color: #ffffff;
-            }
-
-            .bf-text p {
-                color: rgba(255, 255, 255, 0.7);
             }
         }
     </style>
