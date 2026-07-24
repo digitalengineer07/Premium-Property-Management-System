@@ -110,7 +110,11 @@ if (isset($_SESSION['user_id'])) {
         }
 
         .bg-overlay {
-            display: none;
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, rgba(11, 28, 60, 0.85) 0%, rgba(11, 28, 60, 0.4) 45%, rgba(11, 28, 60, 0) 100%);
+            z-index: -2;
+            pointer-events: none;
         }
 
         .top-header {
