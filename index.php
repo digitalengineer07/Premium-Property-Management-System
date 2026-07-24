@@ -58,22 +58,22 @@ if (isset($_SESSION['user_id'])) {
     .bg-slider .slide {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      filter: brightness(0.95);
+      filter: blur(4px) brightness(1.1);
       transition: opacity 2s ease-in-out;
     }
     .bg-slider .slide-1 {
-      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); /* Misty Forest */
+      background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80'); /* Clean Modern House */
     }
     .bg-slider .slide-2 {
-      background-image: url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1920&q=80'); /* Magical Forest House */
+      background-image: url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1920&q=80'); /* Bright Modern Interior */
       animation: fadeSlide 16s infinite alternate;
     }
     .bg-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(255, 255, 255, 0.35); /* Much more transparent */
-      backdrop-filter: blur(8px); /* True glassmorphism */
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(248, 250, 252, 0.65); /* Soft, bright white wash */
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: -2;
     }
 
