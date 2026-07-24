@@ -36,6 +36,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_query'])) {
         $error = "Security validation failed.";
     } else {
         $qid = (int) $_POST['query_id'];
+        
+        // Fetch attachment to delete it from disk
+        $q_stmt = mysqli_prepare($conn, "SELECT attachment FROM queries WHERE id = ?");
+        mysqli_stmt_bind_param($q_stmt, "i", $qid);
+        mysqli_stmt_execute($q_stmt);
+        $q_res = mysqli_stmt_get_result($q_stmt);
+        if ($q_row = mysqli_fetch_assoc($q_res)) {
+            if (!empty($q_row['attachment'])) {
+                $file_path = "../" . $q_row['attachment'];
+                if (file_exists($file_path)) {
+                    @unlink($file_path);
+                }
+            }
+        }
+        mysqli_stmt_close($q_stmt);
+
         $stmt = mysqli_prepare($conn, "DELETE FROM queries WHERE id = ?");
         mysqli_stmt_bind_param($stmt, "i", $qid);
         if (mysqli_stmt_execute($stmt)) {
