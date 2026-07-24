@@ -69,9 +69,39 @@
                 </div>
             
             <!-- Notifications -->
-            <div class="icon-btn">
+            <?php
+                if (!isset($conn)) { require_once "../db.php"; }
+                $pending_pay_q = mysqli_query($conn, "SELECT COUNT(id) as total FROM payment_notifications WHERE status = 'Pending'");
+                $pending_pay_count = mysqli_fetch_assoc($pending_pay_q)['total'] ?? 0;
+            ?>
+            <div class="icon-btn notif-btn-wrapper" style="position: relative;" onclick="document.getElementById('notifDropdownMenu').classList.toggle('show')">
                 <i class='bx bx-bell'></i>
-                <div class="badge-dot" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; width: 14px; height: 14px; top: -2px; right: -2px;">3</div>
+                <?php if ($pending_pay_count > 0): ?>
+                    <div class="badge-dot" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; width: 14px; height: 14px; top: -2px; right: -2px;"><?php echo $pending_pay_count; ?></div>
+                <?php endif; ?>
+                
+                <div id="notifDropdownMenu" class="dropdown-menu-custom" style="right: -60px; min-width: 280px; padding: 0; overflow: hidden;">
+                    <div style="padding: 12px 16px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; font-weight: 700; color: #1E293B; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Notifications</span>
+                        <?php if ($pending_pay_count > 0): ?><span style="background: #EF4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px;"><?php echo $pending_pay_count; ?> New</span><?php endif; ?>
+                    </div>
+                    <?php if ($pending_pay_count > 0): ?>
+                        <a href="payment-verifications.php" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-bottom: 1px solid #E2E8F0; text-decoration: none;">
+                            <div style="background: rgba(245, 158, 11, 0.1); color: #D97706; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;"><i class='bx bx-check-shield'></i></div>
+                            <div>
+                                <p style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 600; color: #1E293B;">Verify <?php echo $pending_pay_count; ?> Payments</p>
+                                <p style="margin: 0; font-size: 11.5px; color: #64748B; line-height: 1.4;">Residents have submitted payment screenshots awaiting your approval.</p>
+                            </div>
+                        </a>
+                        <a href="payment-verifications.php" style="display: block; text-align: center; padding: 10px; font-size: 12px; font-weight: 600; color: #624BFF; text-decoration: none; background: #F8FAFC;">View all approvals</a>
+                    <?php else: ?>
+                        <div style="padding: 30px 20px; text-align: center; color: #94A3B8;">
+                            <i class='bx bx-bell-off' style="font-size: 32px; margin-bottom: 12px; opacity: 0.5;"></i>
+                            <p style="margin: 0; font-size: 13px; font-weight: 500;">You're all caught up!</p>
+                            <p style="margin: 4px 0 0 0; font-size: 11px;">No new notifications</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
             
             <!-- Profile -->
@@ -96,10 +126,18 @@
 
 <script>
     document.addEventListener('click', function(e) {
-        const dropdown = document.getElementById('adminDropdownMenu');
-        const trigger = document.querySelector('.admin-profile-dropdown');
-        if (dropdown && trigger && !trigger.contains(e.target)) {
-            dropdown.classList.remove('show');
+        // Handle Profile Dropdown
+        const profDropdown = document.getElementById('adminDropdownMenu');
+        const profTrigger = document.querySelector('.admin-profile-dropdown');
+        if (profDropdown && profTrigger && !profTrigger.contains(e.target)) {
+            profDropdown.classList.remove('show');
+        }
+        
+        // Handle Notif Dropdown
+        const notifDropdown = document.getElementById('notifDropdownMenu');
+        const notifTrigger = document.querySelector('.notif-btn-wrapper');
+        if (notifDropdown && notifTrigger && !notifTrigger.contains(e.target)) {
+            notifDropdown.classList.remove('show');
         }
     });
 </script>
