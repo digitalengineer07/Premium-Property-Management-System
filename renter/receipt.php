@@ -827,6 +827,8 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
             .fi-item {
                 gap: 10px !important;
             }
+            .bottom-thank h2 { font-size: 18px !important; margin-bottom: 4px; }
+            .bottom-thank h3 { font-size: 11px !important; }
             .btn-close-receipt { display: none !important; }
         }
         
