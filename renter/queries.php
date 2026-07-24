@@ -61,6 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
 // Handle query deletion
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $del_id = (int) $_GET['id'];
+    
+    // Fetch attachment to delete it from disk
+    $q_stmt = mysqli_prepare($conn, "SELECT attachment FROM queries WHERE id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($q_stmt, "ii", $del_id, $user_id);
+    mysqli_stmt_execute($q_stmt);
+    $q_res = mysqli_stmt_get_result($q_stmt);
+    if ($q_row = mysqli_fetch_assoc($q_res)) {
+        if (!empty($q_row['attachment'])) {
+            $file_path = "../" . $q_row['attachment'];
+            if (file_exists($file_path)) {
+                @unlink($file_path);
+            }
+        }
+    }
+    mysqli_stmt_close($q_stmt);
+
     $stmt = mysqli_prepare($conn, "DELETE FROM queries WHERE id = ? AND user_id = ?");
     mysqli_stmt_bind_param($stmt, "ii", $del_id, $user_id);
     if (mysqli_stmt_execute($stmt)) {
