@@ -1028,20 +1028,21 @@ if (isset($_SESSION['user_id'])) {
             }
 
             .hero-mini-features {
-                gap: 16px;
-                flex-direction: column;
-                align-items: center;
+                gap: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: flex-start;
                 width: 100%;
             }
 
             .hero-mini-features > div {
-                width: 100%;
-                max-width: 280px;
-                justify-content: flex-start;
-                padding: 8px 12px;
-                background: rgba(255, 255, 255, 0.05);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 12px;
+                width: auto;
+                max-width: none;
+                justify-content: center;
+                padding: 0;
+                background: transparent;
+                border: none;
             }
 
             .login-card {
