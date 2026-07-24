@@ -99,6 +99,7 @@ if (isset($_SESSION['user_id'])) {
 
         .bg-slider .slide-5 {
             background-image: url('assets/img/vector_house_bg_5.png');
+            animation-delay: 25s;
         }
 
         @keyframes fadeSlide {
