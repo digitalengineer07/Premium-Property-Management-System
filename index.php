@@ -419,7 +419,7 @@ if (isset($_SESSION['user_id'])) {
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 32px;
-            padding: 2rem;
+            padding: clamp(1.25rem, 3vw, 1.5rem);
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2);
@@ -436,7 +436,7 @@ if (isset($_SESSION['user_id'])) {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             position: relative;
         }
 
@@ -453,7 +453,7 @@ if (isset($_SESSION['user_id'])) {
         .login-header h2 {
             font-family: "Outfit", sans-serif;
             font-weight: 800;
-            font-size: 32px;
+            font-size: 28px;
             color: #ffffff;
             margin: 0 0 4px 0;
             letter-spacing: -0.5px;
@@ -506,19 +506,19 @@ if (isset($_SESSION['user_id'])) {
         .role-toggle {
             display: flex;
             background: rgba(255, 255, 255, 0.1);
-            padding: 6px;
+            padding: 4px;
             border-radius: 16px;
             position: relative;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .toggle-glider {
             position: absolute;
-            top: 6px;
-            left: 6px;
-            width: calc(50% - 6px);
-            height: calc(100% - 12px);
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -533,7 +533,7 @@ if (isset($_SESSION['user_id'])) {
         .role-toggle button {
             flex: 1;
             border: 0;
-            padding: 12px;
+            padding: 10px;
             font-weight: 600;
             font-size: 14px;
             background: transparent;
@@ -560,18 +560,18 @@ if (isset($_SESSION['user_id'])) {
         .role-info-box {
             background: #e0e7ff;
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             transition: all 0.3s ease;
         }
 
         .role-info-box.admin-mode {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 11px 15px;
+            padding: 9px 13px;
         }
 
         .role-info-icon {
@@ -611,7 +611,7 @@ if (isset($_SESSION['user_id'])) {
             color: white;
             border: none;
             width: 100%;
-            padding: 16px;
+            padding: 12px;
             border-radius: 12px;
             font-weight: 600;
             font-size: 15px;
@@ -635,7 +635,7 @@ if (isset($_SESSION['user_id'])) {
             display: flex;
             align-items: center;
             text-align: center;
-            margin: 1.25rem 0;
+            margin: 1rem 0;
             color: #e2e8f0;
             font-size: 12px;
             font-weight: 500;
@@ -661,7 +661,7 @@ if (isset($_SESSION['user_id'])) {
             color: #475569;
             border: 1px solid #e2e8f0;
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
             font-weight: 600;
             font-size: 14px;
@@ -682,7 +682,7 @@ if (isset($_SESSION['user_id'])) {
 
         .terms-note {
             text-align: center;
-            margin-top: 1.25rem;
+            margin-top: 1rem;
             margin-bottom: 0;
             font-size: 12px;
             color: #64748b;
