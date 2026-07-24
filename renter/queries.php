@@ -24,11 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
     $subject = trim($_POST['subject'] ?? '');
     $message = trim($_POST['message'] ?? '');
 
+    $attachment = null;
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/queries/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9.]/", "_", basename($_FILES['attachment']['name']));
+        $targetFile = $uploadDir . $fileName;
+        
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png'];
+        if (in_array($fileType, $allowedTypes) && $_FILES['attachment']['size'] <= 5 * 1024 * 1024) {
+            if (move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
+                $attachment = 'uploads/queries/' . $fileName;
+            }
+        }
+    }
+
     if (empty($subject) || empty($message)) {
         $error = "Please fill in all required fields.";
     } else {
-        $stmt = mysqli_prepare($conn, "INSERT INTO queries (user_id, category, subject, message) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isss", $user_id, $category, $subject, $message);
+        $stmt = mysqli_prepare($conn, "INSERT INTO queries (user_id, category, subject, message, attachment) VALUES (?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "issss", $user_id, $category, $subject, $message, $attachment);
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
             header("Location: queries.php?success=1");
