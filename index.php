@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
 
     body {
       font-family: 'Inter', sans-serif;
-      background: rgba(248, 250, 252, 0.70);
+      background: rgba(255, 255, 255, 0.85); /* Clean, bright overlay */
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -53,19 +53,20 @@ if (isset($_SESSION['user_id'])) {
       position: fixed;
       top: -10px; left: -10px; right: -10px; bottom: -10px;
       z-index: -2;
-      background: #0b1c3c;
+      background: #ffffff;
     }
     .bg-slider .slide {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      filter: blur(4px) brightness(1.05);
+      filter: blur(3px) brightness(1.1);
+      transition: opacity 2s ease-in-out;
     }
     .bg-slider .slide-1 {
-      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); /* Misty Forest */
+      background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80'); /* Clean Modern House */
     }
     .bg-slider .slide-2 {
-      background-image: url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1920&q=80'); /* Modern House by Water */
-      animation: fadeSlide 12s infinite alternate;
+      background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80'); /* Clean Luxury House */
+      animation: fadeSlide 16s infinite alternate;
     }
 
     .top-header {
@@ -224,8 +225,8 @@ if (isset($_SESSION['user_id'])) {
 
     /* Animations */
     @keyframes fadeSlide {
-      0%, 35% { opacity: 0; }
-      65%, 100% { opacity: 1; }
+      0%, 40% { opacity: 0; }
+      60%, 100% { opacity: 1; }
     }
     @keyframes floatImg { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
     @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
