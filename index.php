@@ -1021,6 +1021,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="slide slide-2"></div>
         <div class="slide slide-3"></div>
         <div class="slide slide-4"></div>
+        <div class="slide slide-5"></div>
     </div>
     <div class="bg-overlay"></div>
 
