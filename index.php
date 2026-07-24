@@ -993,20 +993,60 @@ if (isset($_SESSION['user_id'])) {
         }
 
         @media (max-width: 768px) {
+            .main-wrap {
+                padding: 1rem;
+            }
+
+            .content-grid {
+                gap: 24px;
+                margin-bottom: 1rem;
+            }
+
             .top-header {
                 flex-direction: column;
-                gap: 16px;
-                padding-bottom: 1.5rem;
+                gap: 12px;
+                padding: 1rem;
             }
 
             .header-links {
                 width: 100%;
                 justify-content: center;
                 flex-wrap: wrap;
+                gap: 12px;
+                font-size: 14px;
+            }
+
+            .hero-section h1 {
+                font-size: 32px;
+                line-height: 1.1;
+                margin-bottom: 12px;
+            }
+
+            .hero-section p.hero-desc {
+                font-size: 14px;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-mini-features {
+                gap: 16px;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            .hero-mini-features > div {
+                width: 100%;
+                max-width: 280px;
+                justify-content: flex-start;
+                padding: 8px 12px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 12px;
             }
 
             .login-card {
-                padding: 2rem;
+                padding: 1.25rem;
+                border-radius: 24px;
             }
 
             .bf-item {
