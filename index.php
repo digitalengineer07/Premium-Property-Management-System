@@ -48,7 +48,7 @@ if (isset($_SESSION['user_id'])) {
 
         body {
             font-family: 'Inter', sans-serif;
-            background: transparent;
+            background: #0b1c3c;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -98,9 +98,11 @@ if (isset($_SESSION['user_id'])) {
         }
 
         @keyframes fadeSlide {
-            0%, 20% { opacity: 1; }
-            25%, 95% { opacity: 0; }
-            100% { opacity: 1; }
+            0% { opacity: 0; }
+            5% { opacity: 1; }
+            25% { opacity: 1; }
+            30% { opacity: 0; }
+            100% { opacity: 0; }
         }
 
         .bg-overlay {
