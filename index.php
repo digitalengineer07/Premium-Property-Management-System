@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
 
     body {
       font-family: 'Inter', sans-serif;
-      background: rgba(248, 250, 252, 0.75);
+      background: rgba(248, 250, 252, 0.70);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -49,15 +49,23 @@ if (isset($_SESSION['user_id'])) {
       scroll-behavior: smooth;
     }
 
-    body::before {
-      content: '';
+    .bg-slider {
       position: fixed;
-      top: -10px; left: -10px; right: -10px; bottom: -10px; /* Oversize to hide blur edges */
-      background-image: url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1920&q=80');
-      background-size: cover;
-      background-position: center;
-      filter: blur(5px) brightness(1.05);
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
       z-index: -2;
+      background: #0b1c3c;
+    }
+    .bg-slider .slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      filter: blur(4px) brightness(1.05);
+    }
+    .bg-slider .slide-1 {
+      background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1920&q=80'); /* Misty Forest */
+    }
+    .bg-slider .slide-2 {
+      background-image: url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=1920&q=80'); /* Modern House by Water */
+      animation: fadeSlide 12s infinite alternate;
     }
 
     .top-header {
@@ -215,6 +223,10 @@ if (isset($_SESSION['user_id'])) {
     footer .copyright { font-size: 11px; color: #94a3b8; font-weight: 500; }
 
     /* Animations */
+    @keyframes fadeSlide {
+      0%, 35% { opacity: 0; }
+      65%, 100% { opacity: 1; }
+    }
     @keyframes floatImg { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
     @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeLeft { to { opacity: 1; transform: translateX(0); } }
@@ -254,6 +266,12 @@ if (isset($_SESSION['user_id'])) {
   </style>
 </head>
 <body>
+
+<!-- Background Slider -->
+<div class="bg-slider">
+    <div class="slide slide-1"></div>
+    <div class="slide slide-2"></div>
+</div>
 
 <!-- Abstract Premium Glows -->
 <div class="premium-glow-left"></div>
