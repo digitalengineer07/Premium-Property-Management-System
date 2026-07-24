@@ -14,8 +14,9 @@
             </button>
         </div>
 
-        <form method="POST" id="approvalForm" action="payment-approvals.php">
+        <form method="POST" id="approvalForm" action="process_payment.php">
             <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
+            <input type="hidden" name="return_url" value="payment-approvals.php">
             
             <div style="margin-bottom: 16px;">
                 <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Amount (&#8377;)</label>
