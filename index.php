@@ -28,8 +28,8 @@ if (isset($_SESSION['user_id'])) {
 
   <style>
     :root {
-      --primary: #10875c;
-      --primary-gradient: linear-gradient(90deg, #10875c 0%, #3b82f6 100%);
+      --primary: #624BFF;
+      --primary-gradient: linear-gradient(90deg, #624BFF 0%, #8B5CF6 100%);
       --text-main: #0b1c3c;
       --text-gray: #64748b;
       --bg-light: #f8fafc;
@@ -48,9 +48,9 @@ if (isset($_SESSION['user_id'])) {
       overflow-x: hidden;
       scroll-behavior: smooth;
       background-image: 
-        radial-gradient(circle at 10% 30%, rgba(16, 185, 129, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 10% 30%, rgba(98, 75, 255, 0.04) 0%, transparent 40%),
         radial-gradient(circle at 90% 70%, rgba(59, 130, 246, 0.03) 0%, transparent 40%),
-        url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg"><path d="M-100,500 C300,50 500,250 1540,-100" fill="none" stroke="rgba(16,185,129,0.15)" stroke-width="1"/><path d="M-100,530 C300,80 500,280 1540,-70" fill="none" stroke="rgba(16,185,129,0.05)" stroke-width="1"/></svg>');
+        url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 1440 600" xmlns="http://www.w3.org/2000/svg"><path d="M-100,500 C300,50 500,250 1540,-100" fill="none" stroke="rgba(98,75,255,0.15)" stroke-width="1"/><path d="M-100,530 C300,80 500,280 1540,-70" fill="none" stroke="rgba(98,75,255,0.05)" stroke-width="1"/></svg>');
       background-size: cover;
       background-position: top center;
       background-repeat: no-repeat;
@@ -64,8 +64,8 @@ if (isset($_SESSION['user_id'])) {
 
     .brand-logo { display: flex; align-items: center; gap: 8px; cursor: pointer; }
     .logo-icon-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
-    .brand-logo-icon { color: #10875c; font-size: 46px; }
-    .brand-leaf { position: absolute; bottom: -2px; right: -4px; font-size: 22px; color: #10875c; transform: rotate(15deg); text-shadow: -2px -2px 0 #f8fafc; }
+    .brand-logo-icon { color: #624BFF; font-size: 46px; }
+    .brand-leaf { position: absolute; bottom: -2px; right: -4px; font-size: 22px; color: #624BFF; transform: rotate(15deg); text-shadow: -2px -2px 0 #f8fafc; }
     
     .brand-logo-text { display: flex; flex-direction: column; margin-left: 2px; }
     .brand-logo-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 24px; color: #0b1c3c; line-height: 1.1; letter-spacing: -0.5px; }
@@ -74,15 +74,15 @@ if (isset($_SESSION['user_id'])) {
     .header-links { display: flex; align-items: center; gap: 24px; font-size: 14px; font-weight: 500; color: #64748b; }
     .header-links .link-item { display: flex; align-items: center; gap: 8px; text-decoration: none; color: #64748b; transition: color 0.2s; }
     .header-links .link-item:hover { color: var(--primary); }
-    .header-links .link-item i { font-size: 20px; color: #10875c; }
+    .header-links .link-item i { font-size: 20px; color: #624BFF; }
     .header-divider { width: 1px; height: 16px; background: #cbd5e1; }
     
     .btn-help {
         display: flex; align-items: center; gap: 8px; padding: 10px 24px; border-radius: 100px; 
-        border: 1px solid #a7f3d0; background: #ecfdf5; color: #059669; text-decoration: none; 
+        border: 1px solid #c7d2fe; background: #e0e7ff; color: #4338ca; text-decoration: none; 
         font-weight: 600; font-size: 14px; transition: all 0.3s ease; margin-left: 8px;
     }
-    .btn-help:hover { background: #d1fae5; box-shadow: 0 4px 10px rgba(5, 150, 105, 0.1); transform: translateY(-1px); }
+    .btn-help:hover { background: #EEF2FF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1); transform: translateY(-1px); }
 
     /* Main Container */
     .main-wrap {
@@ -91,14 +91,14 @@ if (isset($_SESSION['user_id'])) {
     }
 
     .content-grid {
-        display: grid; grid-template-columns: 55% 45%; gap: 60px; width: 100%; align-items: center;
+        display: grid; grid-template-columns: 1fr 450px; gap: 60px; width: 100%; align-items: center; justify-content: center;
     }
 
     /* Left side - Hero */
     .hero-section { display: flex; flex-direction: column; justify-content: center; position: relative; animation: fadeUp 0.8s ease-out forwards; opacity: 0; }
 
     .welcome-badge {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; background: #ecfdf5; color: #059669; 
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; background: #e0e7ff; color: #4338ca; 
       font-weight: 600; font-size: 13px; border-radius: 100px; margin-bottom: 1.5rem; width: fit-content;
     }
     .welcome-badge i { font-size: 14px; animation: pulseIcon 2s infinite; }
@@ -107,7 +107,7 @@ if (isset($_SESSION['user_id'])) {
     .hero-section h1 span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
 
     .deco-dash { display: flex; gap: 6px; margin-top: 1.25rem; margin-bottom: 1.25rem; align-items: center; }
-    .deco-dash span:first-child { width: 44px; height: 5px; border-radius: 3px; background: #10875c; }
+    .deco-dash span:first-child { width: 44px; height: 5px; border-radius: 3px; background: #624BFF; }
     .deco-dash span:last-child { width: 8px; height: 5px; border-radius: 3px; background: #cbd5e1; }
 
     .hero-section p.hero-desc { color: #64748b; font-size: 15px; line-height: 1.6; max-width: 480px; font-weight: 400; margin-bottom: 2.5rem; }
@@ -118,7 +118,7 @@ if (isset($_SESSION['user_id'])) {
     .mini-feat:hover { transform: translateY(-2px); }
     .mini-feat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: box-shadow 0.3s ease; }
     .mini-feat:hover .mini-feat-icon { box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
-    .mf-1 .mini-feat-icon { background: #ecfdf5; color: #059669; }
+    .mf-1 .mini-feat-icon { background: #e0e7ff; color: #4338ca; }
     .mf-2 .mini-feat-icon { background: #eff6ff; color: #2563eb; }
     .mf-3 .mini-feat-icon { background: #faf5ff; color: #9333ea; }
     .mini-feat-text { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; }
@@ -132,22 +132,22 @@ if (isset($_SESSION['user_id'])) {
     }
 
     /* Right side - Login Card */
-    .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; }
+    .login-section { display: flex; align-items: flex-start; justify-content: flex-end; align-self: flex-start; margin-top: 0; animation: fadeLeft 0.8s ease-out 0.2s forwards; opacity: 0; width: 100%; }
     .login-card {
-      background: #ffffff; border-radius: 32px; padding: 2rem 2.5rem 1.25rem 2.5rem; width: 100%; max-width: 480px; 
+      background: #ffffff; border-radius: 32px; padding: 2.5rem; width: 100%; max-width: 450px; 
       box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(15, 23, 42, 0.02); position: relative;
       transition: box-shadow 0.4s ease, transform 0.4s ease;
     }
     .login-card:hover { box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02); transform: translateY(-4px); }
     
     .login-header-wrap { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem; position: relative; }
-    .login-header h4 { font-size: 14px; color: #059669; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .login-header h4 { font-size: 14px; color: #624BFF; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
     .login-header h2 { font-family: "Outfit", sans-serif; font-weight: 800; font-size: 32px; color: #0f172a; margin: 0 0 4px 0; letter-spacing: -0.5px; }
     .login-header p { color: #64748b; font-size: 14px; font-weight: 500; margin: 0; }
     
     .shield-badge-wrapper { position: relative; width: 68px; height: 68px; display: flex; align-items: center; justify-content: center; }
     .shield-badge-dots { position: absolute; inset: 0; background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px); background-size: 8px 8px; border-radius: 50%; opacity: 0.8; animation: spinSlow 30s linear infinite; }
-    .shield-badge { width: 44px; height: 44px; background: #ecfdf5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 24px; position: relative; z-index: 2; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1); border: 2px solid #ffffff; }
+    .shield-badge { width: 44px; height: 44px; background: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #624BFF; font-size: 24px; position: relative; z-index: 2; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.1); border: 2px solid #ffffff; }
 
     /* Ultra-modern Role Toggle */
     .role-toggle { display: flex; background: #f8fafc; padding: 6px; border-radius: 16px; position: relative; margin-bottom: 1rem; border: 1px solid #f1f5f9; }
@@ -155,35 +155,35 @@ if (isset($_SESSION['user_id'])) {
     .role-toggle.admin-active .toggle-glider { transform: translateX(100%); }
     .role-toggle button { flex: 1; border: 0; padding: 12px; font-weight: 600; font-size: 14px; background: transparent; cursor: pointer; color: #64748b; position: relative; z-index: 2; transition: color 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .role-toggle button i { font-size: 18px; }
-    .role-toggle button.active { color: #10875c; }
+    .role-toggle button.active { color: #624BFF; }
 
     /* Role Info Box */
-    .role-info-box { background: #ecfdf5; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; transition: all 0.3s ease; }
+    .role-info-box { background: #e0e7ff; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 1.25rem; transition: all 0.3s ease; }
     .role-info-box.admin-mode { background: #f8fafc; border: 1px solid #e2e8f0; padding: 11px 15px; }
-    .role-info-icon { width: 40px; height: 40px; background: #d1fae5; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: all 0.3s ease; }
+    .role-info-icon { width: 40px; height: 40px; background: #c7d2fe; color: #4338ca; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; transition: all 0.3s ease; }
     .admin-mode .role-info-icon { background: #e2e8f0; color: #475569; }
-    .role-info-text { font-size: 13px; color: #064e3b; font-weight: 500; line-height: 1.4; transition: all 0.3s ease; }
+    .role-info-text { font-size: 13px; color: #312e81; font-weight: 500; line-height: 1.4; transition: all 0.3s ease; }
     .admin-mode .role-info-text { color: #475569; }
 
     /* Buttons */
-    .btn-proceed { background: linear-gradient(90deg, #166534 0%, #0d9488 100%); color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2); }
-    .btn-proceed:hover { background: linear-gradient(90deg, #14532d 0%, #0f766e 100%); box-shadow: 0 8px 20px rgba(13, 148, 136, 0.3); transform: translateY(-2px); }
+    .btn-proceed { background: linear-gradient(90deg, #624BFF 0%, #4F39F6 100%); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 600; font-size: 15px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); }
+    .btn-proceed:hover { background: linear-gradient(90deg, #4F39F6 0%, #3730A3 100%); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.3); transform: translateY(-2px); }
 
-    .divider { display: flex; align-items: center; text-align: center; margin: 1rem 0; color: #94a3b8; font-size: 12px; font-weight: 500; }
+    .divider { display: flex; align-items: center; text-align: center; margin: 1.25rem 0; color: #94a3b8; font-size: 12px; font-weight: 500; }
     .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
-    .divider:not(:empty)::before { margin-right: 1em; }
-    .divider:not(:empty)::after { margin-left: 1em; }
+    .divider:not(:empty):before { margin-right: 1em; }
+    .divider:not(:empty):after { margin-left: 1em; }
 
     .btn-switch { background: #ffffff; color: #475569; border: 1px solid #e2e8f0; width: 100%; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
     .btn-switch:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; }
 
     .terms-note { text-align: center; margin-top: 1.25rem; margin-bottom: 0; font-size: 12px; color: #64748b; line-height: 1.5; }
-    .terms-note a { color: #0d9488; text-decoration: none; font-weight: 600; transition: color 0.2s; }
-    .terms-note a:hover { color: #0f766e; text-decoration: underline; }
+    .terms-note a { color: #624BFF; text-decoration: none; font-weight: 600; transition: color 0.2s; }
+    .terms-note a:hover { color: #4F39F6; text-decoration: underline; }
 
     /* Bottom Features Strip */
     .bottom-features {
-        width: 100%; max-width: 1250px; margin: -80px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
+        width: 100%; max-width: 1250px; margin: 20px auto 1rem auto; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); 
         border-radius: 24px; padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; 
         box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02); flex-shrink: 0; position: relative; z-index: 20;
         animation: fadeUp 0.8s ease-out 0.4s forwards; opacity: 0;
@@ -192,7 +192,7 @@ if (isset($_SESSION['user_id'])) {
     .bf-item:hover { transform: translateY(-2px); }
     .bf-icon { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; transition: box-shadow 0.3s ease; }
     .bf-item:hover .bf-icon { box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
-    .bf-item.secure .bf-icon { background: #ecfdf5; color: #059669; border: 2px solid #a7f3d0; }
+    .bf-item.secure .bf-icon { background: #e0e7ff; color: #4338ca; border: 2px solid #c7d2fe; }
     .bf-item.access .bf-icon { background: #eff6ff; color: #2563eb; border: 2px solid #bfdbfe; }
     .bf-item.notif .bf-icon { background: #faf5ff; color: #9333ea; border: 2px solid #e9d5ff; }
     .bf-item.support .bf-icon { background: #fff7ed; color: #ea580c; border: 2px solid #fed7aa; }
@@ -203,7 +203,7 @@ if (isset($_SESSION['user_id'])) {
     /* Abstract Glowing Orbs */
     .premium-glow-left {
         position: fixed; bottom: -10vh; left: -10vw; width: 60vw; height: 60vw;
-        background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(98, 75, 255, 0.08) 0%, transparent 70%);
         z-index: 0; pointer-events: none; border-radius: 50%;
     }
     .premium-glow-right {
@@ -213,7 +213,7 @@ if (isset($_SESSION['user_id'])) {
     }
 
     /* Page Footer */
-    footer { padding: 0 0 10px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; }
+    footer { padding: 0 0 20px 0; text-align: center; flex-shrink: 0; z-index: 5; position: relative; margin-top: auto; }
     footer .copyright { font-size: 11px; color: #94a3b8; font-weight: 500; }
 
     /* Animations */
@@ -225,16 +225,22 @@ if (isset($_SESSION['user_id'])) {
 
     /* Responsive Design */
     @media (max-width: 1440px) {
-        .content-grid { gap: 30px; grid-template-columns: 50% 50%; }
+        .content-grid { gap: 40px; grid-template-columns: 1fr 420px; }
         .hero-section h1 { font-size: 46px; }
         .hero-image-wrapper { max-width: 480px; }
         .top-header { padding: 1.5rem 3rem; }
+    }
+    @media (max-width: 1150px) {
+        .bottom-features { flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
+        .bf-divider { display: none; }
+        .bf-item { width: calc(50% - 20px); justify-content: center; }
     }
     @media (max-width: 1024px) {
       body { height: auto; overflow: visible; overflow-x: hidden; }
       .main-wrap { padding: 2rem; }
       .content-grid { grid-template-columns: 1fr; gap: 40px; margin-bottom: 2rem; }
-      .login-section { justify-content: center; }
+      .login-section { justify-content: center; max-width: 100%; }
+      .login-card { max-width: 500px; margin: 0 auto; }
       .hero-section { align-items: center; text-align: center; }
       .hero-section h1 { font-size: 42px; }
       .hero-section p.hero-desc { text-align: center; margin: 0 auto 2rem auto; }
@@ -245,6 +251,7 @@ if (isset($_SESSION['user_id'])) {
       .top-header { flex-direction: column; gap: 16px; padding-bottom: 1.5rem; }
       .header-links { width: 100%; justify-content: center; flex-wrap: wrap; }
       .login-card { padding: 2rem; }
+      .bf-item { width: 100%; justify-content: flex-start; }
     }
   </style>
 </head>
