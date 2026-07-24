@@ -203,7 +203,7 @@
             <!-- Left: Form -->
             <div class="form-card">
                 <h3 class="form-title">Submit a New Query</h3>
-                <form method="POST" style="flex: 1; display: flex; flex-direction: column;">
+                <form method="POST" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column;">
                   <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div class="form-group">
                         <label class="form-label">Query Category</label>
@@ -233,7 +233,7 @@
                             <h5>Click to upload <span style="color: var(--text-gray); font-weight: 400;">or drag and drop</span></h5>
                             <p>PNG, JPG, JPEG up to 5MB</p>
                         </div>
-                        <input type="file" id="fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" name="attachment" id="fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
                     </div>
 
                     <button type="submit" name="submit_query" class="btn-primary" style="margin-top: auto;">
