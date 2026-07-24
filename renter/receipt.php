@@ -794,6 +794,19 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                 max-width: 100% !important;
                 zoom: 0.85;
             }
+            .meta-grid {
+                grid-template-columns: 1.2fr 1fr 1.3fr !important;
+                gap: 12px !important;
+            }
+            .meta-card {
+                padding: 16px !important;
+            }
+            .card-title, .user-phone {
+                white-space: nowrap !important;
+            }
+            .user-phone {
+                font-size: 12px !important;
+            }
             .btn-close-receipt { display: none !important; }
         }
         
