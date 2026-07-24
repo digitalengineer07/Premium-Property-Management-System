@@ -131,6 +131,13 @@ $queries_res = mysqli_query($conn, "
                     <div style="background: #FAFBFC; padding: 24px;">
                         <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                             <p style="margin: 0; line-height: 1.6; color: var(--text-dark); font-size: 14px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
+                            <?php if(!empty($q['attachment'])): ?>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #EDEDF5;">
+                                    <a href="../<?php echo htmlspecialchars($q['attachment']); ?>" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #624BFF; background: rgba(98, 75, 255, 0.05); padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                                        <i class='bx bx-image'></i> View Attached Image
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
 
