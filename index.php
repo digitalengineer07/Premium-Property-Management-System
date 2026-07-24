@@ -1172,7 +1172,7 @@ if (isset($_SESSION['user_id'])) {
 
             </div>
 
-            <!-- Right Login Section --
+            <!-- Right Login Section -->
             <div class="login-section">
                 <div class="login-card">
 
@@ -1230,90 +1230,90 @@ if (isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Bottom Features Strip -->
-            <div class="bottom-features">
-                <div class="bf-item secure">
-                    <div class="bf-icon"><i class='bx bx-check-shield'></i></div>
-                    <div class="bf-text">
-                        <h5>Secure & Reliable</h5>
-                        <p>Your data is protected<br>with advanced security</p>
-                    </div>
-                </div>
-                <div class="bf-divider"></div>
-                <div class="bf-item access">
-                    <div class="bf-icon"><i class='bx bx-time-five'></i></div>
-                    <div class="bf-text">
-                        <h5>24/7 Access</h5>
-                        <p>Access your account<br>anytime, anywhere</p>
-                    </div>
-                </div>
-                <div class="bf-divider"></div>
-                <div class="bf-item notif">
-                    <div class="bf-icon"><i class='bx bx-bell'></i></div>
-                    <div class="bf-text">
-                        <h5>Instant Notifications</h5>
-                        <p>Get real-time updates<br>on bills and payments</p>
-                    </div>
-                </div>
-                <div class="bf-divider"></div>
-                <div class="bf-item support">
-                    <div class="bf-icon"><i class='bx bx-headphone'></i></div>
-                    <div class="bf-text">
-                        <h5>Dedicated Support</h5>
-                        <p>We're here to help you<br>whenever you need</p>
-                    </div>
+        <div class="bottom-features">
+            <div class="bf-item secure">
+                <div class="bf-icon"><i class='bx bx-check-shield'></i></div>
+                <div class="bf-text">
+                    <h5>Secure & Reliable</h5>
+                    <p>Your data is protected<br>with advanced security</p>
                 </div>
             </div>
-
-            <footer>
-                <div class="copyright">
-                    &copy; <?php echo date('Y'); ?> <?php echo SYSTEM_NAME; ?>. All rights reserved.
+            <div class="bf-divider"></div>
+            <div class="bf-item access">
+                <div class="bf-icon"><i class='bx bx-time-five'></i></div>
+                <div class="bf-text">
+                    <h5>24/7 Access</h5>
+                    <p>Access your account<br>anytime, anywhere</p>
                 </div>
-            </footer>
+            </div>
+            <div class="bf-divider"></div>
+            <div class="bf-item notif">
+                <div class="bf-icon"><i class='bx bx-bell'></i></div>
+                <div class="bf-text">
+                    <h5>Instant Notifications</h5>
+                    <p>Get real-time updates<br>on bills and payments</p>
+                </div>
+            </div>
+            <div class="bf-divider"></div>
+            <div class="bf-item support">
+                <div class="bf-icon"><i class='bx bx-headphone'></i></div>
+                <div class="bf-text">
+                    <h5>Dedicated Support</h5>
+                    <p>We're here to help you<br>whenever you need</p>
+                </div>
+            </div>
         </div>
 
-        <script>
-            const toggleContainer = document.getElementById('role-toggle-container');
-            const btnRenter = document.getElementById('btn-renter');
-            const btnAdmin = document.getElementById('btn-admin');
-            const proceedBtn = document.getElementById('proceed-btn');
-            const switchBtn = document.getElementById('switch-btn');
-            const infoBox = document.getElementById('role-info-box');
-            const infoText = document.getElementById('role-info-text');
+        <footer>
+            <div class="copyright">
+                &copy; <?php echo date('Y'); ?> <?php echo SYSTEM_NAME; ?>. All rights reserved.
+            </div>
+        </footer>
+    </div>
 
-            function setRole(role) {
-                if (role === 'renter') {
-                    toggleContainer.classList.remove('admin-active');
-                    btnRenter.classList.add('active');
-                    btnAdmin.classList.remove('active');
+    <script>
+        const toggleContainer = document.getElementById('role-toggle-container');
+        const btnRenter = document.getElementById('btn-renter');
+        const btnAdmin = document.getElementById('btn-admin');
+        const proceedBtn = document.getElementById('proceed-btn');
+        const switchBtn = document.getElementById('switch-btn');
+        const infoBox = document.getElementById('role-info-box');
+        const infoText = document.getElementById('role-info-text');
 
-                    infoBox.classList.remove('admin-mode');
-                    infoBox.querySelector('i').className = 'bx bxs-user-circle';
-                    infoText.innerHTML = 'Access your resident portal to<br>view and pay bills, and more.';
+        function setRole(role) {
+            if (role === 'renter') {
+                toggleContainer.classList.remove('admin-active');
+                btnRenter.classList.add('active');
+                btnAdmin.classList.remove('active');
 
-                    proceedBtn.href = 'login.php';
+                infoBox.classList.remove('admin-mode');
+                infoBox.querySelector('i').className = 'bx bxs-user-circle';
+                infoText.innerHTML = 'Access your resident portal to<br>view and pay bills, and more.';
 
-                    switchBtn.href = 'admin/login.php';
-                    switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Admin Login";
+                proceedBtn.href = 'login.php';
 
-                } else {
-                    toggleContainer.classList.add('admin-active');
-                    btnAdmin.classList.add('active');
-                    btnRenter.classList.remove('active');
+                switchBtn.href = 'admin/login.php';
+                switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Admin Login";
 
-                    infoBox.classList.add('admin-mode');
-                    infoBox.querySelector('i').className = 'bx bxs-dashboard';
-                    infoText.innerHTML = 'Access the property management<br>dashboard to manage everything.';
+            } else {
+                toggleContainer.classList.add('admin-active');
+                btnAdmin.classList.add('active');
+                btnRenter.classList.remove('active');
 
-                    proceedBtn.href = 'admin/login.php';
+                infoBox.classList.add('admin-mode');
+                infoBox.querySelector('i').className = 'bx bxs-dashboard';
+                infoText.innerHTML = 'Access the property management<br>dashboard to manage everything.';
 
-                    switchBtn.href = 'login.php';
-                    switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Resident Login";
-                }
+                proceedBtn.href = 'admin/login.php';
+
+                switchBtn.href = 'login.php';
+                switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Resident Login";
             }
+        }
 
-            btnRenter.addEventListener('click', () => setRole('renter'));
-            btnAdmin.addEventListener('click', () => setRole('admin'));
-        </script>
+        btnRenter.addEventListener('click', () => setRole('renter'));
+        btnAdmin.addEventListener('click', () => setRole('admin'));
+    </script>
 
 </body>
 
