@@ -296,6 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-submit:hover { background: linear-gradient(135deg, #5038E6 0%, #3B28C5 100%); transform: translateY(-2px); box-shadow: 0 12px 24px rgba(98, 75, 255, 0.35); }
+    .btn-submit:active { transform: scale(0.98) translateY(0); box-shadow: 0 4px 10px rgba(98, 75, 255, 0.2); }
 
     .divider {
         display: flex; align-items: center; margin: 12px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -311,6 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-resident:hover { background: rgba(98,75,255,0.05); }
+    .btn-resident:active { transform: scale(0.98); }
 
     .secure-footer {
         text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -342,6 +344,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         background: rgba(255,255,255,0.9);
         box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         transform: translateY(-1px);
+    }
+    .back-home-btn:active {
+        transform: scale(0.96) translateY(0);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .error-box {
