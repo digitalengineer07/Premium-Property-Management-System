@@ -1050,9 +1050,36 @@ if (isset($_SESSION['user_id'])) {
                 border-radius: 24px;
             }
 
+            .bottom-features {
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
+                padding: 0 1rem 2rem 1rem;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                box-shadow: none;
+            }
+
             .bf-item {
                 width: 100%;
                 justify-content: flex-start;
+                padding: 16px;
+                background: rgba(15, 23, 42, 0.5);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+            }
+
+            .bf-text h5 {
+                color: #ffffff;
+            }
+
+            .bf-text p {
+                color: rgba(255, 255, 255, 0.7);
             }
         }
     </style>
