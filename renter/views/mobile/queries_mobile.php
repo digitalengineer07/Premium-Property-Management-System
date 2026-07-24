@@ -190,7 +190,7 @@
                     <h5>Click to upload</h5>
                     <p>PNG, JPG up to 5MB</p>
                 </div>
-                <input type="file" id="m-fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
+                <input type="file" name="attachment" id="m-fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
             </div>
             <button type="submit" name="submit_query" class="m-btn-submit">
                 <i class='bx bx-send'></i> Submit Query
