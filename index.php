@@ -58,7 +58,7 @@ if (isset($_SESSION['user_id'])) {
     .bg-slider .slide {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      filter: blur(4px) brightness(1.05);
+      filter: brightness(0.95);
       transition: opacity 2s ease-in-out;
     }
     .bg-slider .slide-1 {
@@ -71,8 +71,9 @@ if (isset($_SESSION['user_id'])) {
     .bg-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(2px);
+      background: rgba(255, 255, 255, 0.35); /* Much more transparent */
+      backdrop-filter: blur(8px); /* True glassmorphism */
+      -webkit-backdrop-filter: blur(8px);
       z-index: -2;
     }
 
