@@ -233,7 +233,8 @@
                             <h5>Click to upload <span style="color: var(--text-gray); font-weight: 400;">or drag and drop</span></h5>
                             <p>PNG, JPG, JPEG up to 5MB</p>
                         </div>
-                        <input type="file" name="attachment" id="fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
+                        <input type="file" name="attachment" id="fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg" onchange="document.getElementById('fileNameDisplay').innerHTML = this.files[0] ? '<i class=\'bx bx-check-circle\'></i> Selected: ' + this.files[0].name : '';">
+                        <div id="fileNameDisplay" style="margin-top: 8px; font-size: 12px; color: var(--success); font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;"></div>
                     </div>
 
                     <button type="submit" name="submit_query" class="btn-primary" style="margin-top: auto;">

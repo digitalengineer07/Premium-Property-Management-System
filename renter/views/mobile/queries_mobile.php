@@ -190,7 +190,8 @@
                     <h5>Click to upload</h5>
                     <p>PNG, JPG up to 5MB</p>
                 </div>
-                <input type="file" name="attachment" id="m-fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg">
+                <input type="file" name="attachment" id="m-fileUpload" style="display: none;" accept="image/png, image/jpeg, image/jpg" onchange="document.getElementById('mFileNameDisplay').innerHTML = this.files[0] ? '<i class=\'bx bx-check-circle\'></i> Selected: ' + this.files[0].name : '';">
+                <div id="mFileNameDisplay" style="margin-top: 8px; font-size: 12px; color: var(--success); font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; gap: 4px;"></div>
             </div>
             <button type="submit" name="submit_query" class="m-btn-submit">
                 <i class='bx bx-send'></i> Submit Query
