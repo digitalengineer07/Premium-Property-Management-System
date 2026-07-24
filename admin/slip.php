@@ -735,7 +735,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <button type="button" onclick="window.print()" class="btn">
             <i class='bx bx-printer'></i> Print Bill
         </button>
-        <button type="button" onclick="window.location.href='<?php echo $back_url; ?>';" class="btn btn-outline">
+        <button type="button" onclick="if(document.referrer) { window.history.back(); } else { window.location.href='<?php echo $back_url; ?>'; }" class="btn btn-outline">
             <i class='bx bx-arrow-back'></i> Close
         </button>
     </div>
