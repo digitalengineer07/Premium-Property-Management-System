@@ -40,7 +40,7 @@ if (isset($_SESSION['user_id'])) {
 
     body {
       font-family: 'Inter', sans-serif;
-      background: rgba(248, 250, 252, 0.70);
+      background: rgba(248, 250, 252, 0.75);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -53,7 +53,7 @@ if (isset($_SESSION['user_id'])) {
       content: '';
       position: fixed;
       top: -10px; left: -10px; right: -10px; bottom: -10px; /* Oversize to hide blur edges */
-      background-image: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80');
+      background-image: url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1920&q=80');
       background-size: cover;
       background-position: center;
       filter: blur(5px) brightness(1.05);
