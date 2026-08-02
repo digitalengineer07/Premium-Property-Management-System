@@ -221,7 +221,11 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-check-shield'></i></div>
-                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 0); ?></p></div>
+                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['security_deposit'] ?? 0); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon" style="background: rgba(16,185,129,0.1); color: #10B981;"><i class='bx bx-wallet'></i></div>
+                        <div class="residence-info"><h4>Advance Wallet</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-car'></i></div>
