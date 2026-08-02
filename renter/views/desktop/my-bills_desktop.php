@@ -148,22 +148,30 @@
         $all_bills = [];
 
         // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
         while($r = mysqli_fetch_assoc($rent_q)) {
+            $amt = (float)$r['amount'];
+            $paid = (float)$r['total_paid'];
+            $bal = max(0, $amt - $paid);
+            
+            $status_calc = $r['status'] == 'Due' ? 'Unpaid' : $r['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
+            
             $all_bills[] = [
-                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : ($r['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Rent for ' . $r['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
                 'bill_date' => date('01 M Y', strtotime($r['month'])),
                 'due_date' => date('07 M Y', strtotime($r['month'])),
-                'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
+                'amount' => $amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
                 'overdue' => 0,
                 'summary' => [
-                    'Monthly Rent' => $r['amount'],
+                    'Monthly Rent' => $amt,
                     'Maintenance Charge' => 0,
                     'Other Charges' => 0
                 ]
@@ -171,11 +179,17 @@
         }
 
         // 2. Combined Bill (Electricity + Rent + Maintenance)
-        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($c = mysqli_fetch_assoc($comb_q)) {
             $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'];
+            $paid = (float)$c['total_paid'];
+            $bal = max(0, $total_amt - $paid);
+            
+            $status_calc = $c['status'] == 'Due' ? 'Unpaid' : $c['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
             
             $summary = [];
             if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
@@ -186,12 +200,12 @@
             $overdue = (float)$c['dues'];
             
             $all_bills[] = [
-                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($c['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Monthly Bill for ' . $c['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $c['month'],
                 'bill_date' => date('01 M Y', strtotime($c['month'])),
                 'due_date' => date('07 M Y', strtotime($c['month'])),
-                'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
+                'amount' => $total_amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
                 'overdue' => $overdue,
@@ -272,8 +286,8 @@
                             <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 25%;">BILL FOR</th>
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">AMOUNT</th>
                             <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">OVERDUE</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">BALANCE</th>
                             <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
                         </tr>
                     </thead>
@@ -377,9 +391,9 @@
                 document.getElementById('bdIcon').style.background = colors[0];
                 document.getElementById('bdIcon').style.color = colors[1];
 
-                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdAmount').style.color = statusColor;
-                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdTotalAmount2').style.color = statusColor;
 
                 // Summary List
@@ -392,6 +406,25 @@
                         </div>
                     `;
                 }
+                
+                // Add Gross Amount, Amount Paid, Remaining Balance logic
+                summaryHtml += `
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 13px; color: var(--text-gray); font-weight: 700;">Gross Amount</span>
+                        <span style="font-size: 13px; color: var(--text-dark); font-weight: 800;">${formatMoney(bill.amount)}</span>
+                    </div>
+                `;
+                
+                if (bill.paid > 0) {
+                    summaryHtml += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 13px; color: #10B981; font-weight: 700;">Amount Paid</span>
+                            <span style="font-size: 13px; color: #10B981; font-weight: 800;">-${formatMoney(bill.paid)}</span>
+                        </div>
+                    `;
+                }
+
                 document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
@@ -468,13 +501,13 @@
                             </td>
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
-                            </td>
-                            <td style="text-align:right;">
-                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
+                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
                             </td>
                             <td style="text-align:right;">
                                 <span style="font-size:12px; font-weight:800; color:#FF4B6B;">${bill.overdue && bill.overdue > 0 ? formatMoney(bill.overdue) : '-'}</span>
+                            </td>
+                            <td style="text-align:right;">
+                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.balance)}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}
