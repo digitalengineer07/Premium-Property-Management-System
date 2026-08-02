@@ -183,7 +183,7 @@
                                        FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($c = mysqli_fetch_assoc($comb_q)) {
-            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'];
+            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'] + (float)$c['dues'];
             $paid = (float)$c['total_paid'];
             $bal = max(0, $total_amt - $paid);
             
@@ -294,12 +294,11 @@
                 <div style="padding: 0 12px 12px; overflow-x: hidden;"><table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 25%;">BILL FOR</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">OVERDUE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">BALANCE</th>
-                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
+                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 28%;">BILL FOR</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 20%;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">DUE DATE</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">BALANCE</th>
+                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 16%;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
@@ -513,9 +512,6 @@
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
                                 ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
-                            </td>
-                            <td style="text-align:right;">
-                                <span style="font-size:12px; font-weight:800; color:#FF4B6B;">${bill.overdue && bill.overdue > 0 ? formatMoney(bill.overdue) : '-'}</span>
                             </td>
                             <td style="text-align:right;">
                                 <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.balance)}</span>
