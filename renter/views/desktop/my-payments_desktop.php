@@ -217,7 +217,8 @@
                 'due_date' => date('07 M Y', strtotime($m['month'])),
                 'amount' => $rent_maint_amt, 'remaining_amount' => $rem, 'status' => $st,
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-                'icon' => 'bx-home', 'color' => 'purple'
+                'icon' => 'bx-home', 'color' => 'purple',
+                'dues' => (float)$m['dues']
             ];
         }
 
@@ -496,13 +497,17 @@ function filterMobileByYear(year) {
                                 ];
                             }
                             
-                            // EXCLUDE arrears from the monthly aggregate sum
-                            if (isset($bill['filter_type']) && $bill['filter_type'] === 'other' && isset($bill['type']) && $bill['type'] === 'elec_rent') {
-                                // Do not add arrears/dues amount to the "Total Payment" row for this month
-                            } else {
-                                $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
-                                $monthly_aggregates[$p]['remaining_amount'] += isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            // EXCLUDE arrears/dues from the monthly aggregate sum to avoid double counting
+                            $bill_amount = (float)$bill['amount'];
+                            $bill_remaining = isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            
+                            if (isset($bill['type']) && $bill['type'] === 'elec_rent' && isset($bill['dues'])) {
+                                $bill_amount -= (float)$bill['dues'];
+                                $bill_remaining -= (float)$bill['dues'];
                             }
+                            
+                            $monthly_aggregates[$p]['amount'] += max(0, $bill_amount);
+                            $monthly_aggregates[$p]['remaining_amount'] += max(0, $bill_remaining);
                             
                             $st = strtolower($bill['status']);
                             if($st == 'unpaid' || $st == 'due') {
