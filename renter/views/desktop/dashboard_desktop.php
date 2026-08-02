@@ -153,8 +153,8 @@
         </div>
         <?php endif; ?>
 
-        <!-- 3-Col KPI Cards -->
-        <div class="kpi-grid animate-up">
+        <!-- 3/4-Col KPI Cards -->
+        <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(<?php echo ($user['advance_payment'] ?? 0) > 0 ? 4 : 3; ?>, 1fr); gap: 24px;">
             <!-- Total Outstanding -->
             <div class="kpi-card">
                 <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
@@ -235,6 +235,32 @@
                     <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
+            
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <!-- Advance Wallet -->
+            <div class="kpi-card">
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box green" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-wallet'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Advance Wallet</div>
+                        <div class="kpi-amount" style="margin-bottom: 0; color: #10B981;"><?php echo money($user['advance_payment']); ?></div>
+                    </div>
+                </div>
+                <div class="kpi-bottom">
+                    <div class="kpi-due-date"><i class='bx bx-check-shield'></i> Safe & Available</div>
+                </div>
+                <svg class="kpi-sparkline green" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradGreen2" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5 L100,40 L0,40 Z" fill="url(#gradGreen2)" />
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <?php endif; ?>
         </div>
 
         <!-- 2-Col Main Dashboard Grid -->

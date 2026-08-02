@@ -250,6 +250,16 @@
                 </div>
             </div>
             
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+                <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-wallet'></i></div>
+                <div class="kpi-min-info">
+                    <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Advance Wallet</h4>
+                    <h2 style="font-size: 24px; color: #10B981; margin: 0 0 6px 0; font-weight: 800;"><?php echo money($user['advance_payment']); ?></h2>
+                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">Available Balance</div>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
                 <div class="kpi-min-info">
@@ -258,6 +268,7 @@
                     <div style="font-size: 11px; font-weight: 700; color: #8B5CF6; background: rgba(139,92,246,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">All Time</div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
 
         <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(290px, 1fr); gap: 24px; align-items: stretch;">
