@@ -110,7 +110,7 @@ try {
         $p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial' AND p.user_id = $user_id"))['total'];
         
         $total_paid_this_month = 0; // Not applicable globally in this context
-        $total_gross_due = $elec_due + $maintenance_due + $rent_due + $other_dues - $p_elec - $p_rent;
+        $total_gross_due = $elec_due + $maintenance_due + $rent_due - $p_elec - $p_rent;
         $total_net_due = max(0, $total_gross_due - (float)$user['pending_adjustment']);
     }
 
