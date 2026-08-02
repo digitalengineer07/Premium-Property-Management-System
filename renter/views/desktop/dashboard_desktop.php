@@ -153,6 +153,24 @@
         </div>
         <?php endif; ?>
 
+        <?php if ($onboarding_due > 0): ?>
+        <div class="reminder-banner animate-down" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); margin-bottom: 24px;">
+            <div class="reminder-content">
+                <div class="reminder-icon">
+                    <i class='bx bx-user-plus bx-tada'></i>
+                </div>
+                <div class="reminder-text">
+                    <h3>Welcome! Initial Onboarding Dues</h3>
+                    <p>Please clear your initial Security Deposit and/or Advance Rent to complete your onboarding process.</p>
+                </div>
+            </div>
+            <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" class="btn-pay-now">
+                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt'></i>
+            </button>
+            <i class='bx bx-shield-quarter reminder-bg-art'></i>
+        </div>
+        <?php endif; ?>
+
         <!-- 3/4-Col KPI Cards -->
         <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(<?php echo ($user['advance_payment'] ?? 0) > 0 ? 4 : 3; ?>, 1fr); gap: 24px;">
             <!-- Total Outstanding -->

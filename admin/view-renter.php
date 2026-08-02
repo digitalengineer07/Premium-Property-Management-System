@@ -290,16 +290,29 @@ $admin_user = s($_SESSION['admin'] ?? '');
                   </div>
                     
                     <!-- Security Deposit -->
+                    <?php
+                        $user_id_for_sec = $user['id'];
+                        $sec_target = (float)($user['security_deposit'] ?? 0);
+                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $user_id_for_sec AND bill_type = 'security_deposit'");
+                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
+                        
+                        $is_fully_paid = ($sec_paid >= $sec_target && $sec_target > 0);
+                        $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
+                        $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
+                    ?>
                     <div style="background: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
                         <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; color: #F59E0B; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
+                            <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
                                 <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Refundable at move out</div>
+                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: 800; font-size: 22px; color: #F59E0B;">₹<?php echo number_format($user['security_deposit'] ?? 0, 2); ?></div>
+                            <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo number_format($sec_paid, 2); ?></div>
+                            <?php if (!$is_fully_paid && $sec_target > 0): ?>
+                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo number_format($sec_target - $sec_paid); ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                   <!-- Fixed Charges -->

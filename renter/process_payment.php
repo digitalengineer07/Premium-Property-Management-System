@@ -85,6 +85,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                         $is_duplicate_request = true;
                         $duplicate_msg = "You already have a Pending request to clear all dues.";
                     }
+                } else if ($b_type === 'onboarding') {
+                    // Onboarding payment check
+                    $chk_stmt = mysqli_prepare($conn, "SELECT status FROM payment_notifications WHERE user_id = ? AND bill_type = 'onboarding' AND status = 'Pending'");
+                    mysqli_stmt_bind_param($chk_stmt, "i", $user_id);
+                    mysqli_stmt_execute($chk_stmt);
+                    $res = mysqli_stmt_get_result($chk_stmt);
+                    if (mysqli_num_rows($res) > 0) {
+                        $is_duplicate_request = true;
+                        $duplicate_msg = "You already have a Pending request for Onboarding Dues.";
+                    }
                 } else {
                     // General / Advance payment check
                     $chk_stmt = mysqli_prepare($conn, "SELECT status FROM payment_notifications WHERE user_id = ? AND bill_type = 'general' AND amount = ? AND status = 'Pending' AND DATE(created_at) = CURDATE()");
@@ -107,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
                 mysqli_query($conn, "CREATE TABLE IF NOT EXISTS payment_notifications (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     user_id INT NOT NULL,
-                    bill_type ENUM('rent', 'electricity', 'total', 'advance', 'general') NOT NULL,
+                    bill_type VARCHAR(50) NOT NULL,
                     bill_id INT NULL,
                     amount DECIMAL(10, 2) NOT NULL,
                     transaction_id VARCHAR(50) NOT NULL,
