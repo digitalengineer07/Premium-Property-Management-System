@@ -1290,22 +1290,13 @@ $admin_user = s($_SESSION['admin']);
                     }
                 }
 
-                // Handle Pending Adjustment
-                const adj = data.pending_adjustment || 0;
+                // Handle Advance Wallet (Auto-Credit applied backend)
                 const balanceDiv = document.getElementById('infoBalance');
-                if (adj < 0) {
-                    balanceDiv.textContent = '₹' + Math.abs(adj) + ' (Remaining)';
-                    balanceDiv.style.color = '#FCA5A5';
-                } else if (adj > 0) {
-                    balanceDiv.textContent = '₹' + adj + ' (Extra)';
-                    balanceDiv.style.color = '#6EE7B7';
-                } else {
-                    balanceDiv.textContent = '₹0';
-                    balanceDiv.style.color = 'rgba(255,255,255,0.7)';
-                }
-
-                // Auto-fill Advance Applied (dues = -Adjustment, but only if adj is > 0 meaning they have advance)
-                document.getElementById('dues').value = adj > 0 ? -adj : '';
+                balanceDiv.textContent = 'Auto (Backend)';
+                balanceDiv.style.color = 'rgba(255,255,255,0.7)';
+                
+                // Note: Advance wallet is handled entirely securely on the backend in save-bill.php
+                document.getElementById('dues').value = '';
 
                 const prevInput = document.getElementById('previousReading');
                 prevInput.value = lastReading;

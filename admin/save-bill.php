@@ -242,8 +242,7 @@ mysqli_stmt_bind_param($stmt, "issiiiiddddddsssdss",
 if (mysqli_stmt_execute($stmt)) {
     $bill_id = mysqli_insert_id($conn);
     
-    // Reset pending adjustment since it's now incorporated into this bill's "dues"
-    mysqli_query($conn, "UPDATE users SET pending_adjustment = 0 WHERE id = $user_id");
+    // Legacy pending_adjustment logic removed to prevent debt wiping loophole
     
     // Fetch user details for email notification
     $user_query = mysqli_query($conn, "SELECT name, email FROM users WHERE id = $user_id LIMIT 1");
