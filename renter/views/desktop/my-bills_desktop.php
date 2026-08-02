@@ -161,6 +161,7 @@
                 'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
+                'overdue' => 0,
                 'summary' => [
                     'Monthly Rent' => $r['amount'],
                     'Maintenance Charge' => 0,
@@ -174,14 +175,15 @@
                                        FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($c = mysqli_fetch_assoc($comb_q)) {
-            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['dues'] + (float)$c['extra_charges'];
+            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'];
             
             $summary = [];
             if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
             if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
             if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
             if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
-            if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
+            
+            $overdue = (float)$c['dues'];
             
             $all_bills[] = [
                 'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($c['status'] == 'Due' ? 'unpaid' : 'unpaid')),
@@ -192,6 +194,7 @@
                 'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
                 'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
+                'overdue' => $overdue,
                 'summary' => $summary
             ];
         }
@@ -269,7 +272,8 @@
                             <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 25%;">BILL FOR</th>
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
                             <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">AMOUNT</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">AMOUNT</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">OVERDUE</th>
                             <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
                         </tr>
                     </thead>
@@ -468,6 +472,9 @@
                             </td>
                             <td style="text-align:right;">
                                 <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
+                            </td>
+                            <td style="text-align:right;">
+                                <span style="font-size:12px; font-weight:800; color:#FF4B6B;">${bill.overdue && bill.overdue > 0 ? formatMoney(bill.overdue) : '-'}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}
