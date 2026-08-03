@@ -64,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                             mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx')");
                         }
                         
-                        // Insert remaining to Advance Wallet
+                        // Insert remaining to Advance Wallet (Logs as 1st Month Rent, but DOES NOT add to auto-deduct wallet)
                         if ($amount_to_adv > 0) {
                             $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx')");
-                            mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $amount_to_adv WHERE id=$p_uid");
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                            // Removed: UPDATE users SET advance_payment = advance_payment + $amount_to_adv
                         }
                     }
                     // 2. Handle Specific Bill Payments
