@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            padding-top: 100px;
+            padding-top: 60px;
             padding-bottom: 60px;
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
@@ -352,7 +352,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <div style="width: 100%; max-width: 400px;">
+    <div style="width: 100%; max-width: 450px;">
         <div class="panel animate-up">
             <div style="text-align: center; margin-bottom: 20px;">
                 <div class="shield-graphic-area">
