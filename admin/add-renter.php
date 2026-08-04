@@ -341,6 +341,20 @@ document.getElementById('roomNoInput')?.addEventListener('blur', async function(
         console.error("Failed to fetch last reading", err);
     }
 });
+
+// Auto-hide zero values on focus for better UX
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('focus', function() {
+        if (this.value === '0' || this.value === '0.00') {
+            this.value = '';
+        }
+    });
+    input.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+            this.value = '0';
+        }
+    });
+});
 </script>
 
 </body>
