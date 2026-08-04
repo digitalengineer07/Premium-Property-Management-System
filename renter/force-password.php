@@ -56,9 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         body {
-            background: #F4F7FF;
-            background-image: radial-gradient(circle at 15% 50%, rgba(224, 231, 255, 0.6), transparent 30%),
-                              radial-gradient(circle at 85% 30%, rgba(224, 231, 255, 0.6), transparent 30%);
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,12 +90,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        /* Dark Theme Fixes */
-        .dark-theme body {
-            background: #0F172A;
-            background-image: none;
+        /* Advanced Background Graphic Styling */
+        .bg-elements {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: #F8FAFC;
         }
+        .bg-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        .blob-top-right {
+            top: -15%; right: -10%;
+            width: 60%; height: 70%;
+            background: radial-gradient(circle, #E0E7FF, rgba(243, 232, 255, 0.5));
+        }
+        .blob-bottom-left {
+            bottom: -20%; left: -15%;
+            width: 50%; height: 60%;
+            background: rgba(243, 232, 255, 0.7);
+        }
+        .blob-bottom-right {
+            bottom: -10%; right: 10%;
+            width: 50%; height: 60%;
+            background: rgba(224, 231, 255, 0.6);
+        }
+        .bg-pattern {
+            position: absolute;
+        }
+        .pattern-dots {
+            top: 5%; right: 15%;
+            width: 250px; height: 250px;
+            background-image: radial-gradient(#C7D2FE 2px, transparent 2px);
+            background-size: 24px 24px;
+            opacity: 0.4;
+        }
+        .pattern-waves {
+            top: 25%; right: -10%;
+            width: 500px; height: 600px;
+            background-image: repeating-radial-gradient(circle at 100% 50%, transparent, transparent 15px, rgba(199, 210, 254, 0.15) 16px, rgba(199, 210, 254, 0.15) 17px);
+            opacity: 0.8;
+        }
+        .bg-ring {
+            position: absolute;
+            border: 2px solid rgba(199, 210, 254, 0.4);
+            border-radius: 50%;
+        }
+        .ring-1 {
+            top: 15%; left: 15%;
+            width: 40px; height: 40px;
+        }
+        .ring-2 {
+            bottom: 30%; left: 10%;
+            width: 80px; height: 80px;
+        }
+        .bg-shield {
+            position: absolute;
+            bottom: -5%; right: 5%;
+            font-size: 350px;
+            color: rgba(199, 210, 254, 0.15);
+            transform: rotate(15deg);
+        }
+        
+        /* Dark Theme Fixes */
+        .dark-theme .bg-elements { background: #0F172A; }
+        .dark-theme .blob-top-right { background: radial-gradient(circle, #1E293B, rgba(30, 41, 59, 0.5)); opacity: 0.4;}
+        .dark-theme .blob-bottom-left { background: #1E293B; opacity: 0.4; }
+        .dark-theme .blob-bottom-right { background: #1E293B; opacity: 0.4;}
+        .dark-theme .pattern-dots { background-image: radial-gradient(#334155 2px, transparent 2px); }
+        .dark-theme .pattern-waves { background-image: repeating-radial-gradient(circle at 100% 50%, transparent, transparent 15px, rgba(51, 65, 85, 0.2) 16px, rgba(51, 65, 85, 0.2) 17px); }
+        .dark-theme .bg-ring { border-color: rgba(51, 65, 85, 0.5); }
+        .dark-theme .bg-shield { color: rgba(51, 65, 85, 0.2); }
+        .dark-theme body { background: transparent; }
         .dark-theme .panel {
+
             background: #1E293B !important;
             border-color: rgba(255,255,255,0.05) !important;
         }
@@ -258,11 +328,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
+    <div class="bg-elements">
+        <div class="bg-blob blob-top-right"></div>
+        <div class="bg-blob blob-bottom-left"></div>
+        <div class="bg-blob blob-bottom-right"></div>
+        <div class="bg-pattern pattern-dots"></div>
+        <div class="bg-pattern pattern-waves"></div>
+        <div class="bg-ring ring-1"></div>
+        <div class="bg-ring ring-2"></div>
+        <i class='bx bx-shield bg-shield'></i>
+    </div>
+
     <div class="logo-container">
-        <i class='bx bxs-building-house' style="color: #6366F1; font-size: 40px;"></i>
+        <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #EEF2FF; border-radius: 12px; border: 1.5px solid #C7D2FE;">
+            <i class='bx bxs-building-house' style="color: #6366F1; font-size: 26px;"></i>
+        </div>
         <div style="line-height: 1.1;">
-            <div style="font-weight: 800; color: #1E293B; font-size: 22px;">Madhav Kunj</div>
-            <div style="font-weight: 700; color: #6366F1; font-size: 11px; letter-spacing: 3px;">RESIDENCE</div>
+            <div style="font-weight: 800; color: #1E293B; font-size: 20px;">Madhav Kunj</div>
+            <div style="font-weight: 700; color: #6366F1; font-size: 10px; letter-spacing: 3.5px;">RESIDENCE</div>
         </div>
     </div>
 
