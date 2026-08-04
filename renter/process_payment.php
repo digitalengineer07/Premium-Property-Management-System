@@ -21,7 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : 0;
         $amt = (float)$_POST['amount'];
         $tr_id = trim($_POST['transaction_id'] ?? '');
-        $p_month = !empty($_POST['bill_month']) ? date('F Y', strtotime($_POST['bill_month'].'-01')) : 'Advance/General';
+        if (!empty($_POST['bill_month']) && $_POST['bill_month'] !== 'undefined') {
+            $p_month = date('F Y', strtotime($_POST['bill_month'].'-01'));
+        } else {
+            if ($b_type === 'total') {
+                $p_month = 'Total Balance';
+            } elseif ($b_type === 'onboarding') {
+                $p_month = 'Onboarding & Advance';
+            } else {
+                $p_month = 'Miscellaneous';
+            }
+        }
         $payment_method = $_POST['payment_method'] ?? 'UPI';
         $sys_tx_id = 'TXN-' . date('md') . '-' . strtoupper(bin2hex(random_bytes(4)));
 
