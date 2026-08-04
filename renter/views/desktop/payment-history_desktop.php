@@ -244,7 +244,17 @@
                     $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
                 }
                 
-                $pm = strtolower($row['payment_mode'] ?? '');
+                $pm_db = $row['payment_mode'] ?? '';
+                if (empty(trim($pm_db))) {
+                    $ref_check = trim($row['transaction_id'] ?? '');
+                    if (!empty($ref_check) && strpos($ref_check, 'SYS_') !== 0 && $ref_check !== 'Offline') {
+                        $pm_db = 'UPI'; // Assume UPI if a UTR was provided
+                    } else {
+                        $pm_db = 'Offline';
+                    }
+                }
+
+                $pm = strtolower($pm_db);
                 if (strpos($pm, 'upi') !== false || strpos($pm, 'online') !== false || strpos($pm, 'net banking') !== false) {
                     $dyn_title = 'Online Payment';
                 } elseif (strpos($pm, 'wallet') !== false || strpos($pm, 'auto-deduction') !== false) {
@@ -266,7 +276,7 @@
                     'status' => 'Paid',
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
-                    'payment_mode' => $row['payment_mode'] ?: 'Offline'
+                    'payment_mode' => $pm_db
                 ];
             }
         }
