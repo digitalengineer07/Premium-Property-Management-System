@@ -31,7 +31,7 @@
                 <div style="display: flex; gap: 12px;">
                     <label style="flex: 1; border: 1px solid var(--primary-purple); background: rgba(98, 75, 255, 0.05); color: var(--primary-purple); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; font-size: 14px;" class="app-mode-label" id="app-label-upi">
                         <input type="radio" name="payment_method" value="UPI" checked style="display: none;" onchange="toggleApprovalMode('UPI')">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;"> UPI
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;">
                     </label>
                     <label style="flex: 1; border: 1px solid var(--border); background: var(--white); color: var(--text-gray); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600; font-size: 14px;" class="app-mode-label" id="app-label-cash">
                         <input type="radio" name="payment_method" value="Cash" style="display: none;" onchange="toggleApprovalMode('Cash')">
