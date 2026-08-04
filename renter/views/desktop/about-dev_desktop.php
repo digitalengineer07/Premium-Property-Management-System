@@ -3,7 +3,7 @@
 ?>
 <header class="header-renter">
         <div class="brand-renter">
-            <img src="../assets/img/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: cover;">
+            <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: contain; transform: scale(1.6);">
             <span><?php echo HOUSE_NAME; ?></span>
         </div>
         <div style="display: flex; gap: 12px; align-items: center;">
