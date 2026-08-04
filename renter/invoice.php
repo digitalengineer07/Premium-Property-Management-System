@@ -42,14 +42,19 @@ $total_payable = (float)$bill['amount'] + (float)$bill['rent_amount'] + (float)$
 $remaining_amount = max(0, $total_payable - $amount_paid);
 
 $status = $bill['status']; 
-
-$status_color = '#F59E0B'; // Pending
-$status_bg = '#FEF3C7';
-
-// If for some reason the DB says paid, still force it to Pending for the invoice static view
-$status = 'Pending';
-$status_color = '#F59E0B'; 
-$status_bg = '#FEF3C7';
+if (strtolower($status) === 'paid' || $remaining_amount <= 0) {
+    $status = 'Paid';
+    $status_color = '#10B981'; // Green
+    $status_bg = '#D1FAE5';
+} elseif (strtolower($status) === 'partial' || ($amount_paid > 0 && $remaining_amount > 0)) {
+    $status = 'Partial';
+    $status_color = '#F59E0B'; // Orange
+    $status_bg = '#FEF3C7';
+} else {
+    $status = 'Unpaid';
+    $status_color = '#EF4444'; // Red
+    $status_bg = '#FEE2E2';
+}
 
 
 $bill_invoice_id = !empty($bill['bill_invoice_id']) ? $bill['bill_invoice_id'] : 'BIL-'.date('Ym', strtotime($bill['month'])).'-'.str_pad($bill['id'], 6, '0', STR_PAD_LEFT);
@@ -895,7 +900,11 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-content">
                         <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Billed Amount</p>
                         <div class="payable-amount">₹ <?php echo number_format($total_payable, 2); ?></div>
+                        <?php if (strtolower($status) !== 'paid'): ?>
                         <p class="payable-note">Please make the payment before<br><strong><?php echo $due_date; ?></strong> to avoid late fee.</p>
+                        <?php else: ?>
+                        <p class="payable-note" style="color: #10B981;">Payment received. Thank you!</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
