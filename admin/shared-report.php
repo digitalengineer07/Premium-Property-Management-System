@@ -92,7 +92,7 @@ if (!$shared_info) {
     <header class="header" style="left: 0; width: 100%; position: relative; border-radius: 12px; margin-bottom: 24px;">
         <div class="header-content" style="justify-content: flex-start;">
             <div class="brand" style="display:flex; align-items:center; gap: 12px;">
-                <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px; object-fit: contain; transform: scale(1.6);">
+                <img src="../assets/img/logo.png" alt="Logo" style="width: 32px; height: 32px; border-radius: 8px;">
                 <span style="font-weight:700; font-size: 18px;"><?php echo HOUSE_NAME; ?> Analytics</span>
             </div>
             <div style="margin-left: auto; text-align: right;">

@@ -168,7 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Main Glass Card -->
     <div class="glass-panel animate-fade-in" style="margin-top: 40px; margin-bottom: 40px;">
         <div style="text-align: center; margin-bottom: 32px;">
-            <img src="assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); object-fit: contain; transform: scale(1.6);">
+            <img src="assets/img/logo.png" alt="Logo" style="width: 64px; height: 64px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
             <h1 style="font-size: 26px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Reset Password</h1>
             <?php if ($step == 1): ?><p style="color: var(--text-muted); font-size: 15px;">Enter your username to receive an OTP</p><?php endif; ?>
             <?php if ($step == 2): ?><p style="color: var(--text-muted); font-size: 15px;">Check your email for the verification code.</p><?php endif; ?>
