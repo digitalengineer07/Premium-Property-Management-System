@@ -148,7 +148,7 @@
         $all_bills = [];
 
         // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
                                        FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
         while($r = mysqli_fetch_assoc($rent_q)) {
@@ -164,8 +164,8 @@
                 'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Rent for ' . $r['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
-                'bill_date' => date('01 M Y', strtotime($r['month'])),
-                'due_date' => date('07 M Y', strtotime($r['month'])),
+                'bill_date' => date('d M Y', strtotime('-10 days', strtotime($r['due_date']))),
+                'due_date' => date('d M Y', strtotime($r['due_date'])),
                 'amount' => $amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
@@ -179,7 +179,7 @@
         }
 
         // 2. Combined Bill (Electricity + Rent + Maintenance)
-        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
                                        FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($c = mysqli_fetch_assoc($comb_q)) {
@@ -203,8 +203,8 @@
                 'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Monthly Bill for ' . $c['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $c['month'],
-                'bill_date' => date('01 M Y', strtotime($c['month'])),
-                'due_date' => date('07 M Y', strtotime($c['month'])),
+                'bill_date' => date('d M Y', strtotime($c['created_at'])),
+                'due_date' => date('d M Y', strtotime($c['created_at'] . ' + 10 days')),
                 'amount' => $total_amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
