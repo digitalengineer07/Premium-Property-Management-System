@@ -89,6 +89,76 @@ $admin_user = s($_SESSION['admin']);
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
+    <style>
+        /* Modern Premium Styling for Onboarding */
+        .panel {
+            background: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+        .form-group label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94A3B8 !important;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .form-group input {
+            background: #0F172A !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            color: #F8FAFC !important;
+            height: 52px !important;
+            transition: all 0.3s ease !important;
+        }
+        .form-group input:focus {
+            background: #131E32 !important;
+            border-color: #6366F1 !important;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+            outline: none !important;
+        }
+        .form-group i {
+            color: #64748B !important;
+            transition: color 0.3s ease;
+        }
+        .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
+            color: #6366F1 !important;
+        }
+        .section-title {
+            font-size: 13px;
+            color: #6366F1;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-primary.submit-btn {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3) !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary.submit-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4) !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -134,7 +204,7 @@ $admin_user = s($_SESSION['admin']);
                 <form method="POST" autocomplete="off">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Security & Login</h4>
+                        <div class="section-title">Security & Login</div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Login Username</label>
@@ -155,7 +225,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Personal Profile</h4>
+                        <div class="section-title">Personal Profile</div>
                         <div class="form-group">
                             <label>Resident Full Name</label>
                             <input type="text" name="name" required placeholder="Legal Name of Resident">
@@ -206,7 +276,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Initial Utility Setup</h4>
+                        <div class="section-title">Initial Utility Setup</div>
                         <div class="form-group">
                             <label>Starting Meter Reading (Previous Month Units)</label>
                             <div style="position: relative;">
@@ -218,7 +288,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Financial Initial Setup</h4>
+                        <div class="section-title">Financial Initial Setup</div>
                         <div class="form-group">
                             <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
                                 <div style="flex: 1;">
@@ -266,7 +336,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
+                        <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
                             <i class='bx bx-user-plus'></i> Confirm and Create Account
                         </button>
                         <p style="text-align: center; color: var(--text-gray); font-size: 13px; margin-top: 20px;">
