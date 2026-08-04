@@ -1043,7 +1043,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <i class='bx bx-support'></i>
                     <div>
                         <h4>Need Help?</h4>
-                        <span>+91 6206936907</span>
+                        <p style="font-size: 13px;">+91 6206936907</p>
                         <span>madhavkunj@succorkart.in</span>
                     </div>
                 </div>
