@@ -178,7 +178,17 @@
                                        WHERE e.user_id=$user_id AND e.amount > 0");
         while($e = mysqli_fetch_assoc($elec_q)) {
             $rem = max(0, (float)$e['amount'] - (float)$e['total_paid']);
-            if ($e['status'] == 'Paid') $rem = 0;
+            
+            $st = $e['status'];
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && (float)$e['total_paid'] > 0) {
+                $st = 'Partial';
+            } elseif ($rem == (float)$e['amount']) {
+                $st = 'Unpaid';
+            }
+            $e['status'] = $st;
             
             $all_bills[] = [
                 'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
@@ -207,7 +217,15 @@
             
             $rem = max(0, $rent_maint_amt - $total_paid);
             $st = $orig_status;
-            if ($orig_status == 'Partial' && $rem == 0) $st = 'Paid';
+            
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && $total_paid > 0) {
+                $st = 'Partial';
+            } elseif ($rem == $rent_maint_amt) {
+                $st = 'Unpaid';
+            }
             
             $all_bills[] = [
                 'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => 'rent',
