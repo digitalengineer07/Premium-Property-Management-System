@@ -99,7 +99,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         .invoice-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             background: var(--white);
             border-radius: 20px;
@@ -236,10 +236,10 @@ $email = $bill['email'] ?? 'renter@example.com';
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 16px 20px;
-            width: 260px;
+            width: 300px;
             margin-left: auto;
             flex: 1;
-            max-width: 280px;
+            max-width: 320px;
         }
 
         .meta-row {
@@ -262,6 +262,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         .meta-value {
             font-weight: 700;
             color: var(--text-dark);
+            white-space: nowrap;
         }
 
         .meta-value.highlight {
@@ -386,6 +387,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: flex;
             align-items: center;
             gap: 4px;
+            white-space: nowrap;
+            flex-wrap: nowrap;
         }
         
         .payable-note {
