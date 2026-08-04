@@ -131,7 +131,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 <?php endif; ?>
 
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="margin-bottom: 30px;">
                         <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Security & Login</h4>
@@ -140,14 +140,14 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Login Username</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-at' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;">
+                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Login Password</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-lock-alt' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="password" name="password" required placeholder="••••••••" class="pwd-input" style="padding-left: 45px; padding-right: 40px;">
+                                    <input type="password" name="password" required placeholder="••••••••" class="pwd-input" style="padding-left: 45px; padding-right: 40px;" autocomplete="new-password">
                                     <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
                                 </div>
                             </div>
