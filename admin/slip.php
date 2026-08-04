@@ -165,8 +165,8 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         /* --- CONTACT INFO --- */
         .contact-info {
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
             padding-bottom: 24px;
             margin-bottom: 24px;
             border-bottom: 1px solid var(--border);
@@ -758,7 +758,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         </div>
 
         <div class="contact-info">
-            <div class="contact-item" style="align-items: flex-start; margin-left: -40px; margin-top: -15px;">
+            <div class="contact-item" style="align-items: flex-start;">
                 <i class='bx bx-map' style="margin-top: 2px;"></i>
                 <div style="line-height: 1.4;">
                     <?php 
