@@ -948,13 +948,13 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     </div>
                 </div>
                 <div class="address-info">
-                    Madhav Kunj Society, Near Green Park,<br>
-                    Indore, Madhya Pradesh - 452001
+                    Vastu Estate colony behind RPS residents school,<br>
+                    Patna Bihar - 801503
                 </div>
                 <div class="contact-info">
-                    <span><i class='bx bx-phone-call'></i> +91 98765 43210</span>
+                    <span><i class='bx bx-phone-call'></i> +91 6206936907</span>
                     <span style="color: #D1D5DB;">|</span>
-                    <span><i class='bx bx-envelope'></i> madhavkunj@example.com</span>
+                    <span><i class='bx bx-envelope'></i> madhavkunj@succorkart.in</span>
                 </div>
             </div>
 

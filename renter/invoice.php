@@ -830,8 +830,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                         </div>
                         <p class="brand-address"><?php echo htmlspecialchars(HOUSE_ADDRESS); ?></p>
                         <div class="brand-contact">
-                            <span><i class='bx bxs-phone'></i> +91 7667184920</span>
-                            <span><i class='bx bxs-envelope'></i> nikhil119124@gmail.com</span>
+                            <span><i class='bx bxs-phone'></i> +91 6206936907</span>
+                            <span><i class='bx bxs-envelope'></i> madhavkunj@succorkart.in</span>
                         </div>
                     </div>
                 </div>
@@ -1043,8 +1043,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <i class='bx bx-support'></i>
                     <div>
                         <h4>Need Help?</h4>
-                        <p style="font-size: 13px;">+91 6206936907 &amp; +91 7667184920</p>
-                        <span>nikhil119124@gmail.com</span>
+                        <span>+91 6206936907</span>
+                        <span>madhavkunj@succorkart.in</span>
                     </div>
                 </div>
             </div>
