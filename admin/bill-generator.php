@@ -916,24 +916,24 @@ $admin_user = s($_SESSION['admin']);
                             
                             <!-- Middle: Breakdown -->
                             <div style="flex: 2; min-width: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; font-size: 13px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; font-size: 12px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Units Consumed</span><strong id="calcUnits" style="white-space: nowrap; text-align: right;">0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Units Consumed</span><strong id="calcUnits" style="white-space: nowrap; text-align: right;">0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Standard Rent</span><strong id="calcRent" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Standard Rent</span><strong id="calcRent" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Electricity Cost</span><strong id="calcElectricity" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Electricity Cost</span><strong id="calcElectricity" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Maintenance</span><strong id="calcMaintenance" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Maintenance</span><strong id="calcMaintenance" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;" id="extraChargesDiv">
-                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                 </div>
                             </div>
