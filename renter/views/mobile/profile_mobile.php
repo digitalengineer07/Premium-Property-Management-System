@@ -397,7 +397,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <h2><?php echo htmlspecialchars($d_name); ?></h2>
                 <div style="display: flex; gap: 2px; margin-top: 6px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
                     <div class="mp-room-badge" style="white-space: nowrap;">Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></div>
-                    <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad((($user['id'] * 7937) + 4123) % 10000, 4, '0', STR_PAD_LEFT); ?></div>
+                    <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo strtoupper(str_pad(dechex((($user['id'] * 49281) + 23984) % 65536), 4, '0', STR_PAD_LEFT)); ?></div>
                 </div>
             </div>
         </div>
