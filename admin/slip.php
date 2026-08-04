@@ -758,9 +758,14 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         </div>
 
         <div class="contact-info">
-            <div class="contact-item">
-                <i class='bx bx-map'></i>
-                <?php echo defined('HOUSE_ADDRESS') ? HOUSE_ADDRESS : 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503'; ?>
+            <div class="contact-item" style="align-items: flex-start;">
+                <i class='bx bx-map' style="margin-top: 2px;"></i>
+                <div style="line-height: 1.4;">
+                    <?php 
+                        $addr = defined('HOUSE_ADDRESS') ? HOUSE_ADDRESS : 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503';
+                        echo str_replace(', ', ',<br>', $addr);
+                    ?>
+                </div>
             </div>
             <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-phone-call'></i>
