@@ -167,9 +167,14 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <h1>Resident Onboarding</h1>
-        <p>Create a new account for a shifting-in tenant</p>
+    <div class="welcome animate-up" style="margin-bottom: 40px; padding: 10px 0;">
+        <h1 style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #ffffff 30%, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; margin-bottom: 12px; display: flex; align-items: center; gap: 18px;">
+            <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 12px; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);">
+                <i class='bx bx-user-pin' style="font-size: 32px; color: #818cf8; -webkit-text-fill-color: initial;"></i>
+            </div>
+            Resident Onboarding
+        </h1>
+        <p style="color: #94a3b8; font-size: 15px; max-width: 500px; line-height: 1.6; margin-left: 78px;">Create a new account for a shifting-in tenant. Fill in the required details below to instantly generate their secure profile.</p>
     </div>
 
     <div class="dashboard-grid-70 animate-up" style="margin-top: 30px; grid-template-columns: 1fr;">
