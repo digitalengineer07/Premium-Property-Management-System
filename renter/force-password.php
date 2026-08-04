@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         body {
-            background: var(--bg-main);
+            background: #0F172A;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -64,7 +64,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 0;
             padding: 20px;
         }
-    
+        
+        /* Modern Premium Styling */
+        .panel {
+            background: #1E293B !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+            padding: 40px !important;
+        }
+        .form-group label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94A3B8 !important;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .form-group input {
+            background: #0F172A !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            color: #F8FAFC !important;
+            height: 52px !important;
+            transition: all 0.3s ease !important;
+        }
+        .form-group input:focus {
+            background: #131E32 !important;
+            border-color: #6366F1 !important;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+            outline: none !important;
+        }
+        .form-group i {
+            color: #64748B !important;
+            transition: color 0.3s ease;
+        }
+        .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
+            color: #6366F1 !important;
+        }
+        .btn-primary.submit-btn {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3) !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary.submit-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4) !important;
+        }
+        
         .mb-nav-center {
             width: 52px;
             height: 52px;
@@ -84,18 +136,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .dark-theme .mb-nav-center {
             border-color: #111827;
         }
-
-</style>
+    </style>
 </head>
 <body>
     <div style="width: 100%; max-width: 440px;">
         <div class="panel animate-up" style="padding: 40px;">
-            <div style="text-align: center; margin-bottom: 32px;">
-                <div style="width: 64px; height: 64px; background: rgba(98, 75, 255, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
-                    <i class='bx bx-shield-quarter' style="font-size: 32px; color: var(--primary-purple);"></i>
+            <div style="text-align: center; margin-bottom: 35px;">
+                <div style="width: 72px; height: 72px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                    <i class='bx bx-shield-quarter' style="font-size: 36px; color: #818cf8;"></i>
                 </div>
-                <h1 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px;">Secure Your Account</h1>
-                <p style="color: var(--text-gray); font-size: 13px; line-height: 1.5;">First-time login detected. Please set a new password to continue.</p>
+                <h1 style="font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #ffffff 30%, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; margin-bottom: 12px;">Secure Your Account</h1>
+                <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; max-width: 320px; margin: 0 auto;">First-time login detected. Please set a new password to continue.</p>
             </div>
 
             <?php if($error): ?>
@@ -126,8 +177,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
                     </div>
                 </div>
-                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 14px; border-radius: 12px;">
-                    <i class='bx bx-lock-open-alt'></i> Update & Continue
+                <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 16px; border-radius: 14px; font-size: 15px;">
+                    <i class='bx bx-lock-open-alt' style="font-size: 20px; margin-right: 8px;"></i> Update & Continue
                 </button>
             </form>
         </div>
