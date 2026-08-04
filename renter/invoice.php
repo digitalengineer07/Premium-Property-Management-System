@@ -820,7 +820,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             <!-- Header -->
             <div class="header-section">
                 <div class="brand-section">
-                    <img src="../assets/img/logo.png" onerror="this.src='../assets/img/favicon.png'; this.onerror=null;" alt="Logo" style="height: 64px; object-fit: contain;">
+                    <img src="../assets/img/logo.png?v=<?php echo time(); ?>" onerror="this.src='../assets/img/favicon.png'; this.onerror=null;" alt="Logo" style="height: 64px; object-fit: contain;">
                     <div class="brand-info">
                         <h1><?php echo strtoupper(explode(' ', HOUSE_NAME)[0] . (isset(explode(' ', HOUSE_NAME)[1]) ? ' ' . explode(' ', HOUSE_NAME)[1] : '')); ?></h1>
                         <div class="brand-residence-line">

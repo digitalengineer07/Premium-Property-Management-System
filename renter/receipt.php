@@ -921,7 +921,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <!-- SVG Logo -->
                         <div style="width: 70px; height: 60px;">
-                            <img src="../assets/img/logo.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                            <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <div>
                             <h1 style="font-size: 22px; font-weight: 900; color: #000; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px;">MADHAV KUNJ</h1>
