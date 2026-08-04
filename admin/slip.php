@@ -758,7 +758,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         </div>
 
         <div class="contact-info">
-            <div class="contact-item" style="align-items: flex-start;">
+            <div class="contact-item" style="align-items: flex-start; margin-left: -40px; margin-top: -15px;">
                 <i class='bx bx-map' style="margin-top: 2px;"></i>
                 <div style="line-height: 1.4;">
                     <?php 
