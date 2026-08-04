@@ -75,7 +75,7 @@ mysqli_stmt_close($stmt);
 /* Fetch Billing Lists */
 // Get pure rents
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.created_at, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
+    SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
     FROM rent r 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
     WHERE r.user_id = ? 
@@ -93,7 +93,7 @@ mysqli_stmt_close($stmt);
 
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
+    SELECT e.id, e.month, e.created_at, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
            (SELECT SUM(paid_amount) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
@@ -122,7 +122,7 @@ mysqli_stmt_close($stmt);
 
 // Get advance payments 
 $stmt = mysqli_prepare($conn, "
-    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type 
+    SELECT p.id, p.month, p.payment_date, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type 
     FROM payments p 
     WHERE p.user_id = ? AND p.bill_type = 'advance'
     ORDER BY p.id DESC LIMIT 10
@@ -242,7 +242,15 @@ foreach ($merged_rents as $t) {
         $type = 'elec_rent';
     }
     
-    $due_timestamp = strtotime($t['month'] . '-05');
+    if (!empty($t['created_at'])) {
+        $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
+    } elseif (!empty($t['due_date'])) {
+        $due_timestamp = strtotime($t['due_date']);
+    } elseif (!empty($t['payment_date'])) {
+        $due_timestamp = strtotime($t['payment_date']);
+    } else {
+        $due_timestamp = strtotime($t['month'] . '-01 + 10 days');
+    }
     $due_date_str = date('d M Y', $due_timestamp);
     $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
     
@@ -280,7 +288,12 @@ foreach ($elecs as $t) {
     $subtitle = "Units Consumed: " . $t['units_consumed'];
     $period = date('M Y', strtotime($t['month'] . '-01')) . " Elec";
     
-    $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
+    if (!empty($t['created_at'])) {
+        $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
+    } else {
+        $due_timestamp = strtotime($t['month'] . '-01 + 10 days');
+    }
+    $due_date_str = date('d M Y', $due_timestamp);
     $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
     
     $filter_type = strtolower($status);
