@@ -42,7 +42,16 @@ if (!empty($schema) && isset($schema['tables'])) {
     }
 }
 
+// Check for missing data migrations
+$has_missing_data = false;
+$chk_elec = mysqli_query($conn, "SELECT e.id FROM electricity e WHERE e.status = 'Paid' AND e.id NOT IN (SELECT bill_id FROM payments WHERE bill_type IN ('electricity', 'elec_rent')) LIMIT 1");
+if(mysqli_num_rows($chk_elec) > 0) $has_missing_data = true;
+
+$chk_rent = mysqli_query($conn, "SELECT id FROM rent WHERE status = 'Paid' AND id NOT IN (SELECT bill_id FROM payments WHERE bill_type = 'rent') LIMIT 1");
+if(mysqli_num_rows($chk_rent) > 0) $has_missing_data = true;
+
 // Handle Sync Action
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'sync') {
     $success = true;
     
@@ -69,10 +78,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
     
+    // Data Migrations
+    // 1. Missing Electricity Payments
+    $res = mysqli_query($conn, "SELECT e.id, e.user_id, e.month, e.amount, e.rent_amount, e.maintenance, e.extra_charges, e.dues 
+    FROM electricity e WHERE e.status = 'Paid'");
+    $inserted_elec = 0;
+    while($r = mysqli_fetch_assoc($res)) {
+        $bill_id = $r['id'];
+        $chk = mysqli_query($conn, "SELECT id FROM payments WHERE bill_id = $bill_id AND bill_type IN ('electricity', 'elec_rent')");
+        if(mysqli_num_rows($chk) == 0) {
+            $user_id = $r['user_id'];
+            $month = $r['month'];
+            $total = $r['amount'] + $r['rent_amount'] + $r['maintenance'] + $r['extra_charges'] + $r['dues'];
+            $date_str = date('Y-m-10', strtotime('1 ' . $month));
+            $sys_tx_id = 'SYS_REC_' . strtoupper(substr(md5(uniqid()), 0, 8));
+            
+            $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'elec_rent', ?, ?, ?, 'Cash/Offline', ?, ?, 'Manual/Old', ?)");
+            mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $month, $total, $total, $date_str, $sys_tx_id);
+            if(mysqli_stmt_execute($stmt)) {
+                $inserted_elec++;
+                mysqli_query($conn, "UPDATE electricity SET paid_date = '$date_str' WHERE id = $bill_id AND (paid_date IS NULL OR paid_date = '0000-00-00')");
+            }
+        }
+    }
+    if ($inserted_elec > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Restored $inserted_elec missing payment receipts for legacy electricity bills.</span>";
+    }
+
+    // 2. Missing Rent Payments
+    $res_rent = mysqli_query($conn, "SELECT id, user_id, month, rent_amount FROM rent WHERE status = 'Paid'");
+    $inserted_rent = 0;
+    while($r = mysqli_fetch_assoc($res_rent)) {
+        $bill_id = $r['id'];
+        $chk = mysqli_query($conn, "SELECT id FROM payments WHERE bill_id = $bill_id AND bill_type = 'rent'");
+        if(mysqli_num_rows($chk) == 0) {
+            $user_id = $r['user_id'];
+            $month = $r['month'];
+            $total = $r['rent_amount'];
+            $date_str = date('Y-m-10', strtotime('1 ' . $month));
+            $sys_tx_id = 'SYS_REC_' . strtoupper(substr(md5(uniqid()), 0, 8));
+            
+            $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'rent', ?, ?, ?, 'Cash/Offline', ?, ?, 'Manual/Old', ?)");
+            mysqli_stmt_bind_param($stmt, "iisddss", $user_id, $bill_id, $month, $total, $total, $date_str, $sys_tx_id);
+            if(mysqli_stmt_execute($stmt)) {
+                $inserted_rent++;
+                mysqli_query($conn, "UPDATE rent SET paid_date = '$date_str' WHERE id = $bill_id AND (paid_date IS NULL OR paid_date = '0000-00-00')");
+            }
+        }
+    }
+    if ($inserted_rent > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Restored $inserted_rent missing payment receipts for legacy rent bills.</span>";
+    }
+    
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
         $missing_columns = [];
+        $has_missing_data = false;
+
     }
 }
 ?>
@@ -124,11 +187,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <br>
             <?php endif; ?>
             
-            <?php if (empty($missing_tables) && empty($missing_columns)): ?>
+            <?php if (empty($missing_tables) && empty($missing_columns) && !$has_missing_data): ?>
                 <div class="card" style="text-align: center; padding: 40px;">
                     <div style="font-size: 48px; color: #10B981;"><i class='bx bx-check-circle'></i></div>
                     <h3>Database is perfectly synchronized!</h3>
-                    <p style="color: #64748B;">No missing tables or columns were found.</p>
+                    <p style="color: #64748B;">No missing tables, columns, or orphaned data were found.</p>
                 </div>
             <?php else: ?>
                 <form method="POST">
@@ -150,6 +213,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                 <?php foreach ($missing_columns as $t => $cols): ?>
                                     <li><strong><?php echo $t; ?>:</strong> <?php echo implode(", ", array_keys($cols)); ?></li>
                                 <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($has_missing_data): ?>
+                        <div class="card">
+                            <h4>Legacy Data Migration <span class="badge" style="background:#FEF3C7; color:#D97706;">Required</span></h4>
+                            <ul>
+                                <li>Missing payment receipts detected for old 'Paid' bills. A migration will be performed.</li>
                             </ul>
                         </div>
                     <?php endif; ?>
