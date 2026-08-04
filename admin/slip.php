@@ -745,7 +745,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <!-- Header -->
         <div class="header">
             <div class="brand-section">
-                <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" class="brand-icon" style="width: 48px; height: 48px; object-fit: contain; transform: scale(1.3);">
+                <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" class="brand-icon" style="width: 48px; height: 48px; object-fit: contain; transform: scale(1.6);">
                 <div class="brand-text">
                     <h2><?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav kunj'; ?></h2>
                     <p>Electricity Bill</p>
