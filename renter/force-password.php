@@ -92,20 +92,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        /* Modern Light Premium Styling */
+        /* Pixel-perfect Panel Styling */
         .panel {
             background: #FFFFFF !important;
             border: 1px solid rgba(0, 0, 0, 0.03) !important;
-            border-radius: 24px !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08) !important;
-            padding: 48px !important;
+            border-radius: 28px !important;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.05) !important;
+            padding: 50px 40px !important;
         }
         
         .form-group label {
             font-size: 14px;
-            color: #1E293B !important;
+            color: #0F172A !important;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: block;
             text-transform: none;
             letter-spacing: normal;
@@ -115,11 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: #FFFFFF !important;
             border: 1px solid #E2E8F0 !important;
             border-radius: 12px !important;
-            color: #1E293B !important;
-            height: 52px !important;
+            color: #0F172A !important;
+            height: 56px !important;
             transition: all 0.3s ease !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+            box-shadow: none !important;
             font-weight: 500;
+            font-size: 15px;
+            padding-left: 60px !important;
+            padding-right: 48px !important;
         }
         
         .form-group input::placeholder {
@@ -128,44 +131,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         .form-group input:focus {
-            border-color: #6366F1 !important;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+            border-color: #818CF8 !important;
+            box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.15) !important;
             outline: none !important;
         }
         
-        .form-group i {
-            color: #94A3B8 !important;
-            transition: color 0.3s ease;
+        .input-icon-box {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            width: 40px;
+            height: 40px;
+            background: #EEF2FF;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
         }
         
-        .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
-            color: #6366F1 !important;
+        .input-icon-box i {
+            color: #6366F1;
+            font-size: 20px;
+        }
+        
+        .pwd-toggle {
+            position: absolute;
+            right: 16px;
+            top: 18px;
+            color: #94A3B8;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 2;
+            transition: color 0.3s;
+        }
+        
+        .pwd-toggle:hover {
+            color: #64748B;
         }
         
         .btn-primary.submit-btn {
-            background: linear-gradient(135deg, #818cf8, #4f46e5) !important;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6) !important;
             border: none !important;
             color: white !important;
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3) !important;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25) !important;
             transition: transform 0.2s, box-shadow 0.2s !important;
             font-weight: 600 !important;
-            letter-spacing: 0.5px;
-            height: 54px;
+            font-size: 16px !important;
+            letter-spacing: 0.3px;
+            height: 56px;
+            border-radius: 12px !important;
         }
         
         .btn-primary.submit-btn:hover {
             transform: translateY(-2px) !important;
-            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4) !important;
+            box-shadow: 0 14px 28px rgba(99, 102, 241, 0.35) !important;
         }
         
-        /* Security Shield Icon Animation */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
+        /* Graphic Background for Shield */
+        .shield-graphic-area {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .shield-icon-container {
-            animation: float 4s ease-in-out infinite;
+        
+        .orbit-circle {
+            position: absolute;
+            border: 1px dashed rgba(99, 102, 241, 0.2);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .shield-core {
+            width: 80px;
+            height: 90px;
+            background: linear-gradient(135deg, #8B5CF6, #3B82F6);
+            border-radius: 20px 20px 40px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .floating-badge {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 11;
         }
     </style>
 </head>
@@ -180,19 +244,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div style="width: 100%; max-width: 520px;">
         <div class="panel animate-up">
-            <div style="text-align: center; margin-bottom: 40px;">
-                <div class="shield-icon-container" style="position: relative; width: 90px; height: 90px; margin: 0 auto 30px;">
-                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #818cf8, #4f46e5); box-shadow: 0 15px 35px rgba(79, 70, 229, 0.35); border-radius: 30px; display: flex; align-items: center; justify-content: center;">
-                        <i class='bx bxs-lock-alt' style="font-size: 44px; color: #ffffff;"></i>
+            <div style="text-align: center; margin-bottom: 35px;">
+                <div class="shield-graphic-area">
+                    <!-- Orbit Rings -->
+                    <div class="orbit-circle" style="width: 130px; height: 130px;"></div>
+                    <div class="orbit-circle" style="width: 180px; height: 180px;"></div>
+                    
+                    <!-- Floating Elements -->
+                    <div class="floating-badge" style="width: 28px; height: 28px; top: 25px; left: 20px; background: #DCFCE7;">
+                        <i class='bx bx-check' style="color: #10B981; font-size: 18px; font-weight: bold;"></i>
                     </div>
-                    <!-- Decorative checkmark badge -->
-                    <div style="position: absolute; width: 28px; height: 28px; background: #10B981; border: 3px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; top: -5px; left: -10px;">
-                        <i class='bx bx-check' style="color: white; font-size: 18px; font-weight: bold;"></i>
+                    <div class="floating-badge" style="width: 24px; height: 24px; bottom: 35px; right: 25px; background: #EEF2FF;">
+                        <i class='bx bx-key' style="color: #818CF8; font-size: 14px;"></i>
+                    </div>
+                    
+                    <!-- Tiny pluses -->
+                    <i class='bx bx-plus' style="position: absolute; top: 20px; right: 40px; color: #CBD5E1; font-size: 12px;"></i>
+                    <i class='bx bx-plus' style="position: absolute; bottom: 40px; left: 30px; color: #CBD5E1; font-size: 16px;"></i>
+                    
+                    <!-- Main Shield -->
+                    <div class="shield-core">
+                        <i class='bx bxs-lock-alt' style="font-size: 38px; color: #ffffff;"></i>
                     </div>
                 </div>
                 
-                <h1 style="font-size: 30px; font-weight: 800; color: #0F172A; margin-bottom: 12px;">Secure Your Account</h1>
-                <p style="color: #64748B; font-size: 14.5px; line-height: 1.6; max-width: 360px; margin: 0 auto;">First-time login detected. For your security, please set a new password to continue.</p>
+                <h1 style="font-size: 32px; font-weight: 800; color: #0F172A; margin-bottom: 12px;">Secure Your Account</h1>
+                <p style="color: #64748B; font-size: 15px; line-height: 1.6; max-width: 380px; margin: 0 auto;">First-time login detected. For your security, please set a new password to continue.</p>
             </div>
 
             <?php if($error): ?>
@@ -207,18 +284,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group" style="margin-bottom: 24px;">
                     <label>New Password</label>
                     <div style="position: relative;">
-                        <i class='bx bx-lock-alt' style="position: absolute; left: 16px; top: 16px; color: #94A3B8; font-size: 20px; z-index: 2;"></i>
-                        <input type="password" name="new_password" placeholder="Enter new password" class="pwd-input" required style="padding-left: 48px; padding-right: 48px;">
-                        <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 16px; color: #94A3B8; cursor: pointer; font-size: 20px; z-index: 2;"></i>
+                        <div class="input-icon-box">
+                            <i class='bx bx-lock-alt'></i>
+                        </div>
+                        <input type="password" name="new_password" placeholder="Enter new password" class="pwd-input" required>
+                        <i class='bx bx-hide pwd-toggle'></i>
                     </div>
                     
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 16px; font-size: 12px; color: #64748B;">
-                        Password Strength: <span style="color: #EF4444; font-weight: 600;">Weak</span>
-                        <div style="display: flex; gap: 4px; margin-left: 4px;">
-                            <div style="height: 4px; width: 24px; background: #EF4444; border-radius: 2px;"></div>
-                            <div style="height: 4px; width: 24px; background: #E2E8F0; border-radius: 2px;"></div>
-                            <div style="height: 4px; width: 24px; background: #E2E8F0; border-radius: 2px;"></div>
-                            <div style="height: 4px; width: 24px; background: #E2E8F0; border-radius: 2px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 14px; font-size: 13px; color: #64748B; padding-left: 10px;">
+                        Password Strength: <span style="color: #F43F5E; font-weight: 600;">Weak</span>
+                        <div style="display: flex; gap: 6px; margin-left: 8px;">
+                            <div style="height: 4px; width: 28px; background: #F43F5E; border-radius: 2px;"></div>
+                            <div style="height: 4px; width: 28px; background: #E2E8F0; border-radius: 2px;"></div>
+                            <div style="height: 4px; width: 28px; background: #E2E8F0; border-radius: 2px;"></div>
+                            <div style="height: 4px; width: 28px; background: #E2E8F0; border-radius: 2px;"></div>
                         </div>
                     </div>
                 </div>
@@ -226,26 +305,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group" style="margin-bottom: 32px;">
                     <label>Confirm Password</label>
                     <div style="position: relative;">
-                        <i class='bx bx-lock-alt' style="position: absolute; left: 16px; top: 16px; color: #94A3B8; font-size: 20px; z-index: 2;"></i>
-                        <input type="password" name="confirm_password" placeholder="Confirm new password" class="pwd-input" required style="padding-left: 48px; padding-right: 48px;">
-                        <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 16px; color: #94A3B8; cursor: pointer; font-size: 20px; z-index: 2;"></i>
+                        <div class="input-icon-box">
+                            <i class='bx bx-lock-alt'></i>
+                        </div>
+                        <input type="password" name="confirm_password" placeholder="Confirm new password" class="pwd-input" required>
+                        <i class='bx bx-hide pwd-toggle'></i>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; border-radius: 14px; font-size: 15px;">
-                    <i class='bx bx-lock-open-alt' style="font-size: 20px; margin-right: 8px;"></i> Update & Continue
+                <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center;">
+                    <i class='bx bx-lock-open-alt' style="font-size: 22px; margin-right: 8px;"></i> Update & Continue
                 </button>
             </form>
 
             <!-- Security Priority Box -->
-            <div style="margin-top: 36px; background: #F0FDF4; border-radius: 16px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
-                <div style="background: #DCFCE7; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;">
+            <div style="margin-top: 32px; background: #F8FAFC; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; position: relative; overflow: hidden;">
+                <div style="background: #DCFCE7; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-check-shield' style="color: #10B981; font-size: 24px;"></i>
                 </div>
-                <div>
+                <div style="position: relative; z-index: 2;">
                     <div style="font-weight: 700; color: #0F172A; font-size: 14px; margin-bottom: 4px;">Your security is our priority</div>
-                    <div style="font-size: 12.5px; color: #64748B; line-height: 1.5;">Use a strong password that's different from previously used passwords.</div>
+                    <div style="font-size: 13px; color: #64748B; line-height: 1.5; max-width: 250px;">Use a strong password that's different from previously used passwords.</div>
                 </div>
+                <!-- Faint lock graphic on the right -->
+                <i class='bx bxs-lock-alt' style="position: absolute; right: -10px; bottom: -10px; font-size: 80px; color: #F1F5F9; z-index: 1; transform: rotate(-10deg);"></i>
             </div>
         </div>
     </div>
