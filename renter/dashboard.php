@@ -61,16 +61,18 @@ mysqli_stmt_close($stmt);
 
 $rent_due = $pure_rent_due + $rent_portion_due;
 $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
-$total_due = $elec_due + $rent_due - $unbilled_adj;
-
 /* Calculate Onboarding Dues */
-// If they have generated bills, they are an existing tenant and don't need initial onboarding
-$has_bills = (mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM electricity WHERE user_id=$user_id LIMIT 1")) !== null);
+// Run alter silently just in case
+mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
 
 $sec_due = 0;
 $adv_due = 0;
 
-if (!$has_bills) {
+$u_q = mysqli_query($conn, "SELECT onboarding_completed FROM users WHERE id=$user_id");
+$u_data = mysqli_fetch_assoc($u_q);
+$onboarding_completed = $u_data['onboarding_completed'] ?? 0;
+
+if (!$onboarding_completed) {
     $sec_target = (float)($user['security_deposit'] ?? 0);
     $qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
     $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
