@@ -215,7 +215,7 @@
         
         // Sort by Period Descending
         usort($all_bills, function($a, $b) { 
-            return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
+            return strcmp($b['period'], $a['period']);
         });
         
         $due_this_month = $total_due; 

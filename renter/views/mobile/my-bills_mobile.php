@@ -62,7 +62,7 @@ while($c = mysqli_fetch_assoc($comb_q)) {
 
 // Sort by Period Descending
 usort($mobile_all_bills, function($a, $b) { 
-    return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
+    return strcmp($b['period'], $a['period']);
 });
 $due_this_month = $total_due ?? 0; 
 $total_bills_count = count($mobile_all_bills);
