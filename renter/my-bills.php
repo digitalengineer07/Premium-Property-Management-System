@@ -280,7 +280,7 @@ foreach ($elecs as $t) {
     $subtitle = "Units Consumed: " . $t['units_consumed'];
     $period = date('M Y', strtotime($t['month'] . '-01')) . " Elec";
     
-    $due_timestamp = strtotime($t['month'] . '-05');
+    $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
     $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
     
     $filter_type = strtolower($status);
