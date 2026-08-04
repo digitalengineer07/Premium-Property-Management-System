@@ -887,7 +887,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                         <i class='bx bx-message-square-detail'></i>
                         <div class="photo-det-info">
                             <h5>Note</h5>
-                            <p class="note">Ye reading <?php echo date("F", strtotime($row['month'])); ?> month ka hain. (Bill for <?php echo date("F Y", strtotime($row['month'])); ?>)</p>
+                            <p class="note">Meter reading successfully captured for the billing month of <?php echo date("F Y", strtotime($row['month'] . '-01')); ?>.</p>
                         </div>
                     </div>
                 </div>
