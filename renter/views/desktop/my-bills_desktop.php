@@ -444,6 +444,12 @@
                         btn.onclick = () => window.open('invoice.php?id=' + bill.id, '_blank');
                     });
                 }
+
+                // Toggle Warning
+                const warningDiv = document.getElementById('bdWarning');
+                if (warningDiv) {
+                    warningDiv.style.display = bill.balance > 0 ? 'flex' : 'none';
+                }
             }
             
             function goToPage(page, e) {
