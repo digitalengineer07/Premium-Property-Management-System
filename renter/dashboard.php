@@ -61,6 +61,8 @@ mysqli_stmt_close($stmt);
 
 $rent_due = $pure_rent_due + $rent_portion_due;
 $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
+$total_due = $elec_due + $rent_due - $unbilled_adj;
+
 /* Calculate Onboarding Dues */
 // Run alter silently just in case
 mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
