@@ -333,7 +333,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </td>
                         <td style="padding: 12px 10px;">
                             <div style="font-weight: 700; color: var(--text-dark); font-size: 16px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-door-open' style="color: var(--primary-purple);"></i> <?php echo htmlspecialchars($u['room_no'] ?: 'N/A'); ?></div>
-                            <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad($u['id'], 4, '0', STR_PAD_LEFT); ?></div>
+                            <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php $h=md5($u['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div>
                         </td>
                         <td style="padding: 12px 10px;">
                             <div style="font-size: 12px;">
