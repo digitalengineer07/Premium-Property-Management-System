@@ -488,8 +488,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             background: #FAFBFC;
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px;
-            width: 300px;
+            padding: 20px 24px;
+            width: 380px;
         }
 
         .total-row {
