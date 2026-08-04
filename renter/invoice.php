@@ -233,14 +233,15 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         .meta-section {
-            background: #FAFBFC;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #F5F7FA 100%);
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            border-radius: 14px;
+            padding: 18px 22px;
             width: 300px;
             margin-left: auto;
             flex: 1;
             max-width: 320px;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.04);
         }
 
         .meta-row {
