@@ -63,16 +63,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            padding-top: 60px;
-            padding-bottom: 60px;
+            padding-top: 20px;
+            padding-bottom: 20px;
             font-family: 'Inter', sans-serif;
             box-sizing: border-box;
         }
         
         .logo-container {
             position: absolute;
-            top: 40px;
-            left: 40px;
+            top: 20px;
+            left: 20px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -195,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid rgba(0, 0, 0, 0.03) !important;
             border-radius: 24px !important;
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05) !important;
-            padding: 30px 25px !important;
+            padding: 20px 24px !important;
         }
         
         .form-group label {
@@ -213,12 +213,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #E2E8F0 !important;
             border-radius: 10px !important;
             color: #0F172A !important;
-            height: 44px !important;
+            height: 40px !important;
             transition: all 0.3s ease !important;
             box-shadow: none !important;
             font-weight: 500;
             font-size: 13.5px;
-            padding-left: 48px !important;
+            padding-left: 44px !important;
             padding-right: 44px !important;
         }
         
@@ -235,10 +235,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         .input-icon-box {
             position: absolute;
-            left: 5px;
-            top: 5px;
-            width: 34px;
-            height: 34px;
+            left: 4px;
+            top: 4px;
+            width: 32px;
+            height: 32px;
             background: #EEF2FF;
             border-radius: 8px;
             display: flex;
@@ -276,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-weight: 600 !important;
             font-size: 14px !important;
             letter-spacing: 0.2px;
-            height: 44px;
+            height: 40px;
             border-radius: 10px !important;
         }
         
@@ -354,7 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div style="width: 100%; max-width: 450px;">
         <div class="panel animate-up">
-            <div style="text-align: center; margin-bottom: 20px;">
+            <div style="text-align: center; margin-bottom: 12px;">
                 <div class="shield-graphic-area">
                     <!-- Orbit Rings -->
                     <div class="orbit-circle" style="width: 80px; height: 80px;"></div>
@@ -378,8 +378,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 
-                <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin-bottom: 8px;">Secure Your Account</h1>
-                <p style="color: #64748B; font-size: 13px; line-height: 1.5; max-width: 320px; margin: 0 auto;">First-time login detected. For your security, please set a new password to continue.</p>
+                <h1 style="font-size: 22px; font-weight: 800; color: #0F172A; margin-bottom: 4px;">Secure Your Account</h1>
+                <p style="color: #64748B; font-size: 13px; line-height: 1.4; max-width: 320px; margin: 0 auto;">First-time login detected. For your security, please set a new password to continue.</p>
             </div>
 
             <?php if($error): ?>
@@ -391,7 +391,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST">
                 <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 
-                <div class="form-group" style="margin-bottom: 16px;">
+                <div class="form-group" style="margin-bottom: 12px;">
                     <label>New Password</label>
                     <div style="position: relative;">
                         <div class="input-icon-box">
@@ -401,7 +401,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <i class='bx bx-hide pwd-toggle'></i>
                     </div>
                     
-                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 11px; color: #64748B; padding-left: 6px;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px; font-size: 11px; color: #64748B; padding-left: 6px;">
                         Password Strength: <span style="color: #F43F5E; font-weight: 600;">Weak</span>
                         <div style="display: flex; gap: 4px; margin-left: 6px;">
                             <div style="height: 4px; width: 20px; background: #F43F5E; border-radius: 2px;"></div>
@@ -412,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 
-                <div class="form-group" style="margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 16px;">
                     <label>Confirm Password</label>
                     <div style="position: relative;">
                         <div class="input-icon-box">
@@ -427,9 +427,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class='bx bx-lock-open-alt' style="font-size: 18px; margin-right: 6px;"></i> Update & Continue
                 </button>
             </form>
-
-            <!-- Security Priority Box -->
-            <div class="security-priority-box" style="margin-top: 20px; background: #F8FAFC; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; position: relative; overflow: hidden;">
+            
+            <div class="security-priority-box" style="margin-top: 16px; background: #F8FAFC; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; position: relative; overflow: hidden;">
                 <div style="background: rgba(16, 185, 129, 0.15); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-check-shield' style="color: #10B981; font-size: 18px;"></i>
                 </div>
