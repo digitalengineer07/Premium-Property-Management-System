@@ -168,7 +168,7 @@
 
                           <div id="refNoContainer">
                               <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Enter Transaction ID / UTR</label>
-                              <input type="text" name="transaction_id" id="transaction_id_input" placeholder="Enter 12-digit UTR No." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
+                              <input type="text" name="transaction_id" id="transaction_id_input" placeholder="Enter 12-digit UTR No." required pattern="\d{12}" minlength="12" maxlength="12" title="Please enter exactly 12 digits for the UTR." oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,12)" style="width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; background: #F8F9FA; color: var(--text-dark); outline: none; font-size: 15px;">
                           </div>
                           
                           <button type="submit" id="submitPaymentBtn" name="submit_payment_notif" class="btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 15px; border-radius: 12px; box-shadow: 0 6px 16px rgba(98, 75, 255, 0.25);">
