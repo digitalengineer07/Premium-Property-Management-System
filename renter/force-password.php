@@ -58,12 +58,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background: transparent;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            padding-top: 100px;
+            padding-bottom: 60px;
             font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
         }
         
         .logo-container {
