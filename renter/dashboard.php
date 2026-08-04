@@ -64,16 +64,19 @@ $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
 $total_due = $elec_due + $rent_due - $unbilled_adj;
 
 /* Calculate Onboarding Dues */
-$sec_target = (float)($user['security_deposit'] ?? 0);
-$qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
-$sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
-$sec_due = max(0, $sec_target - $sec_paid);
-
-// Also handle 1st month advance rent if they are completely new (no generated bills)
+// If they have generated bills, they are an existing tenant and don't need initial onboarding
 $has_bills = (mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM electricity WHERE user_id=$user_id LIMIT 1")) !== null);
+
+$sec_due = 0;
 $adv_due = 0;
+
 if (!$has_bills) {
-    // If they have no bills, their 1st month rent is DUE at onboarding
+    $sec_target = (float)($user['security_deposit'] ?? 0);
+    $qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
+    $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
+    $sec_due = max(0, $sec_target - $sec_paid);
+
+    // 1st month rent is DUE at onboarding
     $adv_target = (float)($user['fixed_rent'] ?? 0);
     $qAdvPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='advance'");
     $adv_paid = (float)(mysqli_fetch_assoc($qAdvPaid)['total'] ?? 0);
