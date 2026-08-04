@@ -103,7 +103,7 @@ $admin_user = s($_SESSION['admin']);
     </div>
 
     <div class="dashboard-grid-70 animate-up" style="margin-top: 30px; grid-template-columns: 1fr;">
-        <div style="max-width: 700px; margin: 0 auto; width: 100%;">
+        <div style="width: 100%;">
             <div class="panel">
                 <div class="panel-header" style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
