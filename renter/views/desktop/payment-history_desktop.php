@@ -244,11 +244,20 @@
                     $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
                 }
                 
+                $pm = strtolower($row['payment_mode'] ?? '');
+                if (strpos($pm, 'upi') !== false || strpos($pm, 'online') !== false || strpos($pm, 'net banking') !== false) {
+                    $dyn_title = 'Online Payment';
+                } elseif (strpos($pm, 'wallet') !== false || strpos($pm, 'auto-deduction') !== false) {
+                    $dyn_title = 'Wallet Deduction';
+                } else {
+                    $dyn_title = 'Cash / Offline Payment';
+                }
+
                 $all_bills[] = [
                     'filter_type' => 'approved',
                     'color' => 'green',
                     'icon' => 'bx-check-double',
-                    'title' => 'Cash / Offline Payment',
+                    'title' => $dyn_title,
                     'subtitle' => $subtitle,
                     'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General' || $row['period'] == 'Onboarding & Advance') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),

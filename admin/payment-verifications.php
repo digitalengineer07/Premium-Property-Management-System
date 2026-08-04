@@ -795,7 +795,11 @@ include "sidebar.php";
                             <?php
                             $disp_month = date('M Y', strtotime($n['created_at'])); // Default fallback
                             if (!empty($n['month'])) {
-                                $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                                if (strpos($n['month'], '-') !== false && strlen($n['month']) == 7) {
+                                    $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                                } else {
+                                    $disp_month = $n['month'];
+                                }
                             } elseif ($n['bill_id'] > 0) {
                                 // Try to fetch from rent/electricity table
                                 $bid = (int)$n['bill_id'];
