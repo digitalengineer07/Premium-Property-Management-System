@@ -274,10 +274,12 @@ foreach ($merged_rents as $t) {
         'type' => $type,
         'filter_type' => $filter_type,
         'period' => $period,
+        'raw_month' => $t['month'],
         'title' => $title,
         'subtitle' => $subtitle,
         'due_date' => $due_date_str,
         'amount' => (float)$t['amount'],
+        'remaining_amount' => isset($t['remaining_amount']) ? (float)$t['remaining_amount'] : (float)$t['amount'],
         'status' => $status,
         'summary' => $summary
     ];
@@ -311,6 +313,7 @@ foreach ($elecs as $t) {
         'type' => 'electricity',
         'filter_type' => $filter_type,
         'period' => $period,
+        'raw_month' => $t['month'],
         'title' => $title,
         'subtitle' => $subtitle,
         'due_date' => date('d M Y', $due_timestamp),
@@ -320,6 +323,10 @@ foreach ($elecs as $t) {
         'summary' => $summary
     ];
 }
+
+usort($all_bills, function($a, $b) {
+    return strcmp($b['raw_month'], $a['raw_month']);
+});
 
 // Calculate total value of bills cleared this year (as requested by user)
 $current_year = date('Y');
