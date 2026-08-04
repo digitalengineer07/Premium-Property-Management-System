@@ -56,13 +56,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         body {
-            background: #0F172A;
+            font-family: 'Outfit', sans-serif !important;
+            background-color: #0F172A;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #F8FAFC;
+        }
+
+        .app-container {
             display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 230px;
+            background: #111827;
+            border-right: 1px solid #1E293B;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .sidebar-logo {
+            width: 40px; height: 40px;
+            background: #1E293B; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px; font-weight: 800;
+        }
+        .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .sidebar-brand p { font-size: 12px; color: #94A3B8; margin: 0; font-weight: 500; }
+
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 16px; border-radius: 12px;
+            color: #94A3B8; text-decoration: none; font-weight: 600; font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        .nav-item i { font-size: 18px; opacity: 0.8; }
+        .nav-item.active { background: #624BFF; color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
+        .nav-item.active i { opacity: 1; }
+
+        .main-content {
+            flex: 1;
+            margin-left: 230px;
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
         }
         
         /* Modern Premium Styling */
@@ -139,7 +194,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <div style="width: 100%; max-width: 440px;">
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar hide-mobile">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class='bx bx-building-house'></i>
+            </div>
+            <div class="sidebar-brand">
+                <h2><?= HOUSE_NAME ?></h2>
+                <p>Resident Portal</p>
+            </div>
+        </div>
+        <div class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class='bx bx-lock-alt'></i>
+                <span>Account Security</span>
+            </a>
+            <div class="nav-item" style="opacity: 0.5; cursor: not-allowed;">
+                <i class='bx bx-home'></i>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" style="opacity: 0.5; cursor: not-allowed;">
+                <i class='bx bx-credit-card'></i>
+                <span>Payments</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div style="width: 100%; max-width: 440px;">
         <div class="panel animate-up" style="padding: 40px;">
             <div style="text-align: center; margin-bottom: 35px;">
                 <div style="width: 72px; height: 72px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
@@ -183,10 +267,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
         
-        <p style="text-align: center; margin-top: 24px; color: var(--text-gray); font-size: 13px;">
+        <p style="text-align: center; margin-top: 24px; color: #94A3B8; font-size: 13px;">
             &copy; <?php echo date('Y'); ?> <?php echo HOUSE_NAME; ?>. All rights reserved.
         </p>
     </div>
+    </main>
+</div>
 
 <script>
     document.querySelectorAll('.pwd-toggle').forEach(icon => {
