@@ -511,7 +511,7 @@
                             </td>
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
+                                ${bill.status === 'Unpaid' ? (bill.filter_type === 'overdue' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Overdue</p>` : `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Unpaid</p>`) : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
                             </td>
                             <td style="text-align:right;">
                                 <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.balance)}</span>
