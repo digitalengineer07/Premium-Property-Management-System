@@ -35,8 +35,8 @@ if (!$user) {
 /* Fetch electricity records */
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid,
-           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount
+           (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
+           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as adjustment_amount
     FROM electricity e 
     WHERE e.user_id = ? AND e.amount > 0
     ORDER BY e.id DESC
@@ -49,10 +49,11 @@ mysqli_stmt_close($stmt);
 
 /* Fetch rent records (from electricity table as rent and maintenance combined) */
 $stmt = mysqli_prepare($conn, "
-    SELECT id, month, rent_amount, maintenance, status, source, total_paid FROM (
+    SELECT id, month, rent_amount, maintenance, status, source, total_paid, elec_amount FROM (
         SELECT r.id, r.month, r.rent_amount, r.maintenance, IFNULL(NULLIF(r.rent_status, ''), r.status) as status, 
                'electricity' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = r.id) as total_paid
+               (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
+               r.amount as elec_amount
         FROM electricity r 
         WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
         
@@ -60,8 +61,10 @@ $stmt = mysqli_prepare($conn, "
         
         SELECT rt.id, rt.month, rt.rent_amount, 0 as maintenance, rt.status as status,
                'rent' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid
+               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
+               0 as elec_amount
         FROM rent rt
+
         WHERE rt.user_id = ?
     ) as combined_rents
     ORDER BY STR_TO_DATE(CONCAT('1 ', month), '%d %M %Y') DESC, id DESC
@@ -512,7 +515,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($r['status'] != 'Paid'): $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $r['total_paid']); ?>
+                                    <?php if($r['status'] != 'Paid'): 
+                                        $rent_paid_so_far = ($r['source'] == 'electricity') ? max(0, $r['total_paid'] - $r['elec_amount']) : $r['total_paid'];
+                                        $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $rent_paid_so_far); 
+                                    ?>
                                         <button onclick="openPaymentModal('<?php echo $r['source']; ?>', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
                                     <?php else: ?>
                                         <span style="color: var(--text-gray); padding: 4px 12px; font-size: 11px; font-weight: 600;">-</span>
