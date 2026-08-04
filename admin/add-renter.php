@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $parking = trim($_POST['parking'] ?? '');
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssiddidddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
+                mysqli_stmt_bind_param($stmt, "ssssssiddddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
