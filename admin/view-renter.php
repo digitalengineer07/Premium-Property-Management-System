@@ -222,6 +222,19 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
+                        <?php if(!($user['onboarding_completed'] ?? 0)): ?>
+                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
+                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                            <input type="hidden" name="status" value="1">
+                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #10B981; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-check-shield' style="font-size: 16px;"></i> Mark Onboarding Paid</button>
+                        </form>
+                        <?php else: ?>
+                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
+                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                            <input type="hidden" name="status" value="0">
+                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-x-circle' style="font-size: 16px;"></i> Undo Onboarding</button>
+                        </form>
+                        <?php endif; ?>
                         <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
                     </div>
                 </div>
