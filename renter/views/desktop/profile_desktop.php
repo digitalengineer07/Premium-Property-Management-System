@@ -197,7 +197,7 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-building-house'></i></div>
-                        <div class="residence-info"><h4>Block / Building</h4><p>Block A</p></div>
+                        <div class="residence-info"><h4>Block / Building</h4><p><?php echo htmlspecialchars($user['block'] ?: 'N.A.'); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-map-alt'></i></div>
@@ -205,7 +205,7 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-layer'></i></div>
-                        <div class="residence-info"><h4>Floor</h4><p>2nd Floor</p></div>
+                        <div class="residence-info"><h4>Floor</h4><p><?php echo htmlspecialchars($user['floor'] ?: 'N.A.'); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-calendar-event'></i></div>
@@ -229,7 +229,7 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-car'></i></div>
-                        <div class="residence-info"><h4>Parking Slot</h4><p>A-15</p></div>
+                        <div class="residence-info"><h4>Parking Slot</h4><p><?php echo htmlspecialchars($user['parking'] ?: 'N.A.'); ?></p></div>
                     </div>
                 </div>
             </div>
