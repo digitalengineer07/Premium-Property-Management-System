@@ -152,7 +152,7 @@
                           <input type="hidden" name="bill_type" id="hiddenBillType">
                           <input type="hidden" name="bill_id" id="hiddenBillId">
                           <input type="hidden" name="amount" id="hiddenAmount">
-                          <input type="hidden" name="month" id="hiddenMonth">
+                          <input type="hidden" name="bill_month" id="hiddenMonth">
                           
                           <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Payment Mode</label>
                           <div style="display: flex; gap: 12px; margin-bottom: 16px;">
@@ -299,7 +299,11 @@
           document.getElementById('hiddenBillType').value = type;
           document.getElementById('hiddenBillId').value = id;
           document.getElementById('hiddenAmount').value = amount;
-          document.getElementById('hiddenMonth').value = month;
+          if (month && month !== 'undefined' && month !== '') {
+              document.getElementById('hiddenMonth').value = month;
+          } else {
+              document.getElementById('hiddenMonth').value = '';
+          }
           
           const upiId = "nikhil119124-1@oksbi";
           const payeeName = "Premium Property Management";
