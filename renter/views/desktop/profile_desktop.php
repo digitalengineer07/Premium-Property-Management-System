@@ -159,7 +159,7 @@
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
                 <div style="display: flex; gap: 2px; flex-wrap: wrap;">
                     <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1); white-space: nowrap;"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
-                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1); white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php echo strtoupper(str_pad(dechex((($user['id'] * 49281) + 23984) % 65536), 4, '0', STR_PAD_LEFT)); ?></span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1); white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></span>
                 </div>
             </div>
 
@@ -169,7 +169,7 @@
                       <button class="btn-outline" onclick="if(typeof openProfileSection === 'function') { openProfileSection('all'); } else { document.getElementById('editProfileModal').style.display='flex'; }"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
                   <div class="info-list">
-                      <div class="info-row"><div class="info-label"><i class='bx bx-id-card'></i> Unique ID</div><div class="info-value" style="color: #10B981;">RNT-<?php echo strtoupper(str_pad(dechex((($user['id'] * 49281) + 23984) % 65536), 4, '0', STR_PAD_LEFT)); ?></div></div>
+                      <div class="info-row"><div class="info-label"><i class='bx bx-id-card'></i> Unique ID</div><div class="info-value" style="color: #10B981;">RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
                       <?php
                       $email_val = $user['email'] ?: '-';
