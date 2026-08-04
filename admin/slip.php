@@ -758,7 +758,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         </div>
 
         <div class="contact-info">
-            <div class="contact-item">
+            <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-map'></i>
                 <?php echo defined('HOUSE_ADDRESS') ? HOUSE_ADDRESS : 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503'; ?>
             </div>
