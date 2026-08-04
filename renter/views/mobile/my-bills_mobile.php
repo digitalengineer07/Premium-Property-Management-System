@@ -5,18 +5,18 @@
 $mobile_all_bills = [];
 
 // 1. Pure Rent
-$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
                                 FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                 WHERE r.user_id=$user_id");
 while($r = mysqli_fetch_assoc($rent_q)) {
     $mobile_all_bills[] = [
-        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['month'].'-05') < time() ? 'overdue' : 'unpaid')),
+        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['due_date']) < time() ? 'overdue' : 'unpaid')),
         'title' => 'February 2026', // Mocking based on month for UI matching
         'real_title' => date('F Y', strtotime($r['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $r['month'],
-        'bill_date' => date('01 F Y', strtotime($r['month'])),
-        'due_date' => date('d F Y', strtotime($r['month'] . '-05')),
+        'bill_date' => date('d F Y', strtotime('-10 days', strtotime($r['due_date']))),
+        'due_date' => date('d F Y', strtotime($r['due_date'])),
         'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
         'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
         'icon' => 'bx-home', 'icon_bg' => 'rgba(139, 92, 246, 0.1)', 'icon_color' => '#8B5CF6',
