@@ -755,7 +755,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                 align-items: flex-end !important;
                 gap: 16px !important;
             }
-            .totals-box { width: 300px !important; }
+            .totals-box { width: 380px !important; }
             .warning-box { max-width: 60% !important; margin-bottom: 0 !important; }
             
             .bottom-section { 
