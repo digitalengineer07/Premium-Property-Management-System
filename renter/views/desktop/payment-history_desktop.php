@@ -408,7 +408,6 @@
                                     <div style="display: flex; align-items: center; justify-content: center; gap: 2px; font-weight: 600; font-size: 13px; color: var(--text-dark);">
                                         <?php if(strpos(strtolower($bill['payment_mode']), 'upi') !== false): ?>
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;">
-                                            UPI
                                         <?php elseif(strpos(strtolower($bill['payment_mode']), 'net banking') !== false): ?>
                                             <i class='bx bxs-bank' style="color: #624BFF; font-size: 16px;"></i>
                                             <?php echo $bill['payment_mode']; ?>
