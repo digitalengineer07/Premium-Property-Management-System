@@ -75,7 +75,7 @@ mysqli_stmt_close($stmt);
 /* Fetch Billing Lists */
 // Get pure rents
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
+    SELECT r.id, r.month, r.created_at, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
     FROM rent r 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
     WHERE r.user_id = ? 
