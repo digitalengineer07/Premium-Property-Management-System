@@ -37,23 +37,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Hash password
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
                 $base_reading = (int)($_POST['base_reading'] ?? 0);
-                $advance_payment = (float)($_POST['advance_payment'] ?? 0);
+                $total_collected = (float)($_POST['advance_payment'] ?? 0);
                 $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
+                
+                // Split the total collected amount
+                $amount_to_sec = min($total_collected, $security_deposit);
+                $amount_to_adv = max(0, $total_collected - $amount_to_sec);
+                
+                // Set onboarding completed flag if they fully paid
+                $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
                 
                 $joining_date = $_POST['joining_date'] ?? null;
                 if(empty($joining_date)) $joining_date = date('Y-m-d');
                 $block = trim($_POST['block'] ?? '');
                 $floor = trim($_POST['floor'] ?? '');
                 $parking = trim($_POST['parking'] ?? '');
-                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
+                
+                // Check if onboarding_completed column exists
+                mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssiddddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
+                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $amount_to_adv, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
                     $success = "Resident profile created successfully! <a href='../onboarding-guide.php?id=$new_id&pass=" . urlencode($password) . "' target='_blank' style='color: #10B981; text-decoration: underline; margin-left:10px;'>Print Onboarding Guide</a>";
+
+                    // Insert payment records for the ledger
+                    $sys_tx_id = 'SYS_ONB_' . strtoupper(substr(md5(uniqid()), 0, 10));
+                    if ($amount_to_sec > 0) {
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, 'Cash/Offline', $amount_to_sec, CURDATE(), 'Cash', '$sys_tx_id')");
+                    }
+                    if ($amount_to_adv > 0) {
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, 'Cash/Offline', $amount_to_adv, CURDATE(), 'Cash', '$sys_tx_id')");
+                    }
 
                     // Welcome Email Logic
                     require_once "utils_mailer.php";
@@ -297,17 +317,17 @@ $admin_user = s($_SESSION['admin']);
                         <div class="form-group">
                             <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
                                 <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Advance Wallet (₹)</label>
+                                    <label class="form-label" style="font-weight: 600; color: #1E293B;" title="Total cash collected at joining">Total Initial Payment (₹)</label>
                                 <div style="position: relative; height: 48px;">
                                     <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
-                                    <input type="number" step="0.01" name="advance_payment" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                    <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
                             </div>
                                 <div style="flex: 1;">
                                     <label class="form-label" style="font-weight: 600; color: #1E293B;">Security Deposit (₹)</label>
                                 <div style="position: relative; height: 48px;">
                                     <i class='bx bx-lock-alt' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
-                                    <input type="number" step="0.01" name="security_deposit" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                    <input type="number" step="0.01" name="security_deposit" id="securityDepositInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
                             </div>
                                 <div style="display: flex; align-items: flex-end;">
@@ -325,7 +345,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Rent Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_rent" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="0" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
@@ -391,6 +411,25 @@ document.querySelectorAll('.pwd-toggle').forEach(icon => {
         }
     });
 });
+
+function confirmSubmission(e) {
+    const totalPayment = parseFloat(document.getElementById('totalPaymentInput').value) || 0;
+    const securityDeposit = parseFloat(document.getElementById('securityDepositInput').value) || 0;
+    const fixedRent = parseFloat(document.getElementById('fixedRentInput').value) || 0;
+    
+    const expectedFull = securityDeposit + fixedRent;
+    
+    if (totalPayment > 0 && totalPayment !== expectedFull && totalPayment !== securityDeposit) {
+        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${totalPayment}) does not exactly match the expected Security Deposit (₹${securityDeposit}) or Full Onboarding (₹${expectedFull}).\n\nAre you sure you want to proceed with this custom amount?`);
+        if (!proceed) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    return true;
+}
+
+document.querySelector('form').addEventListener('submit', confirmSubmission);
 
 // Auto-fetch last meter reading when Room No is entered
 document.getElementById('roomNoInput')?.addEventListener('blur', async function(e) {
