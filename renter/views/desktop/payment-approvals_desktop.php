@@ -527,11 +527,11 @@
                         </td>
                         <td>
                             <?php if (!empty($ap['transaction_id'])): ?>
-                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
+                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 6px; border-radius: 6px; font-size: 11px; color: var(--text-gray); white-space: nowrap; display: inline-block;">
                                     <?php echo htmlspecialchars($ap['transaction_id']); ?>
                                 </span>
                             <?php elseif (!empty($ap['sys_tx_id'])): ?>
-                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
+                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 6px; border-radius: 6px; font-size: 11px; color: var(--text-gray); white-space: nowrap; display: inline-block;">
                                     <?php echo htmlspecialchars($ap['sys_tx_id']); ?>
                                 </span>
                             <?php else: ?>
