@@ -364,7 +364,13 @@
                         <div class="status-pill <?php echo $user['electricity_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['electricity_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['electricity_document'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['electricity_document']): ?>
-                                <?php $elec_url = (strpos($user['electricity_document'], 'uploads/') === 0) ? '../' . $user['electricity_document'] : '../uploads/documents/' . $user['electricity_document']; ?>
+                                <?php 
+                                $elec_url = '';
+                                if (!empty($user['electricity_document'])) {
+                                    $doc_name = basename($user['electricity_document']);
+                                    $elec_url = '../view_document.php?file=' . urlencode($doc_name);
+                                }
+                                ?>
                                 <a href="<?php echo htmlspecialchars($elec_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
                             <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
