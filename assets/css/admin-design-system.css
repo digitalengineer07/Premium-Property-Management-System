@@ -1510,6 +1510,89 @@ body.dark-theme thead th:last-child {
 .mobile-sidebar-overlay {
     display: none;
     position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 99998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar-overlay.open {
+    display: block;
+    opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+    .mobile-sidebar-drawer {
+        display: none;
+        position: fixed;
+        top: max(16px, env(safe-area-inset-top, 16px));
+        bottom: max(16px, env(safe-area-inset-bottom, 16px));
+        left: max(16px, env(safe-area-inset-left, 16px));
+        width: 75vw;
+        max-width: 270px;
+        z-index: 99999;
+        flex-direction: column;
+        background: var(--white, #FFFFFF);
+        box-shadow: 10px 10px 50px rgba(0, 0, 0, 0.5);
+        padding: 20px 16px 50px 16px;
+        overflow: hidden;
+        border-radius: 24px;
+        transform: translateX(-120%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .mobile-sidebar-drawer.open {
+        display: flex !important;
+        transform: translateX(0);
+    }
+
+    .mobile-sidebar-drawer .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-shrink: 0;
+    }
+    .mobile-sidebar-drawer .sidebar-logo {
+        width: 40px; height: 40px;
+        background: #1E293B; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 20px; font-weight: 800;
+        flex-shrink: 0;
+    }
+    .mobile-sidebar-drawer .sidebar-brand h2 { 
+        font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; color: var(--text-dark);
+    }
+    .mobile-sidebar-drawer .sidebar-brand p { 
+        font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; 
+    }
+    
+    .dark-theme .mobile-sidebar-drawer {
+        background: #111827;
+        border-right: 1px solid #1E293B;
+    }
+
+    .mobile-sidebar-drawer .nav-menu {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: contain;
+        padding-bottom: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .mobile-sidebar-drawer .nav-menu::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
