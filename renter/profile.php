@@ -635,7 +635,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         }
     </style>
 </head>
-<body class="<?php echo $is_dark ? 'dark-theme' : ''; ?>" style="display: block;">
+<body class="<?php echo ($is_dark ?? false) ? 'dark-theme' : ''; ?>" style="display: block;">
 
 <div class="app-container">
     <!-- Desktop Sidebar -->
