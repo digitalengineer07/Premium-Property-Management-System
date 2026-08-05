@@ -1540,7 +1540,24 @@ body.dark-theme thead th:last-child {
         animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
     }
     .sidebar.mobile-drawer-open .sidebar-header {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        margin-bottom: 24px !important;
         flex-shrink: 0 !important;
+    }
+    .sidebar.mobile-drawer-open .sidebar-logo {
+        width: 40px !important; height: 40px !important;
+        background: #1E293B !important; border-radius: 12px !important;
+        display: flex !important; align-items: center !important; justify-content: center !important;
+        color: white !important; font-size: 20px !important; font-weight: 800 !important;
+        flex-shrink: 0 !important;
+    }
+    .sidebar.mobile-drawer-open .sidebar-brand h2 { 
+        font-size: 18px !important; font-weight: 800 !important; margin: 0 !important; line-height: 1.2 !important; letter-spacing: -0.5px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; max-width: 140px !important; color: var(--text-dark) !important;
+    }
+    .sidebar.mobile-drawer-open .sidebar-brand p { 
+        font-size: 12px !important; color: var(--text-gray) !important; margin: 0 !important; font-weight: 500 !important; 
     }
     .dark-theme .sidebar.mobile-drawer-open {
         background: #111827 !important;
