@@ -290,20 +290,46 @@
                     <a href="my-bills.php#all-bills-container" class="panel-link">View All</a>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; flex: 1;">
+                <div style="display: flex; flex-direction: column; flex: 1">
                     <?php 
-                    $pending_bills_display = [];
-                    foreach ($merged_rents as $r) {
-                        if (isset($r['status']) && $r['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'rent', 'month' => $r['month'], 'amount' => $r['amount']];
-                        }
+                    $pb_raw = [];
+                    // Fetch accurate pending dues from rent
+                    $qR = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qR)) {
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+                        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+                        $due = max(0, (float)$r['total_amount'] - $paid);
+                        if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
                     }
-                    foreach ($elecs as $e) {
-                        if (isset($e['status']) && $e['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['amount']];
-                        }
+                    // Fetch accurate pending dues from electricity (unified)
+                    $qE = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qE)) {
+                        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+                        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+                        $edue = max(0, (float)$r['elec_part'] - $epaid);
+                        if ($edue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $edue];
+                        
+                        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+                        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+                        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
+                        if ($rdue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $rdue];
                     }
-                    $pending_bills_display = array_slice($pending_bills_display, 0, 3);
+                    
+                    // Group by month
+                    $grouped_bills = [];
+                    foreach ($pb_raw as $pb) {
+                        if (!isset($grouped_bills[$pb['month']])) {
+                            $grouped_bills[$pb['month']] = ['month' => $pb['month'], 'due' => 0, 'due_date' => $pb['due_date']];
+                        }
+                        $grouped_bills[$pb['month']]['due'] += $pb['due'];
+                    }
+                    
+                    // Sort chronologically
+                    usort($grouped_bills, function($a, $b) {
+                        return strtotime($a['month'].'-01') - strtotime($b['month'].'-01');
+                    });
+                    
+                    $pending_bills_display = array_slice($grouped_bills, 0, 3);
                     ?>
 
                     <?php if (empty($pending_bills_display)): ?>
@@ -315,20 +341,8 @@
                         <?php foreach($pending_bills_display as $pb): ?>
                         <div class="bill-item">
                             <div class="bill-left">
-                                <?php if ($pb['type'] == 'rent'): ?>
-                                    <div class="bill-icon"><i class='bx bx-home'></i></div>
-                                <?php else: ?>
-                                    <div class="bill-icon yellow"><i class='bx bx-bolt-circle'></i></div>
-                                <?php endif; ?>
+                                <div class="bill-icon"><i class='bx bx-receipt'></i></div>
                                 <div class="bill-info">
-                                    <h4><?php echo $pb['type'] == 'rent' ? 'Rent' : 'Electricity'; ?> for <?php echo htmlspecialchars($pb['month']); ?></h4>
-                                    <p>Due Date: <?php 
-                                        $ts = strtotime($pb['month']);
-                                        if ($pb['type'] == 'rent') {
-                                            echo '05 ' . date('M Y', strtotime('+1 month', $ts));
-                                        } else {
-                                            echo date('t M Y', $ts);
-                                        }
                                     ?></p>
                                 </div>
                             </div>
