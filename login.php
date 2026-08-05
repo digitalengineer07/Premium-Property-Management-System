@@ -13,7 +13,7 @@ if (isset($_SESSION['user_id'])) {
     header("Location: renter/dashboard.php");
     exit;
 }
-updateLastSeen($conn); // Track activity if session exists
+// Removed undefined updateLastSeen() call
 
 $error = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
