@@ -121,7 +121,7 @@
 
         <div class="approvals-table-container">
             <?php if (count($approvals) > 0): ?>
-            <table>
+            <table class="payments-table">
                 <thead>
                     <tr>
                         <th>Date & Time</th>

@@ -309,6 +309,14 @@ if ($res) {
         .app-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid var(--border); margin-top: 20px; }
         .app-footer p { font-size: 12px; color: var(--text-gray); font-weight: 500; margin: 0; }
 
+        .main-content {
+            flex: 1;
+            margin-left: 230px;
+            padding: 32px 40px;
+            max-width: calc(100% - 230px);
+            box-sizing: border-box;
+        }
+
         /* Mobile overrides */
         @media (max-width: 1400px) {
             .dashboard-3col { grid-template-columns: 1fr 1fr; }
