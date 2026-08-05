@@ -83,14 +83,6 @@ $upiLink = generateUPILink(
 </div>
 
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
-<nav class="mobile-bottom-nav">
-    <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
-    <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
-    <div class="mb-nav-center" onclick="if(typeof openPaymentModal === 'function') openPaymentModal(0, 'Quick Payment', 'general'); else window.location.href='my-payments.php';">
-        <i class='bx bx-plus'></i>
-    </div>
-    <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
-    <a href="profile.php" class="mb-nav-item "><i class='bx bx-user'></i><span>Profile</span></a>
-</nav>
+<?php include_once __DIR__ . '/views/mobile/mobile_bottom_nav.php'; ?>
 </body>
 </html>

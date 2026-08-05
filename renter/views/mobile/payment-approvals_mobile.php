@@ -250,27 +250,7 @@
     </div>
 
     <!-- Mobile Bottom Navigation -->
-    <nav class="mobile-bottom-nav">
-        <a href="dashboard.php" class="mb-nav-item">
-            <i class='bx bx-home-alt-2'></i>
-            <span>Home</span>
-        </a>
-        <a href="my-bills.php" class="mb-nav-item">
-            <i class='bx bx-receipt'></i>
-            <span>Bills</span>
-        </a>
-        <div class="mb-nav-center" onclick="openApprovalModal()">
-            <i class='bx bx-plus'></i>
-        </div>
-        <a href="payment-approvals.php" class="mb-nav-item active">
-            <i class='bx bx-check-shield'></i>
-            <span>Approvals</span>
-        </a>
-        <a href="profile.php" class="mb-nav-item">
-            <i class='bx bx-user'></i>
-            <span>Profile</span>
-        </a>
-    </nav>
+    <?php include_once __DIR__ . '/mobile_bottom_nav.php'; ?>
 
     <?php include "approval_modal.php"; ?>
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
