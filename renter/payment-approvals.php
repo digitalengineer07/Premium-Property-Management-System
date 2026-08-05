@@ -486,6 +486,7 @@ if ($res) {
         <div class="mobile-view-wrapper">
             <?php include __DIR__ . '/views/mobile/payment-approvals_mobile.php'; ?>
         </div>
+        </div> <!-- EXTRA CLOSING DIV TO PREVENT MOBILE DIVS FROM EATING DESKTOP WRAPPER -->
 
         <!-- 2. EXCLUSIVE DESKTOP VIEW CODE (Isolated in views/desktop/payment-approvals_desktop.php) -->
         <div class="desktop-view-wrapper">
