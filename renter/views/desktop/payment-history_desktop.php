@@ -225,7 +225,7 @@
                 payment_mode,
                 transaction_id,
                 sys_tx_id,
-                SUM(paid_amount) as amount,
+                SUM(CASE WHEN paid_amount > 0 THEN paid_amount ELSE 0 END) as amount,
                 SUM(CASE WHEN adjustment_amount < 0 THEN ABS(adjustment_amount) ELSE 0 END) as wallet_used,
                 GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
             FROM payments 
