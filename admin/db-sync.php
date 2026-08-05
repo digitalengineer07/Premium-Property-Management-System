@@ -130,6 +130,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sync_results[] = "<span style='color:#10B981;'>✔ Restored $inserted_rent missing payment receipts for legacy rent bills.</span>";
     }
     
+    // 3. Auto-Healing Ledger Status Check
+    $healed_count = 0;
+    
+    // Electricity bills auto-heal
+    $e_query = mysqli_query($conn, "SELECT id, amount, rent_amount, maintenance, extra_charges, dues, status, elec_status, rent_status FROM electricity");
+    while($e = mysqli_fetch_assoc($e_query)) {
+        $b_id = $e['id'];
+        $gross_amt = (float)$e['amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['extra_charges'] + (float)$e['dues'];
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
+        $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
+        
+        $correct_st = 'Due';
+        if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
+        elseif ($tp > 0) $correct_st = 'Partial';
+        elseif ($gross_amt == 0 && $tp == 0) $correct_st = 'Paid';
+        
+        if ($e['status'] !== $correct_st || $e['elec_status'] !== $correct_st || $e['rent_status'] !== $correct_st) {
+            mysqli_query($conn, "UPDATE electricity SET status = '$correct_st', elec_status = '$correct_st', rent_status = '$correct_st' WHERE id = $b_id");
+            $healed_count++;
+        }
+    }
+    
+    // Rent bills auto-heal
+    $r_query = mysqli_query($conn, "SELECT id, rent_amount, status FROM rent");
+    while($r = mysqli_fetch_assoc($r_query)) {
+        $b_id = $r['id'];
+        $gross_amt = (float)$r['rent_amount'];
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
+        $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
+        
+        $correct_st = 'Due';
+        if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
+        elseif ($tp > 0) $correct_st = 'Partial';
+        elseif ($gross_amt == 0 && $tp == 0) $correct_st = 'Paid';
+        
+        if ($r['status'] !== $correct_st) {
+            mysqli_query($conn, "UPDATE rent SET status = '$correct_st' WHERE id = $b_id");
+            $healed_count++;
+        }
+    }
+    
+    if ($healed_count > 0) {
+        $sync_results[] = "<span style='color:#3B82F6;'>✔ Auto-Healed $healed_count billing records to perfectly match the payment ledger.</span>";
+    }
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
