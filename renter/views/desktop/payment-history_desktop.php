@@ -278,6 +278,7 @@
                     'status' => 'Paid',
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
+                    'max_id' => (int)$row['max_id'],
                     'payment_mode' => $pm_db
                 ];
             }
