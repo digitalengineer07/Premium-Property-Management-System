@@ -42,7 +42,7 @@
 
             <div id="approvalRefContainer" style="margin-bottom: 24px;">
                 <label style="font-size: 13px; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 8px;">Transaction ID / UTR No.</label>
-                <input type="text" name="transaction_id" id="approvalRef" placeholder="Enter 12-digit UTR number" style="width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; background: #f8fafc; color: var(--text-dark);">
+                <input type="text" name="transaction_id" id="approvalRef" placeholder="Enter 12-digit UTR number" required pattern="\d{12}" minlength="12" maxlength="12" title="Please enter exactly 12 digits for the UTR." oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,12)" style="width: 100%; box-sizing: border-box; padding: 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; outline: none; background: #f8fafc; color: var(--text-dark);">
                 <p style="font-size: 11px; color: var(--text-gray); margin: 6px 0 0 0;"><i class='bx bx-info-circle'></i> Required for UPI payments to verify transaction.</p>
             </div>
             
@@ -86,6 +86,9 @@ function toggleApprovalMode(mode) {
         
         refContainer.style.display = 'block';
         refInput.setAttribute('required', 'required');
+        refInput.setAttribute('pattern', '\\d{12}');
+        refInput.setAttribute('minlength', '12');
+        refInput.setAttribute('maxlength', '12');
     } else {
         labelCash.style.border = '1px solid var(--primary-purple)';
         labelCash.style.background = 'rgba(98, 75, 255, 0.05)';
@@ -97,6 +100,9 @@ function toggleApprovalMode(mode) {
         
         refContainer.style.display = 'none';
         refInput.removeAttribute('required');
+        refInput.removeAttribute('pattern');
+        refInput.removeAttribute('minlength');
+        refInput.removeAttribute('maxlength');
         refInput.value = ''; // Clear value when switching to cash
     }
 }

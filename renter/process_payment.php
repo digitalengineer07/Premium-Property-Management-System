@@ -45,6 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             $_SESSION['payment_error'] = "Please enter the Transaction ID / UTR.";
             header("Location: " . $return_url);
             exit;
+        } elseif ($payment_method === 'UPI' && !preg_match('/^\d{12}$/', $tr_id)) {
+            $_SESSION['payment_error'] = "Invalid UTR. Please enter exactly 12 digits.";
+            header("Location: " . $return_url);
+            exit;
         } else {
             $is_duplicate = false;
             if ($payment_method === 'UPI' && !empty($tr_id)) {
