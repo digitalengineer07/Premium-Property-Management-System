@@ -1,7 +1,7 @@
 <?php
 // views/desktop/payment-approvals_desktop.php
 ?>
-                <div class="top-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <header class="top-header">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
                 <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
                     <i class='bx bx-check-shield' style="font-size: 24px; color: var(--primary-purple);"></i>
@@ -11,12 +11,10 @@
                     <p style="margin: 4px 0 0 0; color: var(--text-gray); font-size: 14px;">Track your cash and UPI payment verifications</p>
                 </div>
             </div>
-            <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
-
+            <div class="header-actions">
                 <button class="btn-primary" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="openApprovalModal()">
                     <i class='bx bx-plus'></i> Apply for Approval
                 </button>
-            <div class="header-actions">
                 <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
@@ -107,9 +105,7 @@
                     </div>
                 </div>
             </div>
-
-            </div>
-        </div>
+        </header>
 
 
         <?php if (!empty($payment_success)): ?>
