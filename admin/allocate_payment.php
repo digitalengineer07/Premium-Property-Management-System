@@ -58,9 +58,9 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
 }
 
 /**
- * Allocate a bulk payment across the oldest pending bills.
+ * Allocate a bulk payment across the oldest pending bills (or a specific targeted month).
  */
-function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transaction_id, $sys_tx_id, $max_month_str = null, $is_wallet_transfer = false) {
+function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transaction_id, $sys_tx_id, $target_month_str = null, $is_wallet_transfer = false) {
     if ((float)$amount <= 0) return;
     $user_id = (int)$user_id;
     $remaining_payment = (float)$amount;
@@ -124,14 +124,14 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         return $da - $db;
     });
     
-    $max_time = $max_month_str ? strtotime($max_month_str . '-01') : null;
+    $target_time = $target_month_str ? strtotime($target_month_str . '-01') : null;
     
     // Allocate
     foreach ($pending_bills as $bill) {
         if ($remaining_payment <= 0.01) break; // done
         
         $bill_time = strtotime($bill['month'] . '-01');
-        if ($max_time && $bill_time > $max_time) continue; // skip future bills if paying 'monthly'
+        if ($target_time && $bill_time != $target_time) continue; // ONLY allocate to the specifically requested month
         
         $allocate = min($bill['due'], $remaining_payment);
         $remaining_payment -= $allocate;
