@@ -182,7 +182,7 @@
             }
         } else {
         // 1. Fetch user-applied transactions from payment_notifications (Only Pending and Rejected)
-        $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
+        $q_n = mysqli_query($conn, "SELECT id, id as max_id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
         if ($q_n) {
             while ($row = mysqli_fetch_assoc($q_n)) {
                 $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
@@ -209,6 +209,7 @@
                     'status' => $row['status'],
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['p_date']),
+                    'max_id' => (int)$row['max_id'],
                     'payment_mode' => $row['payment_mode'] ?: 'Online'
                 ];
             }
@@ -219,6 +220,7 @@
             SELECT 
                 DATE(payment_date) as p_date,
                 MAX(payment_date) as full_date,
+                MAX(id) as max_id,
                 payment_mode,
                 transaction_id,
                 sys_tx_id,
@@ -283,6 +285,9 @@
 
         }
         usort($all_bills, function($a, $b) {
+            if ($b['p_ts'] == $a['p_ts']) {
+                return $b['max_id'] - $a['max_id'];
+            }
             return $b['p_ts'] - $a['p_ts'];
         });
 
