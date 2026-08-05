@@ -189,7 +189,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    flex: 1;
+    flex: none;
+    justify-content: flex-start;
     overflow-y: auto;
     padding-right: 4px;
     scrollbar-width: thin;
