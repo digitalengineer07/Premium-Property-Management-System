@@ -1,6 +1,19 @@
 <?php
 // Renter Shared Sidebar (used on both Desktop and Mobile Drawer)
 $current_page = basename($_SERVER['PHP_SELF']);
+
+// Mid-session revocation check
+if (isset($_SESSION['user_id']) && isset($conn)) {
+    $uid_chk = (int)$_SESSION['user_id'];
+    $chk_status = mysqli_query($conn, "SELECT status FROM users WHERE id = $uid_chk");
+    if ($chk_status && $row_chk = mysqli_fetch_assoc($chk_status)) {
+        if ($row_chk['status'] === 'moved_out') {
+            session_destroy();
+            echo "<script>alert('Your account has been archived. You are being logged out.'); window.location.href='../login.php';</script>";
+            exit;
+        }
+    }
+}
 ?>
 <aside class="sidebar">
     <div class="sidebar-header">
