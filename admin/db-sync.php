@@ -143,8 +143,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         $correct_st = 'Due';
         if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
-        elseif ($tp > 0) $correct_st = 'Partial';
-        elseif ($gross_amt == 0 && $tp == 0) $correct_st = 'Paid';
+        elseif ($tp > 0 && $tp < $gross_amt) $correct_st = 'Partial';
+        elseif ($tp >= $gross_amt) $correct_st = 'Paid';
+        elseif ($gross_amt <= 0) $correct_st = 'Paid';
         
         if ($e['status'] !== $correct_st || $e['elec_status'] !== $correct_st || $e['rent_status'] !== $correct_st) {
             mysqli_query($conn, "UPDATE electricity SET status = '$correct_st', elec_status = '$correct_st', rent_status = '$correct_st' WHERE id = $b_id");
@@ -162,8 +163,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         $correct_st = 'Due';
         if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
-        elseif ($tp > 0) $correct_st = 'Partial';
-        elseif ($gross_amt == 0 && $tp == 0) $correct_st = 'Paid';
+        elseif ($tp > 0 && $tp < $gross_amt) $correct_st = 'Partial';
+        elseif ($tp >= $gross_amt) $correct_st = 'Paid';
+        elseif ($gross_amt <= 0) $correct_st = 'Paid';
         
         if ($r['status'] !== $correct_st) {
             mysqli_query($conn, "UPDATE rent SET status = '$correct_st' WHERE id = $b_id");
