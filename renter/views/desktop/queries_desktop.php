@@ -204,7 +204,7 @@
             <div class="form-card">
                 <h3 class="form-title">Submit a New Query</h3>
                 <form method="POST" enctype="multipart/form-data" style="flex: 1; display: flex; flex-direction: column;">
-                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
+                  <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                     <div class="form-group">
                         <label class="form-label">Query Category</label>
                         <select name="category" class="form-control" required style="appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=%22none%22 stroke=%22%2364748B%22 stroke-width=%222%22 viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22></path></svg>'); background-repeat: no-repeat; background-position: right 16px center; background-size: 16px;">
