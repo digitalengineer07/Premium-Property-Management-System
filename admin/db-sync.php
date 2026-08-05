@@ -176,6 +176,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if ($healed_count > 0) {
         $sync_results[] = "<span style='color:#3B82F6;'>✔ Auto-Healed $healed_count billing records to perfectly match the payment ledger.</span>";
     }
+    
+    // 4. Grandfather Legacy Users (Fix Onboarding Loophole)
+    $grandfathered = 0;
+    $u_res = mysqli_query($conn, "SELECT id, security_deposit FROM users WHERE onboarding_completed = 0 AND security_deposit > 0");
+    while($u = mysqli_fetch_assoc($u_res)) {
+        $u_id = $u['id'];
+        $chk = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = $u_id AND bill_type = 'security_deposit'");
+        if(mysqli_num_rows($chk) == 0) {
+            mysqli_query($conn, "UPDATE users SET onboarding_completed = 1 WHERE id = $u_id");
+            $grandfathered++;
+        }
+    }
+    // Grandfather any completely empty test users
+    mysqli_query($conn, "UPDATE users SET onboarding_completed = 1 WHERE onboarding_completed = 0 AND security_deposit = 0 AND advance_payment = 0");
+    $grandfathered += mysqli_affected_rows($conn);
+    
+    if ($grandfathered > 0) {
+        $sync_results[] = "<span style='color:#8B5CF6;'>✔ Grandfathered $grandfathered legacy users (Fixed false onboarding dues).</span>";
+    }
+
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
