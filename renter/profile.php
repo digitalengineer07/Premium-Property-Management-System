@@ -5,9 +5,8 @@ session_start();
 require_once "../audit.php";
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'renter') {
-    $_SESSION['user_id'] = 1;
-    $_SESSION['role'] = 'renter';
-    $_SESSION['room_no'] = '101';
+    header("Location: ../login.php");
+    exit;
 }
 $user_id = (int) $_SESSION['user_id'];
 require_once "fetch_notifications.php";
