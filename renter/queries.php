@@ -62,8 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
 }
 
 // Handle query deletion
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    $del_id = (int) $_GET['id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete' && isset($_POST['id'])) {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        die("Security validation failed.");
+    }
+    $del_id = (int) $_POST['id'];
     
     // Fetch attachment to delete it from disk
     $q_stmt = mysqli_prepare($conn, "SELECT attachment FROM queries WHERE id = ? AND user_id = ?");
