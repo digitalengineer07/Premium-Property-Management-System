@@ -364,3 +364,5 @@ foreach ($notices as $n) {
     <!-- Enable Notifications CTA (Removed per user request) -->
 </div>
 <?php include 'mobile_notifications.php'; ?>
+
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>

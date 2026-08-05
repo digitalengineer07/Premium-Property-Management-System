@@ -402,3 +402,5 @@ $total_bills_count = count($mobile_all_bills);
 
 </script>
 <?php include 'mobile_notifications.php'; ?>
+
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>

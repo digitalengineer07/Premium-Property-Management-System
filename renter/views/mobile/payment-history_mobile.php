@@ -503,3 +503,5 @@ height: 32px !important;
     <?php include __DIR__ . '/../desktop/payment-history_desktop.php'; ?>
 </div>
 <?php include 'mobile_notifications.php'; ?>
+
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>

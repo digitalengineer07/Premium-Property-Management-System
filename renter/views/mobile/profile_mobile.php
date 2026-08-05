@@ -513,3 +513,4 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 </div>
 
 <?php include 'mobile_notifications.php'; ?>
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>

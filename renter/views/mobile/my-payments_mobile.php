@@ -525,3 +525,5 @@
 </div>
 
 <?php include 'mobile_notifications.php'; ?>
+
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>
