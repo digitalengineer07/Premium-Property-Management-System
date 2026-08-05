@@ -447,6 +447,20 @@
             </div>
         </div>
 
+        <style>
+            @media (max-width: 768px) {
+                .app-footer {
+                    padding-bottom: 100px !important;
+                    flex-direction: column !important;
+                    text-align: center !important;
+                    gap: 10px;
+                }
+                .app-footer p {
+                    text-align: center !important;
+                }
+            }
+        </style>
+
         <!-- Footer Widgets -->
         <div class="footer-widgets animate-up">
             <div class="footer-widget">
