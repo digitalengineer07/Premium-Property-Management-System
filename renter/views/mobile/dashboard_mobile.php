@@ -225,4 +225,19 @@
     </div>
 </div>
 
+<style>
+/* Added padding for unified footer and widgets to shift them above the bottom nav */
+@media (max-width: 768px) {
+    .app-footer {
+        padding-bottom: 130px !important;
+        flex-direction: column !important;
+        text-align: center !important;
+        gap: 10px;
+    }
+    .app-footer p {
+        text-align: center !important;
+    }
+}
+</style>
+
 <?php include 'mobile_notifications.php'; ?>
