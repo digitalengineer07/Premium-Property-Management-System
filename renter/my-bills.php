@@ -41,16 +41,19 @@ mysqli_stmt_close($stmt);
 // 2. Electricity and Rent components from 'electricity' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
     IFNULL(SUM(
-        CASE WHEN elec_status IN ('Due', 'Partial') OR (elec_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND elec_status != 'Paid')
-        THEN amount - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='electricity' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, e.amount - IFNULL(p.total_paid, 0))
     ), 0) as elec_total, 
     IFNULL(SUM(
-        CASE WHEN rent_status IN ('Due', 'Partial') OR (rent_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND rent_status != 'Paid')
-        THEN (rent_amount + maintenance + dues + extra_charges) - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='elec_rent' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))
     ), 0) as rent_portion_total 
-FROM electricity e WHERE user_id = ?");
+FROM electricity e 
+LEFT JOIN (
+    SELECT bill_id, SUM(paid_amount) as total_paid 
+    FROM payments 
+    WHERE bill_type IN ('electricity', 'elec_rent') 
+    GROUP BY bill_id
+) p ON p.bill_id = e.id
+WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);
@@ -75,7 +78,7 @@ mysqli_stmt_close($stmt);
 /* Fetch Billing Lists */
 // Get pure rents
 $stmt = mysqli_prepare($conn, "
-    SELECT r.id, r.month, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
+    SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, p.adjustment_amount, p.adjustment_type 
     FROM rent r 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
     WHERE r.user_id = ? 
@@ -93,7 +96,7 @@ mysqli_stmt_close($stmt);
 
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
+    SELECT e.id, e.month, e.created_at, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
            (SELECT SUM(paid_amount) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
@@ -122,7 +125,7 @@ mysqli_stmt_close($stmt);
 
 // Get advance payments 
 $stmt = mysqli_prepare($conn, "
-    SELECT p.id, p.month, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type 
+    SELECT p.id, p.month, p.payment_date, p.paid_amount as amount, 'Paid' as status, p.adjustment_amount, p.adjustment_type 
     FROM payments p 
     WHERE p.user_id = ? AND p.bill_type = 'advance'
     ORDER BY p.id DESC LIMIT 10
@@ -145,7 +148,7 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type,
+    SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type,
            (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid 
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
@@ -242,7 +245,15 @@ foreach ($merged_rents as $t) {
         $type = 'elec_rent';
     }
     
-    $due_timestamp = strtotime($t['month'] . '-05');
+    if (!empty($t['created_at'])) {
+        $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
+    } elseif (!empty($t['due_date'])) {
+        $due_timestamp = strtotime($t['due_date']);
+    } elseif (!empty($t['payment_date'])) {
+        $due_timestamp = strtotime($t['payment_date']);
+    } else {
+        $due_timestamp = strtotime($t['month'] . '-01 + 10 days');
+    }
     $due_date_str = date('d M Y', $due_timestamp);
     $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
     
@@ -266,10 +277,12 @@ foreach ($merged_rents as $t) {
         'type' => $type,
         'filter_type' => $filter_type,
         'period' => $period,
+        'raw_month' => $t['month'],
         'title' => $title,
         'subtitle' => $subtitle,
         'due_date' => $due_date_str,
         'amount' => (float)$t['amount'],
+        'remaining_amount' => isset($t['remaining_amount']) ? (float)$t['remaining_amount'] : (float)$t['amount'],
         'status' => $status,
         'summary' => $summary
     ];
@@ -280,7 +293,12 @@ foreach ($elecs as $t) {
     $subtitle = "Units Consumed: " . $t['units_consumed'];
     $period = date('M Y', strtotime($t['month'] . '-01')) . " Elec";
     
-    $due_timestamp = strtotime($t['month'] . '-05');
+    if (!empty($t['created_at'])) {
+        $due_timestamp = strtotime($t['created_at'] . ' + 10 days');
+    } else {
+        $due_timestamp = strtotime($t['month'] . '-01 + 10 days');
+    }
+    $due_date_str = date('d M Y', $due_timestamp);
     $status = ($t['status'] === 'Due') ? 'Unpaid' : 'Paid';
     
     $filter_type = strtolower($status);
@@ -298,6 +316,7 @@ foreach ($elecs as $t) {
         'type' => 'electricity',
         'filter_type' => $filter_type,
         'period' => $period,
+        'raw_month' => $t['month'],
         'title' => $title,
         'subtitle' => $subtitle,
         'due_date' => date('d M Y', $due_timestamp),
@@ -307,6 +326,10 @@ foreach ($elecs as $t) {
         'summary' => $summary
     ];
 }
+
+usort($all_bills, function($a, $b) {
+    return strcmp($b['raw_month'], $a['raw_month']);
+});
 
 // Calculate total value of bills cleared this year (as requested by user)
 $current_year = date('Y');

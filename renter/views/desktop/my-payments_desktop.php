@@ -173,12 +173,22 @@
 
         // 2. Electricity (Usage)
         $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
-                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND e.amount > 0");
         while($e = mysqli_fetch_assoc($elec_q)) {
             $rem = max(0, (float)$e['amount'] - (float)$e['total_paid']);
-            if ($e['status'] == 'Paid') $rem = 0;
+            
+            $st = $e['status'];
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && (float)$e['total_paid'] > 0) {
+                $st = 'Partial';
+            } elseif ($rem == (float)$e['amount']) {
+                $st = 'Unpaid';
+            }
+            $e['status'] = $st;
             
             $all_bills[] = [
                 'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
@@ -195,9 +205,9 @@
         }
 
         // 3. Rent & Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
-                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.extra_charges > 0 OR e.dues > 0)");
         while($m = mysqli_fetch_assoc($maint_q)) {
             $total_paid = (float)$m['total_paid'];
@@ -205,9 +215,20 @@
             $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'] + (float)$m['extra_charges']; 
             $orig_status = $m['status'];
             
-            $rem = max(0, $rent_maint_amt - $total_paid);
+            
+            $elec_amt = (float)$m['amount'];
+            $paid_towards_rent = max(0, $total_paid - $elec_amt);
+            $rem = max(0, $rent_maint_amt - $paid_towards_rent);
             $st = $orig_status;
-            if ($orig_status == 'Partial' && $rem == 0) $st = 'Paid';
+            
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && $total_paid > 0) {
+                $st = 'Partial';
+            } elseif ($rem == $rent_maint_amt) {
+                $st = 'Unpaid';
+            }
             
             $all_bills[] = [
                 'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => 'rent',
@@ -217,7 +238,8 @@
                 'due_date' => date('07 M Y', strtotime($m['month'])),
                 'amount' => $rent_maint_amt, 'remaining_amount' => $rem, 'status' => $st,
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-                'icon' => 'bx-home', 'color' => 'purple'
+                'icon' => 'bx-home', 'color' => 'purple',
+                'dues' => (float)$m['dues']
             ];
         }
 
@@ -496,13 +518,17 @@ function filterMobileByYear(year) {
                                 ];
                             }
                             
-                            // EXCLUDE arrears from the monthly aggregate sum
-                            if (isset($bill['filter_type']) && $bill['filter_type'] === 'other' && isset($bill['type']) && $bill['type'] === 'elec_rent') {
-                                // Do not add arrears/dues amount to the "Total Payment" row for this month
-                            } else {
-                                $monthly_aggregates[$p]['amount'] += (float)$bill['amount'];
-                                $monthly_aggregates[$p]['remaining_amount'] += isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            // EXCLUDE arrears/dues from the monthly aggregate sum to avoid double counting
+                            $bill_amount = (float)$bill['amount'];
+                            $bill_remaining = isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            
+                            if (isset($bill['type']) && $bill['type'] === 'elec_rent' && isset($bill['dues'])) {
+                                $bill_amount -= (float)$bill['dues'];
+                                $bill_remaining -= (float)$bill['dues'];
                             }
+                            
+                            $monthly_aggregates[$p]['amount'] += max(0, $bill_amount);
+                            $monthly_aggregates[$p]['remaining_amount'] += max(0, $bill_remaining);
                             
                             $st = strtolower($bill['status']);
                             if($st == 'unpaid' || $st == 'due') {

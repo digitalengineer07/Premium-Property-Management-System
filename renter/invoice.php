@@ -42,14 +42,19 @@ $total_payable = (float)$bill['amount'] + (float)$bill['rent_amount'] + (float)$
 $remaining_amount = max(0, $total_payable - $amount_paid);
 
 $status = $bill['status']; 
-
-$status_color = '#F59E0B'; // Pending
-$status_bg = '#FEF3C7';
-
-// If for some reason the DB says paid, still force it to Pending for the invoice static view
-$status = 'Pending';
-$status_color = '#F59E0B'; 
-$status_bg = '#FEF3C7';
+if (strtolower($status) === 'paid' || $remaining_amount <= 0) {
+    $status = 'Paid';
+    $status_color = '#10B981'; // Green
+    $status_bg = '#D1FAE5';
+} elseif (strtolower($status) === 'partial' || ($amount_paid > 0 && $remaining_amount > 0)) {
+    $status = 'Partial';
+    $status_color = '#F59E0B'; // Orange
+    $status_bg = '#FEF3C7';
+} else {
+    $status = 'Unpaid';
+    $status_color = '#EF4444'; // Red
+    $status_bg = '#FEE2E2';
+}
 
 
 $bill_invoice_id = !empty($bill['bill_invoice_id']) ? $bill['bill_invoice_id'] : 'BIL-'.date('Ym', strtotime($bill['month'])).'-'.str_pad($bill['id'], 6, '0', STR_PAD_LEFT);
@@ -99,7 +104,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         .invoice-container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             background: var(--white);
             border-radius: 20px;
@@ -200,7 +205,8 @@ $email = $bill['email'] ?? 'renter@example.com';
         .title-section {
             text-align: center;
             flex: 1;
-            padding-top: 10px;
+            margin-top: -10px;
+            transform: translateX(-30px);
         }
 
         .title-section h2 {
@@ -232,14 +238,15 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         .meta-section {
-            background: #FAFBFC;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 20px;
-            width: 260px;
+            background: linear-gradient(135deg, #ffffff 0%, #F5F7FA 100%);
+            border: 1px solid rgba(79, 70, 229, 0.15);
+            border-radius: 14px;
+            padding: 18px 22px;
+            width: 300px;
             margin-left: auto;
             flex: 1;
-            max-width: 280px;
+            max-width: 320px;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.04);
         }
 
         .meta-row {
@@ -262,6 +269,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         .meta-value {
             font-weight: 700;
             color: var(--text-dark);
+            white-space: nowrap;
         }
 
         .meta-value.highlight {
@@ -386,6 +394,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: flex;
             align-items: center;
             gap: 4px;
+            white-space: nowrap;
+            flex-wrap: nowrap;
         }
         
         .payable-note {
@@ -485,8 +495,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             background: #FAFBFC;
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px;
-            width: 300px;
+            padding: 20px 24px;
+            width: 380px;
         }
 
         .total-row {
@@ -752,7 +762,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                 align-items: flex-end !important;
                 gap: 16px !important;
             }
-            .totals-box { width: 300px !important; }
+            .totals-box { width: 380px !important; }
             .warning-box { max-width: 60% !important; margin-bottom: 0 !important; }
             
             .bottom-section { 
@@ -810,7 +820,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             <!-- Header -->
             <div class="header-section">
                 <div class="brand-section">
-                    <img src="../assets/img/logo.png" onerror="this.src='../assets/img/favicon.png'; this.onerror=null;" alt="Logo" style="height: 64px; object-fit: contain;">
+                    <img src="../assets/img/logo.png?v=<?php echo time(); ?>" onerror="this.src='../assets/img/favicon.png'; this.onerror=null;" alt="Logo" style="height: 64px; object-fit: contain;">
                     <div class="brand-info">
                         <h1><?php echo strtoupper(explode(' ', HOUSE_NAME)[0] . (isset(explode(' ', HOUSE_NAME)[1]) ? ' ' . explode(' ', HOUSE_NAME)[1] : '')); ?></h1>
                         <div class="brand-residence-line">
@@ -820,8 +830,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                         </div>
                         <p class="brand-address"><?php echo htmlspecialchars(HOUSE_ADDRESS); ?></p>
                         <div class="brand-contact">
-                            <span><i class='bx bxs-phone'></i> +91 7667184920</span>
-                            <span><i class='bx bxs-envelope'></i> nikhil119124@gmail.com</span>
+                            <span><i class='bx bxs-phone'></i> +91 6206936907</span>
+                            <span><i class='bx bxs-envelope'></i> madhavkunj@succorkart.in</span>
                         </div>
                     </div>
                 </div>
@@ -890,7 +900,11 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="info-content">
                         <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Billed Amount</p>
                         <div class="payable-amount">₹ <?php echo number_format($total_payable, 2); ?></div>
+                        <?php if (strtolower($status) !== 'paid'): ?>
                         <p class="payable-note">Please make the payment before<br><strong><?php echo $due_date; ?></strong> to avoid late fee.</p>
+                        <?php else: ?>
+                        <p class="payable-note" style="color: #10B981;">Payment received. Thank you!</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1029,8 +1043,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <i class='bx bx-support'></i>
                     <div>
                         <h4>Need Help?</h4>
-                        <p style="font-size: 13px;">+91 6206936907 &amp; +91 7667184920</p>
-                        <span>nikhil119124@gmail.com</span>
+                        <p style="font-size: 13px;">+91 6206936907</p>
+                        <span>madhavkunj@succorkart.in</span>
                     </div>
                 </div>
             </div>

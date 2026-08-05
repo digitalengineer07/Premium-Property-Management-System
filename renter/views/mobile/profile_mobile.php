@@ -397,7 +397,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <h2><?php echo htmlspecialchars($d_name); ?></h2>
                 <div style="display: flex; gap: 2px; margin-top: 6px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
                     <div class="mp-room-badge" style="white-space: nowrap;">Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></div>
-                    <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></div>
+                    <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div>
                 </div>
             </div>
         </div>

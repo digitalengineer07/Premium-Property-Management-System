@@ -519,7 +519,7 @@
                         <td>
                             <div style="display: flex; align-items: center; gap: 6px; font-weight: 600;">
                                 <?php if (strtolower($ap['payment_method']) === 'upi'): ?>
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px; width: 40px; object-fit: contain;"> UPI
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px; width: 40px; object-fit: contain;">
                                 <?php else: ?>
                                     <i class='bx bx-money' style="color: #10B981; font-size: 18px;"></i> Cash
                                 <?php endif; ?>
@@ -527,11 +527,11 @@
                         </td>
                         <td>
                             <?php if (!empty($ap['transaction_id'])): ?>
-                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
+                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 6px; border-radius: 6px; font-size: 11px; color: var(--text-gray); white-space: nowrap; display: inline-block;">
                                     <?php echo htmlspecialchars($ap['transaction_id']); ?>
                                 </span>
                             <?php elseif (!empty($ap['sys_tx_id'])): ?>
-                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; font-size: 13px; color: var(--text-gray);">
+                                <span style="font-family: monospace; background: rgba(0,0,0,0.05); padding: 4px 6px; border-radius: 6px; font-size: 11px; color: var(--text-gray); white-space: nowrap; display: inline-block;">
                                     <?php echo htmlspecialchars($ap['sys_tx_id']); ?>
                                 </span>
                             <?php else: ?>

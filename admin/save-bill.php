@@ -242,8 +242,7 @@ mysqli_stmt_bind_param($stmt, "issiiiiddddddsssdss",
 if (mysqli_stmt_execute($stmt)) {
     $bill_id = mysqli_insert_id($conn);
     
-    // Reset pending adjustment since it's now incorporated into this bill's "dues"
-    mysqli_query($conn, "UPDATE users SET pending_adjustment = 0 WHERE id = $user_id");
+    // Legacy pending_adjustment logic removed to prevent debt wiping loophole
     
     // Fetch user details for email notification
     $user_query = mysqli_query($conn, "SELECT name, email FROM users WHERE id = $user_id LIMIT 1");
@@ -260,17 +259,8 @@ if (mysqli_stmt_execute($stmt)) {
     mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
 
     // --- NEW: Enterprise Auto-Credit Application ---
-    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
-    if ($qAdv && $rowAdv = mysqli_fetch_assoc($qAdv)) {
-        $adv = (float)$rowAdv['advance_payment'];
-        if ($adv > 0) {
-            // Temporarily zero the advance so the allocator can redistribute it without doubling
-            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
-            require_once "allocate_payment.php";
-            $sys_id = 'SYS_ADJ_' . strtoupper(bin2hex(random_bytes(6)));
-            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Credit', $sys_id, $sys_id, null, true);
-        }
-    }
+    // User requested to disable this feature so that Advance Payments act solely as a ledger record 
+    // for the 1st month rent, and are NOT automatically consumed by upcoming manual bills.
     // -----------------------------------------------
 
     // Clean buffer and send success

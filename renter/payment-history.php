@@ -34,11 +34,22 @@ $r1a = mysqli_fetch_assoc($r1);
 $pure_rent_due = (float)($r1a['total'] ?? 0);
 mysqli_stmt_close($stmt);
 
-// 2. Electricity and Rent components from 'electricity' table
+// 2. Electricity and Rent components from 'electricity' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(CASE WHEN elec_status = 'Due' OR (elec_status = '' AND status = 'Due') OR (status = 'Due' AND elec_status = 'Due') THEN amount ELSE 0 END), 0) as elec_total, 
-    IFNULL(SUM(CASE WHEN rent_status = 'Due' OR (rent_status = '' AND status = 'Due') OR (status = 'Due' AND rent_status = 'Due') THEN (rent_amount + maintenance) ELSE 0 END), 0) as rent_portion_total 
-FROM electricity WHERE user_id = ?");
+    IFNULL(SUM(
+        GREATEST(0, e.amount - IFNULL(p.total_paid, 0))
+    ), 0) as elec_total, 
+    IFNULL(SUM(
+        GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))
+    ), 0) as rent_portion_total 
+FROM electricity e 
+LEFT JOIN (
+    SELECT bill_id, SUM(paid_amount) as total_paid 
+    FROM payments 
+    WHERE bill_type IN ('electricity', 'elec_rent') 
+    GROUP BY bill_id
+) p ON p.bill_id = e.id
+WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);

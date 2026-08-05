@@ -176,13 +176,15 @@
                         'status' => 'Allocated',
                         'paid_on' => date('d M Y', strtotime($row['p_date'])),
                         'p_ts' => strtotime($row['p_date']),
+                        'max_id' => (int)$row['id'],
+                        'actual_amount' => (float)$row['amount'],
                         'payment_mode' => $row['payment_mode'] ?: 'System'
                     ];
                 }
             }
         } else {
         // 1. Fetch user-applied transactions from payment_notifications (Only Pending and Rejected)
-        $q_n = mysqli_query($conn, "SELECT id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
+        $q_n = mysqli_query($conn, "SELECT id, id as max_id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
         if ($q_n) {
             while ($row = mysqli_fetch_assoc($q_n)) {
                 $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
@@ -202,13 +204,15 @@
                     'icon' => $icon,
                     'title' => $title,
                     'subtitle' => $subtitle,
-                    'period' => ($row['month'] == 'Advance' || $row['month'] == 'Advance/General') ? 'Advance Balance' : ($row['month'] ?: 'Multiple'),
+                    'period' => ($row['month'] == 'Advance' || $row['month'] == 'Advance/General' || $row['month'] == 'Onboarding & Advance') ? 'Advance Balance' : ($row['month'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)$row['amount'],
                     'status' => $row['status'],
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['p_date']),
+                    'max_id' => (int)$row['max_id'],
                     'payment_mode' => $row['payment_mode'] ?: 'Online'
                 ];
             }
@@ -219,10 +223,12 @@
             SELECT 
                 DATE(payment_date) as p_date,
                 MAX(payment_date) as full_date,
+                MAX(id) as max_id,
                 payment_mode,
                 transaction_id,
                 sys_tx_id,
-                SUM(paid_amount) as amount,
+                SUM(CASE WHEN paid_amount > 0 THEN paid_amount ELSE 0 END) as amount,
+                SUM(paid_amount) as actual_amount,
                 SUM(CASE WHEN adjustment_amount < 0 THEN ABS(adjustment_amount) ELSE 0 END) as wallet_used,
                 GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
             FROM payments 
@@ -244,26 +250,50 @@
                     $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
                 }
                 
+                $pm_db = $row['payment_mode'] ?? '';
+                if (empty(trim($pm_db))) {
+                    $ref_check = trim($row['transaction_id'] ?? '');
+                    if (!empty($ref_check) && strpos($ref_check, 'SYS_') !== 0 && $ref_check !== 'Offline') {
+                        $pm_db = 'UPI'; // Assume UPI if a UTR was provided
+                    } else {
+                        $pm_db = 'Offline';
+                    }
+                }
+
+                $pm = strtolower($pm_db);
+                if (strpos($pm, 'upi') !== false || strpos($pm, 'online') !== false || strpos($pm, 'net banking') !== false) {
+                    $dyn_title = 'Online Payment';
+                } elseif (strpos($pm, 'wallet') !== false || strpos($pm, 'auto-deduction') !== false) {
+                    $dyn_title = 'Wallet Deduction';
+                } else {
+                    $dyn_title = 'Cash / Offline Payment';
+                }
+
                 $all_bills[] = [
                     'filter_type' => 'approved',
                     'color' => 'green',
                     'icon' => 'bx-check-double',
-                    'title' => 'Cash / Offline Payment',
+                    'title' => $dyn_title,
                     'subtitle' => $subtitle,
-                    'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
+                    'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General' || $row['period'] == 'Onboarding & Advance') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)($row['actual_amount'] ?? $row['amount']),
                     'status' => 'Paid',
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
-                    'payment_mode' => $row['payment_mode'] ?: 'Offline'
+                    'max_id' => (int)$row['max_id'],
+                    'payment_mode' => $pm_db
                 ];
             }
         }
 
         }
         usort($all_bills, function($a, $b) {
+            if ($b['p_ts'] == $a['p_ts']) {
+                return $b['max_id'] - $a['max_id'];
+            }
             return $b['p_ts'] - $a['p_ts'];
         });
 
@@ -271,9 +301,12 @@
         $total_all_amount = 0;
         $valid_payment_count = 0;
         foreach($all_bills as $b) {
-            if (in_array(strtolower($b['status']), ['paid', 'approved'])) {
-                $total_all_amount += $b['amount'];
-                $valid_payment_count++;
+            if (in_array(strtolower($b['status']), ['paid', 'approved', 'allocated'])) {
+                $total_all_amount += (float)($b['actual_amount'] ?? $b['amount']);
+                // Don't increment count for pure 0-actual internal transfers
+                if ((float)($b['actual_amount'] ?? $b['amount']) > 0.01) {
+                    $valid_payment_count++;
+                }
             }
         }
         $avg_payment = $valid_payment_count > 0 ? ($total_all_amount / $valid_payment_count) : 0;
@@ -377,7 +410,6 @@
                             <th>BILL TYPE</th>
                             <th>FOR PERIOD</th>
                             <th>BILL DATE</th>
-                            <th>DUE DATE</th>
                             <th>AMOUNT</th>
                             <th>STATUS</th>
                             <th>PAID ON</th>
@@ -402,7 +434,6 @@
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
                                 <td><?php echo $bill['bill_date']; ?></td>
-                                <td><?php echo $bill['due_date']; ?></td>
                                 <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
@@ -410,7 +441,6 @@
                                     <div style="display: flex; align-items: center; justify-content: center; gap: 2px; font-weight: 600; font-size: 13px; color: var(--text-dark);">
                                         <?php if(strpos(strtolower($bill['payment_mode']), 'upi') !== false): ?>
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;">
-                                            UPI
                                         <?php elseif(strpos(strtolower($bill['payment_mode']), 'net banking') !== false): ?>
                                             <i class='bx bxs-bank' style="color: #624BFF; font-size: 16px;"></i>
                                             <?php echo $bill['payment_mode']; ?>

@@ -52,6 +52,26 @@
         </div>
     </div>
 
+    <!-- Onboarding Reminder Card -->
+    <?php if ($onboarding_due > 0): ?>
+    <div class="m-reminder-card" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 24px; padding: 24px; color: white; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; gap: 16px;">
+            <div class="m-remind-icon" style="width: 48px; height: 48px; border-radius: 50%; background: white; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <i class='bx bx-user-plus'></i>
+            </div>
+            <div class="m-reminder-body">
+                <h4 style="font-size: 16px; font-weight: 800; margin: 0 0 6px 0; letter-spacing: -0.3px;">Initial Onboarding Dues</h4>
+                <p style="font-size: 12px; opacity: 0.95; line-height: 1.5; margin: 0;">Please clear your initial Security Deposit and/or Advance Rent to complete your onboarding process.</p>
+            </div>
+        </div>
+        <div class="m-reminder-action" style="text-align: right;">
+            <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" style="background: white; color: #059669; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt' style="font-size: 16px;"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- Payment Reminder Card -->
     <?php if ($show_banner || $total_due > 0): ?>
     <div class="m-reminder-card" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF3D77 50%, #FF5E3A 100%); border-radius: 24px; padding: 24px; color: white; box-shadow: 0 10px 25px rgba(255, 61, 119, 0.3); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 16px;">

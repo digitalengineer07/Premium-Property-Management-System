@@ -153,8 +153,26 @@
         </div>
         <?php endif; ?>
 
-        <!-- 3-Col KPI Cards -->
-        <div class="kpi-grid animate-up">
+        <?php if ($onboarding_due > 0): ?>
+        <div class="reminder-banner animate-down" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); margin-bottom: 24px;">
+            <div class="reminder-content">
+                <div class="reminder-icon">
+                    <i class='bx bx-user-plus bx-tada'></i>
+                </div>
+                <div class="reminder-text">
+                    <h3>Welcome! Initial Onboarding Dues</h3>
+                    <p>Please clear your initial Security Deposit and/or Advance Rent to complete your onboarding process.</p>
+                </div>
+            </div>
+            <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" class="btn-pay-now">
+                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt'></i>
+            </button>
+            <i class='bx bx-shield-quarter reminder-bg-art'></i>
+        </div>
+        <?php endif; ?>
+
+        <!-- 3/4-Col KPI Cards -->
+        <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(<?php echo ($user['advance_payment'] ?? 0) > 0 ? 4 : 3; ?>, 1fr); gap: 24px;">
             <!-- Total Outstanding -->
             <div class="kpi-card">
                 <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
@@ -235,6 +253,32 @@
                     <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
+            
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <!-- Advance Wallet -->
+            <div class="kpi-card">
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box green" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-wallet'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Advance Wallet</div>
+                        <div class="kpi-amount" style="margin-bottom: 0; color: #10B981;"><?php echo money($user['advance_payment']); ?></div>
+                    </div>
+                </div>
+                <div class="kpi-bottom">
+                    <div class="kpi-due-date"><i class='bx bx-check-shield'></i> Safe & Available</div>
+                </div>
+                <svg class="kpi-sparkline green" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradGreen2" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5 L100,40 L0,40 Z" fill="url(#gradGreen2)" />
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <?php endif; ?>
         </div>
 
         <!-- 2-Col Main Dashboard Grid -->
@@ -246,20 +290,46 @@
                     <a href="my-bills.php#all-bills-container" class="panel-link">View All</a>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; flex: 1;">
+                <div style="display: flex; flex-direction: column; flex: 1">
                     <?php 
-                    $pending_bills_display = [];
-                    foreach ($merged_rents as $r) {
-                        if (isset($r['status']) && $r['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'rent', 'month' => $r['month'], 'amount' => $r['amount']];
-                        }
+                    $pb_raw = [];
+                    // Fetch accurate pending dues from rent
+                    $qR = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qR)) {
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+                        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+                        $due = max(0, (float)$r['total_amount'] - $paid);
+                        if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
                     }
-                    foreach ($elecs as $e) {
-                        if (isset($e['status']) && $e['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['amount']];
-                        }
+                    // Fetch accurate pending dues from electricity (unified)
+                    $qE = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qE)) {
+                        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+                        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+                        $edue = max(0, (float)$r['elec_part'] - $epaid);
+                        if ($edue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $edue];
+                        
+                        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+                        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+                        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
+                        if ($rdue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $rdue];
                     }
-                    $pending_bills_display = array_slice($pending_bills_display, 0, 3);
+                    
+                    // Group by month
+                    $grouped_bills = [];
+                    foreach ($pb_raw as $pb) {
+                        if (!isset($grouped_bills[$pb['month']])) {
+                            $grouped_bills[$pb['month']] = ['month' => $pb['month'], 'due' => 0, 'due_date' => $pb['due_date']];
+                        }
+                        $grouped_bills[$pb['month']]['due'] += $pb['due'];
+                    }
+                    
+                    // Sort chronologically
+                    usort($grouped_bills, function($a, $b) {
+                        return strtotime($a['month'].'-01') - strtotime($b['month'].'-01');
+                    });
+                    
+                    $pending_bills_display = array_slice($grouped_bills, 0, 3);
                     ?>
 
                     <?php if (empty($pending_bills_display)): ?>
@@ -271,26 +341,15 @@
                         <?php foreach($pending_bills_display as $pb): ?>
                         <div class="bill-item">
                             <div class="bill-left">
-                                <?php if ($pb['type'] == 'rent'): ?>
-                                    <div class="bill-icon"><i class='bx bx-home'></i></div>
-                                <?php else: ?>
-                                    <div class="bill-icon yellow"><i class='bx bx-bolt-circle'></i></div>
-                                <?php endif; ?>
+                                <div class="bill-icon"><i class='bx bx-receipt'></i></div>
                                 <div class="bill-info">
-                                    <h4><?php echo $pb['type'] == 'rent' ? 'Rent' : 'Electricity'; ?> for <?php echo htmlspecialchars($pb['month']); ?></h4>
-                                    <p>Due Date: <?php 
-                                        $ts = strtotime($pb['month']);
-                                        if ($pb['type'] == 'rent') {
-                                            echo '05 ' . date('M Y', strtotime('+1 month', $ts));
-                                        } else {
-                                            echo date('t M Y', $ts);
-                                        }
-                                    ?></p>
+                                    <h4>Total Bill for <?php echo htmlspecialchars($pb['month']); ?></h4>
+                                    <p>Due Date: <?php echo date('d M Y', strtotime($pb['due_date'])); ?></p>
                                 </div>
                             </div>
                             <div class="bill-right">
-                                <h4 <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>><?php echo money($pb['amount']); ?></h4>
-                                <p <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>>Pending</p>
+                                <h4><?php echo money($pb['due']); ?></h4>
+                                <p>Pending</p>
                             </div>
                         </div>
                         <?php endforeach; ?>

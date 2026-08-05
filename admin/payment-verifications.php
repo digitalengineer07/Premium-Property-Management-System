@@ -45,6 +45,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         $max_m = ($p_btype == 'monthly' && !empty($notif['month'])) ? mysqli_real_escape_string($conn, $notif['month']) : null;
                         allocate_bulk_payment($conn, $p_uid, $p_amt, $p_pmode, $p_tx, $p_sys_tx, $max_m);
                     } 
+                    // 1.5 Handle Onboarding Payment (Split into Security Deposit and Advance)
+                    else if ($p_btype == 'onboarding') {
+                        $user_q = mysqli_query($conn, "SELECT security_deposit FROM users WHERE id = $p_uid");
+                        $u_row = mysqli_fetch_assoc($user_q);
+                        $sec_target = (float)($u_row['security_deposit'] ?? 0);
+                        
+                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $p_uid AND bill_type = 'security_deposit'");
+                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
+                        $sec_due = max(0, $sec_target - $sec_paid);
+                        
+                        $amount_to_sec = min($p_amt, $sec_due);
+                        $amount_to_adv = $p_amt - $amount_to_sec;
+                        
+                        // Insert Security Deposit component
+                        if ($amount_to_sec > 0) {
+                            $sys_sec_tx = 'SYS_SEC_' . strtoupper(bin2hex(random_bytes(6)));
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx')");
+                        }
+                        
+                        // Insert remaining to Advance Wallet (Logs as 1st Month Rent, but DOES NOT add to auto-deduct wallet)
+                        if ($amount_to_adv > 0) {
+                            $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                            // Removed: UPDATE users SET advance_payment = advance_payment + $amount_to_adv
+                        }
+                    }
                     // 2. Handle Specific Bill Payments
                     else {
                         // Check if payment already recorded (Legacy / Duplication fallback)
@@ -769,7 +795,11 @@ include "sidebar.php";
                             <?php
                             $disp_month = date('M Y', strtotime($n['created_at'])); // Default fallback
                             if (!empty($n['month'])) {
-                                $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                                if (strpos($n['month'], '-') !== false && strlen($n['month']) == 7) {
+                                    $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                                } else {
+                                    $disp_month = $n['month'];
+                                }
                             } elseif ($n['bill_id'] > 0) {
                                 // Try to fetch from rent/electricity table
                                 $bid = (int)$n['bill_id'];

@@ -165,8 +165,8 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         /* --- CONTACT INFO --- */
         .contact-info {
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
             padding-bottom: 24px;
             margin-bottom: 24px;
             border-bottom: 1px solid var(--border);
@@ -745,7 +745,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <!-- Header -->
         <div class="header">
             <div class="brand-section">
-                <i class='bx bxs-building-house brand-icon'></i>
+                <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" class="brand-icon" style="width: 48px; height: 48px; object-fit: contain; transform: scale(1.3);">
                 <div class="brand-text">
                     <h2><?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav kunj'; ?></h2>
                     <p>Electricity Bill</p>
@@ -757,19 +757,23 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             </div>
         </div>
 
-        <!-- Contact Info -->
         <div class="contact-info">
-            <div class="contact-item">
-                <i class='bx bx-map'></i>
-                Vastu Estate colony Madhav Kunj apartment behind RPS School
+            <div class="contact-item" style="align-items: flex-start;">
+                <i class='bx bx-map' style="margin-top: 2px;"></i>
+                <div style="line-height: 1.4;">
+                    <?php 
+                        $addr = defined('HOUSE_ADDRESS') ? HOUSE_ADDRESS : 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503';
+                        echo str_replace(', ', ',<br>', $addr);
+                    ?>
+                </div>
             </div>
             <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-phone-call'></i>
-                <?php echo (strpos(trim($phone), '+91') === 0) ? htmlspecialchars(trim($phone)) : '+91&nbsp;' . htmlspecialchars(trim($phone)); ?>
+                +91 6206936907
             </div>
             <div class="contact-item" style="white-space: nowrap;">
                 <i class='bx bx-envelope'></i>
-                <?php echo htmlspecialchars(trim($email)); ?>
+                madhavkunj@succorkart.in
             </div>
         </div>
 
@@ -887,7 +891,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                         <i class='bx bx-message-square-detail'></i>
                         <div class="photo-det-info">
                             <h5>Note</h5>
-                            <p class="note">Current meter reading captured successfully.</p>
+                            <p class="note">Reading captured for <?php echo date("F Y", strtotime($row['month'] . '-01')); ?>.</p>
                         </div>
                     </div>
                 </div>

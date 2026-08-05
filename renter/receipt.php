@@ -921,21 +921,7 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <!-- SVG Logo -->
                         <div style="width: 70px; height: 60px;">
-                            <svg width="100%" height="100%" viewBox="0 0 100 80">
-                                <!-- Roof & Body -->
-                                <path d="M 10 50 L 50 10 L 90 50" fill="none" stroke="#4A3AFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M 30 40 L 30 70 L 70 70 L 70 40" fill="none" stroke="#4A3AFF" stroke-width="8"/>
-                                <path d="M 20 40 L 20 20 L 30 20 L 30 30" fill="none" stroke="#4A3AFF" stroke-width="6"/>
-                                <rect x="42" y="42" width="16" height="16" fill="none" stroke="#4A3AFF" stroke-width="4"/>
-                                <line x1="50" y1="42" x2="50" y2="58" stroke="#4A3AFF" stroke-width="4"/>
-                                <line x1="42" y1="50" x2="58" y2="50" stroke="#4A3AFF" stroke-width="4"/>
-                                <!-- Leaves -->
-                                <path d="M 15 70 Q 25 60 30 70 Q 25 80 15 70" fill="#10B981"/>
-                                <path d="M 25 75 Q 35 65 40 75 Q 35 85 25 75" fill="#10B981"/>
-                                <path d="M 85 70 Q 75 60 70 70 Q 75 80 85 70" fill="#10B981"/>
-                                <path d="M 75 75 Q 65 65 60 75 Q 65 85 75 75" fill="#10B981"/>
-                                <path d="M 30 73 Q 50 83 70 73" fill="none" stroke="#10B981" stroke-width="3"/>
-                            </svg>
+                            <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <div>
                             <h1 style="font-size: 22px; font-weight: 900; color: #000; letter-spacing: 0.5px; line-height: 1.1; margin-bottom: 4px;">MADHAV KUNJ</h1>
@@ -948,13 +934,13 @@ $receipt['account_holder'] = 'Madhav Kunj Residence';
                     </div>
                 </div>
                 <div class="address-info">
-                    Madhav Kunj Society, Near Green Park,<br>
-                    Indore, Madhya Pradesh - 452001
+                    Vastu Estate colony behind RPS residents school,<br>
+                    Patna Bihar - 801503
                 </div>
                 <div class="contact-info">
-                    <span><i class='bx bx-phone-call'></i> +91 98765 43210</span>
+                    <span><i class='bx bx-phone-call'></i> +91 6206936907</span>
                     <span style="color: #D1D5DB;">|</span>
-                    <span><i class='bx bx-envelope'></i> madhavkunj@example.com</span>
+                    <span><i class='bx bx-envelope'></i> madhavkunj@succorkart.in</span>
                 </div>
             </div>
 

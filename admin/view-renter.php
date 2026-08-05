@@ -35,8 +35,8 @@ if (!$user) {
 /* Fetch electricity records */
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid,
-           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as adjustment_amount
+           (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
+           (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as adjustment_amount
     FROM electricity e 
     WHERE e.user_id = ? AND e.amount > 0
     ORDER BY e.id DESC
@@ -49,10 +49,11 @@ mysqli_stmt_close($stmt);
 
 /* Fetch rent records (from electricity table as rent and maintenance combined) */
 $stmt = mysqli_prepare($conn, "
-    SELECT id, month, rent_amount, maintenance, status, source, total_paid FROM (
+    SELECT id, month, rent_amount, maintenance, status, source, total_paid, elec_amount FROM (
         SELECT r.id, r.month, r.rent_amount, r.maintenance, IFNULL(NULLIF(r.rent_status, ''), r.status) as status, 
                'electricity' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = r.id) as total_paid
+               (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
+               r.amount as elec_amount
         FROM electricity r 
         WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
         
@@ -60,8 +61,10 @@ $stmt = mysqli_prepare($conn, "
         
         SELECT rt.id, rt.month, rt.rent_amount, 0 as maintenance, rt.status as status,
                'rent' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid
+               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
+               0 as elec_amount
         FROM rent rt
+
         WHERE rt.user_id = ?
     ) as combined_rents
     ORDER BY STR_TO_DATE(CONCAT('1 ', month), '%d %M %Y') DESC, id DESC
@@ -206,7 +209,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-user-circle' style="font-size: 16px;"></i> @<?php echo htmlspecialchars($user['username']); ?></span>
                         <span style="color: var(--border);">|</span> 
                         <span style="display: flex; align-items: center; gap: 4px; color: var(--primary-purple); background: rgba(98, 75, 255, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; white-space: nowrap;"><i class='bx bx-door-open' style="font-size: 14px;"></i> Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></span>
-                        <span style="display: flex; align-items: center; gap: 4px; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 14px;"></i> RNT-<?php echo str_pad($user['id'], 4, '0', STR_PAD_LEFT); ?></span>
+                        <span style="display: flex; align-items: center; gap: 4px; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 12px; white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 14px;"></i> RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></span>
                     </div>
                 </div>
             </div>
@@ -222,6 +225,19 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
+                        <?php if(!($user['onboarding_completed'] ?? 0)): ?>
+                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
+                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                            <input type="hidden" name="status" value="1">
+                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #10B981; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-check-shield' style="font-size: 16px;"></i> Mark Onboarding Paid</button>
+                        </form>
+                        <?php else: ?>
+                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
+                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                            <input type="hidden" name="status" value="0">
+                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-x-circle' style="font-size: 16px;"></i> Undo Onboarding</button>
+                        </form>
+                        <?php endif; ?>
                         <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
                     </div>
                 </div>
@@ -290,16 +306,29 @@ $admin_user = s($_SESSION['admin'] ?? '');
                   </div>
                     
                     <!-- Security Deposit -->
+                    <?php
+                        $user_id_for_sec = $user['id'];
+                        $sec_target = (float)($user['security_deposit'] ?? 0);
+                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $user_id_for_sec AND bill_type = 'security_deposit'");
+                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
+                        
+                        $is_fully_paid = ($sec_paid >= $sec_target && $sec_target > 0);
+                        $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
+                        $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
+                    ?>
                     <div style="background: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
                         <div style="display: flex; align-items: center; gap: 16px;">
-                            <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(245,158,11,0.1); display: flex; align-items: center; justify-content: center; color: #F59E0B; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
+                            <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
                                 <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Refundable at move out</div>
+                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: 800; font-size: 22px; color: #F59E0B;">₹<?php echo number_format($user['security_deposit'] ?? 0, 2); ?></div>
+                            <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo number_format($sec_paid, 2); ?></div>
+                            <?php if (!$is_fully_paid && $sec_target > 0): ?>
+                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo number_format($sec_target - $sec_paid); ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                   <!-- Fixed Charges -->
@@ -486,7 +515,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($r['status'] != 'Paid'): $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $r['total_paid']); ?>
+                                    <?php if($r['status'] != 'Paid'): 
+                                        $rent_paid_so_far = ($r['source'] == 'electricity') ? max(0, $r['total_paid'] - $r['elec_amount']) : $r['total_paid'];
+                                        $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $rent_paid_so_far); 
+                                    ?>
                                         <button onclick="openPaymentModal('<?php echo $r['source']; ?>', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
                                     <?php else: ?>
                                         <span style="color: var(--text-gray); padding: 4px 12px; font-size: 11px; font-weight: 600;">-</span>

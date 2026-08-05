@@ -5,18 +5,18 @@
 $mobile_all_bills = [];
 
 // 1. Pure Rent
-$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
                                 FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                 WHERE r.user_id=$user_id");
 while($r = mysqli_fetch_assoc($rent_q)) {
     $mobile_all_bills[] = [
-        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['month'].'-05') < time() ? 'overdue' : 'unpaid')),
+        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['due_date']) < time() ? 'overdue' : 'unpaid')),
         'title' => 'February 2026', // Mocking based on month for UI matching
         'real_title' => date('F Y', strtotime($r['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $r['month'],
-        'bill_date' => date('01 F Y', strtotime($r['month'])),
-        'due_date' => date('d F Y', strtotime($r['month'] . '-05')),
+        'bill_date' => date('d F Y', strtotime('-10 days', strtotime($r['due_date']))),
+        'due_date' => date('d F Y', strtotime($r['due_date'])),
         'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
         'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
         'icon' => 'bx-home', 'icon_bg' => 'rgba(139, 92, 246, 0.1)', 'icon_color' => '#8B5CF6',
@@ -30,7 +30,7 @@ while($r = mysqli_fetch_assoc($rent_q)) {
 }
 
 // 2. Combined Bill (Electricity + Rent + Maintenance)
-$comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+$comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
                                 FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                 WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
 while($c = mysqli_fetch_assoc($comb_q)) {
@@ -43,13 +43,15 @@ while($c = mysqli_fetch_assoc($comb_q)) {
     if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
     if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
     
+    $due_timestamp = strtotime($c['created_at'] . ' + 10 days');
+    
     $mobile_all_bills[] = [
-        'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : (strtotime($c['month'].'-05') < time() ? 'overdue' : 'unpaid')),
+        'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($due_timestamp < time() ? 'overdue' : 'unpaid')),
         'real_title' => date('F Y', strtotime($c['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $c['month'],
-        'bill_date' => date('01 F Y', strtotime($c['month'])),
-        'due_date' => date('d F Y', strtotime($c['month'] . '-07')),
+        'bill_date' => date('d M Y', strtotime($c['created_at'])),
+        'due_date' => date('d F Y', $due_timestamp),
         'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
         'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
         'icon' => 'bx-layer', 'icon_bg' => 'rgba(98, 75, 255, 0.1)', 'icon_color' => 'var(--primary-purple)',
@@ -60,7 +62,7 @@ while($c = mysqli_fetch_assoc($comb_q)) {
 
 // Sort by Period Descending
 usort($mobile_all_bills, function($a, $b) { 
-    return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
+    return strtotime($b['period']) - strtotime($a['period']);
 });
 $due_this_month = $total_due ?? 0; 
 $total_bills_count = count($mobile_all_bills);
@@ -278,8 +280,10 @@ $total_bills_count = count($mobile_all_bills);
             <div class="m-bill-mid">
                 <h4><?php echo $bill['due_date']; ?></h4>
                 <span class="m-bill-badge" style="background: <?php echo $bill['badge_bg']; ?>; color: <?php echo $bill['badge_color']; ?>;"><?php echo $bill['badge']; ?></span>
-                <?php if($bill['status'] === 'Unpaid'): ?>
-                    <p style="margin-top: 4px;">Due Today</p>
+                <?php if($bill['filter_type'] === 'overdue'): ?>
+                    <p style="margin-top: 4px; color: #FF4B6B;">Overdue</p>
+                <?php elseif($bill['status'] === 'Unpaid'): ?>
+                    <p style="margin-top: 4px; color: #F59E0B;">Unpaid</p>
                 <?php endif; ?>
             </div>
             <div class="m-bill-right">

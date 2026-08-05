@@ -19,7 +19,7 @@ if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
 
 // 1) Rent Collected: overall total rent amount collected (combining explicit rent and the rent portion of combined bills)
 $explicit_rent = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
-$rent_from_combined = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance + dues), 0) AS total FROM electricity WHERE status = 'Paid'"))['total'];
+$rent_from_combined = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance + extra_charges + dues), 0) AS total FROM electricity WHERE status = 'Paid'"))['total'];
 $rent_collected_total = $explicit_rent + $rent_from_combined;
 
 // 2) Total Dues: total due amount of all renters combined
@@ -35,7 +35,7 @@ $adv_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(adva
 $total_dues_total = max(0, (($d_elec_total + $d_rent_total + $d_adj) - ($p_elec_total + $p_rent_total)) - $adv_adj);
 
 // 3) Electricity Paid: sum of all electricity amounts paid for the selected month (electricity portion only)
-$elec_collected_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount + extra_charges), 0) AS total FROM electricity WHERE status = 'Paid' AND month='$prev_month_str'"))['total'];
+$elec_collected_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount), 0) AS total FROM electricity WHERE status = 'Paid' AND month='$prev_month_str'"))['total'];
 
 // 5) Total Revenue: actual cash/bank/UPI received (excluding wallet auto-deductions)
 $total_revenue_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "

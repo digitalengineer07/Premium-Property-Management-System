@@ -13,7 +13,7 @@ require_once "fetch_notifications.php";
 if (empty($_SESSION['csrf'])) $_SESSION['csrf'] = bin2hex(random_bytes(32));
 
 /* Fetch profile */
-$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT username, name, phone, whatsapp, room_no, profile_pic, must_change_password, pending_adjustment, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
@@ -41,16 +41,19 @@ mysqli_stmt_close($stmt);
 // 2. Electricity and Rent components from 'electricity' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
     IFNULL(SUM(
-        CASE WHEN elec_status IN ('Due', 'Partial') OR (elec_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND elec_status != 'Paid')
-        THEN amount - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='electricity' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, e.amount - IFNULL(p.total_paid, 0))
     ), 0) as elec_total, 
     IFNULL(SUM(
-        CASE WHEN rent_status IN ('Due', 'Partial') OR (rent_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND rent_status != 'Paid')
-        THEN (rent_amount + maintenance) - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='elec_rent' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))
     ), 0) as rent_portion_total 
-FROM electricity e WHERE user_id = ?");
+FROM electricity e 
+LEFT JOIN (
+    SELECT bill_id, SUM(paid_amount) as total_paid 
+    FROM payments 
+    WHERE bill_type IN ('electricity', 'elec_rent') 
+    GROUP BY bill_id
+) p ON p.bill_id = e.id
+WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);
@@ -63,6 +66,31 @@ $rent_due = $pure_rent_due + $rent_portion_due;
 $unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
 $total_due = $elec_due + $rent_due - $unbilled_adj;
 
+/* Calculate Onboarding Dues */
+// Run alter silently just in case
+mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+
+$sec_due = 0;
+$adv_due = 0;
+
+$u_q = mysqli_query($conn, "SELECT onboarding_completed FROM users WHERE id=$user_id");
+$u_data = mysqli_fetch_assoc($u_q);
+$onboarding_completed = $u_data['onboarding_completed'] ?? 0;
+
+if (!$onboarding_completed) {
+    $sec_target = (float)($user['security_deposit'] ?? 0);
+    $qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
+    $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
+    $sec_due = max(0, $sec_target - $sec_paid);
+
+    // 1st month rent is DUE at onboarding
+    $adv_target = (float)($user['fixed_rent'] ?? 0);
+    $qAdvPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='advance'");
+    $adv_paid = (float)(mysqli_fetch_assoc($qAdvPaid)['total'] ?? 0);
+    $adv_due = max(0, $adv_target - $adv_paid);
+}
+
+$onboarding_due = $sec_due + $adv_due;
 /* Last payment */
 $stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);

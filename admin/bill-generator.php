@@ -916,24 +916,24 @@ $admin_user = s($_SESSION['admin']);
                             
                             <!-- Middle: Breakdown -->
                             <div style="flex: 2; min-width: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; font-size: 14px;">
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Units Consumed</span><strong id="calcUnits">0</strong>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; font-size: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Units Consumed</span><strong id="calcUnits" style="white-space: nowrap; text-align: right;">0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Standard Rent</span><strong id="calcRent">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Standard Rent</span><strong id="calcRent" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Electricity Cost</span><strong id="calcElectricity">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Electricity Cost</span><strong id="calcElectricity" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Maintenance</span><strong id="calcMaintenance">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Maintenance</span><strong id="calcMaintenance" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Advance Applied</span><strong id="calcDues">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;" id="extraChargesDiv">
-                                        <span style="color: rgba(255,255,255,0.8);">Extra Charges</span><strong id="calcExtraCharges">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;" id="extraChargesDiv">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                 </div>
                             </div>
@@ -1290,22 +1290,13 @@ $admin_user = s($_SESSION['admin']);
                     }
                 }
 
-                // Handle Pending Adjustment
-                const adj = data.pending_adjustment || 0;
+                // Handle Advance Wallet (Auto-Credit applied backend)
                 const balanceDiv = document.getElementById('infoBalance');
-                if (adj < 0) {
-                    balanceDiv.textContent = '₹' + Math.abs(adj) + ' (Remaining)';
-                    balanceDiv.style.color = '#FCA5A5';
-                } else if (adj > 0) {
-                    balanceDiv.textContent = '₹' + adj + ' (Extra)';
-                    balanceDiv.style.color = '#6EE7B7';
-                } else {
-                    balanceDiv.textContent = '₹0';
-                    balanceDiv.style.color = 'rgba(255,255,255,0.7)';
-                }
-
-                // Auto-fill Advance Applied (dues = -Adjustment, but only if adj is > 0 meaning they have advance)
-                document.getElementById('dues').value = adj > 0 ? -adj : '';
+                balanceDiv.textContent = 'Auto (Backend)';
+                balanceDiv.style.color = 'rgba(255,255,255,0.7)';
+                
+                // Note: Advance wallet is handled entirely securely on the backend in save-bill.php
+                document.getElementById('dues').value = '';
 
                 const prevInput = document.getElementById('previousReading');
                 prevInput.value = lastReading;

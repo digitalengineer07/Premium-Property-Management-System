@@ -148,21 +148,30 @@
         $all_bills = [];
 
         // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
         while($r = mysqli_fetch_assoc($rent_q)) {
+            $amt = (float)$r['amount'];
+            $paid = (float)$r['total_paid'];
+            $bal = max(0, $amt - $paid);
+            
+            $status_calc = $r['status'] == 'Due' ? 'Unpaid' : $r['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
+            
             $all_bills[] = [
-                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : ($r['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Rent for ' . $r['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
-                'bill_date' => date('01 M Y', strtotime($r['month'])),
-                'due_date' => date('07 M Y', strtotime($r['month'])),
-                'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
+                'bill_date' => date('d M Y', strtotime('-10 days', strtotime($r['due_date']))),
+                'due_date' => date('d M Y', strtotime($r['due_date'])),
+                'amount' => $amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
+                'overdue' => 0,
                 'summary' => [
-                    'Monthly Rent' => $r['amount'],
+                    'Monthly Rent' => $amt,
                     'Maintenance Charge' => 0,
                     'Other Charges' => 0
                 ]
@@ -170,35 +179,43 @@
         }
 
         // 2. Combined Bill (Electricity + Rent + Maintenance)
-        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
         while($c = mysqli_fetch_assoc($comb_q)) {
-            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['dues'] + (float)$c['extra_charges'];
+            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'] + (float)$c['dues'];
+            $paid = (float)$c['total_paid'];
+            $bal = max(0, $total_amt - $paid);
+            
+            $status_calc = $c['status'] == 'Due' ? 'Unpaid' : $c['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
             
             $summary = [];
             if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
             if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
             if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
             if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
-            if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
+            
+            $overdue = (float)$c['dues'];
             
             $all_bills[] = [
-                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($c['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Monthly Bill for ' . $c['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $c['month'],
-                'bill_date' => date('01 M Y', strtotime($c['month'])),
-                'due_date' => date('07 M Y', strtotime($c['month'])),
-                'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
+                'bill_date' => date('d M Y', strtotime($c['created_at'])),
+                'due_date' => date('d M Y', strtotime($c['created_at'] . ' + 10 days')),
+                'amount' => $total_amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
+                'overdue' => $overdue,
                 'summary' => $summary
             ];
         }
         
         // Sort by Period Descending
         usort($all_bills, function($a, $b) { 
-            return strtotime($b['bill_date'] ?? 'now') - strtotime($a['bill_date'] ?? 'now');
+            return strtotime($b['period']) - strtotime($a['period']);
         });
         
         $due_this_month = $total_due; 
@@ -233,6 +250,16 @@
                 </div>
             </div>
             
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+                <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-wallet'></i></div>
+                <div class="kpi-min-info">
+                    <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Advance Wallet</h4>
+                    <h2 style="font-size: 24px; color: #10B981; margin: 0 0 6px 0; font-weight: 800;"><?php echo money($user['advance_payment']); ?></h2>
+                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">Available Balance</div>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
                 <div class="kpi-min-info">
@@ -241,6 +268,7 @@
                     <div style="font-size: 11px; font-weight: 700; color: #8B5CF6; background: rgba(139,92,246,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">All Time</div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
 
         <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(290px, 1fr); gap: 24px; align-items: stretch;">
@@ -266,11 +294,11 @@
                 <div style="padding: 0 12px 12px; overflow-x: hidden;"><table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 25%;">BILL FOR</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">AMOUNT</th>
-                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
+                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 28%;">BILL FOR</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 20%;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">DUE DATE</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">BALANCE</th>
+                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 16%;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
@@ -373,9 +401,9 @@
                 document.getElementById('bdIcon').style.background = colors[0];
                 document.getElementById('bdIcon').style.color = colors[1];
 
-                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdAmount').style.color = statusColor;
-                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdTotalAmount2').style.color = statusColor;
 
                 // Summary List
@@ -388,6 +416,25 @@
                         </div>
                     `;
                 }
+                
+                // Add Gross Amount, Amount Paid, Remaining Balance logic
+                summaryHtml += `
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 13px; color: var(--text-gray); font-weight: 700;">Gross Amount</span>
+                        <span style="font-size: 13px; color: var(--text-dark); font-weight: 800;">${formatMoney(bill.amount)}</span>
+                    </div>
+                `;
+                
+                if (bill.paid > 0) {
+                    summaryHtml += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 13px; color: #10B981; font-weight: 700;">Amount Paid</span>
+                            <span style="font-size: 13px; color: #10B981; font-weight: 800;">-${formatMoney(bill.paid)}</span>
+                        </div>
+                    `;
+                }
+
                 document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
@@ -396,6 +443,12 @@
                     downloadBtns.forEach(btn => {
                         btn.onclick = () => window.open('invoice.php?id=' + bill.id, '_blank');
                     });
+                }
+
+                // Toggle Warning
+                const warningDiv = document.getElementById('bdWarning');
+                if (warningDiv) {
+                    warningDiv.style.display = bill.balance > 0 ? 'flex' : 'none';
                 }
             }
             
@@ -464,10 +517,10 @@
                             </td>
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
+                                ${bill.status === 'Unpaid' ? (bill.filter_type === 'overdue' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Overdue</p>` : `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Unpaid</p>`) : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
                             </td>
                             <td style="text-align:right;">
-                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
+                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.balance)}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}

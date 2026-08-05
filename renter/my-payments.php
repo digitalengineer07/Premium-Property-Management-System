@@ -41,16 +41,19 @@ mysqli_stmt_close($stmt);
 // 2. Electricity and Rent components from 'electricity' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
     IFNULL(SUM(
-        CASE WHEN elec_status IN ('Due', 'Partial') OR (elec_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND elec_status != 'Paid')
-        THEN amount - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='electricity' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, e.amount - IFNULL(p.total_paid, 0))
     ), 0) as elec_total, 
     IFNULL(SUM(
-        CASE WHEN rent_status IN ('Due', 'Partial') OR (rent_status = '' AND status IN ('Due', 'Partial')) OR (status IN ('Due', 'Partial') AND rent_status != 'Paid')
-        THEN (rent_amount + maintenance + dues + extra_charges) - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='elec_rent' AND p.bill_id=e.id), 0) 
-        ELSE 0 END
+        GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))
     ), 0) as rent_portion_total 
-FROM electricity e WHERE user_id = ?");
+FROM electricity e 
+LEFT JOIN (
+    SELECT bill_id, SUM(paid_amount) as total_paid 
+    FROM payments 
+    WHERE bill_type IN ('electricity', 'elec_rent') 
+    GROUP BY bill_id
+) p ON p.bill_id = e.id
+WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $r2 = mysqli_stmt_get_result($stmt);
