@@ -177,6 +177,7 @@
                         'paid_on' => date('d M Y', strtotime($row['p_date'])),
                         'p_ts' => strtotime($row['p_date']),
                         'max_id' => (int)$row['id'],
+                        'actual_amount' => (float)$row['amount'],
                         'payment_mode' => $row['payment_mode'] ?: 'System'
                     ];
                 }
@@ -207,6 +208,7 @@
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)$row['amount'],
                     'status' => $row['status'],
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['p_date']),
@@ -226,6 +228,7 @@
                 transaction_id,
                 sys_tx_id,
                 SUM(CASE WHEN paid_amount > 0 THEN paid_amount ELSE 0 END) as amount,
+                SUM(paid_amount) as actual_amount,
                 SUM(CASE WHEN adjustment_amount < 0 THEN ABS(adjustment_amount) ELSE 0 END) as wallet_used,
                 GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
             FROM payments 
@@ -276,6 +279,7 @@
                     'bill_date' => date('d M Y', strtotime($row['p_date'])),
                     'due_date' => '-',
                     'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)($row['actual_amount'] ?? $row['amount']),
                     'status' => 'Paid',
                     'paid_on' => date('d M Y', strtotime($row['p_date'])),
                     'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
@@ -298,8 +302,11 @@
         $valid_payment_count = 0;
         foreach($all_bills as $b) {
             if (in_array(strtolower($b['status']), ['paid', 'approved', 'allocated'])) {
-                $total_all_amount += $b['amount'];
-                $valid_payment_count++;
+                $total_all_amount += (float)($b['actual_amount'] ?? $b['amount']);
+                // Don't increment count for pure 0-actual internal transfers
+                if ((float)($b['actual_amount'] ?? $b['amount']) > 0.01) {
+                    $valid_payment_count++;
+                }
             }
         }
         $avg_payment = $valid_payment_count > 0 ? ($total_all_amount / $valid_payment_count) : 0;
