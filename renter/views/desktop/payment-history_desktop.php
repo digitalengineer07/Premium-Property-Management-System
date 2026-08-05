@@ -290,7 +290,7 @@
         $total_all_amount = 0;
         $valid_payment_count = 0;
         foreach($all_bills as $b) {
-            if (in_array(strtolower($b['status']), ['paid', 'approved'])) {
+            if (in_array(strtolower($b['status']), ['paid', 'approved', 'allocated'])) {
                 $total_all_amount += $b['amount'];
                 $valid_payment_count++;
             }
