@@ -63,6 +63,11 @@ if ($res) {
         })();
     </script>
     <style>
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
         /* New Sidebar Dashboard CSS */
         :root {
             --bg-main: #FAFBFC;
