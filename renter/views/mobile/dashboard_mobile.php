@@ -243,7 +243,7 @@
 
     /* Mobile Sidebar Drawer Responsive Fixes */
     .sidebar.mobile-drawer-open {
-        padding-bottom: 24px !important; /* Add bottom padding so logout button is never cut off */
+        padding-bottom: 50px !important; /* Increased from 24px to push logout button higher */
     }
     .sidebar.mobile-drawer-open .nav-menu {
         flex: 1 1 auto !important;
