@@ -29,27 +29,28 @@ if (!file_exists($physical_path)) {
 
 // Ownership Verification
 if (!$is_admin) {
+    $safe_file_param = mysqli_real_escape_string($conn, $file_param);
     if ($folder_param === 'aadhaar' || strpos($file_param, 'aadhar_') === 0) {
-        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND aadhaar_file LIKE '%$file_param%'");
+        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND aadhaar_file LIKE '%$safe_file_param%'");
         if (mysqli_num_rows($q) == 0) {
             http_response_code(403);
             die("Forbidden: You do not have permission to view this Aadhar card.");
         }
     } else if ($folder_param === 'agreements') {
-        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND agreement_document LIKE '%$file_param%'");
+        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND agreement_document LIKE '%$safe_file_param%'");
         if (mysqli_num_rows($q) == 0) {
             http_response_code(403);
             die("Forbidden: You do not have permission to view this agreement.");
         }
     } else if ($folder_param === 'documents' || $folder_param === 'bills') {
-        $q = mysqli_query($conn, "SELECT id FROM documents WHERE user_id = $user_id AND file_path LIKE '%$file_param%'");
-        $q2 = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND electricity_document LIKE '%$file_param%'");
+        $q = mysqli_query($conn, "SELECT id FROM documents WHERE user_id = $user_id AND file_path LIKE '%$safe_file_param%'");
+        $q2 = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND electricity_document LIKE '%$safe_file_param%'");
         if (mysqli_num_rows($q) == 0 && mysqli_num_rows($q2) == 0) {
             http_response_code(403);
             die("Forbidden: You do not have permission to view this document.");
         }
     } else if ($folder_param === 'queries') {
-        $q = mysqli_query($conn, "SELECT id FROM queries WHERE user_id = $user_id AND attachment LIKE '%$file_param%'");
+        $q = mysqli_query($conn, "SELECT id FROM queries WHERE user_id = $user_id AND attachment LIKE '%$safe_file_param%'");
         if (mysqli_num_rows($q) == 0) {
             http_response_code(403);
             die("Forbidden: You do not have permission to view this query attachment.");
