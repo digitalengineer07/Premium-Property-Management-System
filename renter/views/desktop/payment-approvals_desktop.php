@@ -26,7 +26,7 @@
                     </div>
                     
                     <!-- Notification Dropdown -->
-                    <div id="notifDropdown" style="display: none;">
+                    <div id="notifDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 320px; z-index: 1000; overflow: hidden;">
                         <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
                             <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
                             <?php if($unread_count > 0): ?>
