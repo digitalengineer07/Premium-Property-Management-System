@@ -334,23 +334,35 @@
                         <div class="status-pill <?php echo $user['aadhaar_file'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['aadhaar_file'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['aadhaar_file'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['aadhaar_file']): ?>
-                                <?php $aadhaar_url = (strpos($user['aadhaar_file'], 'uploads/') === 0) ? '../' . $user['aadhaar_file'] : '../uploads/aadhaar/' . $user['aadhaar_file']; ?>
+                                <?php 
+                                $aadhaar_url = '';
+                                if (!empty($user['aadhaar_file'])) {
+                                    $doc_name = basename($user['aadhaar_file']);
+                                    $folder = (strpos($user['aadhaar_file'], 'aadhaar/') !== false) ? 'aadhaar' : 'documents';
+                                    $aadhaar_url = '../view_document.php?folder=' . $folder . '&file=' . urlencode($doc_name);
+                                }
+                                ?>
                                 <a href="<?php echo htmlspecialchars($aadhaar_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
-                            <?php else: ?>
-                                <a href="documents.php#upload-widget-container" title="Upload"><i class='bx bx-upload'></i></a>
                             <?php endif; ?>
-                            <a href="documents.php#upload-widget-container"><i class='bx bx-chevron-right'></i></a>
+                            <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
                         </div>
                     </div>
                     
                     <!-- Agreement Copy -->
                     <div class="doc-item">
-                        <div class="doc-icon purple"><i class='bx bx-file-blank'></i></div>
+                        <div class="doc-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6;"><i class='bx bx-file'></i></div>
                         <div class="doc-info"><h4>Agreement Copy</h4></div>
                         <div class="status-pill <?php echo $user['agreement_document'] ? 'status-verified' : 'status-pending'; ?>" <?php echo !$user['agreement_document'] ? 'style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"' : ''; ?>><?php echo $user['agreement_document'] ? 'Verified' : 'Pending'; ?></div>
                         <div class="doc-actions">
                             <?php if ($user['agreement_document']): ?>
-                                <?php $agree_url = (strpos($user['agreement_document'], 'uploads/') === 0) ? '../' . $user['agreement_document'] : '../uploads/agreements/' . $user['agreement_document']; ?>
+                                <?php 
+                                $agree_url = '';
+                                if (!empty($user['agreement_document'])) {
+                                    $doc_name = basename($user['agreement_document']);
+                                    $folder = (strpos($user['agreement_document'], 'agreements/') !== false) ? 'agreements' : 'documents';
+                                    $agree_url = '../view_document.php?folder=' . $folder . '&file=' . urlencode($doc_name);
+                                }
+                                ?>
                                 <a href="<?php echo htmlspecialchars($agree_url); ?>" target="_blank"><i class='bx bx-show'></i></a>
                             <?php endif; ?>
                             <a href="documents.php"><i class='bx bx-chevron-right'></i></a>
