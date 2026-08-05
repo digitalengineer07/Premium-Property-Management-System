@@ -274,7 +274,6 @@
 
     <?php include "approval_modal.php"; ?>
 <script src="../assets/js/renter.js?v=<?php echo time(); ?>"></script>
+<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>
 </body>
 </html>
-
-<?php include_once __DIR__ . '/mobile_sidebar.php'; ?>
