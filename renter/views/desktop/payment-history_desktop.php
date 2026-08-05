@@ -163,6 +163,15 @@
                     $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
                     $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
                     
+                    $is_corrupted = false;
+                    if (!empty($row['verification_hash'])) {
+                        $expected_hash = generate_payment_hash($user_id, $row['amount'], $row['sys_tx_id']);
+                        if ($row['verification_hash'] !== $expected_hash) {
+                            $is_corrupted = true;
+                            $subtitle .= ' | <span style="color:var(--danger); font-weight:700;"><i class="bx bx-error-circle"></i> CORRUPTED</span>';
+                        }
+                    }
+                    
                     $all_bills[] = [
                         'filter_type' => 'paid',
                         'color' => 'green',
