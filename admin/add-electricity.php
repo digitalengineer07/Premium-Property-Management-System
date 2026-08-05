@@ -8,11 +8,12 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-$user_id = $_GET['user_id'] ?? null;
+$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 if (!$user_id) {
     header("Location: manage-renters.php");
     exit;
 }
+$error = "";
 
 // Fetch renter info
 $u_stmt = mysqli_prepare($conn, "SELECT name, room_no FROM users WHERE id = ?");
@@ -28,10 +29,13 @@ if (!$user) {
 }
 
 if (isset($_POST['save'])) {
-    $month = $_POST['month'];
-    $units = $_POST['units'];
-    $amount = $_POST['amount'];
-    $status = $_POST['status'];
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Security validation failed. Please try again.";
+    } else {
+        $month = $_POST['month'];
+        $units = $_POST['units'];
+        $amount = $_POST['amount'];
+        $status = $_POST['status'];
 
     $p_date = DateTime::createFromFormat('!F Y', $month) ?: DateTime::createFromFormat('!Y-m', $month);
     if ($p_date && (int)$p_date->format('Ym') > (int)date('Ym')) {
@@ -39,13 +43,28 @@ if (isset($_POST['save'])) {
         exit;
     }
 
-    $i_stmt = mysqli_prepare($conn, "INSERT INTO electricity (user_id, month, units, amount, status) VALUES (?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($i_stmt, "isiss", $user_id, $month, $units, $amount, $status);
+    $bill_id_str = "BILL-" . date("Ymd") . "-" . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+    $i_stmt = mysqli_prepare($conn, "INSERT INTO electricity (user_id, month, units, amount, status, due_date, bill_invoice_id, created_at) VALUES (?, ?, ?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, NOW())");
+    mysqli_stmt_bind_param($i_stmt, "isisss", $user_id, $month, $units, $amount, $status, $bill_id_str);
     mysqli_stmt_execute($i_stmt);
     mysqli_stmt_close($i_stmt);
 
+    // AUTO-HEALING LEDGER: Deduct from advance if available
+    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
+    if ($rowAdv = mysqli_fetch_assoc($qAdv)) {
+        $adv = (float)$rowAdv['advance_payment'];
+        if ($adv > 0.01) {
+            // Temporarily zero the advance so the allocator can redistribute it without doubling
+            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
+            require_once "allocate_payment.php";
+            $sys_id = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Wallet Auto-Deduction', $sys_id, $sys_id, null, true);
+        }
+    }
+
     header("Location: view-renter.php?id=$user_id");
     exit;
+    }
 }
 
 $elec = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
@@ -71,6 +90,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <div class="welcome animate-up">
         <h1>New Electricity Bill</h1>
         <p>Record utility usage for <?php echo htmlspecialchars($user['name']); ?></p>
+        <?php if (!empty($error)): ?>
+            <div style="background: #fee2e2; color: #ef4444; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="dashboard-grid-70 animate-up" style="margin-top: 30px;">
@@ -81,6 +105,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
                 
                 <form method="POST">
+                    <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div class="form-group">
                         <label style="display: flex; justify-content: space-between; align-items: center;">
                             <span>Bill For Month <span style="color:#EF4444">*</span></span>

@@ -200,14 +200,16 @@ if (isset($_FILES['meter_crop']) && $_FILES['meter_crop']['error'] === UPLOAD_ER
     }
 }
 
+$bill_id_str = "BILL-" . date("Ymd") . "-" . strtoupper(substr(md5(uniqid('', true)), 0, 8));
+
 // Insert into electricity table
 $stmt = mysqli_prepare($conn, 
     "INSERT INTO electricity (
         user_id, month, payment_date, units, previous_reading, current_reading, 
         units_consumed, rate_per_unit, amount, rent_amount, maintenance, 
         dues, total_amount, meter_screenshot, meter_screenshot_orig, meter_screenshot_thumb,
-        status, created_at, extra_charges, extra_charges_desc
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), ?, ?)"
+        status, created_at, due_date, extra_charges, extra_charges_desc, bill_invoice_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due', NOW(), DATE_ADD(CURDATE(), INTERVAL 10 DAY), ?, ?, ?)"
 );
 
 if (!$stmt) {
@@ -215,7 +217,7 @@ if (!$stmt) {
     exit;
 }
 
-mysqli_stmt_bind_param($stmt, "issiiiiddddddsssds", 
+mysqli_stmt_bind_param($stmt, "issiiiiddddddsssdss", 
     $user_id, 
     $month_display, 
     $bill_date,
@@ -233,14 +235,14 @@ mysqli_stmt_bind_param($stmt, "issiiiiddddddsssds",
     $meter_screenshot_orig,
     $meter_screenshot_thumb,
     $extra_charges,
-    $extra_charges_desc
+    $extra_charges_desc,
+    $bill_id_str
 );
 
 if (mysqli_stmt_execute($stmt)) {
     $bill_id = mysqli_insert_id($conn);
     
-    // Reset pending adjustment since it's now incorporated into this bill's "dues"
-    mysqli_query($conn, "UPDATE users SET pending_adjustment = 0 WHERE id = $user_id");
+    // Legacy pending_adjustment logic removed to prevent debt wiping loophole
     
     // Fetch user details for email notification
     $user_query = mysqli_query($conn, "SELECT name, email FROM users WHERE id = $user_id LIMIT 1");
@@ -251,6 +253,15 @@ if (mysqli_stmt_execute($stmt)) {
             send_new_bill_notification($user_data['email'], $user_data['name'], $month_display, $total_amount);
         }
     }
+
+    // Insert App Notification
+    $msg_safe = mysqli_real_escape_string($conn, "A new electricity bill for $month_display (₹" . number_format($total_amount, 2) . ") has been assigned to you.");
+    mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
+
+    // --- NEW: Enterprise Auto-Credit Application ---
+    // User requested to disable this feature so that Advance Payments act solely as a ledger record 
+    // for the 1st month rent, and are NOT automatically consumed by upcoming manual bills.
+    // -----------------------------------------------
 
     // Clean buffer and send success
     if (ob_get_length()) ob_clean();

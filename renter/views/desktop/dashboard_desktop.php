@@ -5,10 +5,10 @@
         <header class="top-header">
             <div class="header-greeting">
                 <h1>Hello, <?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?> 👋</h1>
-                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? 'N/A'); ?></span></p>
+                <p>Welcome back! You're assigned to <span>Room <?php echo htmlspecialchars($room_no); ?></span></p>
             </div>
             <div class="header-actions">
-                <div class="notification-wrapper">
+                <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
@@ -26,11 +26,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -44,7 +44,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -91,10 +91,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -153,8 +153,26 @@
         </div>
         <?php endif; ?>
 
-        <!-- 3-Col KPI Cards -->
-        <div class="kpi-grid animate-up">
+        <?php if ($onboarding_due > 0): ?>
+        <div class="reminder-banner animate-down" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); margin-bottom: 24px;">
+            <div class="reminder-content">
+                <div class="reminder-icon">
+                    <i class='bx bx-user-plus bx-tada'></i>
+                </div>
+                <div class="reminder-text">
+                    <h3>Welcome! Initial Onboarding Dues</h3>
+                    <p>Please clear your initial Security Deposit and/or Advance Rent to complete your onboarding process.</p>
+                </div>
+            </div>
+            <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" class="btn-pay-now">
+                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt'></i>
+            </button>
+            <i class='bx bx-shield-quarter reminder-bg-art'></i>
+        </div>
+        <?php endif; ?>
+
+        <!-- 3/4-Col KPI Cards -->
+        <div class="kpi-grid animate-up" style="display: grid; grid-template-columns: repeat(<?php echo ($user['advance_payment'] ?? 0) > 0 ? 4 : 3; ?>, 1fr); gap: 24px;">
             <!-- Total Outstanding -->
             <div class="kpi-card">
                 <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
@@ -235,10 +253,36 @@
                     <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
+            
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <!-- Advance Wallet -->
+            <div class="kpi-card">
+                <div class="kpi-top" style="align-items: center; gap: 16px; margin-bottom: 24px;">
+                    <div class="kpi-icon-box green" style="width: 56px; height: 56px; font-size: 28px; flex-shrink: 0;"><i class='bx bx-wallet'></i></div>
+                    <div>
+                        <div class="kpi-title" style="margin-bottom: 4px;">Advance Wallet</div>
+                        <div class="kpi-amount" style="margin-bottom: 0; color: #10B981;"><?php echo money($user['advance_payment']); ?></div>
+                    </div>
+                </div>
+                <div class="kpi-bottom">
+                    <div class="kpi-due-date"><i class='bx bx-check-shield'></i> Safe & Available</div>
+                </div>
+                <svg class="kpi-sparkline green" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="gradGreen2" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10B981;stop-opacity:0.25" />
+                            <stop offset="100%" style="stop-color:#10B981;stop-opacity:0" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5 L100,40 L0,40 Z" fill="url(#gradGreen2)" />
+                    <path d="M0,35 L20,30 L40,33 L60,20 L80,23 L100,5" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <?php endif; ?>
         </div>
 
-        <!-- 3-Col Main Dashboard Grid -->
-        <div class="dashboard-3col animate-up">
+        <!-- 2-Col Main Dashboard Grid -->
+        <div class="dashboard-2col animate-up">
             <!-- Col 1: Upcoming Bills -->
             <div class="dash-panel">
                 <div class="panel-head">
@@ -246,20 +290,46 @@
                     <a href="my-bills.php#all-bills-container" class="panel-link">View All</a>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; flex: 1;">
+                <div style="display: flex; flex-direction: column; flex: 1">
                     <?php 
-                    $pending_bills_display = [];
-                    foreach ($merged_rents as $r) {
-                        if (isset($r['status']) && $r['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'rent', 'month' => $r['month'], 'amount' => $r['amount']];
-                        }
+                    $pb_raw = [];
+                    // Fetch accurate pending dues from rent
+                    $qR = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qR)) {
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+                        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+                        $due = max(0, (float)$r['total_amount'] - $paid);
+                        if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
                     }
-                    foreach ($elecs as $e) {
-                        if (isset($e['status']) && $e['status'] == 'Due') {
-                            $pending_bills_display[] = ['type' => 'elec', 'month' => $e['month'], 'amount' => $e['amount']];
-                        }
+                    // Fetch accurate pending dues from electricity (unified)
+                    $qE = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    while ($r = mysqli_fetch_assoc($qE)) {
+                        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+                        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+                        $edue = max(0, (float)$r['elec_part'] - $epaid);
+                        if ($edue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $edue];
+                        
+                        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+                        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+                        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
+                        if ($rdue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $rdue];
                     }
-                    $pending_bills_display = array_slice($pending_bills_display, 0, 3);
+                    
+                    // Group by month
+                    $grouped_bills = [];
+                    foreach ($pb_raw as $pb) {
+                        if (!isset($grouped_bills[$pb['month']])) {
+                            $grouped_bills[$pb['month']] = ['month' => $pb['month'], 'due' => 0, 'due_date' => $pb['due_date']];
+                        }
+                        $grouped_bills[$pb['month']]['due'] += $pb['due'];
+                    }
+                    
+                    // Sort chronologically
+                    usort($grouped_bills, function($a, $b) {
+                        return strtotime($a['month'].'-01') - strtotime($b['month'].'-01');
+                    });
+                    
+                    $pending_bills_display = array_slice($grouped_bills, 0, 3);
                     ?>
 
                     <?php if (empty($pending_bills_display)): ?>
@@ -271,26 +341,15 @@
                         <?php foreach($pending_bills_display as $pb): ?>
                         <div class="bill-item">
                             <div class="bill-left">
-                                <?php if ($pb['type'] == 'rent'): ?>
-                                    <div class="bill-icon"><i class='bx bx-home'></i></div>
-                                <?php else: ?>
-                                    <div class="bill-icon yellow"><i class='bx bx-bolt-circle'></i></div>
-                                <?php endif; ?>
+                                <div class="bill-icon"><i class='bx bx-receipt'></i></div>
                                 <div class="bill-info">
-                                    <h4><?php echo $pb['type'] == 'rent' ? 'Rent' : 'Electricity'; ?> for <?php echo htmlspecialchars($pb['month']); ?></h4>
-                                    <p>Due Date: <?php 
-                                        $ts = strtotime($pb['month']);
-                                        if ($pb['type'] == 'rent') {
-                                            echo '05 ' . date('M Y', strtotime('+1 month', $ts));
-                                        } else {
-                                            echo date('t M Y', $ts);
-                                        }
-                                    ?></p>
+                                    <h4>Total Bill for <?php echo htmlspecialchars($pb['month']); ?></h4>
+                                    <p>Due Date: <?php echo date('d M Y', strtotime($pb['due_date'])); ?></p>
                                 </div>
                             </div>
                             <div class="bill-right">
-                                <h4 <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>><?php echo money($pb['amount']); ?></h4>
-                                <p <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>>Pending</p>
+                                <h4><?php echo money($pb['due']); ?></h4>
+                                <p>Pending</p>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -336,49 +395,37 @@
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Col 3: Recent Transactions -->
-            <div class="dash-panel">
+        <!-- Full Width: Recent Transactions -->
+        <div class="dash-panel animate-up" style="margin-bottom: 32px;">
                 <div class="panel-head">
                     <h3 class="panel-title"><i class='bx bx-receipt'></i> Recent Transactions</h3>
                     <a href="payment-history.php" class="panel-link">View All</a>
                 </div>
                 <div class="transaction-list" style="overflow-y: auto; max-height: 250px;">
-                    <?php if (empty($merged_rents) && empty($elecs)): ?>
+                    <?php 
+                    $payments_recent_q = mysqli_query($conn, "SELECT id, bill_type, month, paid_amount as amount, payment_date, 'Paid' as status FROM payments WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
+                    $display_tx = [];
+                    while($pt = mysqli_fetch_assoc($payments_recent_q)) {
+                        $display_tx[] = $pt;
+                    }
+                    if (empty($display_tx)): ?>
                         <div style="text-align: center; padding: 30px; color: var(--text-gray); font-size: 13px; margin: auto;">No recent transactions found.</div>
                     <?php else: ?>
-                        <?php 
-                        // Combine and filter to get only Paid transactions
-                        $all_tx = array_filter(array_merge($merged_rents, $elecs), function($tx) {
-                            return isset($tx['status']) && $tx['status'] === 'Paid';
-                        });
-                        
-                        // Sort by payment_date descending, fallback to id descending
-                        usort($all_tx, function($a, $b) {
-                            $timeA = !empty($a['payment_date']) ? strtotime($a['payment_date']) : 0;
-                            $timeB = !empty($b['payment_date']) ? strtotime($b['payment_date']) : 0;
-                            if ($timeA == $timeB) {
-                                return $b['id'] - $a['id'];
-                            }
-                            return $timeB - $timeA;
-                        });
-                        
-                        $display_tx = array_slice($all_tx, 0, 5); 
-                        foreach($display_tx as $tx):
-                            $is_paid = ($tx['status'] == 'Paid');
-                            $is_elec = (isset($tx['source']) && $tx['source'] == 'elec_table');
-                            $is_adv = (isset($tx['source']) && $tx['source'] == 'advance');
+                        <?php foreach($display_tx as $tx):
+                            $is_paid = true;
+                            $is_elec = ($tx['bill_type'] == 'electricity' || $tx['bill_type'] == 'total' || $tx['bill_type'] == 'elec_rent');
+                            $is_adv = ($tx['bill_type'] == 'advance');
                             
                             $icon_class = 'up';
                             $icon_bx = 'bx-up-arrow-alt';
                             if ($is_elec) { $icon_class = 'elec'; $icon_bx = 'bx-bolt-circle'; }
                             else if ($is_adv) { $icon_class = 'adv'; $icon_bx = 'bx-wallet'; }
-                            else { $icon_class = 'up'; $icon_bx = 'bx-up-arrow-alt'; }
                             
                             $title = 'Rent Payment';
                             if ($is_elec) $title = 'Electricity Payment';
                             if ($is_adv) $title = 'Advance Payment';
-                            if (!isset($tx['source'])) $title = 'Electricity Payment'; // from $elecs array
                         ?>
                         <div class="transaction-item">
                             <div class="tx-left">
@@ -389,8 +436,8 @@
                                 </div>
                             </div>
                             <div class="tx-right">
-                                <div class="tx-amount <?php echo $is_paid ? '' : 'pending'; ?>"><?php echo money($tx['amount']); ?></div>
-                                <div class="tx-status <?php echo $is_paid ? 'paid' : 'pending'; ?>"><?php echo htmlspecialchars($tx['status']); ?></div>
+                                <div class="tx-amount"><?php echo money($tx['amount']); ?></div>
+                                <div class="tx-status paid"><?php echo htmlspecialchars($tx['status']); ?></div>
                                 <div class="tx-date"><?php echo !empty($tx['payment_date']) ? date('d M Y', strtotime($tx['payment_date'])) : '-'; ?></div>
                             </div>
                         </div>
@@ -426,7 +473,7 @@
         </div>
 
         <!-- App Footer -->
-        <div class="app-footer">
-            <p>© 2026 <?php echo htmlspecialchars(HOUSE_NAME); ?>. All rights reserved.</p>
+        <div class="app-footer" style="display: flex !important; flex-direction: row !important; justify-content: space-between !important; margin-top: auto !important; padding-top: 20px !important; padding-bottom: 0px !important;">
+            <p style="text-align: left; margin: 0;">© 2026 <?php echo htmlspecialchars(HOUSE_NAME); ?>. All rights reserved.</p>
             <p>Last updated: <?php echo date('d M Y, h:i A'); ?> <i class='bx bx-refresh' style="cursor:pointer;" onclick="location.reload()"></i></p>
         </div>

@@ -2,7 +2,7 @@
 // config.php - Global configuration for the Rent Manager System
 
 define('HOUSE_NAME', 'Madhav kunj');
-define('HOUSE_ADDRESS', 'Vastu Estate colony Madhav Kunj apartment behind RPS School');
+define('HOUSE_ADDRESS', 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503');
 define('OWNER_NAME', 'Mr. Pramesh Kumar');
 
 // You can add more global settings here

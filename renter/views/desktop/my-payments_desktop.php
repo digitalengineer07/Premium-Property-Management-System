@@ -16,11 +16,11 @@
                             <span style="font-size: 12px; font-weight: 700; padding: 4px 10px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B; border-radius: 20px; letter-spacing: 0.5px;">DUES PENDING</span>
                         <?php endif; ?>
                     </h1>
-                    <p style="font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;">View and manage all your bills and payments in one place.</p>
+                    <p style="font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;">View and manage all your bills and payments in one place.</p>
                 </div>
             </div>
             <div class="header-actions">
-                                <div class="notification-wrapper">
+                                <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
@@ -38,11 +38,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -56,7 +56,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -107,10 +107,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -156,7 +156,7 @@
 
         // 1. Pure Rent
         $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
+                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
         while($r = mysqli_fetch_assoc($rent_q)) {
             $all_bills[] = [
@@ -172,36 +172,74 @@
         }
 
         // 2. Electricity (Usage)
-        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
+        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND e.amount > 0");
         while($e = mysqli_fetch_assoc($elec_q)) {
+            $rem = max(0, (float)$e['amount'] - (float)$e['total_paid']);
+            
+            $st = $e['status'];
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && (float)$e['total_paid'] > 0) {
+                $st = 'Partial';
+            } elseif ($rem == (float)$e['amount']) {
+                $st = 'Unpaid';
+            }
+            $e['status'] = $st;
+            
             $all_bills[] = [
                 'id' => $e['id'], 'type' => 'electricity', 'filter_type' => 'electricity',
                 'title' => 'Electricity', 'subtitle' => 'Units: ' . $e['units_consumed'],
                 'period' => $e['month'],
                 'bill_date' => date('01 M Y', strtotime($e['month'])),
                 'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
-                'amount' => $e['amount'], 'status' => $e['status'],
+                'amount' => $e['amount'], 
+                'remaining_amount' => $rem,
+                'status' => $e['status'],
                 'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
                 'icon' => 'bx-bulb', 'color' => 'yellow'
             ];
         }
 
         // 3. Rent & Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, (e.rent_amount + e.maintenance + e.dues) as combined_amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.extra_charges > 0 OR e.dues > 0)");
         while($m = mysqli_fetch_assoc($maint_q)) {
+            $total_paid = (float)$m['total_paid'];
+            // Include dues (negative) and extra_charges in rent_maint_amt
+            $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'] + (float)$m['extra_charges']; 
+            $orig_status = $m['status'];
+            
+            
+            $elec_amt = (float)$m['amount'];
+            $paid_towards_rent = max(0, $total_paid - $elec_amt);
+            $rem = max(0, $rent_maint_amt - $paid_towards_rent);
+            $st = $orig_status;
+            
+            if ($st == 'Paid' || $rem == 0) {
+                $st = 'Paid';
+                $rem = 0;
+            } elseif ($rem > 0 && $total_paid > 0) {
+                $st = 'Partial';
+            } elseif ($rem == $rent_maint_amt) {
+                $st = 'Unpaid';
+            }
+            
             $all_bills[] = [
                 'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => 'rent',
                 'title' => 'Rent & Maintenance', 'subtitle' => $m['month'],
                 'period' => $m['month'],
                 'bill_date' => date('01 M Y', strtotime($m['month'])),
                 'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $m['combined_amount'], 'status' => $m['status'],
+                'amount' => $rent_maint_amt, 'remaining_amount' => $rem, 'status' => $st,
                 'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-                'icon' => 'bx-home', 'color' => 'purple'
+                'icon' => 'bx-home', 'color' => 'purple',
+                'dues' => (float)$m['dues']
             ];
         }
 
@@ -287,7 +325,7 @@
                 <div class="m-sum-icon red"><i class='bx bx-credit-card-alt'></i></div>
             </div>
             <span>Total Outstanding</span>
-            <h3 class="amount-red">₹<?php echo number_format((float)$total_due, 2); ?></h3>
+            <h3 class="amount-red">₹<?php echo number_format((float)$total_due); ?></h3>
             <div class="m-sum-pill red">Payment Due</div>
         </div>
 
@@ -297,7 +335,7 @@
                 <div class="m-sum-icon yellow"><i class='bx bx-bolt-circle'></i></div>
             </div>
             <span>Electricity Due</span>
-            <h3>₹<?php echo number_format((float)($elec_due ?? 8.00), 2); ?></h3>
+            <h3>₹<?php echo number_format((float)($elec_due ?? 8)); ?></h3>
             <div class="m-sum-pill yellow">Due on 31 <?php echo date('M Y'); ?></div>
         </div>
 
@@ -307,7 +345,7 @@
                 <div class="m-sum-icon purple"><i class='bx bx-home-alt'></i></div>
             </div>
             <span>Rent Due</span>
-            <h3>₹<?php echo number_format((float)($rent_due ?? 8000.00), 2); ?></h3>
+            <h3>₹<?php echo number_format((float)($rent_due ?? 8000)); ?></h3>
             <div class="m-sum-pill purple">Due on 05 <?php echo date('M Y', strtotime('+1 month')); ?></div>
         </div>
 
@@ -317,7 +355,7 @@
                 <div class="m-sum-icon green"><i class='bx bx-check-circle'></i></div>
             </div>
             <span>Last Payment</span>
-            <h3>₹<?php echo $last_payment ? number_format((float)$last_payment['total_amount'], 2) : '8,000.00'; ?></h3>
+            <h3>₹<?php echo $last_payment ? number_format((float)$last_payment['total_amount']) : '8,000'; ?></h3>
             <div class="m-sum-pill green">Paid on <?php echo $last_payment ? date('d M Y', strtotime($last_payment['payment_date'])) : '05 Dec 2025'; ?></div>
         </div>
     </div>
@@ -365,11 +403,11 @@
                     <span class="m-status-pill <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span>
                 </div>
                 <div class="m-pci-right">
-                    <div class="m-pci-amt">₹<?php echo number_format((float)$bill['amount'], 2); ?></div>
+                    <div class="m-pci-amt">₹<?php echo number_format((float)$bill['amount']); ?></div>
                     <?php if ($bill['status'] == 'Paid'): ?>
                         <div class="m-pci-date"><?php echo $bill['paid_on']; ?></div>
                     <?php else: ?>
-                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                        <button class="m-pci-pay-btn" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($title_disp); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
                             <i class='bx bx-credit-card'></i> Pay Now
                         </button>
                     <?php endif; ?>
@@ -463,11 +501,100 @@ function filterMobileByYear(year) {
                     </thead>
                     <tbody id="paymentsTableBody">
                         <?php 
+                        // First generate aggregates
+                        $monthly_aggregates = [];
+                        foreach($all_bills as $bill) {
+                            $p = $bill['period'];
+                            if(!isset($monthly_aggregates[$p])) {
+                                $monthly_aggregates[$p] = [
+                                    'period' => $p,
+                                    'amount' => 0,
+                                    'remaining_amount' => 0,
+                                    'due_date' => $bill['due_date'],
+                                    'paid_on' => '-',
+                                    'has_unpaid' => false,
+                                    'has_partial' => false,
+                                    'has_paid' => false,
+                                ];
+                            }
+                            
+                            // EXCLUDE arrears/dues from the monthly aggregate sum to avoid double counting
+                            $bill_amount = (float)$bill['amount'];
+                            $bill_remaining = isset($bill['remaining_amount']) ? (float)$bill['remaining_amount'] : (float)$bill['amount'];
+                            
+                            if (isset($bill['type']) && $bill['type'] === 'elec_rent' && isset($bill['dues'])) {
+                                $bill_amount -= (float)$bill['dues'];
+                                $bill_remaining -= (float)$bill['dues'];
+                            }
+                            
+                            $monthly_aggregates[$p]['amount'] += max(0, $bill_amount);
+                            $monthly_aggregates[$p]['remaining_amount'] += max(0, $bill_remaining);
+                            
+                            $st = strtolower($bill['status']);
+                            if($st == 'unpaid' || $st == 'due') {
+                                $monthly_aggregates[$p]['has_unpaid'] = true;
+                            } elseif($st == 'partial') {
+                                $monthly_aggregates[$p]['has_partial'] = true;
+                            } elseif($st == 'paid') {
+                                $monthly_aggregates[$p]['has_paid'] = true;
+                                if($bill['paid_on'] != '-') $monthly_aggregates[$p]['paid_on'] = $bill['paid_on'];
+                            }
+                        }
+                        
+                        foreach($monthly_aggregates as &$agg) {
+                            $agg['status'] = 'Unpaid';
+                            if ($agg['has_partial'] || ($agg['has_paid'] && $agg['has_unpaid'])) {
+                                $agg['status'] = 'Partial';
+                            } elseif ($agg['has_paid'] && !$agg['has_unpaid'] && !$agg['has_partial']) {
+                                $agg['status'] = 'Paid';
+                            }
+                        }
+                        unset($agg);
+
                         $current_month = '';
                         foreach($all_bills as $bill): 
                             if ($bill['period'] != $current_month) {
                                 $current_month = $bill['period'];
                                 echo "<tr class='month-divider' data-filter-type='divider' data-period='$current_month'><td colspan='7' style='padding: 14px 24px; font-weight: 700; font-size: 13px; color: var(--text-gray); border-bottom: 2px solid var(--border); background: var(--bg-main);'><i class='bx bx-calendar' style='margin-right: 6px;'></i> $current_month</td></tr>";
+                                
+                                $agg = $monthly_aggregates[$current_month];
+                                ?>
+                                <tr data-filter-type="all-aggregate" data-period="<?php echo htmlspecialchars($current_month); ?>" class="data-row">
+                                    <td>
+                                        <div class="td-bill-type">
+                                            <div class="td-icon purple"><i class='bx bx-receipt'></i></div>
+                                            <div class="td-info">
+                                                <h4>Total Payment</h4>
+                                                <p>For <?php echo htmlspecialchars($current_month); ?></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($current_month); ?></td>
+                                    <td><?php echo $agg['due_date']; ?></td>
+                                    <td style="font-weight: 800;"><?php echo money($agg['amount']); ?></td>
+                                    <td><span class="td-status <?php echo strtolower($agg['status']); ?>"><?php echo $agg['status']; ?></span></td>
+                                    <td><?php echo $agg['paid_on']; ?></td>
+                                    <td>
+                                        <?php if ($agg['status'] == 'Paid'): ?>
+                                            <div style="display: flex; gap: 4px; align-items: center;">
+                                                <a href="payment-history.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
+                                                <a href="receipt.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt" style="padding: 6px 10px; min-width: auto;" title="View Receipt"><i class='bx bx-show' style="margin: 0; font-size: 16px;"></i></a>
+                                            </div>
+                                        <?php elseif ($agg['status'] == 'Partial'): ?>
+                                            <div style="display: flex; gap: 4px; align-items: center;">
+                                                <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['remaining_amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
+                                                    <i class='bx bx-credit-card-alt'></i> Pay Now
+                                                </button>
+                                                <a href="payment-history.php?month=<?php echo urlencode($current_month); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
+                                            </div>
+                                        <?php else: ?>
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)$agg['remaining_amount'], (float)$total_due)); ?>, 'Total Payment for <?php echo htmlspecialchars($current_month); ?>', 'monthly', 0, '<?php echo addslashes($current_month); ?>')">
+                                                <i class='bx bx-credit-card-alt'></i> Pay Now
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php
                             }
                         ?>
                             <tr data-filter-type="<?php echo $bill['filter_type']; ?>" data-period="<?php echo htmlspecialchars($bill['period']); ?>" class="data-row">
@@ -482,14 +609,36 @@ function filterMobileByYear(year) {
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
                                 <td><?php echo $bill['due_date']; ?></td>
-                                <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
+                                <td style="font-weight: 800;">
+                                    <?php 
+                                    if ($bill['status'] === 'Paid') {
+                                        echo money($bill['amount']);
+                                    } else {
+                                        $rem = isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount'];
+                                        echo money($rem);
+                                        if ($bill['status'] === 'Partial' && $rem < $bill['amount']) {
+                                            echo "<div style='font-size: 11px; color: var(--text-gray); font-weight: 500;'>Orig: " . money($bill['amount']) . "</div>";
+                                        }
+                                    }
+                                    ?>
+                                </td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>
                                     <?php if ($bill['status'] == 'Paid'): ?>
-                                        <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <a href="#" class="btn-view-receipt"><i class='bx bx-download'></i> View Receipt</a>
+                                            <a href="receipt.php?month=<?php echo urlencode($bill['period']); ?>&bill_id=<?php echo $bill['id']; ?>" class="btn-view-receipt" style="padding: 6px 10px; min-width: auto;" title="View Receipt"><i class='bx bx-show' style="margin: 0; font-size: 16px;"></i></a>
+                                        </div>
+                                    <?php elseif ($bill['status'] == 'Partial'): ?>
+                                        <div style="display: flex; gap: 4px; align-items: center;">
+                                            <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
+                                                <i class='bx bx-credit-card-alt'></i> Pay Now
+                                            </button>
+                                            <a href="payment-history.php?month=<?php echo urlencode($bill['period']); ?>" class="btn-view-receipt"><i class='bx bx-history'></i> History</a>
+                                        </div>
                                     <?php else: ?>
-                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo $bill['amount']; ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>)">
+                                        <button class="btn-action-pay" onclick="openPaymentModal(<?php echo max(0, min((float)(isset($bill['remaining_amount']) ? $bill['remaining_amount'] : $bill['amount']), (float)$total_due)); ?>, '<?php echo htmlspecialchars($bill['title']); ?> for <?php echo htmlspecialchars($bill['period']); ?>', '<?php echo $bill['type']; ?>', <?php echo $bill['id']; ?>, '<?php echo addslashes($bill['period']); ?>')">
                                             <i class='bx bx-credit-card-alt'></i> Pay Now
                                         </button>
                                     <?php endif; ?>
@@ -527,7 +676,11 @@ function filterMobileByYear(year) {
                 const allDividers = Array.from(document.querySelectorAll('#paymentsTableBody tr.month-divider'));
                 
                 // 1. Filter rows by tab
-                const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                const filteredRows = allDataRows.filter(row => {
+                    const fType = row.getAttribute('data-filter-type');
+                    if (currentTab === 'all') return fType === 'all-aggregate';
+                    return fType === currentTab;
+                });
                 
                 // 2. Extract unique periods from filtered rows
                 const uniquePeriods = [...new Set(filteredRows.map(row => row.getAttribute('data-period')))];
@@ -563,12 +716,6 @@ function filterMobileByYear(year) {
             
             function renderPaginationControls(totalPages) {
                 const container = document.getElementById('paginationControls');
-                if (totalPages <= 1) {
-                    container.innerHTML = '';
-                    container.style.display = 'none';
-                    return;
-                }
-                
                 container.style.display = 'flex';
                 let html = '';
                 

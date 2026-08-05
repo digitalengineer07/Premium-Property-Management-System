@@ -6,13 +6,13 @@
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-history' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             History
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -22,7 +22,7 @@
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInputMobile').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="openMobileProfile(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
@@ -187,11 +187,11 @@
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         padding: 12px 16px !important;
         border: none !important;
         border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-        text-align: left !important;
+        text-align: center !important;
         font-size: 13px !important;
     }
     
@@ -224,12 +224,11 @@
     }
     
     /* Grid placement and borders for the rest of the cells */
-    .mobile-page-body .payments-table td:nth-child(6) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
-    .mobile-page-body .payments-table td:nth-child(7) { order: 3; } /* Status */
+    .mobile-page-body .payments-table td:nth-child(5) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
+    .mobile-page-body .payments-table td:nth-child(6) { order: 3; } /* Status */
     .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
-    .mobile-page-body .payments-table td:nth-child(5) { order: 5; } /* Due Date */
-    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
-    .mobile-page-body .payments-table td:nth-child(9) { order: 7; border-bottom: none !important; } /* Mode */
+    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
+    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-bottom: none !important; } /* Mode */
     
     /* Inject Labels on top of values */
     .mobile-page-body .payments-table td::before {
@@ -244,11 +243,10 @@
     
     /* Specific label texts */
     .mobile-page-body .payments-table td:nth-child(3)::before { content: "FOR PERIOD"; }
-    .mobile-page-body .payments-table td:nth-child(5)::before { content: "DUE DATE"; }
-    .mobile-page-body .payments-table td:nth-child(6)::before { content: "AMOUNT"; }
-    .mobile-page-body .payments-table td:nth-child(7)::before { content: "STATUS"; }
-    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAID ON"; }
-    .mobile-page-body .payments-table td:nth-child(9)::before { content: "PAYMENT MODE"; }
+    .mobile-page-body .payments-table td:nth-child(5)::before { content: "AMOUNT"; }
+    .mobile-page-body .payments-table td:nth-child(6)::before { content: "STATUS"; }
+    .mobile-page-body .payments-table td:nth-child(7)::before { content: "PAID ON"; }
+    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAYMENT MODE"; }
     
     /* Fix UPI Logo size in mobile box */
     .mobile-page-body .payments-table td img {
@@ -257,8 +255,8 @@
         max-width: 40px !important;
         object-fit: contain !important;
     }
-    .mobile-page-body .payments-table td:nth-child(9) div {
-        justify-content: flex-start !important;
+    .mobile-page-body .payments-table td:nth-child(8) div {
+        justify-content: center !important;
         margin-top: 2px !important;
     }
     
@@ -382,11 +380,11 @@ height: 32px !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: center !important;
-        align-items: flex-start !important;
+        align-items: center !important;
         padding: 12px 16px !important;
         border: none !important;
         border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-        text-align: left !important;
+        text-align: center !important;
         font-size: 13px !important;
     }
     
@@ -419,12 +417,11 @@ height: 32px !important;
     }
     
     /* Grid placement and borders for the rest of the cells */
-    .mobile-page-body .payments-table td:nth-child(6) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
-    .mobile-page-body .payments-table td:nth-child(7) { order: 3; } /* Status */
+    .mobile-page-body .payments-table td:nth-child(5) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
+    .mobile-page-body .payments-table td:nth-child(6) { order: 3; } /* Status */
     .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
-    .mobile-page-body .payments-table td:nth-child(5) { order: 5; } /* Due Date */
-    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
-    .mobile-page-body .payments-table td:nth-child(9) { order: 7; border-bottom: none !important; } /* Mode */
+    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
+    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-bottom: none !important; } /* Mode */
     
     /* Inject Labels on top of values */
     .mobile-page-body .payments-table td::before {
@@ -439,11 +436,10 @@ height: 32px !important;
     
     /* Specific label texts */
     .mobile-page-body .payments-table td:nth-child(3)::before { content: "FOR PERIOD"; }
-    .mobile-page-body .payments-table td:nth-child(5)::before { content: "DUE DATE"; }
-    .mobile-page-body .payments-table td:nth-child(6)::before { content: "AMOUNT"; }
-    .mobile-page-body .payments-table td:nth-child(7)::before { content: "STATUS"; }
-    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAID ON"; }
-    .mobile-page-body .payments-table td:nth-child(9)::before { content: "PAYMENT MODE"; }
+    .mobile-page-body .payments-table td:nth-child(5)::before { content: "AMOUNT"; }
+    .mobile-page-body .payments-table td:nth-child(6)::before { content: "STATUS"; }
+    .mobile-page-body .payments-table td:nth-child(7)::before { content: "PAID ON"; }
+    .mobile-page-body .payments-table td:nth-child(8)::before { content: "PAYMENT MODE"; }
     
     /* Fix UPI Logo size in mobile box */
     .mobile-page-body .payments-table td img {
@@ -452,8 +448,8 @@ height: 32px !important;
         max-width: 40px !important;
         object-fit: contain !important;
     }
-    .mobile-page-body .payments-table td:nth-child(9) div {
-        justify-content: flex-start !important;
+    .mobile-page-body .payments-table td:nth-child(8) div {
+        justify-content: center !important;
         margin-top: 2px !important;
     }
     

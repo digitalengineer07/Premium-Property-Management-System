@@ -64,14 +64,62 @@
         </div>
         <div class="user-profile">
             <!-- Theme Toggle -->
-            <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
+            <div class="icon-btn" id="themeToggle" style="cursor: pointer;">
                     <i class='bx bx-moon'></i>
                 </div>
             
             <!-- Notifications -->
-            <div class="icon-btn">
+            <?php
+                if (!isset($conn)) { require_once "../db.php"; }
+                $pending_pay_q = mysqli_query($conn, "SELECT COUNT(id) as total FROM payment_notifications WHERE status = 'Pending'");
+                $pending_pay_count = mysqli_fetch_assoc($pending_pay_q)['total'] ?? 0;
+                
+                $pending_queries_q = mysqli_query($conn, "SELECT COUNT(id) as total FROM queries WHERE status = 'Pending'");
+                $pending_queries_count = mysqli_fetch_assoc($pending_queries_q)['total'] ?? 0;
+                
+                $total_notif_count = $pending_pay_count + $pending_queries_count;
+            ?>
+            <div class="icon-btn notif-btn-wrapper" style="position: relative;" onclick="document.getElementById('notifDropdownMenu').classList.toggle('show')">
                 <i class='bx bx-bell'></i>
-                <div class="badge-dot" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; width: 14px; height: 14px; top: -2px; right: -2px;">3</div>
+                <?php if ($total_notif_count > 0): ?>
+                    <div class="badge-dot" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; width: 14px; height: 14px; top: -2px; right: -2px;"><?php echo $total_notif_count; ?></div>
+                <?php endif; ?>
+                
+                <div id="notifDropdownMenu" class="dropdown-menu-custom" style="right: -60px; min-width: 280px; padding: 0; overflow: hidden; background: #1E293B; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.5);">
+                    <div style="padding: 12px 16px; background: #152033; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 700; color: #F8FAFC; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Notifications</span>
+                        <?php if ($total_notif_count > 0): ?><span style="background: #EF4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px;"><?php echo $total_notif_count; ?> New</span><?php endif; ?>
+                    </div>
+                    <?php if ($total_notif_count > 0): ?>
+                        <?php if ($pending_pay_count > 0): ?>
+                        <a href="payment-verifications.php" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                            <div style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;"><i class='bx bx-check-shield'></i></div>
+                            <div>
+                                <p style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 600; color: #F8FAFC;">Verify <?php echo $pending_pay_count; ?> Payments</p>
+                                <p style="margin: 0; font-size: 11.5px; color: #94A3B8; line-height: 1.4;">Residents have submitted payment screenshots awaiting your approval.</p>
+                            </div>
+                        </a>
+                        <?php endif; ?>
+                        
+                        <?php if ($pending_queries_count > 0): ?>
+                        <a href="manage-queries.php" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                            <div style="background: rgba(98, 75, 255, 0.15); color: #818CF8; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;"><i class='bx bx-message-square-detail'></i></div>
+                            <div>
+                                <p style="margin: 0 0 4px 0; font-size: 13.5px; font-weight: 600; color: #F8FAFC;"><?php echo $pending_queries_count; ?> Pending Queries</p>
+                                <p style="margin: 0; font-size: 11.5px; color: #94A3B8; line-height: 1.4;">Residents have submitted support queries awaiting your response.</p>
+                            </div>
+                        </a>
+                        <?php endif; ?>
+                        
+                        <a href="dashboard.php" style="display: block; text-align: center; padding: 12px; font-size: 12px; font-weight: 600; color: #818CF8; text-decoration: none; background: rgba(99, 102, 241, 0.05); transition: background 0.2s;" onmouseover="this.style.background='rgba(99, 102, 241, 0.1)'" onmouseout="this.style.background='rgba(99, 102, 241, 0.05)'">View all notifications</a>
+                    <?php else: ?>
+                        <div style="padding: 30px 20px; text-align: center; color: #94A3B8; background: #1E293B;">
+                            <i class='bx bx-bell-off' style="font-size: 32px; margin-bottom: 12px; opacity: 0.3;"></i>
+                            <p style="margin: 0; font-size: 13px; font-weight: 500; color: #CBD5E1;">You're all caught up!</p>
+                            <p style="margin: 4px 0 0 0; font-size: 11px;">No new notifications</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
             
             <!-- Profile -->
@@ -96,10 +144,18 @@
 
 <script>
     document.addEventListener('click', function(e) {
-        const dropdown = document.getElementById('adminDropdownMenu');
-        const trigger = document.querySelector('.admin-profile-dropdown');
-        if (dropdown && trigger && !trigger.contains(e.target)) {
-            dropdown.classList.remove('show');
+        // Handle Profile Dropdown
+        const profDropdown = document.getElementById('adminDropdownMenu');
+        const profTrigger = document.querySelector('.admin-profile-dropdown');
+        if (profDropdown && profTrigger && !profTrigger.contains(e.target)) {
+            profDropdown.classList.remove('show');
+        }
+        
+        // Handle Notif Dropdown
+        const notifDropdown = document.getElementById('notifDropdownMenu');
+        const notifTrigger = document.querySelector('.notif-btn-wrapper');
+        if (notifDropdown && notifTrigger && !notifTrigger.contains(e.target)) {
+            notifDropdown.classList.remove('show');
         }
     });
 </script>

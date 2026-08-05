@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="header-actions">
-                                <div class="notification-wrapper">
+                                <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
@@ -34,11 +34,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -100,10 +100,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -148,85 +148,76 @@
         $all_bills = [];
 
         // 1. Pure Rent
-        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
+        $rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                        WHERE r.user_id=$user_id");
         while($r = mysqli_fetch_assoc($rent_q)) {
+            $amt = (float)$r['amount'];
+            $paid = (float)$r['total_paid'];
+            $bal = max(0, $amt - $paid);
+            
+            $status_calc = $r['status'] == 'Due' ? 'Unpaid' : $r['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
+            
             $all_bills[] = [
-                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : ($r['status'] == 'Due' ? 'unpaid' : 'unpaid')),
+                'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
                 'title' => 'Rent for ' . $r['month'], 'subtitle' => 'Room ' . $room_no,
                 'period' => $r['month'],
-                'bill_date' => date('01 M Y', strtotime($r['month'])),
-                'due_date' => date('07 M Y', strtotime($r['month'])),
-                'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
+                'bill_date' => date('d M Y', strtotime('-10 days', strtotime($r['due_date']))),
+                'due_date' => date('d M Y', strtotime($r['due_date'])),
+                'amount' => $amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
                 'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
+                'overdue' => 0,
                 'summary' => [
-                    'Monthly Rent' => $r['amount'],
+                    'Monthly Rent' => $amt,
                     'Maintenance Charge' => 0,
                     'Other Charges' => 0
                 ]
             ];
         }
 
-        // 2. Electricity (Usage)
-        $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND e.amount > 0");
-        while($e = mysqli_fetch_assoc($elec_q)) {
+        // 2. Combined Bill (Electricity + Rent + Maintenance)
+        $comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date, IFNULL(p.total_paid, 0) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date, SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+                                       WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
+        while($c = mysqli_fetch_assoc($comb_q)) {
+            $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['extra_charges'] + (float)$c['dues'];
+            $paid = (float)$c['total_paid'];
+            $bal = max(0, $total_amt - $paid);
+            
+            $status_calc = $c['status'] == 'Due' ? 'Unpaid' : $c['status'];
+            if ($paid > 0 && $bal > 0) $status_calc = 'Partial';
+            elseif ($bal == 0) $status_calc = 'Paid';
+            
+            $summary = [];
+            if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
+            if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
+            if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
+            if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
+            
+            $overdue = (float)$c['dues'];
+            
             $all_bills[] = [
-                'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : ($e['status'] == 'Due' ? 'unpaid' : 'unpaid')),
-                'title' => 'Electricity for ' . $e['month'], 'subtitle' => 'Room ' . $room_no,
-                'period' => $e['month'],
-                'bill_date' => date('01 M Y', strtotime($e['month'])),
-                'due_date' => date('10 M Y', strtotime('+1 month', strtotime($e['month']))),
-                'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
-                'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
-                'icon' => 'bx-bulb', 'color' => 'yellow',
-                'summary' => [
-                    'Electricity Usage' => $e['amount'],
-                    'Maintenance Charge' => 0,
-                    'Other Charges' => 0
-                ]
-            ];
-        }
-
-        // 3. Rent & Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, (e.rent_amount + e.maintenance + e.dues) as combined_amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                       FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                       WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
-        while($m = mysqli_fetch_assoc($maint_q)) {
-            $all_bills[] = [
-                'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : ($m['status'] == 'Due' ? 'unpaid' : 'unpaid')),
-                'title' => 'Rent for ' . $m['month'], 'subtitle' => 'Room ' . $room_no,
-                'period' => $m['month'],
-                'bill_date' => date('01 M Y', strtotime($m['month'])),
-                'due_date' => date('07 M Y', strtotime($m['month'])),
-                'amount' => $m['combined_amount'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
-                'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
+                'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($status_calc == 'Paid' ? 'paid' : 'unpaid'),
+                'title' => 'Monthly Bill for ' . $c['month'], 'subtitle' => 'Room ' . $room_no,
+                'period' => $c['month'],
+                'bill_date' => date('d M Y', strtotime($c['created_at'])),
+                'due_date' => date('d M Y', strtotime($c['created_at'] . ' + 10 days')),
+                'amount' => $total_amt, 'paid' => $paid, 'balance' => $bal, 'status' => $status_calc,
+                'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
                 'icon' => 'bx-home', 'color' => 'purple',
-                'summary' => [
-                    'Monthly Rent' => $m['rent_amount'],
-                    'Maintenance Charge' => $m['maintenance'],
-                    'Other Charges' => $m['dues']
-                ]
+                'overdue' => $overdue,
+                'summary' => $summary
             ];
         }
         
         // Sort by Period Descending
         usort($all_bills, function($a, $b) { 
-            return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+            return strtotime($b['period']) - strtotime($a['period']);
         });
         
-        // Compute KPIs
-        $paid_this_year = 0;
-        $bills_paid_count = 0;
-        foreach($all_bills as $b) {
-            if ($b['status'] == 'Paid') {
-                $paid_this_year += $b['amount'];
-                $bills_paid_count++;
-            }
-        }
         $due_this_month = $total_due; 
         ?>
 
@@ -255,10 +246,20 @@
                 <div class="kpi-min-info">
                     <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Paid This Year</h4>
                     <h2 style="font-size: 24px; color: var(--text-dark); margin: 0 0 6px 0; font-weight: 800;"><?php echo money($paid_this_year); ?></h2>
-                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;"><?php echo $bills_paid_count; ?> Bills Paid</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;"><?php echo $bills_paid_count; ?> Bills Cleared</div>
                 </div>
             </div>
             
+            <?php if (($user['advance_payment'] ?? 0) > 0): ?>
+            <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
+                <div class="kpi-min-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-wallet'></i></div>
+                <div class="kpi-min-info">
+                    <h4 style="font-size: 13px; color: var(--text-gray); margin: 0 0 4px 0;">Advance Wallet</h4>
+                    <h2 style="font-size: 24px; color: #10B981; margin: 0 0 6px 0; font-weight: 800;"><?php echo money($user['advance_payment']); ?></h2>
+                    <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">Available Balance</div>
+                </div>
+            </div>
+            <?php else: ?>
             <div class="kpi-card-minimal" style="background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 16px;">
                 <div class="kpi-min-icon" style="background: rgba(139, 92, 246, 0.1); color: #8B5CF6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;"><i class='bx bx-receipt'></i></div>
                 <div class="kpi-min-info">
@@ -267,6 +268,7 @@
                     <div style="font-size: 11px; font-weight: 700; color: #8B5CF6; background: rgba(139,92,246,0.1); padding: 4px 8px; border-radius: 8px; display: inline-block;">All Time</div>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
 
         <div id="all-bills-container" class="my-bills-container animate-up" style="animation-delay: 0.1s; display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(290px, 1fr); gap: 24px; align-items: stretch;">
@@ -274,10 +276,10 @@
             <div class="bills-list-panel" style="display: flex; flex-direction: column; gap: 0; background: var(--white); border: 1px solid var(--border); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
                 <div class="tabs-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: transparent; border-bottom: 1px solid var(--border);">
                     <div style="display: flex; gap: 24px;">
-                        <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 14px;">All Bills</button>
-                        <button type="button" class="tab-btn" data-filter="unpaid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Unpaid</button>
-                        <button type="button" class="tab-btn" data-filter="paid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Paid</button>
-                        <button type="button" class="tab-btn" data-filter="overdue" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 14px;">Overdue</button>
+                        <button type="button" class="tab-btn active" data-filter="all" style="background: none; border: none; border-bottom: 2px solid var(--primary-purple); color: var(--primary-purple); font-weight: 700; padding-bottom: 8px; cursor: pointer; font-size: 13px;">All Bills</button>
+                        <button type="button" class="tab-btn" data-filter="unpaid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 13px;">Unpaid</button>
+                        <button type="button" class="tab-btn" data-filter="paid" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 13px;">Paid</button>
+                        <button type="button" class="tab-btn" data-filter="overdue" style="background: none; border: none; color: var(--text-gray); font-weight: 600; padding-bottom: 8px; cursor: pointer; font-size: 13px;">Overdue</button>
                     </div>
                     <div class="tab-actions" style="display: flex; gap: 12px;">
                         <select class="filter-select" style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; color: var(--text-dark); outline: none;">
@@ -292,12 +294,11 @@
                 <div style="padding: 0 12px 12px; overflow-x: hidden;"><table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0 10px; margin-top: -10px;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 25%;">BILL FOR</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 16%;">BILL TYPE</th>
-                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">DUE DATE</th>
-                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 15%;">AMOUNT</th>
-                            <th style="text-align: center; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 14%;">STATUS</th>
-                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 15%;">ACTION</th>
+                            <th style="text-align: left; padding: 12px 8px 12px 14px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-left-radius: 12px; border-bottom-left-radius: 12px; width: 28%;">BILL FOR</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 20%;">BILL TYPE</th>
+                            <th style="text-align: left; padding: 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">DUE DATE</th>
+                            <th style="text-align: right; padding: 12px 8px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; width: 18%;">BALANCE</th>
+                            <th style="text-align: center; padding: 12px 14px 12px 6px; font-size: 10.5px; color: var(--text-gray); text-transform: uppercase; font-weight: 700; white-space: nowrap; border-top-right-radius: 12px; border-bottom-right-radius: 12px; width: 16%;">ACTION</th>
                         </tr>
                     </thead>
                     <tbody id="billsTableBody">
@@ -306,7 +307,7 @@
                 </table>
                 </div><div style="margin-top: auto; padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; color: var(--text-gray); font-size: 13px;">
                     <span id="showingText">Showing 1 to 6 of 14 bills</span>
-                    <div id="paginationControls" style="display: flex; gap: 4px;"></div>
+                    <div id="paginationControls" style="display: flex; gap: 2px;"></div>
                 </div>
             </div>
 
@@ -314,7 +315,6 @@
             <div class="bill-details-panel" style="background: var(--white); border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.04); padding: 32px; display: flex; flex-direction: column;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark);">Bill Details</h3>
-                    <span id="bdStatus" style="font-size: 11px; font-weight: 700; padding: 6px 16px; border-radius: 20px; background: rgba(16, 185, 129, 0.1); color: #10B981;">Paid</span>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
@@ -336,19 +336,18 @@
                         <p style="margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500;">Total Amount</p>
                         <h2 id="bdAmount" style="margin: 0; font-size: 20px; font-weight: 800; color: var(--text-dark); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">₹0.00</h2>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
-                        <button id="bdBtnPay" onclick="" style="background: var(--primary-purple); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: none; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); white-space: nowrap;"><i class='bx bx-credit-card'></i> Pay Now</button>
+                    <div style="display: flex; flex-direction: column; gap: 2px; flex-shrink: 0;">
                         <button id="bdBtnDownload" style="background: var(--white); color: var(--primary-purple); border: 1px solid rgba(98, 75, 255, 0.2); padding: 8px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;"><i class='bx bx-download'></i> Download Bill</button>
                     </div>
                 </div>
 
-                <h4 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 700; color: var(--text-dark);">Bill Summary</h4>
+                <h4 style="margin: 0 0 16px 0; font-size: 13px; font-weight: 700; color: var(--text-dark);">Bill Summary</h4>
                 <div id="bdSummaryList" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
                     <!-- Rendered by JS -->
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px dashed var(--border); margin-bottom: 24px;">
-                    <h4 style="margin: 0; font-size: 14px; font-weight: 800; color: var(--text-dark);">Total Amount</h4>
+                    <h4 style="margin: 0; font-size: 13px; font-weight: 800; color: var(--text-dark);">Total Amount</h4>
                     <h4 id="bdTotalAmount2" style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">₹0.00</h4>
                 </div>
 
@@ -386,12 +385,7 @@
 
                 // Update Bill Details Panel
                 const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
-                const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                 
-                document.querySelectorAll('#bdStatus').forEach(el => el.textContent = bill.status);
-                document.querySelectorAll('#bdStatus').forEach(el => el.style.color = statusColor);
-                document.querySelectorAll('#bdStatus').forEach(el => el.style.background = statusBg);
-
                 document.querySelectorAll('#bdTitle').forEach(el => el.textContent = bill.title);
                 document.querySelectorAll('#bdSubtitle').forEach(el => el.textContent = bill.subtitle);
                 document.querySelectorAll('#bdDueDate').forEach(el => el.textContent = bill.due_date);
@@ -407,9 +401,9 @@
                 document.getElementById('bdIcon').style.background = colors[0];
                 document.getElementById('bdIcon').style.color = colors[1];
 
-                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdAmount').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdAmount').style.color = statusColor;
-                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.amount));
+                document.querySelectorAll('#bdTotalAmount2').forEach(el => el.textContent = formatMoney(bill.balance));
                 document.getElementById('bdTotalAmount2').style.color = statusColor;
 
                 // Summary List
@@ -422,18 +416,42 @@
                         </div>
                     `;
                 }
+                
+                // Add Gross Amount, Amount Paid, Remaining Balance logic
+                summaryHtml += `
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <span style="font-size: 13px; color: var(--text-gray); font-weight: 700;">Gross Amount</span>
+                        <span style="font-size: 13px; color: var(--text-dark); font-weight: 800;">${formatMoney(bill.amount)}</span>
+                    </div>
+                `;
+                
+                if (bill.paid > 0) {
+                    summaryHtml += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <span style="font-size: 13px; color: #10B981; font-weight: 700;">Amount Paid</span>
+                            <span style="font-size: 13px; color: #10B981; font-weight: 800;">-${formatMoney(bill.paid)}</span>
+                        </div>
+                    `;
+                }
+
                 document.querySelectorAll('#bdSummaryList').forEach(el => el.innerHTML = summaryHtml);
 
                 // Buttons
-                const btnPay = document.getElementById('bdBtnPay');
-                if (bill.status === 'Unpaid') {
-                    btnPay.style.display = 'flex';
-                    btnPay.onclick = () => openPaymentModal(bill.amount, bill.title, bill.type, bill.id);
-                } else {
-                    btnPay.style.display = 'none';
+                const downloadBtns = document.querySelectorAll('#bdBtnDownload');
+                if (downloadBtns) {
+                    downloadBtns.forEach(btn => {
+                        btn.onclick = () => window.open('invoice.php?id=' + bill.id, '_blank');
+                    });
+                }
+
+                // Toggle Warning
+                const warningDiv = document.getElementById('bdWarning');
+                if (warningDiv) {
+                    warningDiv.style.display = bill.balance > 0 ? 'flex' : 'none';
                 }
             }
-
+            
             function goToPage(page, e) {
                 if(e) e.preventDefault();
                 currentPage = page;
@@ -464,23 +482,24 @@
                     const statusColor = bill.status === 'Unpaid' ? '#FF4B6B' : '#10B981';
                     const statusBg = bill.status === 'Unpaid' ? 'rgba(255, 75, 107, 0.1)' : 'rgba(16, 185, 129, 0.1)';
                     
-                    const typeColor = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'var(--primary-purple)' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
-                    const typeBg = (bill.type === 'rent' || bill.type === 'elec_rent') ? 'rgba(98, 75, 255, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
+                    const typeColor = (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') ? 'var(--primary-purple)' : (bill.type === 'electricity' ? '#F59E0B' : '#3B82F6');
+                    const typeBg = (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') ? 'rgba(98, 75, 255, 0.1)' : (bill.type === 'electricity' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(59, 130, 246, 0.1)');
                     
                     let iconHtml = '';
-                    if (bill.type === 'rent' || bill.type === 'elec_rent') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(98, 75, 255, 0.1);color:var(--primary-purple);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
+                    if (bill.type === 'rent' || bill.type === 'elec_rent' || bill.type === 'combined') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(98, 75, 255, 0.1);color:var(--primary-purple);display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-home'></i></div>`;
                     else if (bill.type === 'electricity') iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.1);color:#F59E0B;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-bulb'></i></div>`;
                     else iconHtml = `<div style="width:36px;height:36px;border-radius:10px;background:rgba(59,130,246,0.1);color:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:18px;"><i class='bx bx-wrench'></i></div>`;
 
                     
                     let actionBtn = '';
                     if (bill.status === 'Unpaid') {
-                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
+                        actionBtn = `<button onclick="window.open('invoice.php?id=${bill.id}', '_blank'); event.stopPropagation();" style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:11px; padding:6px 12px; border-radius:8px; cursor:pointer; transition:0.2s;">View Bill</button>`;
                     } else {
-                        actionBtn = `<button style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size:14px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
+                        actionBtn = `<button onclick="window.open('invoice.php?id=${bill.id}', '_blank'); event.stopPropagation();" style="background:var(--white); border:1px solid rgba(98,75,255,0.2); color:var(--primary-purple); font-weight:700; font-size: 13px; width: 28px; height: 28px; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; cursor:pointer; transition:0.2s;"><i class='bx bx-download'></i></button>`;
                     }
 
-                    const displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
+                    let displayTypeLabel = bill.type === 'elec_rent' ? 'Rent + Main.' : bill.type;
+                    if (bill.type === 'combined') displayTypeLabel = 'Rent + Utility';
 
                     const rowHtml = `
                         <tr id="bill-row-${idx}" class="bill-row" onclick="selectBill(${idx})">
@@ -498,13 +517,10 @@
                             </td>
                             <td>
                                 <p style="margin:0; font-size:11px; font-weight:600; color:var(--text-dark);">${bill.due_date}</p>
-                                ${bill.status === 'Unpaid' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Due Today</p>` : ''}
+                                ${bill.status === 'Unpaid' ? (bill.filter_type === 'overdue' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#FF4B6B;">Overdue</p>` : `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Unpaid</p>`) : (bill.status === 'Partial' ? `<p style="margin:2px 0 0 0; font-size:9px; font-weight:700; color:#F59E0B;">Partially Paid</p>` : '')}
                             </td>
                             <td style="text-align:right;">
-                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.amount)}</span>
-                            </td>
-                            <td style="text-align:center;">
-                                <span style="font-size:10px; font-weight:700; color:${statusColor}; background:${statusBg}; padding:4px 10px; border-radius:20px; display:inline-block; min-width: 50px;">${bill.status}</span>
+                                <span style="font-size:12px; font-weight:800; color:var(--text-dark);">${formatMoney(bill.balance)}</span>
                             </td>
                             <td style="text-align:center;">
                                 ${actionBtn}

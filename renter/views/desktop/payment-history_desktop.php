@@ -16,8 +16,8 @@
                 </div>
             </div>
             <div class="header-actions">
-                                <div class="notification-wrapper">
-                    <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
+                                <div class="notification-wrapper" style="position: relative; display: inline-block;">
+                    <div class="icon-btn bell-icon" onclick="const nd = this.nextElementSibling; if(nd) nd.style.display = nd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
                             <span style="position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; animation: pulse 2s infinite;">
@@ -34,11 +34,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -76,7 +76,7 @@
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
                 <div style="position: relative;">
-                    <div class="user-profile-pill" onclick="document.getElementById('profileDropdown').style.display = document.getElementById('profileDropdown').style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
+                    <div class="user-profile-pill" onclick="const pd = this.nextElementSibling; if(pd) pd.style.display = pd.style.display === 'none' ? 'block' : 'none'; event.stopPropagation();">
                         <div class="user-avatar" style="overflow: hidden; background: #E0E7FF; color: var(--primary-purple); display: flex; align-items: center; justify-content: center;">
 <?php 
     $real_pic = '';
@@ -100,10 +100,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -144,154 +144,172 @@
         <?php endif; ?>
 
         <?php
-        // Prepare all bills data based strictly on database 'status'
+        // Fetch all transactions from the payments table
+        // Fetch all transactions grouped by system transaction intent (sys_tx_id) to avoid showing fragmented ledger entries
         $all_bills = [];
-
-        // 1. Fetch Paid Rent Bills
-        $rent_q = mysqli_query($conn, "
-            SELECT r.id, r.month, r.rent_amount as amount, r.paid_date, 
-                   (SELECT payment_mode FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id ORDER BY p.id DESC LIMIT 1) as payment_mode,
-                   (SELECT transaction_id FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id ORDER BY p.id DESC LIMIT 1) as transaction_id
-            FROM rent r
-            WHERE r.user_id = $user_id AND r.status = 'Paid'
-        ");
-        while ($r = mysqli_fetch_assoc($rent_q)) {
-            $month = $r['month'];
-            $amt = (float)$r['amount'];
-            $pdate = !empty($r['paid_date']) ? date('d M Y', strtotime($r['paid_date'])) : 'N/A';
-            
-            $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : 'N/A';
-            $due_date = $ts ? date('07 M Y', $ts) : 'N/A';
-            
-            $all_bills[] = [
-                'id' => 'r_'.$r['id'],
-                'type' => 'rent',
-                'filter_type' => 'rent',
-                'title' => 'Rent Payment',
-                'subtitle' => !empty($r['transaction_id']) ? ('Ref: ' . $r['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($r['payment_mode']) ? $r['payment_mode'] : 'Cash/UPI',
-                'icon' => 'bx-home',
-                'color' => 'purple'
-            ];
-        }
-
-        // 2. Fetch Paid Electricity/Total Bills
-        $elec_q = mysqli_query($conn, "
-            SELECT e.id, e.month, e.total_amount, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.payment_date, e.created_at, e.paid_date,
-                   (SELECT payment_mode FROM payments p WHERE p.bill_type IN ('electricity','total') AND p.bill_id=e.id ORDER BY p.id DESC LIMIT 1) as payment_mode,
-                   (SELECT transaction_id FROM payments p WHERE p.bill_type IN ('electricity','total') AND p.bill_id=e.id ORDER BY p.id DESC LIMIT 1) as transaction_id
-            FROM electricity e
-            WHERE e.user_id = $user_id AND e.status = 'Paid'
-        ");
-        while ($e = mysqli_fetch_assoc($elec_q)) {
-            $month = !empty($e['month']) ? $e['month'] : date('F Y', strtotime($e['created_at']));
-            $amt = (float)$e['total_amount'] > 0 ? (float)$e['total_amount'] : ((float)$e['elec_amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['dues']);
-            $pdate = !empty($e['paid_date']) ? date('d M Y', strtotime($e['paid_date'])) : (!empty($e['payment_date']) ? date('d M Y', strtotime($e['payment_date'])) : 'N/A');
-            
-            $slip_dt = !empty($e['payment_date']) ? $e['payment_date'] : $e['created_at'];
-            $bill_date = date('d M Y', strtotime($slip_dt));
-            $due_date = date('d M Y', strtotime($slip_dt . ' + 6 days'));
-            
-            $has_elec = (float)$e['elec_amount'] > 0;
-            $has_rent = (float)$e['rent_amount'] > 0 || (float)$e['maintenance'] > 0;
-            
-            if ($has_elec && $has_rent) {
-                $title = 'Rent + Main. + Electricity';
-                $filter_type = 'other';
-                $icon = 'bx-credit-card';
-                $color = 'purple';
-            } elseif ($has_rent) {
-                $title = 'Rent + Main.';
-                $filter_type = 'other';
-                $icon = 'bx-home';
-                $color = 'purple';
-            } else {
-                $title = 'Electricity Payment';
-                $filter_type = 'electricity';
-                $icon = 'bx-bulb';
-                $color = 'yellow';
+        
+        if (isset($_GET['month']) && !empty($_GET['month'])) {
+            $target_month = mysqli_real_escape_string($conn, urldecode($_GET['month']));
+            $q = mysqli_query($conn, "SELECT id, bill_type, paid_amount as amount, month, payment_mode, payment_date as p_date, transaction_id, sys_tx_id FROM payments WHERE user_id = $user_id AND month = '$target_month' ORDER BY payment_date DESC, id DESC");
+            if ($q) {
+                while ($row = mysqli_fetch_assoc($q)) {
+                    $title = 'Ledger Split';
+                    if ($row['bill_type'] == 'rent') $title = 'Rent Split';
+                    if ($row['bill_type'] == 'electricity') $title = 'Electricity Split';
+                    if ($row['bill_type'] == 'elec_rent') $title = 'Bill Component (Rent)';
+                    if ($row['bill_type'] == 'advance') $title = 'Advance Application';
+                    
+                    $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                    $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
+                    $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                    
+                    $all_bills[] = [
+                        'filter_type' => 'paid',
+                        'color' => 'green',
+                        'icon' => 'bx-layer',
+                        'title' => $title,
+                        'subtitle' => $subtitle,
+                        'period' => $row['month'],
+                        'bill_date' => date('d M Y', strtotime($row['p_date'])),
+                        'due_date' => '-',
+                        'amount' => (float)$row['amount'],
+                        'status' => 'Allocated',
+                        'paid_on' => date('d M Y', strtotime($row['p_date'])),
+                        'p_ts' => strtotime($row['p_date']),
+                        'max_id' => (int)$row['id'],
+                        'actual_amount' => (float)$row['amount'],
+                        'payment_mode' => $row['payment_mode'] ?: 'System'
+                    ];
+                }
             }
-            
-            $all_bills[] = [
-                'id' => 'e_'.$e['id'],
-                'type' => 'electricity',
-                'filter_type' => $filter_type,
-                'title' => $title,
-                'subtitle' => !empty($e['transaction_id']) ? ('Ref: ' . $e['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($e['payment_mode']) ? $e['payment_mode'] : 'Cash/UPI',
-                'icon' => $icon,
-                'color' => $color
-            ];
-        }
-
-        // 3. Fetch Advance Payments
-        $adv_q = mysqli_query($conn, "
-            SELECT id, month, paid_amount, payment_date, payment_mode, transaction_id
-            FROM payments
-            WHERE user_id = $user_id AND bill_type = 'advance'
-        ");
-        while ($a = mysqli_fetch_assoc($adv_q)) {
-            $month = $a['month'];
-            $amt = (float)$a['paid_amount'];
-            $pdate = !empty($a['payment_date']) ? date('d M Y', strtotime($a['payment_date'])) : 'N/A';
-            
-            $ts = strtotime($month);
-            $bill_date = $ts ? date('01 M Y', $ts) : $pdate;
-            $due_date = $ts ? date('07 M Y', $ts) : $pdate;
-            
-            $all_bills[] = [
-                'id' => 'a_'.$a['id'],
-                'type' => 'advance',
-                'filter_type' => 'other',
-                'title' => 'Advance Payment',
-                'subtitle' => !empty($a['transaction_id']) ? ('Ref: ' . $a['transaction_id']) : ('Room ' . $room_no),
-                'period' => $month,
-                'bill_date' => $bill_date,
-                'due_date' => $due_date,
-                'amount' => $amt,
-                'status' => 'Paid',
-                'paid_on' => $pdate,
-                'payment_mode' => !empty($a['payment_mode']) ? $a['payment_mode'] : 'Cash/UPI',
-                'icon' => 'bx-file',
-                'color' => 'blue'
-            ];
-        }
-
-        // 2. Removed fallback loop that caused duplicate/inflated 'extra paid amount' KPIs
-        
-        $total_successful_amount = array_sum(array_column($all_bills, 'amount'));
-        $total_successful_count = count($all_bills);
-        $avg_payment = $total_successful_count > 0 ? $total_successful_amount / $total_successful_count : 0;
-        
-        $pending_q = mysqli_query($conn, "SELECT COALESCE(SUM(amount),0) as total_pending, COUNT(id) as count_pending FROM payment_notifications WHERE user_id=$user_id AND status='Pending'");
-        $pending_row = mysqli_fetch_assoc($pending_q);
-        $total_pending_amount = $pending_row['total_pending'];
-        $total_pending_count = $pending_row['count_pending'];
-        
-        $total_all_amount = $total_successful_amount + $total_pending_amount;
-
-        // Sort by Period Descending, then by Bill Date Descending
-        usort($all_bills, function($a, $b) { 
-            $t1 = strtotime($b['period']);
-            $t2 = strtotime($a['period']);
-            if ($t1 == $t2) {
-                return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+        } else {
+        // 1. Fetch user-applied transactions from payment_notifications (Only Pending and Rejected)
+        $q_n = mysqli_query($conn, "SELECT id, id as max_id, bill_type, amount, month, payment_method as payment_mode, status, transaction_id, created_at as p_date, sys_tx_id, admin_note FROM payment_notifications WHERE user_id = $user_id AND status IN ('Pending', 'Rejected') ORDER BY id DESC LIMIT 50");
+        if ($q_n) {
+            while ($row = mysqli_fetch_assoc($q_n)) {
+                $color = ($row['status'] == 'Approved') ? 'green' : (($row['status'] == 'Rejected') ? 'red' : 'orange');
+                $icon = ($row['status'] == 'Approved') ? 'bx-check-circle' : (($row['status'] == 'Rejected') ? 'bx-x-circle' : 'bx-time-five');
+                
+                $title = 'Online Payment';
+                if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
+                if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
+                
+                $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
+                $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                
+                $all_bills[] = [
+                    'filter_type' => strtolower($row['status']),
+                    'color' => $color,
+                    'icon' => $icon,
+                    'title' => $title,
+                    'subtitle' => $subtitle,
+                    'period' => ($row['month'] == 'Advance' || $row['month'] == 'Advance/General' || $row['month'] == 'Onboarding & Advance') ? 'Advance Balance' : ($row['month'] ?: 'Multiple'),
+                    'bill_date' => date('d M Y', strtotime($row['p_date'])),
+                    'due_date' => '-',
+                    'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)$row['amount'],
+                    'status' => $row['status'],
+                    'paid_on' => date('d M Y', strtotime($row['p_date'])),
+                    'p_ts' => strtotime($row['p_date']),
+                    'max_id' => (int)$row['max_id'],
+                    'payment_mode' => $row['payment_mode'] ?: 'Online'
+                ];
             }
-            return $t1 - $t2;
+        }
+
+        // 2. Fetch completed transactions directly from the payments ledger
+        $q_m = mysqli_query($conn, "
+            SELECT 
+                DATE(payment_date) as p_date,
+                MAX(payment_date) as full_date,
+                MAX(id) as max_id,
+                payment_mode,
+                transaction_id,
+                sys_tx_id,
+                SUM(CASE WHEN paid_amount > 0 THEN paid_amount ELSE 0 END) as amount,
+                SUM(paid_amount) as actual_amount,
+                SUM(CASE WHEN adjustment_amount < 0 THEN ABS(adjustment_amount) ELSE 0 END) as wallet_used,
+                GROUP_CONCAT(DISTINCT month SEPARATOR ', ') as period
+            FROM payments 
+            WHERE user_id = $user_id
+            GROUP BY DATE(payment_date), payment_mode, transaction_id, sys_tx_id
+            ORDER BY p_date DESC
+            LIMIT 50
+        ");
+        
+        if ($q_m) {
+            while ($row = mysqli_fetch_assoc($q_m)) {
+                $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
+                $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
+                $subtitle = (empty($ref) || $ref === $sys_id || strpos($ref, 'SYS_') === 0 || $ref === 'Offline') ? 'ID: ' . $sys_id : 'Ref: ' . $ref . ' | ID: ' . $sys_id;
+                
+                $wallet_used = (float)($row['wallet_used'] ?? 0);
+                if ($wallet_used > 0) {
+                    $total_settled = (float)$row['amount'] + $wallet_used;
+                    $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
+                }
+                
+                $pm_db = $row['payment_mode'] ?? '';
+                if (empty(trim($pm_db))) {
+                    $ref_check = trim($row['transaction_id'] ?? '');
+                    if (!empty($ref_check) && strpos($ref_check, 'SYS_') !== 0 && $ref_check !== 'Offline') {
+                        $pm_db = 'UPI'; // Assume UPI if a UTR was provided
+                    } else {
+                        $pm_db = 'Offline';
+                    }
+                }
+
+                $pm = strtolower($pm_db);
+                if (strpos($pm, 'upi') !== false || strpos($pm, 'online') !== false || strpos($pm, 'net banking') !== false) {
+                    $dyn_title = 'Online Payment';
+                } elseif (strpos($pm, 'wallet') !== false || strpos($pm, 'auto-deduction') !== false) {
+                    $dyn_title = 'Wallet Deduction';
+                } else {
+                    $dyn_title = 'Cash / Offline Payment';
+                }
+
+                $all_bills[] = [
+                    'filter_type' => 'approved',
+                    'color' => 'green',
+                    'icon' => 'bx-check-double',
+                    'title' => $dyn_title,
+                    'subtitle' => $subtitle,
+                    'period' => ($row['period'] == 'Advance' || $row['period'] == 'Advance/General' || $row['period'] == 'Onboarding & Advance') ? 'Advance Balance' : ($row['period'] ?: 'Multiple'),
+                    'bill_date' => date('d M Y', strtotime($row['p_date'])),
+                    'due_date' => '-',
+                    'amount' => (float)$row['amount'],
+                    'actual_amount' => (float)($row['actual_amount'] ?? $row['amount']),
+                    'status' => 'Paid',
+                    'paid_on' => date('d M Y', strtotime($row['p_date'])),
+                    'p_ts' => strtotime($row['full_date'] ?: $row['p_date']),
+                    'max_id' => (int)$row['max_id'],
+                    'payment_mode' => $pm_db
+                ];
+            }
+        }
+
+        }
+        usort($all_bills, function($a, $b) {
+            if ($b['p_ts'] == $a['p_ts']) {
+                return $b['max_id'] - $a['max_id'];
+            }
+            return $b['p_ts'] - $a['p_ts'];
         });
+
+        // KPI Calculations
+        $total_all_amount = 0;
+        $valid_payment_count = 0;
+        foreach($all_bills as $b) {
+            if (in_array(strtolower($b['status']), ['paid', 'approved', 'allocated'])) {
+                $total_all_amount += (float)($b['actual_amount'] ?? $b['amount']);
+                // Don't increment count for pure 0-actual internal transfers
+                if ((float)($b['actual_amount'] ?? $b['amount']) > 0.01) {
+                    $valid_payment_count++;
+                }
+            }
+        }
+        $avg_payment = $valid_payment_count > 0 ? ($total_all_amount / $valid_payment_count) : 0;
         ?>
 
         <!-- 4-Col KPI Grid -->
@@ -315,11 +333,15 @@
             </div>
 
             <div class="kpi-card-minimal">
-                <div class="kpi-min-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class='bx bx-time'></i></div>
+                <div class="kpi-min-icon" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;"><i class='bx bx-credit-card'></i></div>
                 <div class="kpi-min-info">
-                    <h4>Pending Payments</h4>
-                    <h2><?php echo money($total_pending_amount); ?></h2>
-                    <div class="kpi-min-tag" style="background: transparent; color: var(--text-gray); padding: 0;"><?php echo $total_pending_count; ?> Transactions</div>
+                    <h4>Total Outstanding</h4>
+                    <h2 style="<?php echo $total_due > 0 ? 'color: #FF4B6B;' : ''; ?>"><?php echo money($total_due); ?></h2>
+                    <?php if ($total_due > 0): ?>
+                        <div class="kpi-min-tag" style="background: rgba(255, 75, 107, 0.08); color: #FF4B6B;">Payment Due</div>
+                    <?php else: ?>
+                        <div class="kpi-min-tag" style="background: rgba(16, 185, 129, 0.08); color: #10B981;">All Clear</div>
+                    <?php endif; ?>
                 </div>
             </div>
             
@@ -388,7 +410,6 @@
                             <th>BILL TYPE</th>
                             <th>FOR PERIOD</th>
                             <th>BILL DATE</th>
-                            <th>DUE DATE</th>
                             <th>AMOUNT</th>
                             <th>STATUS</th>
                             <th>PAID ON</th>
@@ -407,21 +428,19 @@
                                         <div class="td-icon <?php echo $bill['color']; ?>"><i class='bx <?php echo $bill['icon']; ?>'></i></div>
                                         <div class="td-info">
                                             <h4><?php echo htmlspecialchars($bill['title']); ?></h4>
-                                            <p><?php echo htmlspecialchars($bill['subtitle']); ?></p>
+                                            <p><?php echo $bill['subtitle']; ?></p>
                                         </div>
                                     </div>
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
                                 <td><?php echo $bill['bill_date']; ?></td>
-                                <td><?php echo $bill['due_date']; ?></td>
                                 <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>
-                                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; font-size: 13px; color: var(--text-dark);">
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 2px; font-weight: 600; font-size: 13px; color: var(--text-dark);">
                                         <?php if(strpos(strtolower($bill['payment_mode']), 'upi') !== false): ?>
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" style="height: 14px;">
-                                            UPI
                                         <?php elseif(strpos(strtolower($bill['payment_mode']), 'net banking') !== false): ?>
                                             <i class='bx bxs-bank' style="color: #624BFF; font-size: 16px;"></i>
                                             <?php echo $bill['payment_mode']; ?>
@@ -469,8 +488,19 @@
                 function renderTable() {
                     const allDataRows = Array.from(container.querySelectorAll('tbody tr.data-row'));
                     
-                    // 1. Filter rows by tab
-                    const filteredRows = allDataRows.filter(row => currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab);
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const monthFilter = urlParams.get('month');
+                    
+                    // 1. Filter rows by tab and month
+                    const filteredRows = allDataRows.filter(row => {
+                        const tabMatch = currentTab === 'all' || row.getAttribute('data-filter-type') === currentTab;
+                        if (!tabMatch) return false;
+                        if (monthFilter) {
+                            const rowMonth = row.querySelector('td:nth-child(3)').textContent.trim();
+                            if (rowMonth !== monthFilter) return false;
+                        }
+                        return true;
+                    });
                     
                     // 2. Paginate rows
                     const totalRecords = filteredRows.length;
@@ -510,12 +540,6 @@
                 function renderPaginationControls(totalPages) {
                     const pagContainer = container.querySelector('.pagination-controls');
                     if (!pagContainer) return;
-                    
-                    if (totalPages <= 1) {
-                        pagContainer.innerHTML = '';
-                        pagContainer.style.display = 'none';
-                        return;
-                    }
                     
                     pagContainer.style.display = 'flex';
                     let html = '';

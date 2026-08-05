@@ -15,7 +15,7 @@ if (!isset($_SESSION['admin']) && !isset($_SESSION['user_id'])) {
 }
 
 // Fetch electricity record with user details
-$stmt = mysqli_prepare($conn, "SELECT e.*, u.name, u.room_no FROM electricity e LEFT JOIN users u ON e.user_id = u.id WHERE e.id = ?");
+$stmt = mysqli_prepare($conn, "SELECT e.*, u.name, u.room_no, u.phone, u.email FROM electricity e LEFT JOIN users u ON e.user_id = u.id WHERE e.id = ?");
 mysqli_stmt_bind_param($stmt, "i", $elec_id);
 mysqli_stmt_execute($stmt);
 $res = mysqli_stmt_get_result($stmt);
@@ -39,7 +39,10 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
 $date = date("F d, Y", strtotime($row['payment_date'] ?? $row['created_at'] ?? date('Y-m-d')));
 $name = $row['name'] ?: 'N/A';
 $room = $row['room_no'] ?: 'N/A';
+$phone = $row['phone'] ?? '98765 43210';
+$email = $row['email'] ?? 'madhavkunj@example.com';
 $month_period = $row['month'] ?? 'N/A';
+$invoice_no = 'ELC-' . str_pad($elec_id, 5, '0', STR_PAD_LEFT);
 
 // Readings and calculations
 $current_reading = (int)($row['current_reading'] ?? 0);
@@ -55,9 +58,7 @@ $dues = (float)($row['dues'] ?? 0);
 $extra_charges = (float)($row['extra_charges'] ?? 0);
 $extra_charges_desc = $row['extra_charges_desc'] ?? '';
 
-$total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
-
-$admin_user = htmlspecialchars($_SESSION['admin'] ?? 'Admin', ENT_QUOTES, 'UTF-8');
+$total_amount = $electricity_amount;
 
 // Back URL for fallback
 $back_url = "dashboard.php";
@@ -70,7 +71,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Slip | <?php echo htmlspecialchars($name); ?></title>
+    <title>Electricity Bill | <?php echo htmlspecialchars($name); ?></title>
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -78,184 +79,653 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
     
     <style>
         :root {
-            --primary: #624BFF;
-            --text-dark: #1A1A1A;
-            --text-gray: #71717A;
-            --border: #F1F1F4;
-            --bg-light: #FBFBFF;
+            --primary: #4634FF;
+            --primary-light: #F0EDFF;
+            --text-dark: #1F2937;
+            --text-gray: #6B7280;
+            --border: #F3F4F6;
+            --bg-light: #FAFAFB;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f4f4f9; color: var(--text-dark); -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #e9ecef; 
+            color: var(--text-dark); 
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+        }
 
         .invoice-wrapper {
-            max-width: 950px;
+            max-width: 900px;
             margin: 40px auto;
             background: white;
-            padding: 50px 60px;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-            position: relative;
-            overflow: hidden;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
         }
 
-        /* Branding element */
-        .invoice-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 150px; height: 150px;
-            background: radial-gradient(circle at top right, rgba(98, 75, 255, 0.05), transparent);
-        }
-
+        /* --- HEADER --- */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .brand-info h2 { 
-            font-size: 24px; font-weight: 800; color: var(--primary);
-            display: flex; align-items: center; gap: 10px; margin-bottom: 5px;
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .brand-info p { font-size: 14px; color: var(--text-gray); }
+        .brand-icon {
+            font-size: 42px;
+            color: var(--primary);
+        }
+        .brand-text h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+        .brand-text p {
+            font-size: 14px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
 
-        .bill-title { text-align: right; }
-        .bill-title h1 { font-size: 32px; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
-        .bill-title span { background: #F0EDFF; color: var(--primary); padding: 5px 12px; border-radius: 8px; font-weight: 700; font-size: 12px; }
+        .title-section {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+        .title-section h1 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .title-section h1 i {
+            color: var(--primary);
+            font-size: 36px;
+        }
+        .month-pill {
+            background: var(--primary);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
 
-        .info-grid {
+        /* --- CONTACT INFO --- */
+        .contact-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .contact-item i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        /* --- META CARDS --- */
+        .meta-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1.5px solid var(--border);
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-        .info-group h4 { font-size: 10px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .info-group p { font-size: 14px; font-weight: 700; }
-
-        .table-container { margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 10px 0; border-bottom: 2px solid var(--text-dark); font-size: 11px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
-        td { padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
-
-        .reading-box { display: flex; align-items: center; gap: 15px; }
-        .reading-tag { background: var(--bg-light); border: 1px solid var(--border); padding: 6px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; }
-
-        .total-section {
+        .meta-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px 20px;
             display: flex;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-        }
-        .total-box {
-            width: 100%;
-            max-width: 360px;
-            background: #F8F7FF;
-            padding: 20px;
-            border-radius: 20px;
-        }
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
-        .total-row.grand-total { 
-            margin-top: 20px; 
-            padding-top: 20px; 
-            border-top: 2px dashed rgba(98, 75, 255, 0.2); 
-            margin-bottom: 0;
             align-items: center;
+            gap: 16px;
         }
-        .total-row.grand-total span:first-child { 
-            font-size: 16px; 
-            font-weight: 700; 
-            color: var(--text-dark); 
+        .meta-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        .meta-info h4 {
+            font-size: 11px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .meta-info p {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+        .meta-info .sub-p {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* --- METER READING SECTION --- */
+        .section-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            background: white;
+        }
+        .section-header {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-header i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+        .section-header h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .total-row.grand-total span:last-child { 
-            font-size: 26px; 
-            font-weight: 800; 
-            color: var(--primary); 
-        }
 
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            border-top: 1.5px solid var(--border);
-            padding-top: 15px;
-        }
-        .footer p { color: var(--text-gray); font-size: 12px; line-height: 1.4; }
-
-        .actions {
-            max-width: 800px;
-            margin: 20px auto;
+        .meter-flow {
+            padding: 30px 40px;
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        .flow-item {
+            text-align: center;
+            flex: 1;
+        }
+        .flow-item h4 {
+            font-size: 12px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .flow-item .val {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+        .flow-item .unit {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        .flow-arrow {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            font-weight: 800;
+        }
+        
+        .flow-item.highlight {
+            background: var(--primary-light);
+            padding: 20px;
+            border-radius: 12px;
+            flex: 1.5;
+        }
+        .flow-item.highlight h4 { color: var(--primary); }
+
+        .meter-meta {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            padding: 20px;
+            gap: 20px;
+        }
+        .meter-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-right: 1px solid var(--border);
+        }
+        .meter-meta-item:last-child {
+            border-right: none;
+        }
+        .meter-meta-item i {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .meta-sm h5 {
+            font-size: 10px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .meta-sm p {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* --- PHOTO SECTION --- */
+        .photo-body {
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        .photo-img {
+            width: 300px;
+            height: 140px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .photo-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+        .photo-det-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .photo-det-row i {
+            color: var(--text-gray);
+            font-size: 18px;
+            margin-top: 2px;
+        }
+        .photo-det-info h5 {
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        .photo-det-info p {
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+        .photo-det-info .note {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* --- CHARGES BREAKDOWN --- */
+        .charges-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .charges-table thead {
+            background: var(--primary);
+            color: white;
+        }
+        .charges-table th {
+            padding: 16px 24px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .charges-table th:last-child {
+            text-align: right;
+        }
+        .charges-table td {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border);
+        }
+        .charges-table td:last-child {
+            text-align: right;
+        }
+        .charges-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* --- TOTAL AMOUNT --- */
+        .total-box {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--primary-light);
+        }
+        .total-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .total-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .total-left h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .total-left p {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+        .total-amount {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .thank-you {
+            font-family: 'Brush Script MT', 'Dancing Script', cursive, sans-serif;
+            font-size: 28px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 15px;
+            margin-bottom: 10px;
         }
+        .thank-you::before, .thank-you::after {
+            content: '';
+            height: 1px;
+            width: 40px;
+            background: var(--primary);
+        }
+        .footer-query {
+            font-size: 15px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        /* PRINT STYLES */
+        .actions {
+            max-width: 900px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 12px 24px;
+            border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; font-size: 14px; transition: all 0.2s ease;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(70, 52, 255, 0.2); }
+        .btn:active { transform: scale(0.96); box-shadow: none; }
+        
+        .btn-outline {
+            background: white; border: 1px solid var(--border); color: var(--text-dark);
+        }
+        .btn-outline:hover { background: #f8f9fa; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-outline:active { background: #e9ecef; transform: scale(0.96); box-shadow: none; }
 
         @media print {
-            body { background: white; padding: 0; }
-            .invoice-wrapper { 
-                margin: 0; 
-                box-shadow: none; 
-                width: 100%; 
-                max-width: 100%; 
-                padding: 30px !important;
-                min-height: 27cm; /* Ensures it takes up full A4 height */
-                display: flex;
-                flex-direction: column;
-                border: none !important;
+            body { background: white; margin: 0; }
+            @page { margin: 0.5cm; } /* Reduce default browser margins */
+            .invoice-wrapper {
+                margin: 0; padding: 0; box-shadow: none; max-width: 100%;
             }
+            /* Compress spacing to fit one page */
+            .header { margin-bottom: 12px; }
+            .contact-info { margin-bottom: 12px; padding-bottom: 12px; font-size: 10px; gap: 12px; }
+            .contact-item { white-space: nowrap; }
+            .meta-grid { margin-bottom: 16px; gap: 12px; }
+            .meta-card { padding: 12px 16px; }
+            .section-card { margin-bottom: 16px; }
+            .meter-flow { padding: 16px 20px; }
+            .meter-meta { padding: 12px 20px; gap: 12px; }
+            .photo-body { padding: 12px 20px; gap: 20px; }
+            .photo-img { height: 110px; width: 240px; }
+            .charges-table { margin-bottom: 16px; }
+            .charges-table th, .charges-table td { padding: 10px 16px; }
+            .total-box { padding: 16px 24px; }
+            .footer { margin-top: 20px; }
+            
             .actions { display: none; }
-            .total-box { background: #F8F7FF !important; -webkit-print-color-adjust: exact; }
-            .footer { 
-                margin-top: auto !important; 
-                padding-top: 20px;
-                padding-bottom: 10px;
+            .meta-card, .flow-item.highlight, .meter-meta-item i, .total-box, .total-icon {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-            @page { 
-                size: auto;
-                margin: 0.5cm; 
+            .charges-table thead {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-            .table-container td { padding: 8px 0 !important; }
-            .header { margin-bottom: 15px !important; }
-            .info-grid { margin-bottom: 15px !important; }
-            .total-section { margin-bottom: 10px !important; }
-            .meter-ss-container { max-width: 220px !important; }
         }
-
-        .btn {
-            background: var(--primary); color: white; border: none; padding: 12px 30px;
-            border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px;
-            transition: 0.2s; text-decoration: none;
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(98, 75, 255, 0.2); }
-        .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--text-dark); }
-
-        @media (max-width: 768px) {
-            .actions { margin: 10px; gap: 8px; flex-wrap: nowrap; }
-            .btn { padding: 10px 12px; font-size: 12px; border-radius: 10px; flex: 1; justify-content: center; white-space: nowrap; }
-            .btn-outline i { display: none; } /* Hide arrow on mobile to save space */
-            
-            .invoice-wrapper { padding: 24px 16px; margin: 0; border-radius: 0; }
-            .header { flex-direction: column; gap: 20px; margin-bottom: 24px; text-align: center; align-items: center; }
-            .bill-title { text-align: center; }
-            .brand-info h2 { font-size: 20px; justify-content: center; }
-            .brand-info p { font-size: 13px; max-width: 250px; margin: 0 auto; }
-            
-            .bill-title h1 { font-size: 24px; }
-            .info-grid { grid-template-columns: 1fr; gap: 15px; margin-bottom: 24px; text-align: center; }
-            
-            .table-container th { font-size: 10px; padding: 8px 0; }
-            .table-container td { font-size: 12px; padding: 12px 0; }
-            
-            .reading-box { justify-content: center; gap: 8px; }
-            .reading-tag { padding: 4px 8px; font-size: 12px; }
-            
-            .total-box { padding: 16px; border-radius: 16px; }
-            .total-row.grand-total span:first-child { font-size: 14px; }
-            .total-row.grand-total span:last-child { font-size: 20px; }
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .slip-container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                background: rgba(98, 75, 255, 0.04);
+                padding: 20px;
+                border-radius: 16px;
+                border: 1px solid rgba(98, 75, 255, 0.1);
+            }
+            .brand-section {
+                flex-direction: row;
+                align-items: center;
+                gap: 12px;
+            }
+            .brand-icon {
+                font-size: 28px;
+                background: white;
+                width: 48px;
+                height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            }
+            .title-section {
+                text-align: left;
+                align-items: flex-start;
+                width: 100%;
+                border-top: 1px dashed rgba(98, 75, 255, 0.2);
+                padding-top: 16px;
+                margin-top: 4px;
+            }
+            .title-section h1 {
+                font-size: 20px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .contact-info {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+                background: var(--bg-light);
+                padding: 16px;
+                border-radius: 16px;
+                border: 1px solid var(--border);
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+            .contact-item {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 10px;
+                font-size: 12px;
+                line-height: 1.4;
+            }
+            .contact-item i {
+                font-size: 16px;
+                margin-top: 1px;
+                color: var(--primary);
+                background: white;
+                padding: 6px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+            }
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+            .photo-details-grid {
+                grid-template-columns: 1fr;
+            }
+            .charges-table th, .charges-table td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+            .charges-table th:first-child, .charges-table td:first-child {
+                padding-left: 10px;
+            }
+            .charges-table th:last-child, .charges-table td:last-child {
+                padding-right: 10px;
+            }
+            .footer {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+                align-items: center;
+            }
+            .thank-you {
+                font-size: 18px;
+                gap: 6px;
+                white-space: nowrap;
+            }
+            .thank-you::before, .thank-you::after {
+                width: 20px;
+            }
+            .footer-signature {
+                text-align: center;
+                align-items: center;
+            }
+            .footer-signature::before {
+                margin: 0 auto 12px auto;
+            }
+            .brand-text h2 {
+                font-size: 22px;
+            }
+            .title-section h1 {
+                font-size: 26px;
+            }
+            /* Action buttons at the top should stack */
+            .actions {
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                margin: 10px auto 20px auto;
+                padding: 0 15px;
+                box-sizing: border-box;
+            }
+            .actions .btn {
+                width: auto;
+                justify-content: center;
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+            /* Structure Adjustments */
+            .meter-flow {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 0 auto;
+            }
+            .meter-meta {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px 12px;
+            }
+            .meter-meta-item {
+                border-right: none;
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .meter-meta-item:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            .photo-body {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .photo-img {
+                width: 100% !important;
+                height: auto !important;
+            }
+            .total-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
         }
     </style>
 </head>
@@ -263,149 +733,213 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
 
     <div class="actions">
         <button type="button" onclick="window.print()" class="btn">
-            <i class='bx bx-printer'></i> Print Slip
+            <i class='bx bx-printer'></i> Print Bill
         </button>
-        <button type="button" onclick="if(window.opener) { window.close(); } else if (window.history.length > 1 || document.referrer) { window.history.back(); } else { window.location.href='<?php echo $back_url; ?>'; }" class="btn btn-outline">
-            <i class='bx bx-arrow-back'></i> Close & Back
+        <button type="button" onclick="if(document.referrer) { window.history.back(); } else { window.location.href='<?php echo $back_url; ?>'; }" class="btn btn-outline">
+            <i class='bx bx-arrow-back'></i> Close
         </button>
     </div>
 
     <div class="invoice-wrapper">
+        
+        <!-- Header -->
         <div class="header">
-            <div class="brand-info">
-                <h2><i class='bx bxs-building-house'></i> <?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Premium Property'; ?></h2>
-                <p>Official Billing Receipt</p>
-            </div>
-            <div class="bill-title">
-                <h1>BILL INVOICE</h1>
-                <span><?php echo htmlspecialchars($month_period); ?></span>
-            </div>
-        </div>
-
-        <div class="info-grid">
-            <div class="info-group">
-                <h4>Billing Date</h4>
-                <p><?php echo $date; ?></p>
-            </div>
-            <div class="info-group">
-                <h4>Bill To</h4>
-                <p style="font-size: 18px; color: var(--text-dark); margin-bottom: 2px;"><?php echo htmlspecialchars($name); ?></p>
-                <p style="font-size: 14px; color: var(--primary); font-weight: 600;">Room: <?php echo htmlspecialchars($room); ?></p>
-            </div>
-            <div class="info-group">
-                <h4>Invoice No.</h4>
-                <p>#RM-<?php echo str_pad($elec_id, 5, '0', STR_PAD_LEFT); ?></p>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th style="width: 200px;">Readings</th>
-                        <th style="text-align: right;">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700;">Electricity Consumption</div>
-                            <div style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Usage for <?php echo $month_period; ?></div>
-                        </td>
-                        <td>
-                            <div class="reading-box">
-                                <div class="reading-tag"><?php echo $previous_reading; ?></div>
-                                <i class='bx bx-right-arrow-alt' style="color: var(--text-gray);"></i>
-                                <div class="reading-tag"><?php echo $current_reading; ?></div>
-                            </div>
-                            <div style="font-size: 12px; margin-top: 8px; color: var(--primary); font-weight: 600;">Net Usage: <?php echo $units_consumed; ?> Units</div>
-                        </td>
-                        <td style="text-align: right; font-weight: 700;">₹<?php echo number_format($electricity_amount, 2); ?></td>
-                    </tr>
-                    <?php if ($rent_amount > 0): ?>
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700;">Monthly Standard Rent</div>
-                            <div style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Fixed base rent for room</div>
-                        </td>
-                        <td>—</td>
-                        <td style="text-align: right; font-weight: 700;">₹<?php echo number_format($rent_amount, 2); ?></td>
-                    </tr>
-                    <?php endif; ?>
-                    <?php if ($maintenance > 0): ?>
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700;">Maintenance Charges</div>
-                        </td>
-                        <td>—</td>
-                        <td style="text-align: right; font-weight: 700;">₹<?php echo number_format($maintenance, 2); ?></td>
-                    </tr>
-                    <?php endif; ?>
-                    <?php if ($extra_charges > 0): ?>
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700;">Additional Charges</div>
-                            <div style="font-size: 13px; color: var(--text-gray); margin-top: 4px;"><?php echo htmlspecialchars($extra_charges_desc ? $extra_charges_desc : "Other one-off charges"); ?></div>
-                        </td>
-                        <td>—</td>
-                        <td style="text-align: right; font-weight: 700;">₹<?php echo number_format($extra_charges, 2); ?></td>
-                    </tr>
-                    <?php endif; ?>
-                    <?php if ($dues != 0): ?>
-                    <tr>
-                        <td>
-                            <div style="font-weight: 700; color: <?php echo $dues > 0 ? '#EF4444' : '#10B981'; ?>;">
-                                <?php echo $dues > 0 ? 'Arrears / Remaining' : 'Adjustment (Extra Paid)'; ?>
-                            </div>
-                            <div style="font-size: 13px; color: var(--text-gray); margin-top: 4px;">Carried forward from previous month</div>
-                        </td>
-                        <td>—</td>
-                        <td style="text-align: right; font-weight: 700; color: <?php echo $dues > 0 ? '#EF4444' : '#10B981'; ?>;">
-                            ₹<?php echo ($dues > 0 ? '+' : '-') . number_format(abs($dues), 2); ?>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="total-section">
-            <div class="total-box">
-                <div class="total-row">
-                    <span>Subtotal</span>
-                    <span style="font-weight: 700;">₹<?php echo number_format($electricity_amount + $rent_amount + $maintenance + $extra_charges, 2); ?></span>
+            <div class="brand-section">
+                <img src="../assets/img/logo.png?v=<?php echo time(); ?>" alt="Logo" class="brand-icon" style="width: 48px; height: 48px; object-fit: contain; transform: scale(1.3);">
+                <div class="brand-text">
+                    <h2><?php echo defined('HOUSE_NAME') ? HOUSE_NAME : 'Madhav kunj'; ?></h2>
+                    <p>Electricity Bill</p>
                 </div>
-                <?php if ($dues != 0): ?>
-                <div class="total-row">
-                    <span><?php echo $dues > 0 ? 'Arrears' : 'Extra Applied'; ?></span>
-                    <span style="color: <?php echo $dues > 0 ? '#EF4444' : '#10B981'; ?>; font-weight: 600;">
-                        ₹<?php echo ($dues > 0 ? '+' : '-') . number_format(abs($dues), 2); ?>
-                    </span>
+            </div>
+            <div class="title-section">
+                <h1><i class='bx bxs-zap'></i> ELECTRICITY BILL</h1>
+                <div class="month-pill"><?php echo htmlspecialchars($month_period); ?></div>
+            </div>
+        </div>
+
+        <div class="contact-info">
+            <div class="contact-item" style="align-items: flex-start;">
+                <i class='bx bx-map' style="margin-top: 2px;"></i>
+                <div style="line-height: 1.4;">
+                    <?php 
+                        $addr = defined('HOUSE_ADDRESS') ? HOUSE_ADDRESS : 'Vastu Estate colony behind RPS residents school, Patna Bihar- 801503';
+                        echo str_replace(', ', ',<br>', $addr);
+                    ?>
                 </div>
-                <?php endif; ?>
-                <div class="total-row grand-total" style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-                    <span style="flex-shrink: 0;">Grand Total</span>
-                    <span style="flex-shrink: 0;">₹<?php echo number_format($total_amount, 2); ?></span>
+            </div>
+            <div class="contact-item" style="white-space: nowrap;">
+                <i class='bx bx-phone-call'></i>
+                +91 6206936907
+            </div>
+            <div class="contact-item" style="white-space: nowrap;">
+                <i class='bx bx-envelope'></i>
+                madhavkunj@succorkart.in
+            </div>
+        </div>
+
+        <!-- Meta Cards -->
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-icon"><i class='bx bx-calendar'></i></div>
+                <div class="meta-info">
+                    <h4>Billing Date</h4>
+                    <p><?php echo date("F d, Y", strtotime($date)); ?></p>
+                </div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-icon"><i class='bx bx-user'></i></div>
+                <div class="meta-info">
+                    <h4>Billed To</h4>
+                    <p><?php echo htmlspecialchars($name); ?></p>
+                    <p class="sub-p">Room: <?php echo htmlspecialchars($room); ?></p>
+                </div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-icon"><i class='bx bx-receipt'></i></div>
+                <div class="meta-info">
+                    <h4>Invoice No.</h4>
+                    <p><?php echo $invoice_no; ?></p>
                 </div>
             </div>
         </div>
 
+        <!-- Meter Details -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class='bx bx-tachometer'></i>
+                <h3>Meter Reading Details</h3>
+            </div>
+            <div class="meter-flow">
+                <div class="flow-item">
+                    <h4>Current Reading</h4>
+                    <div class="val"><?php echo $current_reading; ?></div>
+                    <div class="unit">Units</div>
+                </div>
+                <div class="flow-arrow"><i class='bx bx-minus'></i></div>
+                <div class="flow-item">
+                    <h4>Previous Reading</h4>
+                    <div class="val"><?php echo $previous_reading; ?></div>
+                    <div class="unit">Units</div>
+                </div>
+                <div class="flow-arrow">=</div>
+                <div class="flow-item highlight">
+                    <h4>Units Consumed</h4>
+                    <div class="val"><?php echo $units_consumed; ?></div>
+                    <div class="unit">Units</div>
+                </div>
+            </div>
+            <div class="meter-meta">
+                <div class="meter-meta-item">
+                    <i class='bx bx-money'></i>
+                    <div class="meta-sm">
+                        <h5>Unit Rate</h5>
+                        <p>₹<?php echo number_format($rate_per_unit, 2); ?></p>
+                    </div>
+                </div>
+                <div class="meter-meta-item">
+                    <i class='bx bx-chip'></i>
+                    <div class="meta-sm">
+                        <h5>Meter Type</h5>
+                        <p>Digital</p>
+                    </div>
+                </div>
+                <div class="meter-meta-item">
+                    <i class='bx bx-calendar-check'></i>
+                    <div class="meta-sm">
+                        <h5>Reading Date</h5>
+                        <p><?php echo date("d M Y", strtotime($row['created_at'])); ?></p>
+                    </div>
+                </div>
+                <div class="meter-meta-item">
+                    <i class='bx bx-calendar-event'></i>
+                    <div class="meta-sm">
+                        <h5>Bill Period</h5>
+                        <p><?php echo htmlspecialchars($month_period); ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meter Photo (Conditional) -->
         <?php 
-        $display_img = !empty($row['meter_screenshot']) ? $row['meter_screenshot'] : ($row['meter_screenshot_orig'] ?? null);
+        $display_img = !empty($row['meter_screenshot_orig']) ? $row['meter_screenshot_orig'] : (!empty($row['meter_screenshot']) ? $row['meter_screenshot'] : null);
         if (!empty($display_img)): 
         ?>
-        <div style="margin-top: 15px; padding-top: 15px; border-top: 1.5px solid var(--border); page-break-inside: avoid;">
-            <h4 style="font-size: 10px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Meter Reading</h4>
-            <div class="meter-ss-container" style="background: var(--bg-light); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-width: 250px; margin: 0 auto;">
-                <img src="../uploads/meter_readings/<?php echo htmlspecialchars($display_img); ?>" alt="Meter Reading" style="width: 100%; height: auto; display: block;">
+        <div class="section-card">
+            <div class="section-header">
+                <i class='bx bx-camera'></i>
+                <h3>Meter Reading Photo</h3>
+            </div>
+            <div class="photo-body">
+                <img src="../uploads/meter_readings/<?php echo htmlspecialchars($display_img); ?>" alt="Meter Reading" class="photo-img">
+                <div class="photo-details">
+                    <div class="photo-det-row">
+                        <i class='bx bx-calendar'></i>
+                        <div class="photo-det-info">
+                            <h5>Photo Captured On</h5>
+                            <p><?php echo date("d M Y, h:i A", strtotime($row['created_at'])); ?></p>
+                        </div>
+                    </div>
+                    <div class="photo-det-row">
+                        <i class='bx bx-user'></i>
+                        <div class="photo-det-info">
+                            <h5>Captured By</h5>
+                            <p>Admin</p>
+                        </div>
+                    </div>
+                    <div class="photo-det-row">
+                        <i class='bx bx-message-square-detail'></i>
+                        <div class="photo-det-info">
+                            <h5>Note</h5>
+                            <p class="note">Reading captured for <?php echo date("F Y", strtotime($row['month'] . '-01')); ?>.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <?php endif; ?>
 
-        <footer class="footer">
-            <p><strong>Thank you for your payment!</strong><br>Generated by <?php echo SYSTEM_NAME; ?> for <?php echo HOUSE_NAME; ?>. Please keep this for your records.</p>
+        <!-- Breakdown Table -->
+        <table class="charges-table">
+            <thead>
+                <tr>
+                    <th><i class='bx bxs-zap' style="margin-right: 8px;"></i> Electricity Charges Breakdown</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Energy Charges (<?php echo $units_consumed; ?> Units @ ₹<?php echo number_format($rate_per_unit, 2); ?>)</td>
+                    <td>₹<?php echo number_format($electricity_amount, 2); ?></td>
+                </tr>
+                
+                <!-- Display dynamically based on DB values -->
+                
+            </tbody>
+        </table>
+
+        <!-- Total Box -->
+        <div class="total-box">
+            <div class="total-left">
+                <div class="total-icon">
+                    <i class='bx bx-file'></i>
+                </div>
+                <div>
+                    <h3>Total Amount Payable</h3>
+                    <p>(Inclusive of all charges)</p>
+                </div>
+            </div>
+            <div class="total-amount">
+                ₹<?php echo number_format($total_amount, 2); ?>
+            </div>
         </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="thank-you">♥ Thank you for your timely payment! ♥</div>
+            <div class="footer-query">For any queries, contact +91 7667184920</div>
+        </div>
+
     </div>
 
 </body>

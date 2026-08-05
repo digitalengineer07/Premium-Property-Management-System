@@ -22,24 +22,29 @@ if ($id <= 0) {
     exit;
 }
 
-// Start transaction to ensure all or nothing is deleted
+// 1. Protect Accounting Integrity: Check for any financial records
+$p_q = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = $id LIMIT 1");
+if ($p_q && mysqli_num_rows($p_q) > 0) {
+    echo json_encode(['success' => false, 'message' => 'Cannot delete a resident with existing financial records to protect accounting integrity. Please use the "Move Out" button instead.']);
+    exit;
+}
+
+// Start transaction for full cascaded purge
 mysqli_begin_transaction($conn);
 
 try {
-    // 1. Delete bills (electricity)
-    $stmt1 = mysqli_prepare($conn, "DELETE FROM electricity WHERE user_id = ?");
-    mysqli_stmt_bind_param($stmt1, "i", $id);
-    mysqli_stmt_execute($stmt1);
-
-    // 2. Delete rent records
-    $stmt2 = mysqli_prepare($conn, "DELETE FROM rent WHERE user_id = ?");
-    mysqli_stmt_bind_param($stmt2, "i", $id);
-    mysqli_stmt_execute($stmt2);
+    // 1. Delete bills
+    mysqli_query($conn, "DELETE FROM electricity WHERE user_id = $id");
+    mysqli_query($conn, "DELETE FROM rent WHERE user_id = $id");
+    
+    // 2. Delete non-financial traces (since financial is confirmed 0)
+    mysqli_query($conn, "DELETE FROM payment_notifications WHERE user_id = $id");
+    mysqli_query($conn, "DELETE FROM app_notifications WHERE user_id = $id");
+    mysqli_query($conn, "DELETE FROM queries WHERE user_id = $id");
+    mysqli_query($conn, "DELETE FROM documents WHERE user_id = $id");
 
     // 3. Delete user profile
-    $stmt3 = mysqli_prepare($conn, "DELETE FROM users WHERE id = ?");
-    mysqli_stmt_bind_param($stmt3, "i", $id);
-    mysqli_stmt_execute($stmt3);
+    mysqli_query($conn, "DELETE FROM users WHERE id = $id");
 
     mysqli_commit($conn);
     echo json_encode(['success' => true]);

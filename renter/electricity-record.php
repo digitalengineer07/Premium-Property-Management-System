@@ -35,7 +35,7 @@ $res_amount_paid = mysqli_query($conn, $q_amount_paid);
 $amount_paid = mysqli_fetch_assoc($res_amount_paid)['total'] ?? 0;
 
 // Query 3: Pending Amount
-$q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status != 'Paid'";
+$q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user_id AND status = 'Due'";
 $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
@@ -66,7 +66,7 @@ $last_reading = $latest_record['current_reading'] ?? 0;
 $last_reading_date = $latest_record ? date("d M Y", strtotime($latest_record['created_at'])) : 'N/A';
 
 function money($val) {
-    return '₹' . number_format((float)$val, 2);
+    return '₹' . number_format((float)$val);
 }
 ?>
 <!DOCTYPE html>
@@ -78,6 +78,15 @@ function money($val) {
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
+    
+    <!-- Immediate Theme Setter to prevent flashes -->
+    <script>
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+            }
+        })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -131,7 +140,7 @@ function money($val) {
             left: 0;
             top: 0;
             z-index: 100;
-            overflow-y: auto;
+           
         }
 
         /* Custom sleek scrollbar for the sidebar */
@@ -164,11 +173,14 @@ function money($val) {
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1;  overflow-y: auto;}
+        .nav-menu::-webkit-scrollbar { width: 4px; }
+        .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 16px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -187,7 +199,7 @@ function money($val) {
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -197,17 +209,17 @@ function money($val) {
         
         /* Top Header */
         .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
-        .header-title h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-title p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0; }
+        .header-title h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-title p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         
         /* Icons and buttons */
         .icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: white; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-dark); cursor: pointer; transition: 0.2s; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.02); text-decoration: none; }
         .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
-        .btn-outline-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); white-space: nowrap; }
+        .btn-outline-support { border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple); padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); white-space: nowrap; }
         .btn-outline-support:hover { background: rgba(98, 75, 255, 0.02); }
         
         /* KPI Cards */
@@ -235,15 +247,15 @@ function money($val) {
         
         /* Current Month Details */
         .cmd-panel { background: rgba(139, 92, 246, 0.02); }
-        .cmd-panel .panel-header h3 { display: flex; align-items: center; gap: 8px; color: var(--primary-purple); }
+        .cmd-panel .panel-header h3 { display: flex; align-items: center; gap: 2px; color: var(--primary-purple); }
         .cmd-list { display: flex; flex-direction: column; gap: 12px; }
         .cmd-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .cmd-item:last-child { border-bottom: none; padding-bottom: 0; }
         .cmd-label { font-size: 13px; color: var(--text-gray); font-weight: 500; }
         .cmd-value { font-size: 13px; color: var(--text-dark); font-weight: 700; }
         
-        .cmd-total { display: flex; justify-content: space-between; align-items: center; background: rgba(139, 92, 246, 0.08); padding: 12px 16px; border-radius: 12px; margin-top: 12px; }
-        .cmd-total .cmd-label { color: var(--primary-purple); font-weight: 700; font-size: 14px; }
+        .cmd-total { display: flex; justify-content: space-between; align-items: center; background: rgba(139, 92, 246, 0.08); padding: 10px 14px; border-radius: 12px; margin-top: 12px; }
+        .cmd-total .cmd-label { color: var(--primary-purple); font-weight: 700; font-size: 13px; }
         .cmd-total .cmd-value { color: var(--primary-purple); font-weight: 800; font-size: 16px; }
 
         /* Dropdown styling */
@@ -264,7 +276,7 @@ function money($val) {
         .status-badge.unpaid { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .status-badge.due { background: rgba(255, 75, 107, 0.1); color: #FF4B6B; }
 
-        .btn-table-action { background: white; border: 1px solid rgba(139, 92, 246, 0.2); color: var(--primary-purple); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; }
+        .btn-table-action { background: white; border: 1px solid rgba(139, 92, 246, 0.2); color: var(--primary-purple); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 2px; transition: 0.2s; }
         .btn-table-action:hover { background: rgba(139, 92, 246, 0.05); }
         .btn-table-action.pay { border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.05); }
         .btn-table-action.pay:hover { background: rgba(139, 92, 246, 0.1); }
@@ -273,7 +285,7 @@ function money($val) {
         .btn-view-more { background: none; border: none; color: var(--primary-purple); font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
     
     /* Standardized Notification Dropdown CSS */
@@ -353,7 +365,7 @@ function money($val) {
             .grid-2-1, .dashboard-3col { grid-template-columns: 1fr !important; gap: 20px !important; }
             .sidebar { width: 80px !important; padding: 24px 10px !important; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none !important; }
-            .nav-item { justify-content: center !important; padding: 12px !important; }
+            .nav-item { justify-content: center !important; padding: 10px 16px; }
             .nav-item i { font-size: 24px !important; }
             .main-content { margin-left: 80px !important; max-width: calc(100% - 80px) !important; }
         }
@@ -426,7 +438,7 @@ function money($val) {
             color: var(--text-gray, #64748B);
             font-size: 11px;
             font-weight: 600;
-            gap: 4px;
+            gap: 2px;
             transition: all 0.2s ease;
             padding: 6px 12px;
             border-radius: 12px;
@@ -484,6 +496,10 @@ function money($val) {
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
             <a href="electricity-record.php" class="nav-item active">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
@@ -507,12 +523,14 @@ function money($val) {
             <a href="profile.php" class="nav-item">
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
-            </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            </a></nav>
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
+            <a href="../logout.php" class="nav-item" style=" color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
-        </nav>
+        
+        </div>
     </aside>
 
     <!-- Main Content -->

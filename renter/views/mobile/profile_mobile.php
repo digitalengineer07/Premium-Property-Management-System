@@ -15,7 +15,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
 
     .m-profile-wrapper {
         background: var(--bg-main, #FAFBFC);
-        padding-bottom: 0px;
+        padding-bottom: 90px;
     }
 
     /* Header */
@@ -94,7 +94,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         cursor: pointer;
     }
@@ -155,7 +155,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
+        font-size: 13px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
     }
@@ -215,7 +215,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     }
 
     .mp-menu-text h3 {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 700;
         color: var(--text-dark, #0F172A);
         margin: 0 0 2px 0;
@@ -291,7 +291,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 2px;
         background: var(--white, #fff);
         border: 1px solid rgba(15, 23, 42, 0.1);
         color: var(--text-dark, #0F172A);
@@ -338,13 +338,13 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <i class='bx bx-menu-alt-left'></i>
             </div>
             <h1 class="m-page-title"
-                style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+                style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
                 <i class='bx bx-user-circle' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
                 Profile
             </h1>
         </div>
 
-        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+        <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
             <div class="header-icon-btn" id="themeToggleMobile"
                 onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
                 <i class='bx bx-moon'></i>
@@ -356,7 +356,7 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
                 <?php endif; ?>
             </div>
             <a href="#" class="header-profile-btn"
-                onclick="document.getElementById('profilePicInputMobile').click(); return false;"
+                onclick="openMobileProfile(); return false;"
                 style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                     <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile"
@@ -376,18 +376,18 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     <div class="mp-container animate-up" style="padding-top: 114px;">
         <div class="mp-user-card">
             <div class="mp-avatar-container" onclick="document.getElementById('profilePicInputMobile').click()"
-                style="cursor: pointer; width: 80px; height: 80px; flex-shrink: 0;">
+                style="cursor: pointer; width: 80px; height: 80px; min-width: 80px; min-height: 80px; max-width: 80px; max-height: 80px; flex-shrink: 0; flex-basis: 80px; position: relative;">
                 <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                     <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" class="mp-avatar-main"
                         id="profileAvatarImgMobile"
-                        style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
+                        style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; background: #F1F5F9; display: block;">
                 <?php else: ?>
                     <div class="mp-avatar-fallback" id="profileAvatarFallbackMobile"
-                        style="width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-purple, #624BFF); color: white; flex-shrink: 0; font-size: 28px; font-weight: 700;">
+                        style="width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-purple, #624BFF); color: white; flex-shrink: 0; font-size: 28px; font-weight: 700;">
                         <?php echo $avatar_initials; ?>
                     </div>
                     <img src="" alt="Profile" class="mp-avatar-main" id="profileAvatarImgMobile"
-                        style="display: none; width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
+                        style="display: none; width: 100%; height: 100%; min-width: 100%; min-height: 100%; aspect-ratio: 1/1; border-radius: 50%; object-fit: cover; background: #F1F5F9;">
                 <?php endif; ?>
                 <div class="mp-camera-btn">
                     <i class='bx bx-camera'></i>
@@ -395,7 +395,10 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
             </div>
             <div class="mp-user-details">
                 <h2><?php echo htmlspecialchars($d_name); ?></h2>
-                <div class="mp-room-badge">Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></div>
+                <div style="display: flex; gap: 2px; margin-top: 6px; justify-content: flex-start; align-items: center; flex-wrap: wrap;">
+                    <div class="mp-room-badge" style="white-space: nowrap;">Room <?php echo htmlspecialchars($user['room_no'] ?? 'N/A'); ?></div>
+                    <div class="mp-room-badge" style="background: rgba(16, 185, 129, 0.1); color: #10B981; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div>
+                </div>
             </div>
         </div>
 
@@ -494,11 +497,11 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         <a href="../logout.php" class="mp-btn-logout">
             <i class='bx bx-log-out'></i> Logout
         </a>
-    </div>
+    
+        </nav>
 </div>
 
-<nav class="mobile-bottom-nav"
-    style="display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; z-index: 2147483647 !important; transform: none !important; position: fixed !important; height: 72px !important; bottom: 8px !important; left: 16px !important; right: 16px !important; border-radius: 24px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.08) !important; border: 1px solid rgba(255,255,255,0.8) !important; padding: 0 16px !important; background: rgba(255,255,255,0.95) !important; backdrop-filter: blur(12px) !important; justify-content: space-around !important; align-items: center !important;">
+<nav class="mobile-bottom-nav">
     <a href="dashboard.php" class="mb-nav-item "><i class='bx bx-home'></i><span>Dashboard</span></a>
     <a href="my-payments.php" class="mb-nav-item "><i class='bx bx-credit-card'></i><span>Payments</span></a>
     <div class="mb-nav-center"
@@ -507,6 +510,6 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
     </div>
     <a href="payment-history.php" class="mb-nav-item "><i class='bx bx-history'></i><span>History</span></a>
     <a href="profile.php" class="mb-nav-item active"><i class='bx bx-user'></i><span>Profile</span></a>
-</nav>
+</div>
 
 <?php include 'mobile_notifications.php'; ?>

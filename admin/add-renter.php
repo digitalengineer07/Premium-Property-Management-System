@@ -37,22 +37,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Hash password
                 $hashed = password_hash($password, PASSWORD_DEFAULT);
                 $base_reading = (int)($_POST['base_reading'] ?? 0);
-                $advance_payment = (float)($_POST['advance_payment'] ?? 0);
+                $total_collected = (float)($_POST['advance_payment'] ?? 0);
+                $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
+                
+                // Split the total collected amount
+                $amount_to_sec = min($total_collected, $security_deposit);
+                $amount_to_adv = max(0, $total_collected - $amount_to_sec);
+                
+                // Set onboarding completed flag if they fully paid
+                $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
                 
                 $joining_date = $_POST['joining_date'] ?? null;
                 if(empty($joining_date)) $joining_date = date('Y-m-d');
                 $block = trim($_POST['block'] ?? '');
                 $floor = trim($_POST['floor'] ?? '');
                 $parking = trim($_POST['parking'] ?? '');
-                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?)");
+                
+                // Check if onboarding_completed column exists
+                mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+
+                $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssidddissss", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $advance_payment, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking);
+                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $amount_to_adv, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
                     $success = "Resident profile created successfully! <a href='../onboarding-guide.php?id=$new_id&pass=" . urlencode($password) . "' target='_blank' style='color: #10B981; text-decoration: underline; margin-left:10px;'>Print Onboarding Guide</a>";
+
+                    // Insert payment records for the ledger
+                    $sys_tx_id = 'SYS_ONB_' . strtoupper(substr(md5(uniqid()), 0, 10));
+                    if ($amount_to_sec > 0) {
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, 'Cash/Offline', $amount_to_sec, CURDATE(), 'Cash', '$sys_tx_id')");
+                    }
+                    if ($amount_to_adv > 0) {
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, 'Cash/Offline', $amount_to_adv, CURDATE(), 'Cash', '$sys_tx_id')");
+                    }
 
                     // Welcome Email Logic
                     require_once "utils_mailer.php";
@@ -88,6 +109,76 @@ $admin_user = s($_SESSION['admin']);
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/admin-design-system.css">
+    <style>
+        /* Modern Premium Styling for Onboarding */
+        .panel {
+            background: #1E293B;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+        .form-group label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94A3B8 !important;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .form-group input {
+            background: #0F172A !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 12px !important;
+            color: #F8FAFC !important;
+            height: 52px !important;
+            transition: all 0.3s ease !important;
+        }
+        .form-group input:focus {
+            background: #131E32 !important;
+            border-color: #6366F1 !important;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+            outline: none !important;
+        }
+        .form-group i {
+            color: #64748B !important;
+            transition: color 0.3s ease;
+        }
+        .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
+            color: #6366F1 !important;
+        }
+        .section-title {
+            font-size: 13px;
+            color: #6366F1;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-primary.submit-btn {
+            background: linear-gradient(135deg, #6366F1, #8B5CF6) !important;
+            border: none !important;
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3) !important;
+            transition: transform 0.2s, box-shadow 0.2s !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px;
+        }
+        .btn-primary.submit-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 25px rgba(99, 102, 241, 0.4) !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -96,13 +187,18 @@ $admin_user = s($_SESSION['admin']);
 <main class="main">
     <?php include 'header.php'; ?>
 
-    <div class="welcome animate-up">
-        <h1>Resident Onboarding</h1>
-        <p>Create a new account for a shifting-in tenant</p>
+    <div class="welcome animate-up" style="margin-bottom: 40px; padding: 10px 0;">
+        <h1 style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #ffffff 30%, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; margin-bottom: 12px; display: flex; align-items: center; gap: 18px;">
+            <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 12px; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);">
+                <i class='bx bx-user-pin' style="font-size: 32px; color: #818cf8; -webkit-text-fill-color: initial;"></i>
+            </div>
+            Resident Onboarding
+        </h1>
+        <p style="color: #94a3b8; font-size: 15px; max-width: 500px; line-height: 1.6; margin-left: 78px;">Create a new account for a shifting-in tenant. Fill in the required details below to instantly generate their secure profile.</p>
     </div>
 
     <div class="dashboard-grid-70 animate-up" style="margin-top: 30px; grid-template-columns: 1fr;">
-        <div style="max-width: 700px; margin: 0 auto; width: 100%;">
+        <div style="width: 100%;">
             <div class="panel">
                 <div class="panel-header" style="border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px;">
                     <div style="display: flex; align-items: center; gap: 15px;">
@@ -130,23 +226,23 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 <?php endif; ?>
 
-                <form method="POST">
+                <form method="POST" autocomplete="off">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Security & Login</h4>
+                        <div class="section-title">Security & Login</div>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Login Username</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-at' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;">
+                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Login Password</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-lock-alt' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="password" name="password" required placeholder="••••••••" class="pwd-input" style="padding-left: 45px; padding-right: 40px;">
+                                    <input type="password" name="password" required placeholder="••••••••" class="pwd-input" style="padding-left: 45px; padding-right: 40px;" autocomplete="new-password">
                                     <i class='bx bx-hide pwd-toggle' style="position: absolute; right: 16px; top: 14px; color: var(--text-gray); cursor: pointer; font-size: 20px;"></i>
                                 </div>
                             </div>
@@ -154,7 +250,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Personal Profile</h4>
+                        <div class="section-title">Personal Profile</div>
                         <div class="form-group">
                             <label>Resident Full Name</label>
                             <input type="text" name="name" required placeholder="Legal Name of Resident">
@@ -205,7 +301,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Initial Utility Setup</h4>
+                        <div class="section-title">Initial Utility Setup</div>
                         <div class="form-group">
                             <label>Starting Meter Reading (Previous Month Units)</label>
                             <div style="position: relative;">
@@ -217,15 +313,26 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-bottom: 30px;">
-                        <h4 style="font-size: 14px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Financial Initial Setup</h4>
+                        <div class="section-title">Financial Initial Setup</div>
                         <div class="form-group">
-                            <label>Advance Payment</label>
-                            <div style="display: flex; gap: 10px; align-items: stretch;">
-                                <div style="position: relative; flex: 1; display: flex; align-items: center;">
-                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="advance_payment" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                            <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
+                                <div style="flex: 1;">
+                                    <label class="form-label" style="font-weight: 600; color: #1E293B;" title="Total cash collected at joining">Total Initial Payment (₹)</label>
+                                <div style="position: relative; height: 48px;">
+                                    <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
+                                    <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
-                                <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
+                            </div>
+                                <div style="flex: 1;">
+                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Security Deposit (₹)</label>
+                                <div style="position: relative; height: 48px;">
+                                    <i class='bx bx-lock-alt' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
+                                    <input type="number" step="0.01" name="security_deposit" id="securityDepositInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                </div>
+                            </div>
+                                <div style="display: flex; align-items: flex-end;">
+                                    <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
+                                </div>
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the security/advance deposit received from the renter.</p>
                             <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
@@ -238,7 +345,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Rent Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_rent" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="0" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
@@ -254,7 +361,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
+                        <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
                             <i class='bx bx-user-plus'></i> Confirm and Create Account
                         </button>
                         <p style="text-align: center; color: var(--text-gray); font-size: 13px; margin-top: 20px;">
@@ -270,6 +377,17 @@ $admin_user = s($_SESSION['admin']);
 <script>
 function generateAdvanceQR() {
     let amount = document.getElementsByName('advance_payment')[0].value;
+    if (amount === '' || parseFloat(amount) < 0) {
+        alert('Advance Payment must be 0 or greater');
+        return;
+    }
+    
+    let secAmount = document.getElementsByName('security_deposit')[0].value;
+    if (secAmount === '' || parseFloat(secAmount) < 0) {
+        alert('Security Deposit must be 0 or greater');
+        return;
+    }
+    
     if(amount > 0) {
         let upiId = "nikhil119124-1@oksbi"; 
         let name = "Nikhil Kumar";
@@ -294,6 +412,25 @@ document.querySelectorAll('.pwd-toggle').forEach(icon => {
     });
 });
 
+function confirmSubmission(e) {
+    const totalPayment = parseFloat(document.getElementById('totalPaymentInput').value) || 0;
+    const securityDeposit = parseFloat(document.getElementById('securityDepositInput').value) || 0;
+    const fixedRent = parseFloat(document.getElementById('fixedRentInput').value) || 0;
+    
+    const expectedFull = securityDeposit + fixedRent;
+    
+    if (totalPayment > 0 && totalPayment !== expectedFull && totalPayment !== securityDeposit) {
+        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${totalPayment}) does not exactly match the expected Security Deposit (₹${securityDeposit}) or Full Onboarding (₹${expectedFull}).\n\nAre you sure you want to proceed with this custom amount?`);
+        if (!proceed) {
+            e.preventDefault();
+            return false;
+        }
+    }
+    return true;
+}
+
+document.querySelector('form').addEventListener('submit', confirmSubmission);
+
 // Auto-fetch last meter reading when Room No is entered
 document.getElementById('roomNoInput')?.addEventListener('blur', async function(e) {
     const roomNo = e.target.value.trim();
@@ -317,6 +454,20 @@ document.getElementById('roomNoInput')?.addEventListener('blur', async function(
     } catch (err) {
         console.error("Failed to fetch last reading", err);
     }
+});
+
+// Auto-hide zero values on focus for better UX
+document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('focus', function() {
+        if (this.value === '0' || this.value === '0.00') {
+            this.value = '';
+        }
+    });
+    input.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+            this.value = '0';
+        }
+    });
 });
 </script>
 

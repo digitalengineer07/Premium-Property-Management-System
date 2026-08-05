@@ -15,200 +15,1320 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <!doctype html>
 <html lang="en">
+
 <head>
-  <title><?php echo HOUSE_NAME; ?> - Premium Property Management</title>
-  <meta name="description" content="Manage your stay at <?php echo HOUSE_NAME; ?>. Access rent records, electricity bills, and support queries in one place.">
-  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <title><?php echo HOUSE_NAME; ?> - Premium Property Management</title>
+    <meta name="description"
+        content="Manage your stay at <?php echo HOUSE_NAME; ?>. Access rent records, electricity bills, and support queries in one place.">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- Fonts + Bootstrap -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Fonts + Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        :root {
+            --primary: #624BFF;
+            --primary-gradient: linear-gradient(90deg, #624BFF 0%, #8B5CF6 100%);
+            --text-main: #0b1c3c;
+            --text-gray: #64748b;
+            --bg-light: #f8fafc;
+            --border-light: #e2e8f0;
+        }
 
-  <style>
-    :root{
-      --panel-bg: linear-gradient(135deg, #d8f6ee 0%, #e5f3ff 60%);
-      --accent: #1f7f6a;
-      --card-radius: 18px;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body { 
-      font-family: "Inter", system-ui, sans-serif; 
-      background: #f3f7f9; 
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden; /* Prevent bounce scrolls */
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0b1c3c;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
 
-    .wrap {
-      flex: 1;
-      display:grid;
-      grid-template-columns: 1fr 460px;
-      gap:30px;
-      align-items:center;
-      padding: 0 48px;
-    }
+        .bg-slider {
+            position: fixed;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: -3;
+            background: transparent;
+        }
 
-    /* left visual panel */
-    .visual {
-      background: var(--panel-bg);
-      border-radius: 24px;
-      padding: 30px;
-      box-shadow: 0 16px 40px rgba(17,24,39,0.06);
-      display:flex;
-      gap:24px;
-      align-items:center;
-      justify-content:center;
-    }
-    .visual .text {
-      max-width: 520px;
-    }
-    .visual h1 { margin:0; font-size:34px; color:#0b3b33; }
-    .visual p { color: #164b44; opacity:.85; margin-top:10px; font-size:14px; }
-    .visual img { width:280px; border-radius:14px; }
+        .bg-slider .slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.95);
+            animation: fadeSlide 30s infinite;
+        }
 
-    /* right card */
-    .card-panel {
-      background: #ffffff;
-      border-radius: var(--card-radius);
-      padding: 28px;
-      box-shadow: 0 20px 48px rgba(10,20,30,0.05);
-      border: 1px solid rgba(10,20,30,0.03);
-    }
+        .bg-slider .slide-1 {
+            background-image: url('assets/img/vector_house_bg.png');
+            animation-delay: 0s;
+        }
 
-    .role-toggle {
-      display:flex;
-      gap:8px;
-      margin-bottom:18px;
-      background: #f5fbf8;
-      padding:6px; border-radius:12px;
-    }
-    .role-toggle button {
-      flex:1;
-      border-radius:10px;
-      border:0;
-      padding:10px 12px;
-      font-weight:600;
-      background:transparent;
-      cursor:pointer;
-      color:#114037;
-    }
-    .role-toggle button.active {
-      background: linear-gradient(180deg,#0ea37a,#007f61);
-      color:white;
-      box-shadow: 0 8px 20px rgba(16,78,63,0.12);
-    }
+        .bg-slider .slide-2 {
+            background-image: url('assets/img/vector_house_bg_2.png');
+            animation-delay: -24s;
+        }
 
-    .small-muted { color:#64748b; font-size:13px; margin-top:8px; }
+        .bg-slider .slide-3 {
+            background-image: url('assets/img/vector_house_bg_3.png');
+            animation-delay: -18s;
+        }
 
-    .login-small {
-      margin-top:12px;
-      font-size:13px;
-    }
+        .bg-slider .slide-4 {
+            background-image: url('assets/img/vector_house_bg_4.png');
+            animation-delay: -12s;
+        }
 
-    .brand {
-      font-weight:700; font-size:18px; color:#0b3b33;
-    }
+        .bg-slider .slide-5 {
+            background-image: url('assets/img/vector_house_bg_5.png');
+            animation-delay: -6s;
+        }
 
-    @media (max-width: 980px) {
-      body { height: auto; overflow: auto; }
-      .wrap { grid-template-columns: 1fr; padding:22px 15px; }
-      .visual img { display:none; }
-      .visual { justify-content:flex-start; }
-    }
-    
-    @media (max-width: 480px) {
-      .wrap { padding: 15px; gap: 15px; }
-      .visual { padding: 25px; border-radius: 18px; }
-      .visual h1 { font-size: 24px; }
-      .card-panel { padding: 20px; }
-    }
-  </style>
+        @keyframes fadeSlide {
+            0% {
+                opacity: 1;
+            }
+
+            16% {
+                opacity: 1;
+            }
+
+            20% {
+                opacity: 0;
+            }
+
+            96% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(to right, rgba(11, 28, 60, 0.85) 0%, rgba(11, 28, 60, 0.4) 45%, rgba(11, 28, 60, 0) 100%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            z-index: 10;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .logo-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo-icon {
+            color: #624BFF;
+            font-size: 46px;
+        }
+
+        .brand-leaf {
+            position: absolute;
+            bottom: -2px;
+            right: -4px;
+            font-size: 22px;
+            color: #624BFF;
+            transform: rotate(15deg);
+            text-shadow: -2px -2px 0 #f8fafc;
+        }
+
+        .brand-logo-text {
+            display: flex;
+            flex-direction: column;
+            margin-left: 2px;
+        }
+
+        .brand-logo-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            color: #ffffff;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .brand-logo-sub {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            color: #e2e8f0;
+            margin-top: 1px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .header-links .link-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #e2e8f0;
+            transition: color 0.2s;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .header-links .link-item:hover {
+            color: #ffffff;
+        }
+
+        .header-links .link-item i {
+            font-size: 20px;
+            color: #c7d2fe;
+            text-shadow: none;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-help {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 100px;
+            border: 1px solid #c7d2fe;
+            background: #e0e7ff;
+            color: #4338ca;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-left: 8px;
+        }
+
+        .btn-help:hover {
+            background: #EEF2FF;
+            box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Main Container */
+        .main-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1536px;
+            margin: 0 auto;
+            padding: 1rem 4rem 3rem 4rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 120px;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Left side - Hero */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            animation: fadeUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .welcome-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            background: #e0e7ff;
+            color: #4338ca;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 100px;
+            margin-bottom: 1.5rem;
+            width: fit-content;
+        }
+
+        .welcome-badge i {
+            font-size: 14px;
+            animation: pulseIcon 2s infinite;
+        }
+
+        .hero-section h1 {
+            font-family: "Outfit", sans-serif;
+            font-size: 46px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-section h1 span {
+            background: linear-gradient(90deg, #A78BFA 0%, #C084FC 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+        }
+
+        .deco-dash {
+            display: flex;
+            gap: 6px;
+            margin-top: 1.25rem;
+            margin-bottom: 1.25rem;
+            align-items: center;
+        }
+
+        .deco-dash span:first-child {
+            width: 44px;
+            height: 5px;
+            border-radius: 3px;
+            background: #624BFF;
+        }
+
+        .deco-dash span:last-child {
+            width: 8px;
+            height: 5px;
+            border-radius: 3px;
+            background: #cbd5e1;
+        }
+
+        .hero-section p.hero-desc {
+            color: #e2e8f0;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 420px;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Hero mini features */
+        .hero-mini-features {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .mini-feat {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .mini-feat:hover {
+            transform: translateY(-2px);
+        }
+
+        .mini-feat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .mini-feat:hover .mini-feat-icon {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .mf-1 .mini-feat-icon {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .mf-2 .mini-feat-icon {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .mf-3 .mini-feat-icon {
+            background: #faf5ff;
+            color: #9333ea;
+        }
+
+        .mini-feat-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-image-wrapper {
+            display: none;
+        }
+
+        /* Right side - Login Card */
+        .login-section {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            align-self: flex-start;
+            margin-top: 0;
+            animation: fadeLeft 0.8s ease-out 0.2s forwards;
+            opacity: 0;
+            width: 100%;
+        }
+
+        .login-card {
+            background: transparent;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 32px;
+            padding: clamp(1.25rem, 3vw, 1.5rem);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            position: relative;
+            transition: box-shadow 0.4s ease, transform 0.4s ease;
+        }
+
+        .login-card:hover {
+            box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.02);
+            transform: translateY(-4px);
+        }
+
+        .login-header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .login-header h4 {
+            font-size: 14px;
+            color: #c7d2fe;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .login-header h2 {
+            font-family: "Outfit", sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-header p {
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .shield-badge-wrapper {
+            position: relative;
+            width: 68px;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shield-badge-dots {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 8px 8px;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: spinSlow 30s linear infinite;
+        }
+
+        .shield-badge {
+            width: 44px;
+            height: 44px;
+            background: #e0e7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #624BFF;
+            font-size: 24px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(98, 75, 255, 0.1);
+            border: 2px solid #ffffff;
+        }
+
+        /* Ultra-modern Role Toggle */
+        .role-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px;
+            border-radius: 16px;
+            position: relative;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-glider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .role-toggle.admin-active .toggle-glider {
+            transform: translateX(100%);
+        }
+
+        .role-toggle button {
+            flex: 1;
+            border: 0;
+            padding: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            background: transparent;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            position: relative;
+            z-index: 2;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .role-toggle button i {
+            font-size: 18px;
+        }
+
+        .role-toggle button.active {
+            color: #4338ca;
+        }
+
+        .role-toggle button:active {
+            transform: scale(0.96);
+        }
+
+        /* Role Info Box */
+        .role-info-box {
+            background: #e0e7ff;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .role-info-box.admin-mode {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 9px 13px;
+        }
+
+        .role-info-icon {
+            width: 40px;
+            height: 40px;
+            background: #c7d2fe;
+            color: #4338ca;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .admin-mode .role-info-icon {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .role-info-text {
+            font-size: 13px;
+            color: #312e81;
+            font-weight: 500;
+            line-height: 1.4;
+            transition: all 0.3s ease;
+        }
+
+        .admin-mode .role-info-text {
+            color: #475569;
+        }
+
+        /* Buttons */
+        .btn-proceed {
+            background: linear-gradient(90deg, #624BFF 0%, #4F39F6 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2);
+        }
+
+        .btn-proceed:hover {
+            background: linear-gradient(90deg, #4F39F6 0%, #3730A3 100%);
+            box-shadow: 0 8px 20px rgba(98, 75, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-proceed:active {
+            transform: scale(0.98) translateY(0);
+            box-shadow: 0 2px 10px rgba(98, 75, 255, 0.2);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1rem 0;
+            color: #e2e8f0;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .divider:not(:empty):before {
+            margin-right: 1em;
+        }
+
+        .divider:not(:empty):after {
+            margin-left: 1em;
+        }
+
+        .btn-switch {
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-switch:hover {
+            background: #f8fafc;
+            color: #0f172a;
+            border-color: #cbd5e1;
+        }
+
+        .btn-switch:active {
+            transform: scale(0.98);
+            background: #e2e8f0;
+        }
+
+        .terms-note {
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .terms-note a {
+            color: #624BFF;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .terms-note a:hover {
+            color: #4F39F6;
+            text-decoration: underline;
+        }
+
+        /* Bottom Features Strip */
+        .bottom-features {
+            width: 100%;
+            max-width: 1250px;
+            margin: 20px auto 1rem auto;
+            background: transparent;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.06), 0 0 0 1px rgba(15, 23, 42, 0.02);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 20;
+            animation: fadeUp 0.8s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .bf-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .bf-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .bf-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .bf-item:hover .bf-icon {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .bf-item.secure .bf-icon {
+            background: #e0e7ff;
+            color: #4338ca;
+            border: 2px solid #c7d2fe;
+        }
+
+        .bf-item.access .bf-icon {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 2px solid #bfdbfe;
+        }
+
+        .bf-item.notif .bf-icon {
+            background: #faf5ff;
+            color: #9333ea;
+            border: 2px solid #e9d5ff;
+        }
+
+        .bf-item.support .bf-icon {
+            background: #fff7ed;
+            color: #ea580c;
+            border: 2px solid #fed7aa;
+        }
+
+        .bf-text h5 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 4px 0;
+        }
+
+        .bf-text p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            font-weight: 500;
+            line-height: 1.4;
+            max-width: 180px;
+        }
+
+        .bf-divider {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Abstract Glowing Orbs */
+        .premium-glow-left {
+            position: fixed;
+            bottom: -10vh;
+            left: -10vw;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, rgba(98, 75, 255, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        .premium-glow-right {
+            position: fixed;
+            top: -10vh;
+            right: -10vw;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        /* Page Footer */
+        footer {
+            padding: 0 0 20px 0;
+            text-align: center;
+            flex-shrink: 0;
+            z-index: 5;
+            position: relative;
+            margin-top: auto;
+        }
+
+        footer .copyright {
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes fadeSlide {
+
+            0%,
+            40% {
+                opacity: 0;
+            }
+
+            60%,
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes floatImg {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulseIcon {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes spinSlow {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1440px) {
+            .content-grid {
+                gap: 40px;
+                grid-template-columns: 1fr 420px;
+            }
+
+            .hero-section h1 {
+                font-size: 46px;
+            }
+
+            .hero-image-wrapper {
+                max-width: 480px;
+            }
+
+            .top-header {
+                padding: 1.5rem 3rem;
+            }
+        }
+
+        @media (max-width: 1150px) {
+            .bottom-features {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .bf-divider {
+                display: none;
+            }
+
+            .bf-item {
+                width: calc(50% - 20px);
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                height: auto;
+                overflow: visible;
+                overflow-x: hidden;
+            }
+
+            .main-wrap {
+                padding: 2rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                margin-bottom: 2rem;
+            }
+
+            .login-section {
+                justify-content: center;
+                max-width: 100%;
+            }
+
+            .login-card {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .hero-section {
+                align-items: center;
+                text-align: center;
+            }
+
+            .hero-section h1 {
+                font-size: 42px;
+            }
+
+            .hero-section p.hero-desc {
+                text-align: center;
+                margin: 0 auto 2rem auto;
+            }
+
+            .hero-mini-features,
+            .deco-dash {
+                justify-content: center;
+            }
+
+            .top-header {
+                padding: 1rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-wrap {
+                padding: 1rem;
+            }
+
+            .content-grid {
+                gap: 24px;
+                margin-bottom: 1rem;
+            }
+
+            .top-header {
+                flex-direction: column;
+                gap: 12px;
+                padding: 1rem;
+            }
+
+            .header-links {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 12px;
+                font-size: 14px;
+            }
+
+            .hero-section h1 {
+                font-size: 32px;
+                line-height: 1.1;
+                margin-bottom: 12px;
+            }
+
+            .hero-section p.hero-desc {
+                font-size: 14px;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-mini-features {
+                gap: 12px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .hero-mini-features>div {
+                width: auto;
+                max-width: none;
+                justify-content: center;
+                padding: 0;
+                background: transparent;
+                border: none;
+            }
+
+            .login-card {
+                padding: 1.25rem;
+                border-radius: 24px;
+            }
+
+            .bottom-features {
+                background: transparent;
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                border: none;
+                padding: 0 1rem 2rem 1rem;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                box-shadow: none;
+            }
+
+            .bf-item {
+                width: 100%;
+                justify-content: flex-start;
+                padding: 16px;
+                background: rgba(15, 23, 42, 0.5);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="wrap container">
+    <!-- Background Slider -->
+    <div class="bg-slider">
+        <div class="slide slide-1"></div>
+        <div class="slide slide-2"></div>
+        <div class="slide slide-3"></div>
+        <div class="slide slide-4"></div>
+        <div class="slide slide-5"></div>
+    </div>
+    <div class="bg-overlay"></div>
 
-  <!-- Left visual -->
-  <div class="visual">
-    <div class="text">
-      <div class="brand"><?php echo HOUSE_NAME; ?></div>
-      <h1>Efficient Rent & Bill Management</h1>
-      <p>Access your account to manage bills, review payment history, and oversee financial records. Proceed by selecting your role as an administrator (owner) or a resident.</p>
-      <div class="small-muted">Note: Administrators are provided with a comprehensive management dashboard, whereas residents access a personalized portal.</div>
+    <!-- Abstract Premium Glows -->
+    <div class="premium-glow-left"></div>
+    <div class="premium-glow-right"></div>
+
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="brand-logo">
+            <div class="logo-icon-wrapper">
+                <i class='bx bx-buildings brand-logo-icon'></i>
+                <i class='bx bxs-leaf brand-leaf'></i>
+            </div>
+            <div class="brand-logo-text">
+                <span class="brand-logo-title">Madhav Kunj</span>
+                <span class="brand-logo-sub">R E S I D E N C E</span>
+            </div>
+        </div>
+
+        <div class="header-links">
+            <div class="link-item">
+                <i class='bx bx-check-shield'></i> Secure
+            </div>
+            <div class="header-divider"></div>
+            <div class="link-item">
+                <i class='bx bx-phone-call'></i> Support
+            </div>
+            <a href="#" class="btn-help">
+                <i class='bx bx-headphone'></i> Help
+            </a>
+        </div>
+    </header>
+
+    <div class="main-wrap">
+        <div class="content-grid">
+
+            <!-- Left Hero Section -->
+            <div class="hero-section">
+                <div class="welcome-badge">
+                    <i class='bx bx-sparkles'></i> Welcome to <?php echo HOUSE_NAME; ?>
+                </div>
+
+                <h1>Smart Property<br><span>Management</span></h1>
+
+                <div class="deco-dash">
+                    <span></span><span></span>
+                </div>
+
+                <p class="hero-desc">A unified digital experience to manage your property, view bills, track payments,
+                    and access important records &ndash; all in one secure place.</p>
+
+                <div class="hero-mini-features">
+                    <div class="mini-feat mf-1">
+                        <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
+                        <div class="mini-feat-text">Easy Bill<br>Management</div>
+                    </div>
+                    <div class="mini-feat mf-2">
+                        <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
+                        <div class="mini-feat-text">Secure<br>Payments</div>
+                    </div>
+                    <div class="mini-feat mf-3">
+                        <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                        <div class="mini-feat-text">Real-time<br>Updates</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Right Login Section -->
+            <div class="login-section">
+                <div class="login-card">
+
+                    <div class="login-header-wrap">
+                        <div class="login-header">
+                            <h4>Welcome Back! 👋</h4>
+                            <h2>Sign In</h2>
+                            <p>Choose your role to continue</p>
+                        </div>
+                        <div class="shield-badge-wrapper">
+                            <div class="shield-badge-dots"></div>
+                            <div class="shield-badge">
+                                <i class='bx bx-check'></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="role-toggle" id="role-toggle-container">
+                        <div class="toggle-glider"></div>
+                        <button id="btn-renter" class="active" data-role="renter">
+                            <i class='bx bx-group'></i> Resident
+                        </button>
+                        <button id="btn-admin" data-role="admin">
+                            <i class='bx bx-shield-quarter'></i> Admin
+                        </button>
+                    </div>
+
+                    <div class="role-info-box" id="role-info-box">
+                        <div class="role-info-icon" id="role-info-icon-container">
+                            <i class='bx bxs-user-circle' id="role-info-icon"></i>
+                        </div>
+                        <div class="role-info-text" id="role-info-text">
+                            Access your resident portal to<br>view and pay bills, and more.
+                        </div>
+                    </div>
+
+                    <a id="proceed-btn" href="login.php" class="btn-proceed">
+                        Proceed to Login <i class='bx bx-right-arrow-alt' style="font-size: 20px;"></i>
+                    </a>
+
+                    <div class="divider">or</div>
+
+                    <a id="switch-btn" href="admin/login.php" class="btn-switch">
+                        <i class='bx bx-user'></i> Switch to Admin Login
+                    </a>
+
+                    <div class="terms-note">
+                        By continuing, you agree to our <a href="terms-and-conditions.php">Terms of Use</a><br>and <a
+                            href="privacy-policy.php">Privacy Policy</a>.
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Features Strip -->
+        <div class="bottom-features">
+            <div class="bf-item secure">
+                <div class="bf-icon"><i class='bx bx-check-shield'></i></div>
+                <div class="bf-text">
+                    <h5>Secure & Reliable</h5>
+                    <p>Your data is protected<br>with advanced security</p>
+                </div>
+            </div>
+            <div class="bf-divider"></div>
+            <div class="bf-item access">
+                <div class="bf-icon"><i class='bx bx-time-five'></i></div>
+                <div class="bf-text">
+                    <h5>24/7 Access</h5>
+                    <p>Access your account<br>anytime, anywhere</p>
+                </div>
+            </div>
+            <div class="bf-divider"></div>
+            <div class="bf-item notif">
+                <div class="bf-icon"><i class='bx bx-bell'></i></div>
+                <div class="bf-text">
+                    <h5>Instant Notifications</h5>
+                    <p>Get real-time updates<br>on bills and payments</p>
+                </div>
+            </div>
+            <div class="bf-divider"></div>
+            <div class="bf-item support">
+                <div class="bf-icon"><i class='bx bx-headphone'></i></div>
+                <div class="bf-text">
+                    <h5>Dedicated Support</h5>
+                    <p>We're here to help you<br>whenever you need</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="copyright">
+                &copy; <?php echo date('Y'); ?> <?php echo SYSTEM_NAME; ?>. All rights reserved.
+            </div>
+        </footer>
     </div>
 
-    <!-- optional illustration (add your uploaded image path) -->
-    <img src="assets/img/login-illustration.png" alt="illustration">
-  </div>
+    <script>
+        const toggleContainer = document.getElementById('role-toggle-container');
+        const btnRenter = document.getElementById('btn-renter');
+        const btnAdmin = document.getElementById('btn-admin');
+        const proceedBtn = document.getElementById('proceed-btn');
+        const switchBtn = document.getElementById('switch-btn');
+        const infoBox = document.getElementById('role-info-box');
+        const infoText = document.getElementById('role-info-text');
 
-  <!-- Right card -->
-  <div class="card-panel">
+        function setRole(role) {
+            if (role === 'renter') {
+                toggleContainer.classList.remove('admin-active');
+                btnRenter.classList.add('active');
+                btnAdmin.classList.remove('active');
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <div style="font-weight:700;font-size:20px">Sign in</div>
-      <div class="small-muted">Please choose your role</div>
-    </div>
+                infoBox.classList.remove('admin-mode');
+                infoBox.querySelector('i').className = 'bx bxs-user-circle';
+                infoText.innerHTML = 'Access your resident portal to<br>view and pay bills, and more.';
 
-    <div class="role-toggle" role="tablist" aria-label="Choose role">
-      <button id="btn-renter" class="active" data-role="renter">Resident</button>
-      <button id="btn-admin" data-role="admin">Admin</button>
-    </div>
+                proceedBtn.href = 'login.php';
 
-    <!-- Login links: we will redirect to the real login pages -->
-    <div id="login-area">
-      <p class="login-small">You will be taken to the Resident login form.</p>
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <a id="proceed-btn" href="login.php" class="btn btn-primary w-100">Proceed to Resident Login</a>
-      </div>
-      <div style="margin-top:14px" class="small-muted">If you want admin login, toggle the role to Admin and click proceed.</div>
-    </div>
+                switchBtn.href = 'admin/login.php';
+                switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Admin Login";
 
-  </div>
-</div>
+            } else {
+                toggleContainer.classList.add('admin-active');
+                btnAdmin.classList.add('active');
+                btnRenter.classList.remove('active');
 
-<footer style="padding: 16px; text-align: center; border-top: 1px solid rgba(0,0,0,0.05); background: white; flex-shrink: 0;">
-    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">
-        <a href="privacy-policy.php" style="color: inherit; text-decoration: none; margin: 0 8px;">Privacy Policy</a> |
-        <a href="terms-and-conditions.php" style="color: inherit; text-decoration: none; margin: 0 8px;">Terms & Conditions</a> |
-        <a href="cookie-policy.php" style="color: inherit; text-decoration: none; margin: 0 8px;">Cookie Policy</a> |
-        <a href="copyright.php" style="color: inherit; text-decoration: none; margin: 0 8px;">Copyright Notice</a>
-    </div>
-    <div style="font-size: 10px; color: #94a3b8;">
-        &copy; <?php echo date('Y'); ?> <?php echo SYSTEM_NAME; ?>. All rights reserved.
-    </div>
-</footer>
+                infoBox.classList.add('admin-mode');
+                infoBox.querySelector('i').className = 'bx bxs-dashboard';
+                infoText.innerHTML = 'Access the property management<br>dashboard to manage everything.';
 
-<script>
-  const btnRenter = document.getElementById('btn-renter');
-  const btnAdmin = document.getElementById('btn-admin');
-  const proceedBtn = document.getElementById('proceed-btn');
-  const loginArea = document.getElementById('login-area');
+                proceedBtn.href = 'admin/login.php';
 
-  function setRole(role) {
-    if (role === 'renter') {
-      btnRenter.classList.add('active');
-      btnAdmin.classList.remove('active');
-      proceedBtn.href = 'login.php';
-      loginArea.querySelector('.login-small').innerText = 'You will be taken to the Resident login form.';
-      proceedBtn.innerText = 'Proceed to Resident Login';
-    } else {
-      btnAdmin.classList.add('active');
-      btnRenter.classList.remove('active');
-      proceedBtn.href = 'admin/login.php';
-      loginArea.querySelector('.login-small').innerText = 'You will be taken to the Admin login form.';
-      proceedBtn.innerText = 'Proceed to Admin Login';
-    }
-  }
+                switchBtn.href = 'login.php';
+                switchBtn.innerHTML = "<i class='bx bx-user'></i> Switch to Resident Login";
+            }
+        }
 
-  btnRenter.addEventListener('click', ()=> setRole('renter'));
-  btnAdmin.addEventListener('click', ()=> setRole('admin'));
-</script>
+        btnRenter.addEventListener('click', () => setRole('renter'));
+        btnAdmin.addEventListener('click', () => setRole('admin'));
+    </script>
 
 </body>
+
 </html>

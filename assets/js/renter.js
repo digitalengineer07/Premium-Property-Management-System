@@ -57,14 +57,79 @@ const paymentModal = document.getElementById('paymentModal');
 const scannerModal = document.getElementById('scannerModal');
 const dynamicQR = document.getElementById('dynamicQR');
 const amountSpan = document.getElementById('paymentAmountDisplay');
+// Toast Notification System
+window.showToast = function(message, type = 'error') {
+    const toast = document.createElement('div');
+    toast.style.position = 'fixed';
+    toast.style.bottom = '30px'; // Move to bottom for better UX on mobile
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%) translateY(20px)';
+    toast.style.backgroundColor = type === 'error' ? '#EF4444' : '#10B981';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 16px';
+    toast.style.borderRadius = '12px'; // Square-ish rounded corners look better for wrapped text
+    toast.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
+    toast.style.zIndex = '999999';
+    toast.style.fontSize = '13px';
+    toast.style.fontWeight = '500'; // Less bold
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    toast.style.pointerEvents = 'none';
+    toast.style.textAlign = 'left'; // Align text left when wrapping
+    toast.style.width = 'max-content';
+    toast.style.maxWidth = '90vw';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '10px';
+    
+    const iconClass = type === 'error' ? 'bx-error-circle' : 'bx-check-circle';
+    toast.innerHTML = `<i class='bx ${iconClass}' style='font-size: 20px; flex-shrink: 0;'></i> <span>${message}</span>`;
+    
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
+    
+    // Animate out
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
+};
+
 const paymentTitle = document.getElementById('paymentTitle');
 const hiddenBillType = document.getElementById('hiddenBillType');
 const hiddenBillId = document.getElementById('hiddenBillId');
+const hiddenMonth = document.getElementById('hiddenMonth');
 const hiddenAmount = document.getElementById('hiddenAmount');
 const paymentTimer = document.getElementById('paymentTimer');
 let timerInterval = null;
 
-function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null) {
+function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = null, month = '') {
+    // Level 3 Security: Rate Limiting to prevent modal opening spam
+    const rateLimitKey = 'lastModalOpenTime';
+    const lastOpen = localStorage.getItem(rateLimitKey);
+    const cooldownMs = 2 * 60 * 1000; // 2 minutes cooldown
+    
+    if (lastOpen && (Date.now() - parseInt(lastOpen)) < cooldownMs) {
+        const remainingSecs = Math.ceil((cooldownMs - (Date.now() - parseInt(lastOpen))) / 1000);
+        const remainingMins = Math.ceil(remainingSecs / 60);
+        
+        if (typeof showToast === 'function') {
+            showToast(`Security Limit: Please wait ${remainingMins} min(s) to open scanner.`, "error");
+        } else {
+            alert(`Security Limit: Please wait ${remainingMins} min(s) to open scanner.`);
+        }
+        return;
+    }
+    
+    // Set timestamp for next modal open rate limit check
+    localStorage.setItem(rateLimitKey, Date.now());
+
     if (!amountSpan) return;
     
     // Format amount securely (strip commas, ensure 2 decimal places)
@@ -84,6 +149,7 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
     hiddenAmount.value = numericAmount;
     hiddenBillType.value = type;
     hiddenBillId.value = id;
+    if (hiddenMonth) hiddenMonth.value = month;
 
     const upiId = "nikhil119124-1@oksbi";
     const name = "Nikhil Kumar";
@@ -93,16 +159,18 @@ function openPaymentModal(amount, title = "Rent + Main.", type = "total", id = n
     // Unique transaction reference for secure tracking
     const trRef = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
     
-    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=${trRef}&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(cleanTitle)}`;
+    // Updated robust deep link format with merchant code and intent mode
+    const upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=${trRef}&mc=0000&mode=02&am=${formattedAmount}&cu=INR&tn=${encodeURIComponent(cleanTitle)}`;
     dynamicQR.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(upiUrl)}`;
     
     const deepLinkBtn = document.getElementById('upiDeepLinkBtn');
     if (deepLinkBtn) {
         deepLinkBtn.href = upiUrl;
-        deepLinkBtn.style.display = 'flex';
+        deepLinkBtn.target = "_top"; // Ensure it breaks out of any constrained context
     }
     
     paymentModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
     startTimer(300);
 }
 
@@ -122,9 +190,9 @@ function startTimer(duration) {
     }, 1000);
 }
 
-function closePaymentModal() { paymentModal.style.display = 'none'; if (timerInterval) clearInterval(timerInterval); }
-function openScannerModal() { scannerModal.style.display = 'flex'; }
-function closeScannerModal() { scannerModal.style.display = 'none'; }
+function closePaymentModal() { paymentModal.style.display = 'none'; document.body.style.overflow = ''; if (timerInterval) clearInterval(timerInterval); }
+function openScannerModal() { scannerModal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+function closeScannerModal() { scannerModal.style.display = 'none'; document.body.style.overflow = ''; }
 
 window.addEventListener('click', function (event) {
     if (event.target == paymentModal) closePaymentModal();

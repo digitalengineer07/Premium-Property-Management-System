@@ -17,26 +17,34 @@ if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
     $prev_month_str = date('F Y', strtotime('first day of last month'));
 }
 
-// 1) Rent Collected: overall total rent amount collected
-$r_coll_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM electricity WHERE status='Paid'"))['total'];
-$r_coll_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'"))['total'];
-$rent_collected_total = $r_coll_elec + $r_coll_rent;
+// 1) Rent Collected: overall total rent amount collected (combining explicit rent and the rent portion of combined bills)
+$explicit_rent = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
+$rent_from_combined = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance + extra_charges + dues), 0) AS total FROM electricity WHERE status = 'Paid'"))['total'];
+$rent_collected_total = $explicit_rent + $rent_from_combined;
 
-// 2) Total Dues: total due amount of all renters combined (subtracts partial payments)
-$d_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid'"))['total'];
-$d_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status!='Paid'"))['total'];
-$p_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='electricity' AND e.status='Partial'"))['total'];
-$p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial'"))['total'];
-$total_dues_total = max(0, ($d_elec + $d_rent) - ($p_elec + $p_rent));
+// 2) Total Dues: total due amount of all renters combined
+$d_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity"))['total'];
+$d_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent"))['total'];
+$p_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type IN ('electricity', 'elec_rent', 'total')"))['total'];
+$p_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
 
-// 3) Electricity Paid: sum of all electricity amounts paid for the selected month
-$elec_collected_total = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount),0) AS total FROM electricity WHERE status='Paid' AND month='$prev_month_str'"))['total'];
+// Include pending negative adjustments (money users owe)
+$d_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(ABS(pending_adjustment)),0) AS total FROM users WHERE pending_adjustment < 0"))['total'];
+// User wallets (advances) reduce total dues
+$adv_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(advance_payment),0) AS total FROM users"))['total'];
+$total_dues_total = max(0, (($d_elec_total + $d_rent_total + $d_adj) - ($p_elec_total + $p_rent_total)) - $adv_adj);
 
-// 5) Total Revenue: combined total of all paid renter amounts (rent + elec + advance + partials)
-$rev_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status='Paid'"))['total'];
-$rev_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'"))['total'];
-$rev_adv = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type='advance'"))['total'];
-$total_revenue_total = $rev_elec + $rev_rent + $p_elec + $p_rent + $rev_adv;
+// 3) Electricity Paid: sum of all electricity amounts paid for the selected month (electricity portion only)
+$elec_collected_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(amount), 0) AS total FROM electricity WHERE status = 'Paid' AND month='$prev_month_str'"))['total'];
+
+// 5) Total Revenue: actual cash/bank/UPI received (excluding wallet auto-deductions)
+$total_revenue_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT IFNULL(SUM(paid_amount),0) AS total 
+    FROM payments 
+    WHERE (payment_mode NOT LIKE '%Wallet Auto-Deduction%' OR payment_mode IS NULL) 
+    AND (sys_tx_id NOT LIKE 'SYS_ADV_%' OR sys_tx_id IS NULL) 
+    AND (payment_mode != 'wallet' OR payment_mode IS NULL)
+"))['total'];
 
 $renters = mysqli_query($conn, "SELECT * FROM users WHERE status = 'active' ORDER BY id ASC");
 $elec_records = mysqli_query($conn, "SELECT e.*, u.name as renter_name FROM electricity e JOIN users u ON e.user_id = u.id ORDER BY e.id DESC LIMIT 6");
@@ -124,12 +132,12 @@ elseif ($transaction_range === '30d') $tx_where = "WHERE payment_date >= DATE_SU
 $unified_tx_sql = "
     SELECT * FROM (
         SELECT 
-            id, user_id, bill_type as type, bill_id, total_amount as amount, payment_mode as mode, 
+            id, user_id, bill_type as type, bill_id, paid_amount as amount, adjustment_amount, payment_mode as mode, 
             payment_date, payment_time, 'Success' as status, 'admin' as source
         FROM payments
         UNION ALL
         SELECT 
-            id, user_id, bill_type as type, bill_id, amount, 'UPI' as mode, 
+            id, user_id, bill_type as type, bill_id, amount, 0 as adjustment_amount, 'UPI' as mode, 
             DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
         FROM payment_notifications
     ) as combined_tx
@@ -342,6 +350,156 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         }
         @media (min-width: 769px) {
             .hide-desktop { display: none !important; }
+        }
+
+        /* PREMIUM DASHBOARD ENHANCEMENTS */
+        .welcome-header {
+            background: linear-gradient(135deg, #624BFF 0%, #8B5CF6 100%) !important;
+            color: white !important;
+            padding: 32px 40px !important;
+            border-radius: 24px !important;
+            box-shadow: 0 20px 40px rgba(98, 75, 255, 0.2) !important;
+            margin-bottom: 40px !important;
+            position: relative;
+            overflow: hidden;
+            border: none !important;
+        }
+        .welcome-header::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background: url('../assets/img/pattern.svg') no-repeat right center;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .welcome-text h1 {
+            color: white !important;
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            margin-bottom: 8px !important;
+        }
+        .welcome-text p {
+            color: rgba(255,255,255,0.9) !important;
+            font-size: 15px !important;
+        }
+        .welcome-header .btn-outline {
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            color: white !important;
+            backdrop-filter: blur(10px) !important;
+            transition: all 0.3s ease !important;
+        }
+        .welcome-header .btn-outline:hover {
+            background: rgba(255,255,255,0.25) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+        
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.7) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255,255,255,0.5) !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+            border-radius: 20px !important;
+            padding: 24px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            position: relative;
+            overflow: hidden;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
+            border-color: rgba(98, 75, 255, 0.2) !important;
+        }
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(98, 75, 255, 0.5), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .kpi-card:hover::before {
+            opacity: 1;
+        }
+        .kpi-value {
+            font-size: 28px !important;
+            font-weight: 800 !important;
+            background: linear-gradient(90deg, #0F172A, #334155);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 12px 0 4px 0 !important;
+        }
+        .kpi-label {
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            color: #64748B !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi-icon {
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 24px !important;
+        }
+        
+        .panel {
+            background: white !important;
+            border-radius: 24px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.01) !important;
+            border: 1px solid rgba(226, 232, 240, 0.6) !important;
+            padding: 28px !important;
+            transition: all 0.3s ease !important;
+        }
+        .panel:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02) !important;
+        }
+        .panel-header h2 {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            color: #1E293B !important;
+        }
+        
+        /* Table enhancements */
+        table {
+            border-collapse: separate !important;
+            border-spacing: 0 8px !important;
+        }
+        th {
+            background: transparent !important;
+            color: #64748B !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            border: none !important;
+            padding: 0 16px 8px 16px !important;
+        }
+        td {
+            background: #F8FAFC !important;
+            border: none !important;
+            padding: 16px !important;
+            transition: background 0.2s ease !important;
+        }
+        td:first-child { border-radius: 12px 0 0 12px !important; }
+        td:last-child { border-radius: 0 12px 12px 0 !important; }
+        tr:hover td {
+            background: #F1F5F9 !important;
+        }
+        
+        /* Status Badges Premium */
+        .status-badge {
+            border-radius: 8px !important;
+            font-weight: 700 !important;
+            padding: 6px 12px !important;
+            font-size: 11px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
     </style>
 
@@ -569,7 +727,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                             <?php else: while ($tx = mysqli_fetch_assoc($recent_transactions)): ?>
                             <tr>
                                 <td data-label="Resident">
-                                    <div style="font-weight: 600;"><?php echo s($tx['name']); ?></div>
+                                    <div style="font-weight: 600;"><?php echo htmlspecialchars($tx['name']); ?></div>
                                     <div style="font-size: 10px; color: var(--text-gray);">
                                         <?php echo date('M d, H:i', strtotime($tx['payment_date'].' '.$tx['payment_time'])); ?>
                                         <i class="bx <?php echo $tx['source'] == 'admin' ? 'bx-user-check' : 'bx-globe'; ?>" title="<?php echo $tx['source'] == 'admin' ? 'Manual' : 'Online'; ?>" style="margin-left:5px; opacity:0.6;"></i>
@@ -578,7 +736,12 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 <td data-label="Ref/ID">
                                     <code style="font-size: 10px; background: var(--bg-main); padding: 2px 4px; border-radius: 4px;">#<?php echo $tx['id']; ?></code>
                                 </td>
-                                <td data-label="Amount" style="font-weight: 700;">₹<?php echo number_format($tx['amount']); ?></td>
+                                <td data-label="Amount">
+                                    <div style="font-weight: 700;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                    <?php if ($tx['adjustment_amount'] < 0): ?>
+                                    <div style="font-size: 10px; color: #10B981; font-weight: 600; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet</div>
+                                    <?php endif; ?>
+                                </td>
                                 <td data-label="Type" style="font-size: 11px;">
                                     <span style="text-transform: capitalize;"><?php echo $tx['type']; ?></span>
                                     <div style="font-size: 9px; opacity: 0.7;"><?php echo $tx['mode']; ?></div>
@@ -619,7 +782,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                     <i class='bx <?php echo $tx['type'] == 'rent' ? 'bx-home' : 'bx-bulb'; ?>'></i>
                                 </div>
                                 <div>
-                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo s($tx['name']); ?></div>
+                                    <div style="font-weight: 700; color: var(--text-dark); font-size: 14px;"><?php echo htmlspecialchars($tx['name']); ?></div>
                                     <div style="font-size: 11px; color: var(--text-gray); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
                                         <?php echo date('M d, H:i', strtotime($tx['payment_date'].' '.$tx['payment_time'])); ?>
                                         <i class="bx <?php echo $tx['source'] == 'admin' ? 'bx-user-check' : 'bx-globe'; ?>" style="opacity:0.6;"></i>
@@ -627,7 +790,10 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($tx['amount']); ?></div>
+                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                <?php if($tx['adjustment_amount'] < 0): ?>
+                                    <div style="font-size: 9px; color: #10B981; font-weight: 700; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> WALLET</div>
+                                <?php endif; ?>
                                 <div style="font-size: 10px; color: var(--text-gray); text-transform: uppercase; margin-top: 2px; font-weight: 600;">
                                     <?php echo $tx['type']; ?> &bull; <?php echo $tx['mode']; ?>
                                 </div>

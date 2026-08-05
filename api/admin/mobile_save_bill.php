@@ -158,10 +158,8 @@ try {
 
     $bill_id = mysqli_insert_id($conn);
     
-    // Reset pending adjustment since dues are included in this bill
-    $update_stmt = mysqli_prepare($conn, "UPDATE users SET pending_adjustment = 0 WHERE id = ?");
-    mysqli_stmt_bind_param($update_stmt, "i", $user_id);
-    mysqli_stmt_execute($update_stmt);
+    
+    // Legacy pending_adjustment logic removed
 
     mysqli_commit($conn);
 

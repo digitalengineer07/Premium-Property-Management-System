@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="header-actions">
-            <div class="notification-wrapper">
+            <div class="notification-wrapper" style="position: relative; display: inline-block;">
                 <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                     <i class='bx bx-bell'></i>
                     <?php if ($unread_count > 0): ?>
@@ -33,11 +33,11 @@
                             <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                         <?php endif; ?>
                     </div>
-                    <div style="max-height: 350px; overflow-y: auto;">
+                    <div style="max-height: 350px;">
                         <?php if (empty($unread_notifications)): ?>
                             <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                 <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                             </div>
                         <?php else: ?>
                             <?php foreach ($unread_notifications as $notif): ?>
@@ -51,7 +51,7 @@
                                         </div>
                                         <div style="flex: 1; padding-right: 36px;">
                                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                 <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                             </div>
                                             <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -96,10 +96,10 @@
                 </div>
                 
                 <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                    <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                    <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                         <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                     </a>
-                    <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                    <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                         <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                     </a>
                 </div>
@@ -157,7 +157,10 @@
                     </form>
                 </div>
                 <h2 style="margin: 0 0 12px 0; font-weight: 800; font-size: 22px; color: var(--text-dark); letter-spacing: -0.5px;"><?php echo htmlspecialchars($display_name); ?></h2>
-                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1);"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+                <div style="display: flex; gap: 2px; flex-wrap: wrap;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(98, 75, 255, 0.1); white-space: nowrap;"><i class='bx bx-door-open' style="font-size: 17px;"></i> Room <?php echo htmlspecialchars($user['room_no']); ?></span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 18px; background: rgba(16, 185, 129, 0.1); color: #10B981; font-weight: 700; border-radius: 20px; font-size: 13.5px; box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.1); white-space: nowrap;"><i class='bx bx-id-card' style="font-size: 17px;"></i> RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></span>
+                </div>
             </div>
 
             <div class="panel">
@@ -166,6 +169,7 @@
                       <button class="btn-outline" onclick="if(typeof openProfileSection === 'function') { openProfileSection('all'); } else { document.getElementById('editProfileModal').style.display='flex'; }"><i class='bx bx-edit-alt'></i> Edit</button>
                   </div>
                   <div class="info-list">
+                      <div class="info-row"><div class="info-label"><i class='bx bx-id-card'></i> Unique ID</div><div class="info-value" style="color: #10B981;">RNT-<?php $h=md5($user['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div></div>
                       <div class="info-row"><div class="info-label"><i class='bx bx-user'></i> Full Name</div><div class="info-value"><?php echo htmlspecialchars($user['name'] ?: '-'); ?></div></div>
                       <?php
                       $email_val = $user['email'] ?: '-';
@@ -193,7 +197,7 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-building-house'></i></div>
-                        <div class="residence-info"><h4>Block / Building</h4><p>Block A</p></div>
+                        <div class="residence-info"><h4>Block / Building</h4><p><?php echo htmlspecialchars($user['block'] ?: 'N.A.'); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-map-alt'></i></div>
@@ -201,7 +205,7 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-layer'></i></div>
-                        <div class="residence-info"><h4>Floor</h4><p>2nd Floor</p></div>
+                        <div class="residence-info"><h4>Floor</h4><p><?php echo htmlspecialchars($user['floor'] ?: 'N.A.'); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-calendar-event'></i></div>
@@ -209,15 +213,23 @@
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-rupee'></i></div>
-                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹<?php echo number_format($user['fixed_rent'] ?? 8000, 2); ?></p></div>
+                        <div class="residence-info"><h4>Monthly Rent</h4><p>₹<?php echo number_format($user['fixed_rent'] ?? 0); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon"><i class='bx bx-wrench'></i></div>
+                        <div class="residence-info"><h4>Maintenance</h4><p>₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-check-shield'></i></div>
-                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 16000, 2); ?></p></div>
+                        <div class="residence-info"><h4>Security Deposit</h4><p>₹<?php echo number_format($user['security_deposit'] ?? 0); ?></p></div>
+                    </div>
+                    <div class="residence-item">
+                        <div class="residence-icon" style="background: rgba(16,185,129,0.1); color: #10B981;"><i class='bx bx-wallet'></i></div>
+                        <div class="residence-info"><h4>Advance Wallet</h4><p>₹<?php echo number_format($user['advance_payment'] ?? 0); ?></p></div>
                     </div>
                     <div class="residence-item">
                         <div class="residence-icon"><i class='bx bx-car'></i></div>
-                        <div class="residence-info"><h4>Parking Slot</h4><p>A-15</p></div>
+                        <div class="residence-info"><h4>Parking Slot</h4><p><?php echo htmlspecialchars($user['parking'] ?: 'N.A.'); ?></p></div>
                     </div>
                 </div>
             </div>

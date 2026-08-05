@@ -12,44 +12,49 @@ if (!isset($_SESSION['admin']) && !$is_cron) {
     exit;
 }
 
-// Allow manual run or triggered via task
-$day = (int)date('d');
+// Removed the $day < 20 check. Reminders now rely strictly on due_date.
 $is_force = isset($_GET['force']);
 $error_msg = "";
 $sent_count = 0;
 $process_done = false;
 
-if ($day < 20 && !$is_force) {
-    $error_msg = "Automated reminders are scheduled to trigger only after the 20th of each month (Current Day: $day).";
-} else {
-    // 1. Process Rent Reminders
-    $rent_q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND r.reminder_status = 'Enabled'");
-    while ($r = mysqli_fetch_assoc($rent_q)) {
-        $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$r['id']} AND bill_type='Rent' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
-        if (mysqli_num_rows($check) == 0 && !empty($r['email'])) {
-            $details = ["Rent for " . $r['month']];
-            if (send_payment_reminder_email($r['email'], $r['name'], $details, $r['rent_amount'])) {
-                log_reminder($conn, $r['user_id'], $r['id'], 'Rent', $r['month'], 'Auto', 'Sent');
-                $sent_count++;
-            }
-        }
-    }
+// 1. Process Rent Reminders
+$rent_q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND r.reminder_status = 'Enabled' AND r.due_date < CURDATE()");
+while ($r = mysqli_fetch_assoc($rent_q)) {
+    $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$r['id']} AND bill_type='Rent' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
+    if (mysqli_num_rows($check) == 0 && !empty($r['email'])) {
+        $details = ["Rent for " . $r['month']];
+        if (send_payment_reminder_email($r['email'], $r['name'], $details, $r['rent_amount'])) {
+            log_reminder($conn, $r['user_id'], $r['id'], 'Rent', $r['month'], 'Auto', 'Sent');
+            
+            // Add to user panel notification
+            $msg_safe = mysqli_real_escape_string($conn, "Your rent for " . $r['month'] . " is overdue. Please pay at your earliest convenience.");
+            mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$r['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
 
-    // 2. Process Electricity Reminders
-    $elec_q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND e.reminder_status = 'Enabled'");
-    while ($e = mysqli_fetch_assoc($elec_q)) {
-        $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$e['id']} AND bill_type='Electricity' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
-        if (mysqli_num_rows($check) == 0 && !empty($e['email'])) {
-            $details = ["Monthly Rent & Electricity Bill for " . $e['month']];
-            $pdf_path = !empty($e['bill_file']) ? $e['bill_file'] : null;
-            if (send_payment_reminder_email($e['email'], $e['name'], $details, $e['total_amount'], $pdf_path)) {
-                log_reminder($conn, $e['user_id'], $e['id'], 'Electricity', $e['month'], 'Auto', 'Sent');
-                $sent_count++;
-            }
+            $sent_count++;
         }
     }
-    $process_done = true;
 }
+
+// 2. Process Electricity Reminders
+$elec_q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND e.reminder_status = 'Enabled' AND e.due_date < CURDATE()");
+while ($e = mysqli_fetch_assoc($elec_q)) {
+    $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$e['id']} AND bill_type='Electricity' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
+    if (mysqli_num_rows($check) == 0 && !empty($e['email'])) {
+        $details = ["Monthly Rent & Electricity Bill for " . $e['month']];
+        $pdf_path = !empty($e['bill_file']) ? $e['bill_file'] : null;
+        if (send_payment_reminder_email($e['email'], $e['name'], $details, $e['total_amount'], $pdf_path)) {
+            log_reminder($conn, $e['user_id'], $e['id'], 'Electricity', $e['month'], 'Auto', 'Sent');
+            
+            // Add to user panel notification
+            $msg_safe = mysqli_real_escape_string($conn, "Your bill for " . $e['month'] . " is overdue. Please pay at your earliest convenience.");
+            mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$e['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
+
+            $sent_count++;
+        }
+    }
+}
+$process_done = true;
 
 if (isset($_GET['api'])) {
     header('Content-Type: application/json');

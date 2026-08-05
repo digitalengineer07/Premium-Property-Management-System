@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) { die('Security validation failed.'); }
     $user_id = (int)$_POST['user_id'];
     $expiry_date = !empty($_POST['expiry_date']) ? $_POST['expiry_date'] : null;
 

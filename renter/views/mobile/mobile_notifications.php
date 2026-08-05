@@ -6,16 +6,16 @@
 .m-notif-dropdown { position: fixed; top: 70px; right: 16px; width: 320px; max-width: calc(100vw - 32px); background: var(--bg-color, #ffffff); border-radius: 20px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); z-index: 10000; display: flex; flex-direction: column; max-height: 70vh; border: 1px solid var(--border); opacity: 0; transform: translateY(-10px) scale(0.95); transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
 .m-notif-dropdown.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
 .dark-theme .m-notif-dropdown { background: #1a1d24; border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
-.m-notif-dropdown::before { content: ''; position: absolute; top: -6px; right: 24px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
+.m-notif-dropdown::before { content: ''; position: absolute; top: -6px; right: 70px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
 
 .m-notif-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.m-notif-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 8px; }
+.m-notif-header h3 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-dark); display: flex; align-items: center; gap: 2px; }
 .m-notif-badge-pill { font-size: 10px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 8px; font-weight: 700; margin-left: auto; }
-.m-notif-body { padding: 12px; overflow-y: auto; flex: 1; }
+.m-notif-body { padding: 12px; flex: 1; }
 
 .m-notif-empty { text-align: center; padding: 30px 0; color: var(--text-gray); }
 .m-notif-empty i { font-size: 40px; opacity: 0.3; margin-bottom: 12px; }
-.m-notif-empty p { margin: 0; font-size: 14px; font-weight: 600; }
+.m-notif-empty p { margin: 0; font-size: 13px; font-weight: 600; }
 
 .m-notif-item { display: flex; gap: 12px; padding: 12px; background: transparent; border-radius: 12px; margin-bottom: 8px; position: relative; overflow: hidden; transition: background 0.2s ease; }
 .m-notif-item:active { background: rgba(0,0,0,0.03); }
@@ -23,7 +23,7 @@
 
 .m-notif-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .m-notif-text { flex: 1; padding-right: 24px; }
-.m-notif-text h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+.m-notif-text h4 { margin: 0 0 4px 0; font-size: 13px; font-weight: 700; color: var(--text-dark); }
 .m-notif-text p { margin: 0 0 6px 0; font-size: 12px; color: var(--text-gray); line-height: 1.4; }
 .m-notif-time { font-size: 10px; font-weight: 600; color: #a0aec0; }
 .m-notif-dismiss { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-gray); font-size: 18px; cursor: pointer; opacity: 0.6; }
@@ -31,6 +31,19 @@
 
 /* Global overlay invisible just to catch outside clicks */
 .m-notif-click-catcher { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9998; display: none; }
+
+/* Profile Dropdown */
+.m-profile-dropdown { position: fixed; top: 70px; right: 16px; width: 200px; max-width: calc(100vw - 32px); background: var(--bg-color, #ffffff); border-radius: 16px; box-shadow: 0 15px 50px rgba(0,0,0,0.15); z-index: 10000; display: flex; flex-direction: column; border: 1px solid var(--border); opacity: 0; transform: translateY(-10px) scale(0.95); transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
+.m-profile-dropdown.active { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.dark-theme .m-profile-dropdown { background: #1a1d24; border-color: rgba(255,255,255,0.1); box-shadow: 0 15px 50px rgba(0,0,0,0.5); }
+.m-profile-dropdown::before { content: ''; position: absolute; top: -6px; right: 24px; width: 12px; height: 12px; background: inherit; transform: rotate(45deg); border-left: 1px solid var(--border); border-top: 1px solid var(--border); }
+
+.m-profile-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; font-size: 14px; font-weight: 600; color: var(--text-dark); text-decoration: none; border-bottom: 1px solid var(--border); transition: background 0.2s ease; }
+.m-profile-menu-item:last-child { border-bottom: none; }
+.m-profile-menu-item:active { background: rgba(0,0,0,0.03); }
+.dark-theme .m-profile-menu-item:active { background: rgba(255,255,255,0.05); }
+.m-profile-menu-item.text-danger { color: #EF4444; }
+.m-profile-menu-item i { font-size: 20px; }
 </style>
 
 <div class="m-notif-click-catcher" id="mNotifClickCatcher" onclick="closeMobileNotif()"></div>
@@ -67,6 +80,11 @@
     </div>
 </div>
 
+<div id="mobileProfileDropdown" class="m-profile-dropdown">
+    <a href="profile.php" class="m-profile-menu-item"><i class='bx bx-user'></i> My Profile</a>
+    <a href="logout.php" class="m-profile-menu-item text-danger"><i class='bx bx-log-out'></i> Logout</a>
+</div>
+
 <?php include __DIR__ . '/global_profile_upload.php'; ?>
 
 <script>
@@ -77,18 +95,32 @@ function openMobileNotif() {
         if(dropdown.classList.contains('active')) {
             closeMobileNotif();
         } else {
+            closeMobileNotif(); // close others
+            dropdown.classList.add('active');
+            catcher.style.display = 'block';
+        }
+    }
+}
+function openMobileProfile() {
+    let dropdown = document.getElementById('mobileProfileDropdown');
+    let catcher = document.getElementById('mNotifClickCatcher');
+    if(dropdown && catcher) {
+        if(dropdown.classList.contains('active')) {
+            closeMobileNotif();
+        } else {
+            closeMobileNotif(); // close others
             dropdown.classList.add('active');
             catcher.style.display = 'block';
         }
     }
 }
 function closeMobileNotif() {
-    let dropdown = document.getElementById('mobileNotifDropdown');
+    let notifDropdown = document.getElementById('mobileNotifDropdown');
+    let profileDropdown = document.getElementById('mobileProfileDropdown');
     let catcher = document.getElementById('mNotifClickCatcher');
-    if(dropdown && catcher) {
-        dropdown.classList.remove('active');
-        catcher.style.display = 'none';
-    }
+    if(notifDropdown) notifDropdown.classList.remove('active');
+    if(profileDropdown) profileDropdown.classList.remove('active');
+    if(catcher) catcher.style.display = 'none';
 }
 function dismissNotificationMobile(id) {
     let item = document.getElementById('m-notif-' + id);

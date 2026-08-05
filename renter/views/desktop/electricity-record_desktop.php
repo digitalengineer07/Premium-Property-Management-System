@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="header-actions">
-                <div class="notification-wrapper">
+                <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
                         <?php if ($unread_count > 0): ?>
@@ -34,11 +34,11 @@
                                 <span style="font-size: 11px; background: rgba(239, 68, 68, 0.1); color: #EF4444; padding: 4px 8px; border-radius: 10px; font-weight: 600;"><?php echo $unread_count; ?> New</span>
                             <?php endif; ?>
                         </div>
-                        <div style="max-height: 350px; overflow-y: auto;">
+                        <div style="max-height: 350px;">
                             <?php if (empty($unread_notifications)): ?>
                                 <div style="padding: 30px; text-align: center; color: var(--text-gray);">
                                     <i class='bx bx-bell-off' style="font-size: 40px; opacity: 0.5; margin-bottom: 10px;"></i>
-                                    <p style="margin: 0; font-size: 14px;">You're all caught up!</p>
+                                    <p style="margin: 0; font-size: 13px;">You're all caught up!</p>
                                 </div>
                             <?php else: ?>
                                 <?php foreach ($unread_notifications as $notif): ?>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div style="flex: 1; padding-right: 36px;">
                                                 <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                                    <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
+                                                    <h4 style="margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); padding-right: 8px;"><?php echo htmlspecialchars($notif['title']); ?></h4>
                                                     <span style="font-size: 11px; color: var(--text-gray); font-weight: 600; white-space: nowrap;"><?php echo date('M d', strtotime($notif['time'])); ?></span>
                                                 </div>
                                                 <p style="margin: 0; font-size: 13px; color: var(--text-gray); line-height: 1.4;"><?php echo htmlspecialchars($notif['message']); ?></p>
@@ -70,7 +70,7 @@
                 <div class="icon-btn" id="themeToggle" style="cursor: pointer;" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i')||(this.tagName==='I'?this:null);if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
                     <i class='bx bx-moon'></i>
                 </div>
-                <a href="#" class="btn-outline-support">
+                <a href="queries.php" class="btn-outline-support">
                     <i class='bx bx-help-circle'></i> Help & Support
                 </a>
                 <div style="position: relative;">
@@ -98,10 +98,10 @@
                     </div>
                     
                     <div id="profileDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 200px; z-index: 1000; overflow: hidden;">
-                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
+                        <a href="profile.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: var(--text-dark); font-size: 13px; font-weight: 500; border-bottom: 1px solid var(--border); transition: 0.2s;">
                             <i class='bx bx-user' style="font-size: 18px; color: var(--primary-purple);"></i> Profile Settings
                         </a>
-                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 14px; font-weight: 500; transition: 0.2s;">
+                        <a href="../logout.php" style="display: flex; align-items: center; gap: 10px; padding: 14px 16px; text-decoration: none; color: #FF4B6B; font-size: 13px; font-weight: 500; transition: 0.2s;">
                             <i class='bx bx-log-out' style="font-size: 18px;"></i> Logout
                         </a>
                     </div>
@@ -111,15 +111,15 @@
         
         <!-- KPI Grid -->
         <div class="kpi-grid">
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon purple"><i class='bx bx-credit-card'></i></div>
                 <div class="kpi-info">
                     <h4>Total Units (This Year)</h4>
-                    <h2><?php echo number_format($total_units); ?> Units</h2>
+                    <h2><?php echo number_format($total_units); ?></h2>
                     <p>Total electricity consumed</p>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon green"><i class='bx bx-money'></i></div>
                 <div class="kpi-info">
                     <h4>Amount Paid (This Year)</h4>
@@ -127,7 +127,7 @@
                     <p>Total paid for electricity</p>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon orange"><i class='bx bx-time-five'></i></div>
                 <div class="kpi-info">
                     <h4>Pending Amount</h4>
@@ -139,11 +139,11 @@
                     <?php endif; ?>
                 </div>
             </div>
-            <div class="kpi-card">
+            <div class="kpi-card" style="align-items: center; text-align: center;">
                 <div class="kpi-icon blue"><i class='bx bx-tachometer'></i></div>
                 <div class="kpi-info">
                     <h4>Last Recorded Reading</h4>
-                    <h2><?php echo number_format($last_reading); ?> Units</h2>
+                    <h2><?php echo number_format($last_reading); ?></h2>
                     <p><?php echo $last_reading_date; ?></p>
                 </div>
             </div>
@@ -178,19 +178,19 @@
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Previous Reading</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['previous_reading']); ?> Units</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['previous_reading']); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Current Reading</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['current_reading']); ?> Units</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['current_reading']); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Units Consumed</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['units_consumed']); ?> Units</span>
+                        <span class="cmd-value"><?php echo number_format($latest_record['units_consumed']); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Rate per Unit</span>
-                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit'], 2); ?></span>
+                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit']); ?></span>
                     </div>
                 </div>
                 <div class="cmd-total">

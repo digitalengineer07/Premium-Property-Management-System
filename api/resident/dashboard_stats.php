@@ -93,25 +93,32 @@ try {
         $r1 = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = $user_id AND status != 'Paid'");
         $pure_rent_due = (float)mysqli_fetch_assoc($r1)['total'];
 
-        $r2 = mysqli_query($conn, "SELECT 
-            IFNULL(SUM(amount),0) as elec_total, 
-            IFNULL(SUM(rent_amount),0) as rent_total,
-            IFNULL(SUM(maintenance),0) as maint_total,
-            IFNULL(SUM(dues),0) as other_dues_total
-            FROM electricity WHERE user_id = $user_id AND status != 'Paid'");
-        $bill = mysqli_fetch_assoc($r2);
+        $stmt = mysqli_prepare($conn, "SELECT 
+            IFNULL(SUM(GREATEST(0, e.amount - IFNULL(p.total_paid, 0))), 0) as elec_total, 
+            IFNULL(SUM(GREATEST(0, (e.rent_amount) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))), 0) as rent_total,
+            IFNULL(SUM(GREATEST(0, (e.maintenance) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount - e.rent_amount))), 0) as maint_total,
+            IFNULL(SUM(GREATEST(0, (e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount - e.rent_amount - e.maintenance))), 0) as other_dues_total
+        FROM electricity e 
+        LEFT JOIN (
+            SELECT bill_id, SUM(paid_amount) as total_paid 
+            FROM payments 
+            WHERE bill_type IN ('electricity', 'elec_rent') 
+            GROUP BY bill_id
+        ) p ON p.bill_id = e.id
+        WHERE e.user_id = $user_id AND e.status IN ('Due', 'Partial')");
+        mysqli_stmt_execute($stmt);
+        $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 
         $elec_due = (float)$bill['elec_total'];
         $maintenance_due = (float)$bill['maint_total'];
         $rent_due = $pure_rent_due + (float)$bill['rent_total'];
         $other_dues = (float)$bill['other_dues_total'];
 
-        $p_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='electricity' AND e.status='Partial' AND p.user_id = $user_id"))['total'];
         $p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial' AND p.user_id = $user_id"))['total'];
         
-        $total_paid_this_month = 0; // Not applicable globally in this context
-        $total_gross_due = $elec_due + $maintenance_due + $rent_due + $other_dues - $p_elec - $p_rent;
-        $total_net_due = max(0, $total_gross_due - (float)$user['pending_adjustment']);
+        $total_paid_this_month = $p_rent;
+        $total_gross_due = $elec_due + $maintenance_due + $rent_due + $other_dues;
+        $total_net_due = max(0, $total_gross_due - $p_rent - (float)$user['pending_adjustment']);
     }
 
     $unbilled_adj = (float)$user['pending_adjustment'];

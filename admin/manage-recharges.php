@@ -24,17 +24,24 @@ $error = "";
 
 // Handle Delete
 if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    mysqli_query($conn, "DELETE FROM meter_recharges WHERE id = $id");
-    $success = "Recharge record deleted.";
+    if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+        $error = "Security validation failed for deletion. Please try again.";
+    } else {
+        $id = (int)$_GET['delete'];
+        mysqli_query($conn, "DELETE FROM meter_recharges WHERE id = $id");
+        $success = "Recharge record deleted.";
+    }
 }
 
 // Handle Add
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recharge'])) {
-    $amount = (float)$_POST['amount'];
-    $date = $_POST['recharge_date'];
-    $time = $_POST['recharge_time'];
-    $notes = trim($_POST['notes'] ?? '');
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error = "Security validation failed. Please try again.";
+    } else {
+        $amount = (float)$_POST['amount'];
+        $date = $_POST['recharge_date'];
+        $time = $_POST['recharge_time'];
+        $notes = trim($_POST['notes'] ?? '');
 
     if ($amount <= 0 || !$date || !$time) {
         $error = "Please provide valid amount, date and time.";
@@ -47,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_recharge'])) {
             $error = "Error saving record.";
         }
         mysqli_stmt_close($stmt);
+    }
     }
 }
 
@@ -140,6 +148,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                     </h2>
                 </div>
                 <form method="POST">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;">
                         
                         <!-- Recharge Amount -->
@@ -222,7 +231,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                                         </div>
                                     </td>
                                     <td data-label="Actions" style="padding: 24px; background: #fff; border: 1px solid #F1F5F9; border-left: none; border-radius: 0 16px 16px 0; text-align: right;">
-                                        <a href="?delete=<?php echo $r['id']; ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.2); background: #FEF2F2; padding: 10px; border-radius: 12px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; margin-left: auto;" onclick="return confirm('Are you sure you want to delete this record?')" onmouseover="this.style.background='#FEE2E2'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='#FEF2F2'; this.style.transform='scale(1)';">
+                                        <a href="?delete=<?php echo $r['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" class="btn-outline" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.2); background: #FEF2F2; padding: 10px; border-radius: 12px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; margin-left: auto;" onclick="return confirm('Are you sure you want to delete this record?')" onmouseover="this.style.background='#FEE2E2'; this.style.transform='scale(1.05)';" onmouseout="this.style.background='#FEF2F2'; this.style.transform='scale(1)';">
                                             <i class='bx bx-trash' style="font-size: 20px;"></i>
                                         </a>
                                     </td>

@@ -16,9 +16,12 @@ $error_msg = "";
 
 /* Handle Password Change */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_pass'])) {
-    $current_pass = $_POST['current_password'] ?? '';
-    $new_pass = $_POST['new_password'] ?? '';
-    $conf_pass = $_POST['confirm_password'] ?? '';
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        $error_msg = "Security validation failed. Please try again.";
+    } else {
+        $current_pass = $_POST['current_password'] ?? '';
+        $new_pass = $_POST['new_password'] ?? '';
+        $conf_pass = $_POST['confirm_password'] ?? '';
 
     $stmt = mysqli_prepare($conn, "SELECT password FROM admin WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $admin_id);
@@ -45,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_pass'])) {
         }
     } else {
         $error_msg = "Current password is incorrect.";
+    }
     }
 }
 
@@ -133,6 +137,7 @@ $recent_bills = mysqli_query($conn, "
                 <?php endif; ?>
 
                 <form method="POST" style="max-width: 500px;">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div class="form-group">
                         <label>Current Password</label>
                         <div style="position: relative;">

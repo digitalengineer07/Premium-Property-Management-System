@@ -6,6 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+/* CSRF token */
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+
 // Redirect if already logged in
 if (isset($_SESSION['admin'])) {
     header("Location: dashboard.php");
@@ -15,10 +20,13 @@ if (isset($_SESSION['admin'])) {
 $error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
-    
-    if ($username === '' || $password === '') {
+    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
+        $error = "Session expired or invalid form submission. Please refresh the page.";
+    } else {
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+        
+        if ($username === '' || $password === '') {
         $error = "Please provide both username and password.";
     } else {
         $stmt = mysqli_prepare($conn, "SELECT id, username, password FROM admin WHERE username = ?");
@@ -57,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mysqli_stmt_close($stmt);
         } else {
             $error = "Database preparation failed.";
+        }
         }
     }
 }
@@ -256,6 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(98, 75, 255, 0.35); }
+    .btn-submit:active { transform: scale(0.98) translateY(0); box-shadow: 0 4px 10px rgba(98, 75, 255, 0.2); }
 
     .divider {
         display: flex; align-items: center; margin: 12px 0; color: #94A3B8; font-size: 11px; font-weight: 600; text-transform: uppercase;
@@ -271,6 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-resident:hover { background: rgba(98,75,255,0.05); }
+    .btn-resident:active { transform: scale(0.98); }
 
     .secure-footer {
         text-align: center; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -302,6 +313,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         background: rgba(255,255,255,0.9);
         box-shadow: 0 6px 20px rgba(0,0,0,0.06);
         transform: translateY(-1px);
+    }
+    .back-home-btn:active {
+        transform: scale(0.96) translateY(0);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .error-box {
@@ -401,6 +416,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" autocomplete="off">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <div class="form-group">
                     <label class="form-label">Username</label>
                     <div class="input-wrapper">

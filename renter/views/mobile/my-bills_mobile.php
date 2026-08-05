@@ -5,18 +5,18 @@
 $mobile_all_bills = [];
 
 // 1. Pure Rent
-$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                FROM rent r LEFT JOIN payments p ON p.bill_type='rent' AND p.bill_id=r.id 
+$rent_q = mysqli_query($conn, "SELECT r.id, r.month, r.due_date, r.rent_amount as amount, r.status, COALESCE(p.payment_date, r.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = r.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+                                FROM rent r LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='rent' GROUP BY bill_id) p ON p.bill_id=r.id 
                                 WHERE r.user_id=$user_id");
 while($r = mysqli_fetch_assoc($rent_q)) {
     $mobile_all_bills[] = [
-        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['month'].'-05') < time() ? 'overdue' : 'unpaid')),
+        'id' => $r['id'], 'type' => 'rent', 'filter_type' => ($r['status'] == 'Paid' ? 'paid' : (strtotime($r['due_date']) < time() ? 'overdue' : 'unpaid')),
         'title' => 'February 2026', // Mocking based on month for UI matching
         'real_title' => date('F Y', strtotime($r['month'])),
         'subtitle' => 'Room ' . $room_no,
         'period' => $r['month'],
-        'bill_date' => date('01 F Y', strtotime($r['month'])),
-        'due_date' => date('d F Y', strtotime($r['month'] . '-05')),
+        'bill_date' => date('d F Y', strtotime('-10 days', strtotime($r['due_date']))),
+        'due_date' => date('d F Y', strtotime($r['due_date'])),
         'amount' => $r['amount'], 'status' => $r['status'] == 'Due' ? 'Unpaid' : $r['status'],
         'paid_on' => $r['payment_date'] ? date('d M Y', strtotime($r['payment_date'])) : '-',
         'icon' => 'bx-home', 'icon_bg' => 'rgba(139, 92, 246, 0.1)', 'icon_color' => '#8B5CF6',
@@ -29,67 +29,41 @@ while($r = mysqli_fetch_assoc($rent_q)) {
     ];
 }
 
-// 2. Electricity (Usage)
-$elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                WHERE e.user_id=$user_id AND e.amount > 0");
-while($e = mysqli_fetch_assoc($elec_q)) {
+// 2. Combined Bill (Electricity + Rent + Maintenance)
+$comb_q = mysqli_query($conn, "SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.status, ''), 'Due') as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
+                                FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
+                                WHERE e.user_id=$user_id AND (e.amount > 0 OR e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0)");
+while($c = mysqli_fetch_assoc($comb_q)) {
+    $total_amt = (float)$c['elec_amount'] + (float)$c['rent_amount'] + (float)$c['maintenance'] + (float)$c['dues'] + (float)$c['extra_charges'];
+    
+    $summary = [];
+    if ((float)$c['rent_amount'] > 0) $summary['Monthly Rent'] = (float)$c['rent_amount'];
+    if ((float)$c['maintenance'] > 0) $summary['Maintenance Charge'] = (float)$c['maintenance'];
+    if ((float)$c['elec_amount'] > 0) $summary['Electricity Usage'] = (float)$c['elec_amount'];
+    if ((float)$c['extra_charges'] > 0) $summary['Other Charges'] = (float)$c['extra_charges'];
+    if ((float)$c['dues'] != 0) $summary['Advance Applied'] = (float)$c['dues'];
+    
+    $due_timestamp = strtotime($c['created_at'] . ' + 10 days');
+    
     $mobile_all_bills[] = [
-        'id' => $e['id'], 'type' => 'electricity', 'filter_type' => ($e['status'] == 'Paid' ? 'paid' : (strtotime('+1 month', strtotime($e['month'].'-05')) < time() ? 'overdue' : 'unpaid')),
-        'real_title' => date('F Y', strtotime($e['month'])),
+        'id' => $c['id'], 'type' => 'combined', 'filter_type' => ($c['status'] == 'Paid' ? 'paid' : ($due_timestamp < time() ? 'overdue' : 'unpaid')),
+        'real_title' => date('F Y', strtotime($c['month'])),
         'subtitle' => 'Room ' . $room_no,
-        'period' => $e['month'],
-        'bill_date' => date('01 F Y', strtotime($e['month'])),
-        'due_date' => date('d F Y', strtotime('+1 month', strtotime($e['month'] . '-05'))),
-        'amount' => $e['amount'], 'status' => $e['status'] == 'Due' ? 'Unpaid' : $e['status'],
-        'paid_on' => $e['payment_date'] ? date('d M Y', strtotime($e['payment_date'])) : '-',
-        'icon' => 'bx-bolt-circle', 'icon_bg' => 'rgba(245, 158, 11, 0.1)', 'icon_color' => '#F59E0B',
-        'badge' => 'Electricity', 'badge_bg' => 'rgba(245, 158, 11, 0.1)', 'badge_color' => '#F59E0B',
-        'summary' => [
-            'Electricity Usage' => $e['amount'],
-            'Maintenance Charge' => 0,
-            'Other Charges' => 0
-        ]
-    ];
-}
-
-// 3. Rent & Maintenance (From Electricity)
-$maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, (e.rent_amount + e.maintenance + e.dues) as combined_amount, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date 
-                                FROM electricity e LEFT JOIN payments p ON p.bill_type='electricity' AND p.bill_id=e.id 
-                                WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0)");
-while($m = mysqli_fetch_assoc($maint_q)) {
-    $mobile_all_bills[] = [
-        'id' => $m['id'], 'type' => 'elec_rent', 'filter_type' => ($m['status'] == 'Paid' ? 'paid' : (strtotime($m['month'].'-05') < time() ? 'overdue' : 'unpaid')),
-        'real_title' => date('F Y', strtotime($m['month'])),
-        'subtitle' => 'Room ' . $room_no,
-        'period' => $m['month'],
-        'bill_date' => date('01 F Y', strtotime($m['month'])),
-        'due_date' => date('d F Y', strtotime($m['month'] . '-05')),
-        'amount' => $m['combined_amount'], 'status' => $m['status'] == 'Due' ? 'Unpaid' : $m['status'],
-        'paid_on' => $m['payment_date'] ? date('d M Y', strtotime($m['payment_date'])) : '-',
-        'icon' => 'bx-wrench', 'icon_bg' => 'rgba(59, 130, 246, 0.1)', 'icon_color' => '#3B82F6',
-        'badge' => 'Maintenance', 'badge_bg' => 'rgba(59, 130, 246, 0.1)', 'badge_color' => '#3B82F6',
-        'summary' => [
-            'Monthly Rent' => $m['rent_amount'],
-            'Maintenance Charge' => $m['maintenance'],
-            'Other Charges' => $m['dues']
-        ]
+        'period' => $c['month'],
+        'bill_date' => date('d M Y', strtotime($c['created_at'])),
+        'due_date' => date('d F Y', $due_timestamp),
+        'amount' => $total_amt, 'status' => $c['status'] == 'Due' ? 'Unpaid' : $c['status'],
+        'paid_on' => $c['payment_date'] ? date('d M Y', strtotime($c['payment_date'])) : '-',
+        'icon' => 'bx-layer', 'icon_bg' => 'rgba(98, 75, 255, 0.1)', 'icon_color' => 'var(--primary-purple)',
+        'badge' => 'Rent + Utility', 'badge_bg' => 'rgba(98, 75, 255, 0.1)', 'badge_color' => 'var(--primary-purple)',
+        'summary' => $summary
     ];
 }
 
 // Sort by Period Descending
 usort($mobile_all_bills, function($a, $b) { 
-    return strtotime($b['bill_date']) - strtotime($a['bill_date']);
+    return strtotime($b['period']) - strtotime($a['period']);
 });
-
-$paid_this_year = 0;
-$bills_paid_count = 0;
-foreach($mobile_all_bills as $b) {
-    if ($b['status'] == 'Paid') {
-        $paid_this_year += $b['amount'];
-        $bills_paid_count++;
-    }
-}
 $due_this_month = $total_due ?? 0; 
 $total_bills_count = count($mobile_all_bills);
 ?>
@@ -108,7 +82,7 @@ $total_bills_count = count($mobile_all_bills);
 
     .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
     .m-tabs::-webkit-scrollbar { display: none; }
-    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 85px; cursor: pointer; white-space: nowrap; }
+    .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 8px; cursor: pointer; white-space: nowrap; }
     .m-tab.active { color: #624BFF; border-bottom: 2px solid #624BFF; }
 
     .m-filters { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 16px; }
@@ -121,7 +95,7 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-left { display: flex; align-items: center; gap: 12px; flex: 1.2; min-width: 0; }
     .m-bill-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
     .m-bill-info { min-width: 0; }
-    .m-bill-info h4 { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .m-bill-info h4 { font-size: 13px; font-weight: 700; color: var(--text-dark); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-bill-info p { font-size: 11px; font-weight: 500; color: var(--text-gray); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .m-bill-badge { font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 4px; }
     
@@ -129,8 +103,8 @@ $total_bills_count = count($mobile_all_bills);
     .m-bill-mid h4 { font-size: 11px; font-weight: 700; color: var(--text-gray); margin: 0 0 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; letter-spacing: 0.5px; }
     .m-bill-mid p { font-size: 10px; color: #FF4B6B; margin: 0; font-weight: 600; white-space: nowrap; }
 
-    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; flex: 1; text-align: right; min-width: 0; }
-    .m-bill-right-info h4 { font-size: 14px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
+    .m-bill-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; flex: 1; text-align: right; min-width: 0; }
+    .m-bill-right-info h4 { font-size: 13px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.3px; display: flex; align-items: center; gap: 12px; }
     .m-bill-status { position: absolute; top: 0; right: 0; font-size: 9px; font-weight: 800; padding: 4px 12px; border-top-right-radius: 15px; border-bottom-left-radius: 12px; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px; }
     .m-bill-action { color: var(--text-gray); font-size: 18px; display: flex; align-items: center; }
     .m-download-btn-mini { width: 26px; height: 26px; background: rgba(98, 75, 255, 0.1); color: #624BFF; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; margin-left: 6px; }
@@ -142,8 +116,8 @@ $total_bills_count = count($mobile_all_bills);
     
     .m-panel-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-dark); font-weight: 500; }
     .m-panel-total { display: flex; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border); font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 24px; }
-    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
-    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 14px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer; }
+    .m-btn-primary { width: 100%; background: #624BFF; color: white; border: none; border-radius: 14px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 2px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); cursor: pointer; }
+    .m-btn-outline { width: 100%; background: transparent; color: #624BFF; border: 1px solid rgba(98, 75, 255, 0.2); border-radius: 14px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 2px; cursor: pointer; }
     
 </style>
 
@@ -154,13 +128,13 @@ $total_bills_count = count($mobile_all_bills);
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-receipt' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             My Bills
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -170,7 +144,7 @@ $total_bills_count = count($mobile_all_bills);
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInputMobile').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="openMobileProfile(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
@@ -230,7 +204,7 @@ $total_bills_count = count($mobile_all_bills);
                 </div>
             </div>
             <div style="margin-top: auto;">
-                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Bills Paid</span>
+                <span class="m-kpi-pill" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><?php echo $bills_paid_count; ?> Bills Cleared</span>
             </div>
         </div>
 
@@ -273,7 +247,6 @@ $total_bills_count = count($mobile_all_bills);
     <div class="m-bottom-panel" id="mBillSummaryPanel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-dark);">Bill Summary</h3>
-            <span id="mSummaryStatus" style="font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 12px; background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
         </div>
         
         <div id="mSummaryDetails">
@@ -285,10 +258,8 @@ $total_bills_count = count($mobile_all_bills);
             <span id="mSummaryTotal" style="color: #FF4B6B;">₹0.00</span>
         </div>
 
-        <button class="m-btn-primary" id="mPayNowBtn" onclick="if(typeof openPaymentModal==='function') openPaymentModal(0, 'Quick Payment', 'general');">
-            <i class='bx bx-credit-card-front'></i> Pay Now
-        </button>
-        <button class="m-btn-outline" onclick="window.location.href='#'">
+
+        <button id="mBtnDownloadBill" class="m-btn-outline" style="display: none;" onclick="">
             <i class='bx bx-download'></i> Download Bill
         </button>
     </div>
@@ -309,8 +280,10 @@ $total_bills_count = count($mobile_all_bills);
             <div class="m-bill-mid">
                 <h4><?php echo $bill['due_date']; ?></h4>
                 <span class="m-bill-badge" style="background: <?php echo $bill['badge_bg']; ?>; color: <?php echo $bill['badge_color']; ?>;"><?php echo $bill['badge']; ?></span>
-                <?php if($bill['status'] === 'Unpaid'): ?>
-                    <p style="margin-top: 4px;">Due Today</p>
+                <?php if($bill['filter_type'] === 'overdue'): ?>
+                    <p style="margin-top: 4px; color: #FF4B6B;">Overdue</p>
+                <?php elseif($bill['status'] === 'Unpaid'): ?>
+                    <p style="margin-top: 4px; color: #F59E0B;">Unpaid</p>
                 <?php endif; ?>
             </div>
             <div class="m-bill-right">
@@ -319,17 +292,12 @@ $total_bills_count = count($mobile_all_bills);
                         <?php echo money($bill['amount']); ?>
                         <div class="m-bill-action">
                             <?php if($bill['status'] === 'Paid'): ?>
-                                <i class='bx bx-download m-download-btn-mini' onclick="event.stopPropagation(); window.location.href='#'"></i>
+                                <i class='bx bx-download m-download-btn-mini' onclick="event.stopPropagation(); window.location.href='invoice.php?id=<?php echo $bill['id']; ?>'"></i>
                             <?php else: ?>
                                 <i class='bx bx-chevron-right' style="font-size: 16px;"></i>
                             <?php endif; ?>
                         </div>
                     </h4>
-                    <?php if($bill['status'] === 'Paid'): ?>
-                        <span class="m-bill-status" style="background: rgba(16, 185, 129, 0.1); color: #10B981;">Paid</span>
-                    <?php else: ?>
-                        <span class="m-bill-status" style="background: rgba(255, 75, 107, 0.1); color: #FF4B6B;">Unpaid</span>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -337,7 +305,7 @@ $total_bills_count = count($mobile_all_bills);
         
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 12px; color: var(--text-gray);">
             <span>Showing 1 to <?php echo min(10, count($mobile_all_bills)); ?> of <?php echo count($mobile_all_bills); ?> bills</span>
-            <div style="display: flex; gap: 8px;">
+            <div style="display: flex; gap: 2px;">
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;"><i class='bx bx-chevron-left'></i></div>
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: #624BFF; color: white; display: flex; align-items: center; justify-content: center;">1</div>
                 <div style="width: 24px; height: 24px; border-radius: 6px; background: var(--white); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;">2</div>
@@ -403,21 +371,21 @@ $total_bills_count = count($mobile_all_bills);
         
         document.getElementById('mSummaryTotal').innerText = '₹' + parseFloat(bill.amount).toFixed(2);
         
-        const statusBadge = document.getElementById('mSummaryStatus');
-        const payNowBtn = document.getElementById('mPayNowBtn');
-        
         if (bill.status === 'Paid') {
-            statusBadge.style.background = 'rgba(16, 185, 129, 0.1)';
-            statusBadge.style.color = '#10B981';
-            statusBadge.innerText = 'Paid';
             document.getElementById('mSummaryTotal').style.color = 'var(--text-dark)';
-            payNowBtn.style.display = 'none';
         } else {
-            statusBadge.style.background = 'rgba(255, 75, 107, 0.1)';
-            statusBadge.style.color = '#FF4B6B';
-            statusBadge.innerText = 'Unpaid';
             document.getElementById('mSummaryTotal').style.color = '#FF4B6B';
-            payNowBtn.style.display = 'flex';
+        }
+        
+        const downloadBtn = document.getElementById('mBtnDownloadBill');
+        if (downloadBtn) {
+            downloadBtn.style.display = 'flex';
+            if (bill.status === 'Unpaid') {
+                downloadBtn.innerHTML = "<i class='bx bx-receipt'></i> View Bill";
+            } else {
+                downloadBtn.innerHTML = "<i class='bx bx-download'></i> Download Bill";
+            }
+            downloadBtn.onclick = () => window.location.href = 'invoice.php?id=' + bill.id;
         }
         
         showMobileBillSummary();

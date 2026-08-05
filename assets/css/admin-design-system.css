@@ -1191,7 +1191,30 @@ tr:hover td {
         min-width: 0 !important;
     }
 }
-.btn-primary:active, .btn-outline:active { transform: scale(0.96); transition: transform 0.1s; }
+/* Universal Click/Press Effect for ALL Buttons & Interactables */
+button:active, 
+.btn:active, 
+.btn-primary:active, 
+.btn-outline:active, 
+.btn-fw:active, 
+.btn-view-all:active, 
+.btn-apply:active,
+.icon-btn:active,
+.header-icon-btn:active,
+.header-profile-btn:active,
+.btn-download:active,
+.btn-outline-support:active,
+.mb-nav-item:active,
+.mb-nav-center:active,
+.nav-item:active,
+.kpi-card:active,
+.approval-card:active,
+a[href]:active,
+.status-badge:active {
+    transform: scale(0.95) !important;
+    transition: transform 0.05s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity: 0.9;
+}
 
 /* ==========================================================================
    ULTRA-PREMIUM SAAS DARK MODE SYNC (Renter & Admin UI)
@@ -1670,6 +1693,24 @@ body.dark-theme thead th:last-child {
         line-height: 1.5 !important;
     }
 }
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 12px !important;
+        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
+        padding-bottom: 110px !important; 
+        border-top: 1px solid var(--border) !important;
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+
+    /* Adjust font size to prevent any horizontal overflow */
+    .app-footer p {
+        font-size: 11px !important;
+        line-height: 1.5 !important;
+    }
+}
 
 /* ==========================================================================
    ULTRA-PREMIUM FLOATING PILL DOCK OVERRIDE
@@ -1723,6 +1764,7 @@ body.dark-theme thead th:last-child {
 
 .mb-nav-item {
     flex: 1 !important;
+    min-width: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -1832,10 +1874,7 @@ body.dark-theme thead th:last-child {
     font-weight: 800 !important;
     color: #ffffff !important;
     letter-spacing: -0.2px !important;
-padding: 16px !important;
-        border-radius: 16px !important;
-        gap: 12px !important;
-    }
+}
     
     /* Ensure action buttons inside widgets stretch or align well */
     .footer-widgets > div > .widget-btn,
@@ -1845,26 +1884,7 @@ padding: 16px !important;
         align-items: center !important;
     }
 
-    /* Stack app footer copyright and last updated text */
-    .app-footer {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-        gap: 12px !important;
-        /* Add massive padding to the bottom so it clears the sticky 76px bottom nav bar AND the floating Install App button! */
-        padding-bottom: 110px !important; 
-        border-top: 1px solid var(--border) !important;
-        margin-top: 20px !important;
-        padding-top: 20px !important;
-    }
 
-    /* Adjust font size to prevent any horizontal overflow */
-    .app-footer p {
-        font-size: 11px !important;
-        line-height: 1.5 !important;
-    }
-}
 
 /* ==========================================================================
    ULTRA-PREMIUM FLOATING PILL DOCK OVERRIDE
@@ -1919,6 +1939,7 @@ padding: 16px !important;
 
 .mb-nav-item {
     flex: 1 !important;
+    min-width: 0 !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -2215,6 +2236,27 @@ padding: 16px !important;
     #editProfileModal .btn-outline, #changePasswordModal .btn-outline {
         display: none !important; /* Hide cancel button to save space, user can use top X button */
     }
+/* Pending Payment Notice (Mobile) */
+.pending-payment-notice {
+    background: linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%);
+    border: 1px solid rgba(98, 75, 255, 0.15);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+.pending-payment-text {
+    display: flex; align-items: flex-start; gap: 2px;
+    font-size: 11px; color: var(--text-dark);
+    line-height: 1.4; margin-bottom: 14px;
+}
+.pending-payment-text i {
+    font-size: 18px; color: #624BFF; flex-shrink: 0;
+}
+
+:root.dark-theme .pending-payment-notice,
+body.dark-theme .pending-payment-notice {
+    background: linear-gradient(135deg, rgba(98, 75, 255, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%) !important;
+    border-color: rgba(98, 75, 255, 0.25) !important;
 }
 
 @keyframes slideUpSheet {

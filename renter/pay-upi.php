@@ -13,14 +13,19 @@ $id   = (int)$_GET['id'];
 $config = require "../config/payment.php";
 
 /* Fetch bill details */
+$user_id = (int)$_SESSION['user_id'];
 if ($type === 'rent') {
-    $q = mysqli_query($conn, "SELECT * FROM rent WHERE id=$id");
+    $q = mysqli_query($conn, "SELECT * FROM rent WHERE id=$id AND user_id=$user_id");
     $bill = mysqli_fetch_assoc($q);
-    $amount = $bill['rent_amount'];
+    $amount = $bill['rent_amount'] ?? 0;
 } else {
-    $q = mysqli_query($conn, "SELECT * FROM electricity WHERE id=$id");
+    $q = mysqli_query($conn, "SELECT * FROM electricity WHERE id=$id AND user_id=$user_id");
     $bill = mysqli_fetch_assoc($q);
-    $amount = $bill['total_amount'];
+    $amount = $bill['total_amount'] ?? 0;
+}
+
+if (!$bill) {
+    die("Invalid bill or unauthorized access.");
 }
 
 $upiLink = generateUPILink(
@@ -42,7 +47,7 @@ $upiLink = generateUPILink(
 <div class="container-app">
   <div class="card" style="max-width:420px;margin:auto;text-align:center">
 
-    <h3>Pay ₹<?php echo number_format($amount,2); ?></h3>
+    <h3>Pay ₹<?php echo number_format($amount); ?></h3>
     <p class="small-muted">Scan QR using any UPI app</p>
 
     <!-- QR Code -->
@@ -59,6 +64,7 @@ $upiLink = generateUPILink(
 
     <!-- Submit payment proof -->
     <form method="POST" action="submit-payment.php" enctype="multipart/form-data">
+                  <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
       <input type="hidden" name="type" value="<?php echo $type; ?>">
       <input type="hidden" name="bill_id" value="<?php echo $id; ?>">
       <input type="hidden" name="amount" value="<?php echo $amount; ?>">

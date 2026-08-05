@@ -7,13 +7,13 @@
         <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.add('mobile-drawer-open'); }">
             <i class='bx bx-menu-alt-left'></i>
         </div>
-        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px;">
+        <h1 class="m-page-title" style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; letter-spacing: -0.5px; display: flex; align-items: center; gap: 2px;">
             <i class='bx bx-home-circle' style="font-size: 22px; color: #ffffff; margin-top: 2px;"></i>
             Dashboard
         </h1>
     </div>
     
-    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 8px;">
+    <div class="m-header-module m-header-right" style="display: flex; align-items: center; gap: 2px;">
         <div class="header-icon-btn" id="themeToggleMobile" onclick="if(typeof toggleTheme==='function'){toggleTheme(event);}else{const d=!document.documentElement.classList.contains('dark-theme');document.documentElement.classList.toggle('dark-theme',d);if(document.body)document.body.classList.toggle('dark-theme',d);localStorage.setItem('theme',d?'dark':'light');const i=this.querySelector('i');if(i)i.className=d?'bx bx-sun':'bx bx-moon';}">
             <i class='bx bx-moon'></i>
         </div>
@@ -23,7 +23,7 @@
                 <span class="m-notif-badge"></span>
             <?php endif; ?>
         </div>
-        <a href="#" class="header-profile-btn" onclick="document.getElementById('profilePicInputMobile').click(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
+        <a href="#" class="header-profile-btn" onclick="openMobileProfile(); return false;" style="width: 38px; height: 38px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); display: block; text-decoration: none;">
             <?php if (!empty($user['profile_pic']) && file_exists("../" . $user['profile_pic'])): ?>
                 <img src="../<?php echo htmlspecialchars($user['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
             <?php else: ?>
@@ -45,12 +45,32 @@
         <div class="m-greeting-text" style="position: relative; z-index: 2; max-width: 60%;">
             <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0 0 6px 0; letter-spacing: -0.5px;">Hello, <?php echo htmlspecialchars(trim($display_name ?? $user['name'] ?? 'User')); ?> 👋</h2>
             <p style="font-size: 13px; color: var(--text-gray); margin: 0 0 12px 0; line-height: 1.4;">Welcome back! You are assigned to</p>
-            <div class="m-room-pill" style="display: inline-block; background: rgba(98,75,255,0.1); color: #624BFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">Room <?php echo htmlspecialchars($room_no ?? $user['room_no'] ?? $_SESSION['room_no'] ?? '201'); ?></div>
+            <div class="m-room-pill" style="display: inline-block; background: rgba(98,75,255,0.1); color: #624BFF; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 20px;">Room <?php echo htmlspecialchars($room_no); ?></div>
         </div>
         <div class="m-greeting-img" style="position: absolute; right: -10px; bottom: 0; width: 170px; height: 100%; display: flex; align-items: flex-end; justify-content: flex-end; pointer-events: none; z-index: 1;">
             <img src="../assets/img/login_building.png" alt="Building" style="width: 100%; max-height: 130px; object-fit: contain; object-position: bottom right;">
         </div>
     </div>
+
+    <!-- Onboarding Reminder Card -->
+    <?php if ($onboarding_due > 0): ?>
+    <div class="m-reminder-card" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 24px; padding: 24px; color: white; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); margin-bottom: 32px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; gap: 16px;">
+            <div class="m-remind-icon" style="width: 48px; height: 48px; border-radius: 50%; background: white; color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <i class='bx bx-user-plus'></i>
+            </div>
+            <div class="m-reminder-body">
+                <h4 style="font-size: 16px; font-weight: 800; margin: 0 0 6px 0; letter-spacing: -0.3px;">Initial Onboarding Dues</h4>
+                <p style="font-size: 12px; opacity: 0.95; line-height: 1.5; margin: 0;">Please clear your initial Security Deposit and/or Advance Rent to complete your onboarding process.</p>
+            </div>
+        </div>
+        <div class="m-reminder-action" style="text-align: right;">
+            <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" style="background: white; color: #059669; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt' style="font-size: 16px;"></i>
+            </button>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Payment Reminder Card -->
     <?php if ($show_banner || $total_due > 0): ?>
@@ -88,13 +108,13 @@
                     </div>
                     <div>
                         <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Total Outstanding</p>
-                        <h2 style="font-size: 22px; font-weight: 800; color: #FF4B6B; margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)$total_due, 2); ?></h2>
+                        <h2 style="font-size: 22px; font-weight: 800; color: #FF4B6B; margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)$total_due); ?></h2>
                     </div>
                 </div>
                 <?php if ($total_due > 0): ?>
-                    <span style="background: rgba(255,75,107,0.1); color: #FF4B6B; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-time-five'></i> Payment Due</span>
+                    <span style="background: rgba(255,75,107,0.1); color: #FF4B6B; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 2px;"><i class='bx bx-time-five'></i> Payment Due</span>
                 <?php else: ?>
-                    <span style="background: rgba(16,185,129,0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle'></i> All Clear</span>
+                    <span style="background: rgba(16,185,129,0.1); color: #10B981; font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 2px;"><i class='bx bx-check-circle'></i> All Clear</span>
                 <?php endif; ?>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">
@@ -115,7 +135,7 @@
                 </div>
                 <div>
                     <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Electricity Due</p>
-                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($elec_due ?? 0), 2); ?></h2>
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($elec_due ?? 0)); ?></h2>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">
@@ -136,7 +156,7 @@
                 </div>
                 <div>
                     <p style="font-size: 11px; color: var(--text-gray); font-weight: 600; margin: 0 0 4px 0;">Rent Due</p>
-                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($rent_due ?? 0), 2); ?></h2>
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">₹<?php echo number_format((float)($rent_due ?? 0)); ?></h2>
                 </div>
             </div>
             <div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-gray); font-weight: 600; position: relative; z-index: 2; margin-top: 16px;">

@@ -24,11 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
     $subject = trim($_POST['subject'] ?? '');
     $message = trim($_POST['message'] ?? '');
 
+    $attachment = null;
+    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = '../uploads/queries/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+        $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9.]/", "_", basename($_FILES['attachment']['name']));
+        $targetFile = $uploadDir . $fileName;
+        
+        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        $allowedTypes = ['jpg', 'jpeg', 'png'];
+        if (in_array($fileType, $allowedTypes) && $_FILES['attachment']['size'] <= 5 * 1024 * 1024) {
+            if (move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
+                $attachment = 'uploads/queries/' . $fileName;
+            }
+        }
+    }
+
     if (empty($subject) || empty($message)) {
         $error = "Please fill in all required fields.";
     } else {
-        $stmt = mysqli_prepare($conn, "INSERT INTO queries (user_id, category, subject, message) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isss", $user_id, $category, $subject, $message);
+        $stmt = mysqli_prepare($conn, "INSERT INTO queries (user_id, category, subject, message, attachment) VALUES (?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "issss", $user_id, $category, $subject, $message, $attachment);
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
             header("Location: queries.php?success=1");
@@ -43,6 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
 // Handle query deletion
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $del_id = (int) $_GET['id'];
+    
+    // Fetch attachment to delete it from disk
+    $q_stmt = mysqli_prepare($conn, "SELECT attachment FROM queries WHERE id = ? AND user_id = ?");
+    mysqli_stmt_bind_param($q_stmt, "ii", $del_id, $user_id);
+    mysqli_stmt_execute($q_stmt);
+    $q_res = mysqli_stmt_get_result($q_stmt);
+    if ($q_row = mysqli_fetch_assoc($q_res)) {
+        if (!empty($q_row['attachment'])) {
+            $file_path = "../" . $q_row['attachment'];
+            if (file_exists($file_path)) {
+                @unlink($file_path);
+            }
+        }
+    }
+    mysqli_stmt_close($q_stmt);
+
     $stmt = mysqli_prepare($conn, "DELETE FROM queries WHERE id = ? AND user_id = ?");
     mysqli_stmt_bind_param($stmt, "ii", $del_id, $user_id);
     if (mysqli_stmt_execute($stmt)) {
@@ -192,11 +226,15 @@ mysqli_stmt_close($stmt);
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1;  overflow-y: auto;}
+        .nav-menu::-webkit-scrollbar { width: 4px; }
+        .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 12px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 16px; border-radius: 12px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -215,7 +253,7 @@ mysqli_stmt_close($stmt);
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: var(--white); padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -231,8 +269,8 @@ mysqli_stmt_close($stmt);
         .top-header {
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;
         }
-        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 8px; letter-spacing: -1px; }
-        .header-greeting p { font-size: 14px; color: var(--text-gray); font-weight: 500; margin: 0;}
+        .header-greeting h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); display: flex; align-items: center; gap: 2px; letter-spacing: -1px; }
+        .header-greeting p { font-size: 13px; color: var(--text-gray); font-weight: 500; margin: 0;}
         .header-greeting p span { background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(98,75,255,0.1); }
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
@@ -243,14 +281,14 @@ mysqli_stmt_close($stmt);
         .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
         .page-btn {
             width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--white);
-            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 13px; font-weight: 600;
             cursor: pointer; text-decoration: none; transition: 0.2s;
         }
         .page-btn:hover:not(:disabled) { background: #f8fafc; border-color: rgba(98, 75, 255, 0.3); color: var(--primary-purple); }
         .page-btn.active { background: var(--primary-purple); color: white; border-color: var(--primary-purple); }
         .btn-outline {
             border: 1px solid rgba(98, 75, 255, 0.15); background: var(--white); color: var(--primary-purple);
-            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
         .btn-outline:hover { background: rgba(98, 75, 255, 0.02); }
@@ -258,7 +296,7 @@ mysqli_stmt_close($stmt);
             display: flex; align-items: center; gap: 10px; cursor: pointer; padding-left: 8px;
             white-space: nowrap;
         }
-        .user-info span:first-child { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info span:first-child { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info span:last-child { font-size: 11px; color: var(--text-gray); margin: 0; }
         
         /* KPI Grid */
@@ -317,8 +355,8 @@ mysqli_stmt_close($stmt);
 
         .btn-primary {
             width: 100%; background: var(--primary-purple); color: white; border: none;
-            padding: 12px; border-radius: 10px; font-weight: 700; font-size: 14px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; border-radius: 10px; font-weight: 700; font-size: 13px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px;
             transition: all 0.2s; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); margin-top: 16px;
         }
         .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
@@ -364,7 +402,7 @@ mysqli_stmt_close($stmt);
         .qi-action:hover { border-color: var(--primary-purple); background: rgba(98,75,255,0.05); }
                     .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
       @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -438,7 +476,7 @@ mysqli_stmt_close($stmt);
             color: var(--text-gray, #64748B);
             font-size: 11px;
             font-weight: 600;
-            gap: 4px;
+            gap: 2px;
             transition: all 0.2s ease;
             padding: 6px 12px;
             border-radius: 12px;
@@ -472,7 +510,7 @@ mysqli_stmt_close($stmt);
         @media (max-width: 992px) {
             .sidebar { width: 80px; padding: 24px 10px; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none; }
-            .nav-item { justify-content: center; padding: 12px; }
+            .nav-item { justify-content: center; padding: 10px 16px; }
             .nav-item i { font-size: 24px; }
             .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
         }
@@ -511,6 +549,10 @@ mysqli_stmt_close($stmt);
                 <i class='bx bx-wallet'></i>
                 <span>My Payments</span>
             </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
             <a href="electricity-record.php" class="nav-item">
                 <i class='bx bx-bolt-circle'></i>
                 <span>Electricity Record</span>
@@ -534,12 +576,14 @@ mysqli_stmt_close($stmt);
             <a href="profile.php" class="nav-item">
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
-            </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            </a></nav>
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
+            <a href="../logout.php" class="nav-item" style=" color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
-        </nav>
+        
+        </div>
     </aside>
 
     <!-- Main Content -->

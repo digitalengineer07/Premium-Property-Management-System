@@ -331,8 +331,9 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </div>
                             </div>
                         </td>
-                        <td style="padding: 12px 10px; font-weight: 700; color: var(--text-dark); font-size: 14px;">
-                            <?php echo htmlspecialchars($u['room_no']); ?>
+                        <td style="padding: 12px 10px;">
+                            <div style="font-weight: 700; color: var(--text-dark); font-size: 16px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class='bx bx-door-open' style="color: var(--primary-purple);"></i> <?php echo htmlspecialchars($u['room_no'] ?: 'N/A'); ?></div>
+                            <div style="font-size: 11px; font-weight: 700; color: #10B981; background: rgba(16, 185, 129, 0.1); padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 3px; white-space: nowrap;"><i class='bx bx-id-card'></i> RNT-<?php $h=md5($u['id'].'r'); $c=[chr(65+hexdec($h[0].$h[1])%26),chr(65+hexdec($h[2].$h[3])%26),hexdec($h[4])%10,hexdec($h[5])%10]; $m=["0213","2031","0123","2301","0231","2013"][hexdec($h[6])%6]; echo $c[$m[0]].$c[$m[1]].$c[$m[2]].$c[$m[3]]; ?></div>
                         </td>
                         <td style="padding: 12px 10px;">
                             <div style="font-size: 12px;">
@@ -358,7 +359,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             </div>
                         </td>
                         <td style="padding: 12px 16px; border-radius: 0 12px 12px 0;">
-                            <div style="display: flex; gap: 4px; justify-content: flex-end;">
+                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
                                 <a href="view-renter.php?id=<?php echo $u['id']; ?>" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 16px; text-decoration: none;" title="View Profile">
                                     <i class='bx bx-user'></i>
                                 </a>
@@ -376,11 +377,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Delete Resident">
                                     <i class='bx bx-trash'></i>
                                 </button>
-                                <?php if ($u['status'] === 'active'): ?>
-                                <a href="../onboarding-guide.php?id=<?php echo $u['id']; ?>" target="_blank" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); color: #64748B; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; text-decoration: none;" title="Download Guide">
-                                    Guide
-                                </a>
-                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>

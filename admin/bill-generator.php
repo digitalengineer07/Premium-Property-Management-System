@@ -846,10 +846,10 @@ $admin_user = s($_SESSION['admin']);
                             </div>
 
                             <div class="form-group" style="margin-bottom: 0;">
-                                <label>Past Dues</label>
+                                <label>Advance Applied (Auto)</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" id="dues" placeholder="0" oninput="calculateBill()" style="padding-left: 40px;">
+                                    <input type="number" id="dues" placeholder="0" readonly style="padding-left: 40px; background-color: #f1f5f9; cursor: not-allowed; color: #10B981; font-weight: 700;">
                                 </div>
                             </div>
                         </div>
@@ -916,24 +916,24 @@ $admin_user = s($_SESSION['admin']);
                             
                             <!-- Middle: Breakdown -->
                             <div style="flex: 2; min-width: 300px; background: rgba(255,255,255,0.1); border-radius: 16px; padding: 16px;">
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; font-size: 14px;">
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Units Consumed</span><strong id="calcUnits">0</strong>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; font-size: 12px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Units Consumed</span><strong id="calcUnits" style="white-space: nowrap; text-align: right;">0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Standard Rent</span><strong id="calcRent">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Standard Rent</span><strong id="calcRent" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Electricity Cost</span><strong id="calcElectricity">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Electricity Cost</span><strong id="calcElectricity" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Maintenance</span><strong id="calcMaintenance">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Maintenance</span><strong id="calcMaintenance" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;">
-                                        <span style="color: rgba(255,255,255,0.8);">Arrears/Dues</span><strong id="calcDues">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
-                                    <div style="display: flex; justify-content: space-between;" id="extraChargesDiv">
-                                        <span style="color: rgba(255,255,255,0.8);">Extra Charges</span><strong id="calcExtraCharges">₹0</strong>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;" id="extraChargesDiv">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
                                 </div>
                             </div>
@@ -1141,15 +1141,15 @@ $admin_user = s($_SESSION['admin']);
             if (cropper) cropper.destroy();
 
             cropper = new Cropper(image, {
-                aspectRatio: NaN, // Free crop for meter display
-                viewMode: 2,
-                autoCropArea: 0.8,
+                aspectRatio: 300 / 140, // Lock crop ratio to match the 300x140 electrical bill display
+                viewMode: 1, // Restrict crop box to not exceed the size of the canvas (image)
+                autoCropArea: 1, // Maximize the initial crop area
                 guides: true,
                 highlight: true,
                 dragMode: 'move',
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: true,
+                cropBoxMovable: false, // Fix the crop box position
+                cropBoxResizable: false, // Prevent admin from shrinking or enlarging the crop box
+                toggleDragModeOnDblclick: false,
             });
         }
 
@@ -1290,24 +1290,13 @@ $admin_user = s($_SESSION['admin']);
                     }
                 }
 
-                // Handle Pending Adjustment
-                const adj = data.pending_adjustment || 0;
+                // Handle Advance Wallet (Auto-Credit applied backend)
                 const balanceDiv = document.getElementById('infoBalance');
-                if (adj < 0) {
-                    balanceDiv.textContent = '₹' + Math.abs(adj) + ' (Remaining)';
-                    balanceDiv.style.color = '#FCA5A5';
-                } else if (adj > 0) {
-                    balanceDiv.textContent = '₹' + adj + ' (Extra)';
-                    balanceDiv.style.color = '#6EE7B7';
-                } else {
-                    balanceDiv.textContent = '₹0';
-                    balanceDiv.style.color = 'rgba(255,255,255,0.7)';
-                }
-
-                // Auto-fill Dues field (Dues = -Adjustment)
-                // If adj is -2000 (Remaining), dues = 2000
-                // If adj is 2000 (Extra), dues = -2000
-                document.getElementById('dues').value = adj === 0 ? '' : -adj;
+                balanceDiv.textContent = 'Auto (Backend)';
+                balanceDiv.style.color = 'rgba(255,255,255,0.7)';
+                
+                // Note: Advance wallet is handled entirely securely on the backend in save-bill.php
+                document.getElementById('dues').value = '';
 
                 const prevInput = document.getElementById('previousReading');
                 prevInput.value = lastReading;
@@ -1527,7 +1516,7 @@ $admin_user = s($_SESSION['admin']);
             window.alertTimeout = setTimeout(() => { box.style.display = 'none'; }, 6000);
         }
 
-        function resetForm() {
+        function resetForm(showMessage = true) {
             // Clear only the specified data fields
             document.getElementById('currentReading').value = '';
             document.getElementById('dues').value = '';
@@ -1547,7 +1536,9 @@ $admin_user = s($_SESSION['admin']);
             // Update the form state in localStorage so the cleared values persist
             saveFormState();
 
-            showMsg('Form reset successfully!', 'success');
+            if (showMessage) {
+                showMsg('Form reset successfully!', 'success');
+            }
         }
 
         function saveFormState() {
@@ -1630,7 +1621,7 @@ $admin_user = s($_SESSION['admin']);
             } else {
                 localStorage.removeItem('billFormState');
                 selectRenterDropdown('');
-                if (typeof resetForm === 'function') resetForm();
+                if (typeof resetForm === 'function') resetForm(false);
             }
         });
 

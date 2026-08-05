@@ -18,7 +18,6 @@ $errmsg = ""; $success = "";
 
 /* Handle profile updates (name/phone/room/about + profile pic + aadhaar upload) */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_profile'])) {
-    file_put_contents('test_log.txt', date('Y-m-d H:i:s') . " - Form Submitted!\n", FILE_APPEND);
 
     if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
         $errmsg = "Invalid form submission (CSRF).";
@@ -178,36 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     }
 }
 
-/* Handle residence details updates */
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_residence_details'])) {
-    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-        $errmsg = "Invalid form submission (CSRF).";
-    } else {
-        $r_room_no = trim($_POST['room_no'] ?? '');
-        $r_join_date = trim($_POST['join_date'] ?? '');
-        $r_rent_amount = trim($_POST['rent_amount'] ?? '');
-        
-        $r_join_date = empty($r_join_date) ? null : $r_join_date;
-        $r_rent_amount = empty($r_rent_amount) ? 0 : (float)$r_rent_amount;
-
-        $stmt = mysqli_prepare($conn, "UPDATE users SET room_no=?, join_date=?, rent_amount=? WHERE id=?");
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "ssdi", $r_room_no, $r_join_date, $r_rent_amount, $user_id);
-            if (mysqli_stmt_execute($stmt)) {
-                $success = "Residence details updated successfully.";
-                // update local variable so it reflects immediately
-                $user['room_no'] = $r_room_no;
-                $user['join_date'] = $r_join_date;
-                $user['rent_amount'] = $r_rent_amount;
-            } else {
-                $errmsg = "Database update failed.";
-            }
-            mysqli_stmt_close($stmt);
-        } else {
-            $errmsg = "Database prepare failed.";
-        }
-    }
-}
+/* Removed insecure residence details updater */
 
 /* Fetch user info */
 $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
@@ -450,11 +420,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .sidebar-brand h2 { font-size: 18px; font-weight: 800; margin: 0; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
         .sidebar-brand p { font-size: 12px; color: var(--text-gray); margin: 0; font-weight: 500; }
 
-        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1;  overflow-y: auto;}
+        .nav-menu::-webkit-scrollbar { width: 4px; }
+        .nav-menu::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
         .nav-item {
             display: flex; align-items: center; gap: 12px;
-            padding: 12px 16px; border-radius: 14px;
-            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 14px;
+            padding: 10px 16px; border-radius: 14px;
+            color: var(--text-gray); text-decoration: none; font-weight: 600; font-size: 13px;
             transition: all 0.2s ease;
         }
         .nav-item i { font-size: 18px; opacity: 0.8; }
@@ -473,7 +446,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .go-mobile-imgs .mock-phone { width: 50px; height: 80px; background: #333; border-radius: 8px; border: 2px solid #111; display: flex; align-items: center; justify-content: center; }
         .go-mobile-imgs .mock-qr { width: 60px; height: 60px; background: white; padding: 4px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .btn-download {
-            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 2px;
             background: var(--primary-purple); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none; transition: 0.2s;
         }
@@ -494,7 +467,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             .profile-grid { grid-template-columns: 1fr; }
             .sidebar { width: 80px; padding: 24px 10px; }
             .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none; }
-            .nav-item { justify-content: center; padding: 12px; }
+            .nav-item { justify-content: center; padding: 10px 16px; }
             .nav-item i { font-size: 24px; }
             .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
         }
@@ -517,7 +490,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .header-icon-wrapper { width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0; }
         
         .header-title-area h1 { margin: 0 0 4px 0; font-size: 28px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
-        .header-title-area p { margin: 0; font-size: 14px; color: var(--text-gray); font-weight: 500; }
+        .header-title-area p { margin: 0; font-size: 13px; color: var(--text-gray); font-weight: 500; }
 
         .header-actions { display: flex; align-items: center; gap: 16px; }
         .header-actions .icon-btn {
@@ -530,12 +503,12 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
         .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
-        .user-info h4 { font-size: 14px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
         .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
 
         .btn-outline-support {
             border: 1px solid rgba(98, 75, 255, 0.15); background: white; color: var(--primary-purple);
-            padding: 10px 16px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
         .btn-outline-support:hover { background: #f8fafc; transform: translateY(-1px); }
@@ -546,7 +519,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         
         .panel { background: var(--white); border-radius: 16px; padding: 24px; box-shadow: var(--card-shadow); border: 1px solid var(--border); transition: var(--transition); }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .panel-header h3 { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 8px; }
+        .panel-header h3 { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 2px; }
         .panel-header h3 i { font-size: 20px; color: var(--primary-purple); }
 
         /* Avatar Card overrides */
@@ -560,14 +533,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .info-row:last-child { border-bottom: none; padding-bottom: 0; }
         .info-label { display: flex; align-items: center; gap: 10px; color: var(--text-gray); font-size: 13px; font-weight: 500; }
         .info-label i { font-size: 18px; color: var(--text-gray); }
-        .info-value { font-size: 14px; font-weight: 600; color: var(--text-dark); text-align: right; max-width: 60%; word-break: break-word; }
+        .info-value { font-size: 13px; font-weight: 600; color: var(--text-dark); text-align: right; max-width: 60%; word-break: break-word; }
 
         /* Residence Grid */
         .residence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .residence-item { display: flex; align-items: flex-start; gap: 12px; }
         .residence-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(98, 75, 255, 0.08); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .residence-info h4 { margin: 0 0 4px 0; font-size: 12px; color: var(--text-gray); font-weight: 500; }
-        .residence-info p { margin: 0; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .residence-info p { margin: 0; font-size: 13px; font-weight: 700; color: var(--text-dark); }
 
         /* Preferences Toggles */
         .preferences-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
@@ -594,13 +567,13 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .doc-icon.red { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
         .doc-icon.yellow { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         .doc-info { flex-grow: 1; }
-        .doc-info h4 { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        .doc-info h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-dark); }
         
         .status-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
         .status-verified { background: rgba(16, 185, 129, 0.1); color: #10B981; }
         .status-pending { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
         
-        .doc-actions { display: flex; align-items: center; gap: 8px; color: var(--text-gray); }
+        .doc-actions { display: flex; align-items: center; gap: 2px; color: var(--text-gray); }
         .doc-actions a { color: var(--text-gray); font-size: 18px; transition: var(--transition); text-decoration: none; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); }
         .doc-actions a:hover { color: var(--primary-purple); border-color: var(--primary-purple); }
         
@@ -672,8 +645,8 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <i class='bx bx-home-heart'></i>
             </div>
             <div class="sidebar-brand">
-                <h2>Resident Dashboard</h2>
-                <p>Premium Renter Portal</p>
+                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
+                <p>Resident Dashboard</p>
             </div>
         </div>
         
@@ -685,6 +658,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="my-payments.php" class="nav-item">
                 <i class='bx bx-credit-card'></i>
                 <span>My Payments</span>
+            </a>
+            <a href="payment-approvals.php" class="nav-item">
+                <i class='bx bx-check-shield'></i>
+                <span>Approvals</span>
+            </a>
+            <a href="electricity-record.php" class="nav-item">
+                <i class='bx bx-bolt-circle'></i>
+                <span>Electricity Record</span>
             </a>
             <a href="my-bills.php" class="nav-item">
                 <i class='bx bx-receipt'></i>
@@ -705,12 +686,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <a href="profile.php" class="nav-item active">
                 <i class='bx bx-user-circle'></i>
                 <span>Profile Settings</span>
-            </a>
-            <a href="../logout.php" class="nav-item" style="color: #FF4B6B; margin-top: 20px;">
+            </a></nav>
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
+            <a href="../logout.php" class="nav-item" style=" color: #FF4B6B; ">
                 <i class='bx bx-log-out'></i>
                 <span>Logout</span>
             </a>
-        </nav>
+        
+        </div>
     </aside>
 
 <main class="main-content">
@@ -728,7 +711,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
     <!-- Edit Profile Modal -->
     <div id="editProfileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
-        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; overflow-y: auto; box-sizing: border-box; position: relative;">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 40px; border-radius: 28px; max-width: 620px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); max-height: 90vh; box-sizing: border-box; position: relative;">
             
             <!-- Decorative Top Gradient Line -->
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
@@ -754,27 +737,27 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" required>
+                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;" required>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Email Address</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Alternate Number</label>
-                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Date of Birth</label>
-                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Gender</label>
-                        <select name="gender" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <select name="gender" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                             <option value="">Select Gender</option>
                             <option value="Male" <?php echo ($user['gender'] ?? '') === 'Male' ? 'selected' : ''; ?>>Male</option>
                             <option value="Female" <?php echo ($user['gender'] ?? '') === 'Female' ? 'selected' : ''; ?>>Female</option>
@@ -783,7 +766,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Address</label>
-                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                 </div>
 
@@ -795,19 +778,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Name</label>
-                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Relationship</label>
-                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
-                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
                     </div>
                 </div>
                 </div> <!-- CLOSING DIV FOR modalEmergencyContactSection -->
@@ -825,28 +808,28 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
+                            <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('current_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">New Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('new_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Confirm New Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('confirm_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
                 </div>
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button type="button" class="btn-outline" onclick="document.getElementById('editProfileModal').style.display='none'" style="padding: 12px 22px; font-weight: 600; border-radius: 14px;">Cancel</button>
-                    <button type="submit" class="btn-primary" style="padding: 12px 26px; font-weight: 600; border-radius: 14px; display: flex; align-items: center; gap: 8px;">
+                    <button type="submit" class="btn-primary" style="padding: 12px 26px; font-weight: 600; border-radius: 14px; display: flex; align-items: center; gap: 2px;">
                         <i class='bx bx-check-shield'></i> Update Password
                     </button>
                 </div>
@@ -870,11 +853,11 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
     <!-- Residence Details Modal (For Mobile) -->
     <div id="residenceDetailsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999999 !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px);">
-        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh; overflow-y: auto;">
+        <div class="no-scrollbar animate-up" style="background: var(--white); padding: 36px 40px; border-radius: 28px; max-width: 480px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.5); position: relative; max-height: 90vh;">
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); border-radius: 28px 28px 0 0;"></div>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px;">
-                <h3 style="margin: 0; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 44px; height: 44px; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; margin-top: 6px; gap: 12px;">
+                <h3 style="margin: 0; font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 12px; flex: 1; line-height: 1.2;">
+                    <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: rgba(98, 75, 255, 0.1); display: flex; align-items: center; justify-content: center;">
                         <i class='bx bx-home' style="color: var(--primary-purple); font-size: 26px;"></i>
                     </div>
                     <span style="background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Residence Details</span>
@@ -886,26 +869,38 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
                 <input type="hidden" name="save_residence_details" value="1">
                 
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-door-open' style="font-size: 16px; vertical-align: middle;"></i> Room Number</label>
-                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="e.g. 101">
+                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-calendar' style="font-size: 16px; vertical-align: middle;"></i> Join Date</label>
-                        <input type="date" name="join_date" value="<?php echo htmlspecialchars($user['join_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                        <input type="text" name="join_date" value="<?php echo $user['joining_date'] ? date('d M Y', strtotime($user['joining_date'])) : 'Not Set'; ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Base Rent (₹)</label>
-                        <input type="number" step="0.01" name="rent_amount" value="<?php echo htmlspecialchars($user['rent_amount'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 14px; box-sizing: border-box;" placeholder="0.00">
+                        <input type="text" name="rent_amount" value="<?php echo number_format($user['fixed_rent'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
-                    
-                    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
-                        <button type="button" class="btn-outline" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="border: none;">Cancel</button>
-                        <button type="submit" class="btn-primary" style="width: auto; padding: 12px 32px;">Save Changes</button>
+
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wrench' style="font-size: 16px; vertical-align: middle;"></i> Maintenance (₹)</label>
+                        <input type="text" name="maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Advance Wallet (₹)</label>
+                        <input type="text" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-check-shield' style="font-size: 16px; vertical-align: middle;"></i> Security Deposit (₹)</label>
+                        <input type="text" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn-primary" onclick="document.getElementById('residenceDetailsModal').style.display='none'" style="width: auto; padding: 12px 32px;">Close</button>
                 </div>
             </form>
         </div>
@@ -1068,7 +1063,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     if (flashMsg) {
         sessionStorage.removeItem('pwdSuccess');
         const alertHtml = `
-            <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease; display: flex; align-items: center; gap: 8px; font-weight: 600;">
+            <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease; display: flex; align-items: center; gap: 2px; font-weight: 600;">
                 <i class='bx bx-check-circle' style='font-size: 20px;'></i> \${flashMsg}
             </div>`;
         const mainEl = document.querySelector('main');
@@ -1241,96 +1236,10 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 // Mobile specific script if needed
 </script>
 
-<style>
-/* Universal Mobile Bottom Navigation Bar CSS */
-@media screen and (max-width: 768px) {
-    .mobile-bottom-nav { display: flex !important; }
-    .main-content {
-        padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
-    }
-}
 
-.mobile-bottom-nav {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: calc(68px + env(safe-area-inset-bottom));
-    padding-bottom: env(safe-area-inset-bottom);
-    background: var(--white, #FFFFFF);
-    border-top: 1px solid var(--border, #F1F5F9);
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
-    z-index: 9999;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0 8px;
-}
-.dark-theme .mobile-bottom-nav {
-    background: #111827;
-    border-top-color: #1E293B;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-}
-.mb-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--text-gray, #64748B);
-    font-size: 11px;
-    font-weight: 600;
-    gap: 4px;
-    transition: all 0.2s ease;
-    padding: 6px 12px;
-    border-radius: 12px;
-}
-.mb-nav-item i { font-size: 22px; transition: transform 0.2s ease, color 0.2s ease; }
-.mb-nav-item.active {
-    color: var(--primary-purple, #624BFF);
-}
-.mb-nav-item.active i {
-    transform: translateY(-2px);
-    color: var(--primary-purple, #624BFF);
-}
-.mb-nav-center {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #624BFF, #8B5CF6);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    box-shadow: 0 8px 20px rgba(98, 75, 255, 0.4);
-    margin-top: -24px;
-    margin-bottom: 4px;
-    border: 4px solid var(--white, #FFFFFF);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.dark-theme .mb-nav-center {
-    border-color: #111827;
-}
-</style>
 
 <!-- Mobile Nav Moved to profile_mobile.php -->
 
-<style>
-/* BRUTEFORCE MOBILE NAV VISIBILITY (Restricted to mobile screens to protect desktop layout) */
-@media screen and (max-width: 768px) {
-    nav.mobile-bottom-nav {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 2147483647 !important;
-        transform: none !important;
-    }
-    body {
-        padding-bottom: 0 !important; /* Removed massive 120px gap */
-    }
-}
-</style>
+
 </body>
 </html>

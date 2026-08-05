@@ -8,7 +8,7 @@ if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
     exit;
 }
-$admin_user = s($_SESSION['admin'] ?? 'Admin');
+$admin_user = e($conn, $_SESSION['admin'] ?? 'Admin');
 
 $success = '';
 $error = '';
@@ -20,72 +20,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
     } else {
         $id = (int)$_POST['id'];
         $action = $_POST['action'];
-        $admin_note = s($_POST['admin_note'] ?? '');
+        $admin_note = e($conn, $_POST['admin_note'] ?? '');
         
         $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id");
         $notif = mysqli_fetch_assoc($q);
         
         if ($notif && $notif['status'] == 'Pending') {
             if ($action == 'approve') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 
-                if ($upd_status) {
-                    // If this payment was for a bill, update the bill status strictly
-                    if (!empty($notif['bill_id'])) {
-                        $bid = (int)$notif['bill_id'];
-                        if ($notif['bill_type'] == 'rent') {
-                            mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                        } elseif ($notif['bill_type'] == 'elec_rent') {
-                            mysqli_query($conn, "UPDATE electricity SET rent_status='Paid', paid_date=COALESCE(paid_date, CURDATE()) WHERE id=$bid");
-                            // If electricity part is also paid or zero, mark overall status Paid, else Partial
-                            $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT amount, elec_status FROM electricity WHERE id=$bid"));
-                            if ($ck && ($ck['elec_status'] == 'Paid' || (float)$ck['amount'] <= 0)) {
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                            } else {
-                                mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
-                            }
-                        } elseif ($notif['bill_type'] == 'electricity') {
-                            mysqli_query($conn, "UPDATE electricity SET elec_status='Paid', paid_date=COALESCE(paid_date, CURDATE()) WHERE id=$bid");
-                            // If rent part is also paid or zero, mark overall status Paid, else Partial
-                            $ck = mysqli_fetch_assoc(mysqli_query($conn, "SELECT rent_amount, maintenance, dues, rent_status FROM electricity WHERE id=$bid"));
-                            if ($ck && ($ck['rent_status'] == 'Paid' || ((float)$ck['rent_amount'] + (float)$ck['maintenance'] + (float)$ck['dues']) <= 0)) {
-                                mysqli_query($conn, "UPDATE electricity SET status='Paid', paid_date=CURDATE() WHERE id=$bid");
-                            } else {
-                                mysqli_query($conn, "UPDATE electricity SET status='Partial' WHERE id=$bid");
-                            }
-                        }
-                    } elseif ($notif['bill_type'] == 'total') {
-                        $uid = (int)$notif['user_id'];
-                        mysqli_query($conn, "UPDATE rent SET status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
-                        mysqli_query($conn, "UPDATE electricity SET status='Paid', elec_status='Paid', rent_status='Paid', paid_date=CURDATE() WHERE user_id=$uid AND status!='Paid'");
-                    }
+                if ($upd_status && mysqli_affected_rows($conn) > 0) {
+                    require_once "allocate_payment.php";
                     
-                    // Automatically record transaction in payments table if not present
                     $p_uid = (int)$notif['user_id'];
-                    $p_bid = (int)$notif['bill_id'];
                     $p_btype = $notif['bill_type'];
+                    $p_bid = (int)$notif['bill_id'];
                     $p_amt = (float)$notif['amount'];
                     $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
                     $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
-                    $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND (transaction_id='$p_tx' OR (bill_id=$p_bid AND bill_type='$p_btype' AND paid_amount=$p_amt))");
-                    if ($ck_p && mysqli_num_rows($ck_p) == 0) {
-                        $p_month = date('F Y');
-                        if ($p_bid > 0) {
-                            if ($p_btype == 'rent') {
-                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$p_bid"));
-                                if ($mr) $p_month = $mr['month'];
-                            } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
-                                $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$p_bid"));
-                                if ($mr) $p_month = $mr['month'];
-                            }
-                        } else {
-                            $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE user_id=$p_uid AND (status='Paid' OR total_amount=$p_amt OR amount=$p_amt) ORDER BY id DESC LIMIT 1"));
-                            if (!$mr) $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE user_id=$p_uid AND (status='Paid' OR rent_amount=$p_amt) ORDER BY id DESC LIMIT 1"));
-                            if ($mr && !empty($mr['month'])) $p_month = $mr['month'];
+                    $p_sys_tx = !empty($notif['sys_tx_id']) ? mysqli_real_escape_string($conn, $notif['sys_tx_id']) : '';
+                    
+                    // 1. Handle Bulk/Total/Monthly Payments
+                    if ($p_btype == 'total' || $p_btype == 'monthly' || $p_btype == 'general' || $p_btype == 'advance') {
+                        $max_m = ($p_btype == 'monthly' && !empty($notif['month'])) ? mysqli_real_escape_string($conn, $notif['month']) : null;
+                        allocate_bulk_payment($conn, $p_uid, $p_amt, $p_pmode, $p_tx, $p_sys_tx, $max_m);
+                    } 
+                    // 1.5 Handle Onboarding Payment (Split into Security Deposit and Advance)
+                    else if ($p_btype == 'onboarding') {
+                        $user_q = mysqli_query($conn, "SELECT security_deposit FROM users WHERE id = $p_uid");
+                        $u_row = mysqli_fetch_assoc($user_q);
+                        $sec_target = (float)($u_row['security_deposit'] ?? 0);
+                        
+                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $p_uid AND bill_type = 'security_deposit'");
+                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
+                        $sec_due = max(0, $sec_target - $sec_paid);
+                        
+                        $amount_to_sec = min($p_amt, $sec_due);
+                        $amount_to_adv = $p_amt - $amount_to_sec;
+                        
+                        // Insert Security Deposit component
+                        if ($amount_to_sec > 0) {
+                            $sys_sec_tx = 'SYS_SEC_' . strtoupper(bin2hex(random_bytes(6)));
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx')");
                         }
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $p_amt, '$p_pmode', $p_amt, CURDATE(), '$p_tx')");
+                        
+                        // Insert remaining to Advance Wallet (Logs as 1st Month Rent, but DOES NOT add to auto-deduct wallet)
+                        if ($amount_to_adv > 0) {
+                            $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                            // Removed: UPDATE users SET advance_payment = advance_payment + $amount_to_adv
+                        }
                     }
-
+                    // 2. Handle Specific Bill Payments
+                    else {
+                        // Check if payment already recorded (Legacy / Duplication fallback)
+                        if (!empty($p_sys_tx)) {
+                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id='$p_sys_tx'");
+                        } else {
+                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND transaction_id='$p_tx' AND '$p_tx' != ''");
+                        }
+                        
+                        if ($ck_p && mysqli_num_rows($ck_p) == 0) {
+                            $p_month = date('F Y');
+                            $bill_amount = $p_amt;
+                            $remaining_amount = $p_amt;
+                            
+                            if ($p_bid > 0) {
+                                if ($p_btype == 'rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
+                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['rent_amount']; }
+                                } elseif ($p_btype == 'electricity') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, total_amount FROM electricity WHERE id=$p_bid"));
+                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['total_amount']; }
+                                }
+                                
+                                $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$p_btype' AND bill_id=$p_bid");
+                                $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
+                                $remaining_amount = max(0, $bill_amount - $already_paid);
+                            }
+                            
+                            $excess = 0;
+                            $amount_to_apply = $p_amt;
+                            
+                            if ($p_amt > $remaining_amount) {
+                                $amount_to_apply = $remaining_amount;
+                                $excess = $p_amt - $remaining_amount;
+                            }
+                            
+                            // Insert core payment if any due is left
+                            if ($amount_to_apply > 0) {
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $bill_amount, '$p_pmode', $amount_to_apply, CURDATE(), '$p_tx', '$p_sys_tx')");
+                                recalculate_bill_status($conn, $p_btype, $p_bid);
+                            }
+                            
+                            // Route overpayments directly to the wallet safely
+                            if ($excess > 0) {
+                                $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance', $excess, '$p_pmode', $excess, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                                mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$p_uid");
+                            }
+                        }
+                    }
 
                     $success = "Payment #{$notif['transaction_id']} approved successfully.";
                     
@@ -95,13 +130,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         $msg = "Hello {$notif['user_name']},<br><br>Your payment of Rs. {$notif['amount']} (Ref: {$notif['transaction_id']}) has been approved.<br><br>Thank you!";
                         @sendEmail($notif['user_email'], $sub, $msg);
                     }
+                    
+                    // App notification
+                    $msg_safe = mysqli_real_escape_string($conn, "Your payment of ₹" . number_format($notif['amount'], 2) . " (Ref: {$notif['transaction_id']}) has been approved.");
+                    mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$notif['user_id']}, 'Payment Approved', '$msg_safe', 'payment_verified')");
+
                 } else {
                     $error = "Failed to approve payment: " . mysqli_error($conn);
                 }
                 
             } elseif ($action == 'reject') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id");
-                if ($upd_status) {
+                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
+                if ($upd_status && mysqli_affected_rows($conn) > 0) {
                     $success = "Payment #{$notif['transaction_id']} rejected.";
                     
                     if (!empty($notif['user_email'])) {
@@ -432,7 +472,7 @@ if ($res) {
         .pv-avatar-rs { background: #D1FAE5; color: #047857; }
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; }
+        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
         .pv-bill-info-inv { font-size: 11px; color: #64748B; white-space: nowrap; }
         
         .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
@@ -488,6 +528,29 @@ if ($res) {
             .pv-table td { display: block; width: 100%; border: none; padding: 10px; }
             .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
         }
+        /* Dark Mode Overrides */
+        .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td, .dark-theme .pv-table-title, .dark-theme .pv-bill-info-type, .dark-theme .pv-utr-text, .dark-theme .pv-date-text, .dark-theme .pv-mode-text, .dark-theme .pv-user-name { color: var(--text-dark) !important; }
+        .dark-theme .pv-header-text p, .dark-theme .pv-kpi-label, .dark-theme .pv-kpi-sub, .dark-theme .pv-filter-group label, .dark-theme .pv-bill-info-inv, .dark-theme .pv-time-text, .dark-theme .pv-page-info { color: var(--text-gray); }
+        .dark-theme .pv-kpi-card, .dark-theme .pv-filter-panel, .dark-theme .pv-table-panel, .dark-theme .pv-table th, .dark-theme .pv-table td { background: var(--white); border-color: var(--border); box-shadow: none; }
+        .dark-theme .pv-pagination-footer { border-color: var(--border); background: var(--bg-main); }
+        .dark-theme .pv-header-icon-box { background: rgba(108, 77, 255, 0.1); }
+        .dark-theme .pv-kpi-blue { background: rgba(99, 102, 241, 0.1); }
+        .dark-theme .pv-kpi-yellow { background: rgba(234, 179, 8, 0.1); }
+        .dark-theme .pv-kpi-green { background: rgba(16, 185, 129, 0.1); }
+        .dark-theme .pv-kpi-red { background: rgba(239, 68, 68, 0.1); }
+        .dark-theme .pv-filter-group input, .dark-theme .pv-filter-group select { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-filter-group input:focus, .dark-theme .pv-filter-group select:focus { border-color: var(--primary-purple); }
+        .dark-theme .pv-table tr { border-bottom-color: var(--border); }
+        .dark-theme .pv-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .dark-theme .pv-btn-clear { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-btn-clear:hover { background: rgba(255, 255, 255, 0.05); }
+        .dark-theme .pv-status-badge.pending { background: rgba(234, 179, 8, 0.15); border-color: rgba(234, 179, 8, 0.2); }
+        .dark-theme .pv-status-badge.approved { background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.2); }
+        .dark-theme .pv-status-badge.rejected { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.2); }
+        .dark-theme .pv-page-btn { background: var(--bg-main); border-color: var(--border); color: var(--text-dark); }
+        .dark-theme .pv-page-btn.active { background: var(--primary-purple); border-color: var(--primary-purple); color: white; }
+        .dark-theme .pv-action-btn.approve { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+        .dark-theme .pv-action-btn.reject { background: rgba(239, 68, 68, 0.15); color: #EF4444; }
     </style>
 </head>
 <body>
@@ -671,7 +734,7 @@ include "sidebar.php";
             <button class="pv-btn-export"><i class='bx bx-download'></i> Export CSV</button>
         </div>
         
-        <div style="width: 100%;">
+        <div style="width: 100%; overflow-x: auto;">
             <table class="pv-table">
                 <thead>
                     <tr>
@@ -680,6 +743,7 @@ include "sidebar.php";
                         <th>Amount</th>
                         <th>Transaction ID (UTR)</th>
                         <th>Date Submitted</th>
+                        <th>Bill Month</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -706,7 +770,7 @@ include "sidebar.php";
                                     $name_parts = explode(' ', $raw_name);
                                     $display_name = count($name_parts) > 2 ? $name_parts[0] . ' ' . $name_parts[1] . '...' : $raw_name;
                                     ?>
-                                    <div title="<?php echo s($raw_name); ?>" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
+                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
                                         <?php echo s($display_name); ?>
                                     </div>
                                     <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
@@ -728,7 +792,27 @@ include "sidebar.php";
                                 }
                             }
                             ?>
-                            <span class="pv-bill-info-type"><?php echo $bType ? $bType . ' - ' : ''; ?><?php echo date('M Y', strtotime($n['created_at'])); ?></span>
+                            <?php
+                            $disp_month = date('M Y', strtotime($n['created_at'])); // Default fallback
+                            if (!empty($n['month'])) {
+                                if (strpos($n['month'], '-') !== false && strlen($n['month']) == 7) {
+                                    $disp_month = date('M Y', strtotime($n['month'] . '-01'));
+                                } else {
+                                    $disp_month = $n['month'];
+                                }
+                            } elseif ($n['bill_id'] > 0) {
+                                // Try to fetch from rent/electricity table
+                                $bid = (int)$n['bill_id'];
+                                if ($n['bill_type'] == 'rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM rent WHERE id=$bid"));
+                                    if ($mr && !empty($mr['month'])) $disp_month = date('M Y', strtotime($mr['month'] . '-01'));
+                                } elseif ($n['bill_type'] == 'electricity' || $n['bill_type'] == 'elec_rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month FROM electricity WHERE id=$bid"));
+                                    if ($mr && !empty($mr['month'])) $disp_month = date('M Y', strtotime($mr['month'] . '-01'));
+                                }
+                            }
+                            ?>
+                            <span class="pv-bill-info-type" title="<?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo htmlspecialchars($disp_month); ?>"><?php echo $bType ? htmlspecialchars($bType) . ' - ' : ''; ?><?php echo htmlspecialchars($disp_month); ?></span>
                             <?php if($n['bill_id']): ?>
                                 <span class="pv-bill-info-inv">Invoice #INV<?php echo date('Ym', strtotime($n['created_at'])) . str_pad($n['bill_id'], 3, '0', STR_PAD_LEFT); ?></span>
                             <?php else: ?>
@@ -740,13 +824,26 @@ include "sidebar.php";
                             <span class="pv-amount-text">₹<?php echo number_format($n['amount'], 2); ?></span>
                         </td>
                         <td>
-                            <div class="pv-utr-text">
-                                <?php echo s($n['transaction_id']); ?> <i class='bx bx-copy' title="Copy UTR" onclick="navigator.clipboard.writeText('<?php echo s($n['transaction_id']); ?>'); alert('UTR Copied!');"></i>
+                            <div class="pv-utr-text" style="margin-bottom:4px;">
+                                <?php echo !empty($n['transaction_id']) ? s($n['transaction_id']) : 'No UTR (Cash)'; ?> 
+                                <?php if(!empty($n['transaction_id'])): ?>
+                                    <i class='bx bx-copy' title="Copy UTR" onclick="navigator.clipboard.writeText('<?php echo s($n['transaction_id']); ?>'); alert('UTR Copied!');"></i>
+                                <?php endif; ?>
                             </div>
+                            <?php if(!empty($n['sys_tx_id'])): ?>
+                                <div style="font-size:11px; color:#64748B; display:flex; align-items:center; gap:4px;">
+                                    <i class='bx bx-barcode-reader'></i> <?php echo s($n['sys_tx_id']); ?>
+                                </div>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <span class="pv-date-text"><?php echo date('M d, Y', strtotime($n['created_at'])); ?></span>
                             <span class="pv-time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
+                        </td>
+                        <td>
+                            <span class="pv-date-text" style="color: #64748B; font-weight: 500;">
+                                <?php echo !empty($n['month']) ? s($n['month']) : '-'; ?>
+                            </span>
                         </td>
                         <td>
                             <?php if($n['status'] == 'Pending'): ?>
@@ -760,11 +857,11 @@ include "sidebar.php";
                         <td>
                             <div class="pv-action-cell">
                                 <?php if($n['status'] == 'Pending'): ?>
-                                    <form action="" method="POST" style="margin:0;">
+                                    <form action="" method="POST" style="margin:0;" onsubmit="if(confirm('Confirm this payment matches your bank statement?')) { var btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.style.opacity = '0.7'; btn.innerText = 'Approving...'; return true; } return false;">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                                         <input type="hidden" name="id" value="<?php echo $n['id']; ?>">
                                         <input type="hidden" name="action" value="approve">
-                                        <button type="submit" class="pv-btn-approve-sm" onclick="return confirm('Confirm this payment matches your bank statement?')">Approve</button>
+                                        <button type="submit" class="pv-btn-approve-sm">Approve</button>
                                     </form>
                                     <form action="" method="POST" style="margin:0;" id="rejectForm_<?php echo $n['id']; ?>">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">

@@ -3,6 +3,7 @@
 .env.*
 *credentials.php
 secret*.php
+db.php
 
 # Logs and databases
 *.log
@@ -17,6 +18,7 @@ secret*.php
 .Trashes
 ehthumbs.db
 Thumbs.db
+*.zip
 
 # IDEs and Editors
 .vscode/

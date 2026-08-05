@@ -48,7 +48,7 @@ mysqli_stmt_close($count_stmt);
 $total_pages = ceil($total_transactions / $limit);
 
 /* Fetch detailed payment history log with LIMIT */
-$stmt = mysqli_prepare($conn, "SELECT p.*, 'Admin' as admin_name, e.amount as elec_amount, e.rent_amount, e.maintenance, e.dues as past_dues, e.extra_charges, e.extra_charges_desc FROM payments p LEFT JOIN electricity e ON p.bill_id = e.id AND p.bill_type = 'electricity' WHERE p.user_id = ? ORDER BY p.id DESC LIMIT ? OFFSET ?");
+$stmt = mysqli_prepare($conn, "SELECT p.*, 'Admin' as admin_name, e.status as elec_status, r.status as rent_status FROM payments p LEFT JOIN electricity e ON p.bill_id = e.id AND (p.bill_type = 'electricity' OR p.bill_type = 'elec_rent') LEFT JOIN rent r ON p.bill_id = r.id AND p.bill_type = 'rent' WHERE p.user_id = ? ORDER BY p.id DESC LIMIT ? OFFSET ?");
 mysqli_stmt_bind_param($stmt, "iii", $id, $limit, $offset);
 mysqli_stmt_execute($stmt);
 $payment_res = mysqli_stmt_get_result($stmt);
@@ -136,7 +136,15 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                         </div>
                                         
                                         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                                            <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <?php
+                                                $bill_status = ($p['bill_type'] == 'rent') ? $p['rent_status'] : $p['elec_status'];
+                                                if ($bill_status == 'Paid'): 
+                                                ?>
+                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: #F8FAFC; border: 1px solid #E2E8F0; color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
+                                                <?php endif; ?>
+                                                <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
+                                            </div>
                                             <div style="font-size: 12px; color: var(--text-gray); display: flex; align-items: center; gap: 8px;">
                                                 <span style="display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <?php echo date('d M Y, h:i A', strtotime($p['payment_date'] . ' ' . $p['payment_time'])); ?></span>
                                                 <?php if ($p['admin_name']): ?>

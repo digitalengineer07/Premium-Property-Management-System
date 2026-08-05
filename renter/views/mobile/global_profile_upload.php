@@ -16,7 +16,7 @@ if (!isset($user)) {
 <div id="cropperModalMobile" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999999; flex-direction:column; align-items:center; justify-content:center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(10px);">
     <div style="background: #fff; width: 100%; max-width: 450px; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <div style="padding: 20px 24px; background: linear-gradient(135deg, var(--primary-purple), #8B5CF6); display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="margin: 0; color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <h4 style="margin: 0; color: #fff; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 2px;">
                 <i class='bx bx-crop' style="font-size: 22px;"></i> Adjust Photo
             </h4>
             <button type="button" onclick="closeCropperMobile()" style="background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; font-size: 24px; width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: 0.2s;"><i class='bx bx-x'></i></button>
@@ -25,8 +25,8 @@ if (!isset($user)) {
             <img id="imageToCropMobile" style="max-width: 100%; max-height: 100%; display: block; margin: 0 auto;">
         </div>
         <div style="padding: 20px 24px; background: #fff; display: flex; gap: 12px; justify-content: flex-end;">
-            <button type="button" onclick="closeCropperMobile()" style="padding: 12px 24px; background: #F1F5F9; border: none; border-radius: 14px; font-weight: 600; font-size: 15px; color: #64748B; cursor: pointer; flex: 1;">Cancel</button>
-            <button type="button" onclick="applyCropMobile()" style="padding: 12px 24px; background: var(--primary-purple); border: none; border-radius: 14px; font-weight: 600; font-size: 15px; color: white; cursor: pointer; flex: 1; box-shadow: 0 8px 16px rgba(98, 75, 255, 0.2);">Crop & Save</button>
+            <button type="button" onclick="closeCropperMobile()" style="padding: 12px 24px; background: #F1F5F9; border: none; border-radius: 14px; font-weight: 600; font-size: 13px; font-size: 15px; color: #64748B; cursor: pointer; flex: 1;">Cancel</button>
+            <button type="button" onclick="applyCropMobile()" style="padding: 12px 24px; background: var(--primary-purple); border: none; border-radius: 14px; font-weight: 600; font-size: 13px; font-size: 15px; color: white; cursor: pointer; flex: 1; box-shadow: 0 8px 16px rgba(98, 75, 255, 0.2);">Crop & Save</button>
         </div>
     </div>
 </div>

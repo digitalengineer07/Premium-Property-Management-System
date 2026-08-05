@@ -63,7 +63,7 @@
             <div class="right-col">
                 <div class="content-card" style="height: 100%;">
                     <h2 class="section-title"><i class='bx bx-link-alt'></i> Get in Touch</h2>
-                    <p style="color: var(--text-gray); font-size: 14px; margin-bottom: 24px;">Always open for collaboration or interesting project discussions.</p>
+                    <p style="color: var(--text-gray); font-size: 13px; margin-bottom: 24px;">Always open for collaboration or interesting project discussions.</p>
                     
                     <a href="mailto:nikhil119124@gmail.com" class="contact-link" target="_blank">
                         <i class='bx bx-envelope' style='color: #EA4335;'></i>

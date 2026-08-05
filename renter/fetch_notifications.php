@@ -50,7 +50,7 @@ if ($rej_notif_q) {
             'id' => $nid,
             'type' => 'rejection',
             'title' => 'Payment Rejected',
-            'message' => '₹' . number_format($r['amount'], 2) . ' (UTR: ' . $r['transaction_id'] . ') ' . (!empty($r['admin_note']) ? '- ' . $r['admin_note'] : ''),
+            'message' => '₹' . number_format($r['amount']) . ' (UTR: ' . $r['transaction_id'] . ') ' . (!empty($r['admin_note']) ? '- ' . $r['admin_note'] : ''),
             'time' => $r['created_at'],
             'icon' => 'bx-x-circle',
             'color' => '#EF4444'
@@ -60,7 +60,7 @@ if ($rej_notif_q) {
 
 // 3. Outstanding Balance (Always calculated independently using decoupled status columns)
 $pure_rent_due_n = 0;
-$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status != 'Paid'");
+$stmt_n = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
 if ($stmt_n) {
     mysqli_stmt_bind_param($stmt_n, "i", $notif_user_id);
     mysqli_stmt_execute($stmt_n);
@@ -79,10 +79,10 @@ if ($stmt_n2) {
     while ($row = mysqli_fetch_assoc($r2_n)) {
         $e_status = !empty($row['elec_status']) ? $row['elec_status'] : $row['status'];
         $r_status = !empty($row['rent_status']) ? $row['rent_status'] : $row['status'];
-        if ($e_status !== 'Paid') {
+        if ($e_status === 'Due') {
             $elec_due_n += (float)$row['amount'];
         }
-        if ($r_status !== 'Paid') {
+        if ($r_status === 'Due') {
             $rent_portion_due_n += ((float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues']);
         }
     }
@@ -101,10 +101,34 @@ if ($notif_total_due > 0) {
             'id' => $nid,
             'type' => 'due',
             'title' => 'Payment Due',
-            'message' => 'You have an outstanding balance of ₹' . number_format($notif_total_due, 2),
+            'message' => 'You have an outstanding balance of ₹' . number_format($notif_total_due),
             'time' => date('Y-m-d H:i:s'),
             'icon' => 'bx-wallet',
             'color' => '#F59E0B'
+        ];
+    }
+}
+
+// 4. App Notifications
+$app_n_q = @mysqli_query($conn, "SELECT id, title, message, type, created_at FROM app_notifications WHERE user_id = $notif_user_id ORDER BY created_at DESC LIMIT 20");
+if ($app_n_q) {
+    while($n = mysqli_fetch_assoc($app_n_q)) {
+        $nid = 'app_' . $n['id'];
+        if (in_array($nid, $dismissed_ids)) continue;
+        
+        $icon = 'bx-bell';
+        $color = '#6366f1';
+        if ($n['type'] == 'bill') { $icon = 'bx-receipt'; $color = '#EC4899'; }
+        elseif ($n['type'] == 'payment_verified') { $icon = 'bx-check-circle'; $color = '#10B981'; }
+
+        $unread_notifications[] = [
+            'id' => $nid,
+            'type' => $n['type'],
+            'title' => $n['title'],
+            'message' => $n['message'],
+            'time' => $n['created_at'],
+            'icon' => $icon,
+            'color' => $color
         ];
     }
 }
