@@ -105,7 +105,11 @@ if (!empty($user_docs['agreement_document'])) {
 
 if (!empty($user_docs['electricity_document'])) {
     $date_str = date('d M Y', strtotime($user_docs['electricity_upload_date'] ?? 'now'));
-    $elec_url = (strpos($user_docs['electricity_document'], 'uploads/') === 0) ? '../' . $user_docs['electricity_document'] : '../uploads/documents/' . $user_docs['electricity_document'];
+    $elec_url = '';
+    if (!empty($user_docs['electricity_document'])) {
+        $doc_name = basename($user_docs['electricity_document']);
+        $elec_url = '../view_document.php?file=' . urlencode($doc_name);
+    }
     $documents[] = [
         'name' => 'Electricity Copy', 'desc' => 'Utility Document', 'category' => 'Utility', 'cat_color' => '#10B981', 'cat_bg' => 'rgba(16, 185, 129, 0.1)',
         'date' => $date_str, 'time' => '', 'status' => 'Verified', 'size' => 'Available', 'icon' => 'bx-bolt-circle', 'url' => $elec_url
