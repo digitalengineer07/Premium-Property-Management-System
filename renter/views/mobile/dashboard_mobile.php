@@ -240,28 +240,6 @@
     .app-footer p {
         text-align: center !important;
     }
-
-    /* Mobile Sidebar Drawer Responsive Fixes */
-    .sidebar.mobile-drawer-open {
-        padding-bottom: 50px !important; /* Increased from 24px to push logout button higher */
-    }
-    .sidebar.mobile-drawer-open .nav-menu {
-        flex: 1 1 auto !important;
-        min-height: 0 !important; /* Crucial for scrolling to work perfectly on short screens */
-        padding-bottom: 12px !important;
-    }
-    .sidebar.mobile-drawer-open > div:last-child {
-        flex-shrink: 0 !important; /* Prevent logout button from getting squished */
-    }
-    .sidebar.mobile-drawer-open .nav-item {
-        padding: 10px 16px !important; /* Slightly tighter padding for smaller screens */
-        margin-bottom: 4px !important;
-    }
-    .sidebar.mobile-drawer-open .nav-item span {
-        font-size: 14px !important; /* Scaled down slightly to fit all screens comfortably */
-        white-space: normal !important; /* Allow text to wrap if screen is very narrow */
-        line-height: 1.2 !important;
-    }
 }
 </style>
 
