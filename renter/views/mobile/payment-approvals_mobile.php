@@ -102,14 +102,14 @@
             </div>
         </header>
 
-    <div class="content-area" style="padding-top: 100px;">
+    <div class="content-area" style="padding-top: 100px; padding-bottom: 80px;">
         <?php if (!empty($payment_success)): ?>
-            <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+            <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin: 0 16px 16px 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
                 <i class='bx bx-check-circle' style="font-size: 18px;"></i> <?php echo $payment_success; ?>
             </div>
         <?php endif; ?>
         <?php if (!empty($payment_error)): ?>
-            <div style="background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+            <div style="background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 12px; border-radius: 12px; margin: 0 16px 16px 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
                 <i class='bx bx-error-circle' style="font-size: 18px;"></i> <?php echo $payment_error; ?>
             </div>
         <?php endif; ?>
