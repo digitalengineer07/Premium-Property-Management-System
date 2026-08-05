@@ -189,7 +189,7 @@ body {
     display: flex !important;
     flex-direction: column !important;
     gap: 8px !important;
-    flex: none !important;
+    flex: 1 1 auto !important; /* Allow shrinking so logout button doesn't overflow */
     justify-content: flex-start !important;
     overflow-y: auto;
     padding-right: 4px;
