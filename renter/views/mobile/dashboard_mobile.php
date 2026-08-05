@@ -228,8 +228,11 @@
 <style>
 /* Added padding for unified footer and widgets to shift them above the bottom nav */
 @media (max-width: 768px) {
+    .main-content {
+        padding-bottom: 120px !important;
+    }
     .app-footer {
-        padding-bottom: 130px !important;
+        padding-bottom: 80px !important;
         flex-direction: column !important;
         text-align: center !important;
         gap: 10px;
