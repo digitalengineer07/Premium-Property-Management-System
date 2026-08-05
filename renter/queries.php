@@ -20,6 +20,9 @@ $error = "";
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+        die("Security validation failed.");
+    }
     $category = $_POST['category'] ?? 'Other';
     $subject = trim($_POST['subject'] ?? '');
     $message = trim($_POST['message'] ?? '');
