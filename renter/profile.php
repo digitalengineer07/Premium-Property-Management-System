@@ -639,62 +639,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
 <div class="app-container">
     <!-- Desktop Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class='bx bx-home-heart'></i>
-            </div>
-            <div class="sidebar-brand">
-                <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
-                <p>Resident Dashboard</p>
-            </div>
-        </div>
-        
-        <nav class="nav-menu">
-            <a href="dashboard.php" class="nav-item">
-                <i class='bx bx-home'></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="my-payments.php" class="nav-item">
-                <i class='bx bx-credit-card'></i>
-                <span>My Payments</span>
-            </a>
-            <a href="payment-approvals.php" class="nav-item">
-                <i class='bx bx-check-shield'></i>
-                <span>Approvals</span>
-            </a>
-            <a href="electricity-record.php" class="nav-item">
-                <i class='bx bx-bolt-circle'></i>
-                <span>Electricity Record</span>
-            </a>
-            <a href="my-bills.php" class="nav-item">
-                <i class='bx bx-receipt'></i>
-                <span>My Bills</span>
-            </a>
-            <a href="queries.php" class="nav-item">
-                <i class='bx bx-message-square-dots'></i>
-                <span>Raise Query</span>
-            </a>
-            <a href="notices.php" class="nav-item">
-                <i class='bx bx-bell'></i>
-                <span>Notices</span>
-            </a>
-            <a href="documents.php" class="nav-item">
-                <i class='bx bx-folder'></i>
-                <span>Documents</span>
-            </a>
-            <a href="profile.php" class="nav-item active">
-                <i class='bx bx-user-circle'></i>
-                <span>Profile Settings</span>
-            </a></nav>
-        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
-            <a href="../logout.php" class="nav-item" style=" color: #FF4B6B; ">
-                <i class='bx bx-log-out'></i>
-                <span>Logout</span>
-            </a>
-        
-        </div>
-    </aside>
+    <?php include_once __DIR__ . '/shared_sidebar.php'; ?>
 
 <main class="main-content">
         <!-- 1. EXCLUSIVE MOBILE VIEW CODE (Isolated in views/mobile/profile_mobile.php) -->
