@@ -640,14 +640,14 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
     <!-- Desktop Sidebar -->
     <?php include_once __DIR__ . '/shared_sidebar.php'; ?>
 
-<main class="main-content" style="border: 5px solid red; min-height: 500px; display: block !important;">
+<main class="main-content">
         <!-- 1. EXCLUSIVE MOBILE VIEW CODE (Isolated in views/mobile/profile_mobile.php) -->
         <div class="mobile-view-wrapper">
             <?php include __DIR__ . '/views/mobile/profile_mobile.php'; ?>
         </div>
 
         <!-- 2. EXCLUSIVE DESKTOP VIEW CODE (Isolated in views/desktop/profile_desktop.php) -->
-        <div class="desktop-view-wrapper">
+        <div class="desktop-view-wrapper" style="border: 5px solid blue; min-height: 500px; display: block !important;">
             <?php include __DIR__ . '/views/desktop/profile_desktop.php'; ?>
         </div>
 </main>
