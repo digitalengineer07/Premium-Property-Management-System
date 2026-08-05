@@ -61,13 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         // Insert Security Deposit component
                         if ($amount_to_sec > 0) {
                             $sys_sec_tx = 'SYS_SEC_' . strtoupper(bin2hex(random_bytes(6)));
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx')");
+                            $vhash_sec = generate_payment_hash($p_uid, $amount_to_sec, $sys_sec_tx);
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx', '$vhash_sec')");
                         }
                         
                         // Insert remaining to Advance Wallet (Logs as 1st Month Rent, but DOES NOT add to auto-deduct wallet)
                         if ($amount_to_adv > 0) {
                             $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                            $vhash_adv = generate_payment_hash($p_uid, $amount_to_adv, $sys_adv_tx);
+                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx', '$vhash_adv')");
                             // Removed: UPDATE users SET advance_payment = advance_payment + $amount_to_adv
                         }
                     }
@@ -109,14 +111,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                             
                             // Insert core payment if any due is left
                             if ($amount_to_apply > 0) {
-                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $bill_amount, '$p_pmode', $amount_to_apply, CURDATE(), '$p_tx', '$p_sys_tx')");
+                                $vhash_core = generate_payment_hash($p_uid, $amount_to_apply, $p_sys_tx);
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $bill_amount, '$p_pmode', $amount_to_apply, CURDATE(), '$p_tx', '$p_sys_tx', '$vhash_core')");
                                 recalculate_bill_status($conn, $p_btype, $p_bid);
                             }
                             
                             // Route overpayments directly to the wallet safely
                             if ($excess > 0) {
                                 $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($p_uid, 'advance', 0, 'Advance', $excess, '$p_pmode', $excess, CURDATE(), '$p_tx', '$sys_adv_tx')");
+                                $vhash_exc = generate_payment_hash($p_uid, $excess, $sys_adv_tx);
+                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'advance', 0, 'Advance', $excess, '$p_pmode', $excess, CURDATE(), '$p_tx', '$sys_adv_tx', '$vhash_exc')");
                                 mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$p_uid");
                             }
                         }
