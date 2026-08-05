@@ -150,7 +150,7 @@
         
         if (isset($_GET['month']) && !empty($_GET['month'])) {
             $target_month = mysqli_real_escape_string($conn, urldecode($_GET['month']));
-            $q = mysqli_query($conn, "SELECT id, bill_type, paid_amount as amount, month, payment_mode, payment_date as p_date, transaction_id, sys_tx_id FROM payments WHERE user_id = $user_id AND month = '$target_month' ORDER BY payment_date DESC, id DESC");
+            $q = mysqli_query($conn, "SELECT id, bill_type, paid_amount as amount, month, payment_mode, payment_date as p_date, transaction_id, sys_tx_id, verification_hash FROM payments WHERE user_id = $user_id AND month = '$target_month' ORDER BY payment_date DESC, id DESC");
             if ($q) {
                 while ($row = mysqli_fetch_assoc($q)) {
                     $title = 'Ledger Split';
