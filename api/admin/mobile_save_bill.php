@@ -11,6 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Basic Authentication via Headers
+$headers = apache_request_headers();
+$authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+if (empty($authHeader)) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "Unauthorized access. No token provided."]);
+    exit;
+}
+
 $data = json_decode(file_get_contents("php://input"));
 
 if (!$data) {

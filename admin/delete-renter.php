@@ -40,10 +40,32 @@ try {
     // 2. Delete non-financial traces (since financial is confirmed 0)
     mysqli_query($conn, "DELETE FROM payment_notifications WHERE user_id = $id");
     mysqli_query($conn, "DELETE FROM app_notifications WHERE user_id = $id");
+    
+    // Fetch and delete query attachments before deleting DB rows
+    $query_q = mysqli_query($conn, "SELECT attachment FROM queries WHERE user_id = $id AND attachment IS NOT NULL AND attachment != ''");
+    while ($q_row = mysqli_fetch_assoc($query_q)) {
+        if (!empty($q_row['attachment']) && file_exists("../" . $q_row['attachment'])) {
+            unlink("../" . $q_row['attachment']);
+        }
+    }
     mysqli_query($conn, "DELETE FROM queries WHERE user_id = $id");
+
+    // Fetch and delete uploaded documents before deleting DB rows
+    $doc_q = mysqli_query($conn, "SELECT file_path FROM documents WHERE user_id = $id");
+    while ($doc = mysqli_fetch_assoc($doc_q)) {
+        if (!empty($doc['file_path']) && file_exists("../" . $doc['file_path'])) {
+            unlink("../" . $doc['file_path']);
+        }
+    }
     mysqli_query($conn, "DELETE FROM documents WHERE user_id = $id");
 
-    // 3. Delete user profile
+    // 3. Delete user profile and their profile picture
+    $user_q = mysqli_query($conn, "SELECT profile_pic FROM users WHERE id = $id");
+    if ($user_q && $u_row = mysqli_fetch_assoc($user_q)) {
+        if (!empty($u_row['profile_pic']) && file_exists("../" . $u_row['profile_pic'])) {
+            unlink("../" . $u_row['profile_pic']);
+        }
+    }
     mysqli_query($conn, "DELETE FROM users WHERE id = $id");
 
     mysqli_commit($conn);
