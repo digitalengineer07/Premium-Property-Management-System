@@ -132,7 +132,8 @@
             </style>
 </head>
 <body class="<?php echo isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark' ? 'dark-theme' : ''; ?>">
-
+<?php include_once __DIR__ . '/../../shared_sidebar.php'; ?>
+<div class="m-approvals-wrapper animate-up">
     <header class="premium-header-pill" style="position: fixed; top: 0; left: 0;">
             <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
                 <div class="m-header-module m-header-left" onclick="if(typeof openMobileSidebar==='function') openMobileSidebar(event); else { document.querySelector('.sidebar')?.classList.toggle('mobile-drawer-open'); }" style="color: white; font-size: 28px; cursor: pointer;">
