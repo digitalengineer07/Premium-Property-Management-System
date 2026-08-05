@@ -173,8 +173,8 @@
 
         // 2. Electricity (Usage)
         $elec_q = mysqli_query($conn, "SELECT e.id, e.month, e.units_consumed, e.amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
-                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND e.amount > 0");
         while($e = mysqli_fetch_assoc($elec_q)) {
             $rem = max(0, (float)$e['amount'] - (float)$e['total_paid']);
@@ -205,9 +205,9 @@
         }
 
         // 3. Rent & Maintenance (From Electricity)
-        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
-                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
-                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type='electricity' GROUP BY bill_id) p ON p.bill_id=e.id 
+        $maint_q = mysqli_query($conn, "SELECT e.id, e.month, e.amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, COALESCE(NULLIF(e.rent_status, ''), e.status) as status, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
+                                       (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
+                                       FROM electricity e LEFT JOIN (SELECT bill_id, MAX(payment_date) as payment_date FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
                                        WHERE e.user_id=$user_id AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.extra_charges > 0 OR e.dues > 0)");
         while($m = mysqli_fetch_assoc($maint_q)) {
             $total_paid = (float)$m['total_paid'];
@@ -215,7 +215,10 @@
             $rent_maint_amt = (float)$m['rent_amount'] + (float)$m['maintenance'] + (float)$m['dues'] + (float)$m['extra_charges']; 
             $orig_status = $m['status'];
             
-            $rem = max(0, $rent_maint_amt - $total_paid);
+            
+            $elec_amt = (float)$m['amount'];
+            $paid_towards_rent = max(0, $total_paid - $elec_amt);
+            $rem = max(0, $rent_maint_amt - $paid_towards_rent);
             $st = $orig_status;
             
             if ($st == 'Paid' || $rem == 0) {
