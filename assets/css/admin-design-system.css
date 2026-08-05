@@ -1674,7 +1674,8 @@ body.dark-theme thead th:last-child {
         display: block !important;
     }
     .sidebar.mobile-drawer-open .nav-menu {
-        flex: 1 1 auto !important; /* Allow it to shrink and grow */
+        flex: none !important; /* Prevent spreading out */
+        justify-content: flex-start !important;
         min-height: 0 !important; /* Crucial for proper scrolling on short screens */
         display: flex !important;
         flex-direction: column !important;
