@@ -16,6 +16,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+$headers = apache_request_headers();
+$authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+if (!$authHeader && isset($_GET['token'])) {
+    $authHeader = "Bearer " . trim($_GET['token']);
+}
+$token = '';
+if (preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+    $token = $matches[1];
+} else if (isset($_POST['token'])) {
+    $token = trim($_POST['token']);
+}
+if (!$token) {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "Unauthorized access. No token provided."]);
+    exit;
+}
+$decoded = json_decode(base64_decode($token), true);
+if (!$decoded || !isset($decoded['id']) || $decoded['role'] !== 'admin') {
+    http_response_code(401);
+    echo json_encode(["status" => "error", "message" => "Unauthorized access. Invalid token or role."]);
+    exit;
+}
+
 try {
     $room_no = isset($_GET['room']) ? trim($_GET['room']) : '';
     
