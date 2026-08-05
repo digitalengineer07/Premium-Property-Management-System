@@ -1674,7 +1674,7 @@ body.dark-theme thead th:last-child {
         display: block !important;
     }
     .sidebar.mobile-drawer-open .nav-menu {
-        flex: none !important; /* Prevent spreading out */
+        flex: 1 1 auto !important; /* Allow shrinking so logout button doesn't overflow */
         justify-content: flex-start !important;
         min-height: 0 !important; /* Crucial for proper scrolling on short screens */
         display: flex !important;
