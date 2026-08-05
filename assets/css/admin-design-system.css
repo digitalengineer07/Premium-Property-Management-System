@@ -1596,7 +1596,19 @@ body.dark-theme thead th:last-child {
         font-size: 14px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .mobile-sidebar-drawer .m-nav-item i { font-size: 18px; opacity: 0.8; }
+    .mobile-sidebar-drawer .m-nav-item span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .mobile-sidebar-drawer .m-nav-item i { 
+        font-size: 18px; 
+        opacity: 0.8; 
+        min-width: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
     .mobile-sidebar-drawer .m-nav-item:hover { background: rgba(98, 75, 255, 0.03); color: var(--primary-purple); }
     .mobile-sidebar-drawer .m-nav-item.active { background: var(--primary-purple); color: white; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.25); }
     .mobile-sidebar-drawer .m-nav-item.active i { opacity: 1; }
