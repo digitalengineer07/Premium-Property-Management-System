@@ -343,12 +343,13 @@
                             <div class="bill-left">
                                 <div class="bill-icon"><i class='bx bx-receipt'></i></div>
                                 <div class="bill-info">
-                                    ?></p>
+                                    <h4>Total Bill for <?php echo htmlspecialchars($pb['month']); ?></h4>
+                                    <p>Due Date: <?php echo date('d M Y', strtotime($pb['due_date'])); ?></p>
                                 </div>
                             </div>
                             <div class="bill-right">
-                                <h4 <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>><?php echo money($pb['amount']); ?></h4>
-                                <p <?php echo $pb['type'] == 'elec' ? 'style="color: #F59E0B;"' : ''; ?>>Pending</p>
+                                <h4><?php echo money($pb['due']); ?></h4>
+                                <p>Pending</p>
                             </div>
                         </div>
                         <?php endforeach; ?>
