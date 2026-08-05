@@ -199,13 +199,13 @@ body {
     overscroll-behavior: contain;
 }
 
-.nav::-webkit-scrollbar {
+.nav-menu::-webkit-scrollbar {
     width: 4px;
 }
-.nav::-webkit-scrollbar-track {
+.nav-menu::-webkit-scrollbar-track {
     background: transparent;
 }
-.nav::-webkit-scrollbar-thumb {
+.nav-menu::-webkit-scrollbar-thumb {
     background: #E2E8F0;
     border-radius: 4px;
 }
