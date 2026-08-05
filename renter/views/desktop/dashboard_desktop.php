@@ -405,7 +405,7 @@
                 </div>
                 <div class="transaction-list" style="overflow-y: auto; max-height: 250px;">
                     <?php 
-                    $payments_recent_q = mysqli_query($conn, "SELECT id, bill_type, month, paid_amount as amount, payment_date, 'Paid' as status FROM payments WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
+                    $payments_recent_q = mysqli_query($conn, "SELECT id, bill_type, month, paid_amount as amount, payment_date, 'Paid' as status, sys_tx_id, verification_hash FROM payments WHERE user_id = $user_id ORDER BY id DESC LIMIT 5");
                     $display_tx = [];
                     while($pt = mysqli_fetch_assoc($payments_recent_q)) {
                         $display_tx[] = $pt;
