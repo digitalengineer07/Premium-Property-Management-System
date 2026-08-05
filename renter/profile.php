@@ -646,8 +646,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <?php include __DIR__ . '/views/mobile/profile_mobile.php'; ?>
         </div>
 
-        <div class="desktop-view-wrapper" style="border: 5px solid blue; min-height: 500px; display: block !important;">
-            <h1 style="color: black; font-size: 50px; z-index: 9999; position: relative;">TEST DESKTOP RENDER</h1>
+        <div class="desktop-view-wrapper">
             <?php include __DIR__ . '/views/desktop/profile_desktop.php'; ?>
         </div>
 </main>
