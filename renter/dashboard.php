@@ -27,9 +27,9 @@ $room_no = $user['room_no'];
 /* Calculate totals */
 // 1. Rent from pure 'rent' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(rent_amount), 0) - 
-    IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
-    AS total 
+    IFNULL(SUM(
+        rent_amount - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
+    ), 0) AS total 
     FROM rent r WHERE user_id = ? AND status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
