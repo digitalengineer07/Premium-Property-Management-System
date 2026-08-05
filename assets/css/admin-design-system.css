@@ -186,11 +186,11 @@ body {
 }
 
 .nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: none;
-    justify-content: flex-start;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    flex: none !important;
+    justify-content: flex-start !important;
     overflow-y: auto;
     padding-right: 4px;
     scrollbar-width: thin;
