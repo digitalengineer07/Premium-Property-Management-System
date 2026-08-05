@@ -68,8 +68,9 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     if ($is_wallet_transfer) {
         // Inject a negative ledger entry to properly offset the wallet transfer and balance the books
         $offset_amt = -1 * $amount;
-        $stmt_offset = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, 'Advance Wallet Auto-Deduction', ?, CURDATE(), ?, ?)");
-        mysqli_stmt_bind_param($stmt_offset, "iddss", $user_id, $offset_amt, $offset_amt, $transaction_id, $sys_tx_id);
+        $vhash = generate_payment_hash($user_id, $offset_amt, $sys_tx_id);
+        $stmt_offset = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, 'Advance Wallet Auto-Deduction', ?, CURDATE(), ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt_offset, "iddsss", $user_id, $offset_amt, $offset_amt, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt_offset);
         mysqli_stmt_close($stmt_offset);
     }
@@ -139,8 +140,9 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         $p_month = $bill['month'];
         
         // Insert into payments
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisdsdss", $user_id, $bill['type'], $bill['id'], $p_month, $bill['total_amount'], $payment_mode, $allocate, $transaction_id, $sys_tx_id);
+        $vhash = generate_payment_hash($user_id, $allocate, $sys_tx_id);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "isisdssdds", $user_id, $bill['type'], $bill['id'], $p_month, $bill['total_amount'], $payment_mode, $allocate, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
@@ -151,8 +153,9 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // If there is still remaining payment (advance payment), handle it
     if ($remaining_payment > 0.01) {
         // Always insert leftover advance (the initial negative offset balances this)
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?)");
-        mysqli_stmt_bind_param($stmt, "idsdss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id);
+        $vhash = generate_payment_hash($user_id, $remaining_payment, $sys_tx_id);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "iddsss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
