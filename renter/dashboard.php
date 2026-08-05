@@ -68,7 +68,7 @@ $total_due = $elec_due + $rent_due - $unbilled_adj;
 
 /* Calculate Onboarding Dues */
 // Run alter silently just in case
-mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+try { mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0"); } catch (Exception $e) {}
 
 $sec_due = 0;
 $adv_due = 0;
@@ -200,7 +200,7 @@ if ($ann_check_q) {
 // Handle Rejection Dismissal
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dismiss_rejection'])) {
     $dismiss_id = (int)$_POST['dismiss_id'];
-    @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
+    try { @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0"); } catch (Exception $e) {}
     mysqli_query($conn, "UPDATE payment_notifications SET is_dismissed = 1 WHERE id = $dismiss_id AND user_id = $user_id");
     header("Location: dashboard.php");
     exit;

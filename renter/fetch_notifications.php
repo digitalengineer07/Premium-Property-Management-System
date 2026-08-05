@@ -40,7 +40,7 @@ if ($ann_q) {
 }
 
 // 2. Rejected Payments
-@mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0");
+try { @mysqli_query($conn, "ALTER TABLE payment_notifications ADD COLUMN is_dismissed TINYINT(1) DEFAULT 0"); } catch (Exception $e) {}
 $rej_notif_q = @mysqli_query($conn, "SELECT id, transaction_id, admin_note, amount, created_at FROM payment_notifications WHERE user_id = $notif_user_id AND status = 'Rejected' AND IFNULL(is_dismissed, 0) = 0 ORDER BY id DESC");
 if ($rej_notif_q) {
     while($r = mysqli_fetch_assoc($rej_notif_q)) {
