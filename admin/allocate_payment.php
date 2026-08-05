@@ -142,7 +142,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         // Insert into payments
         $vhash = generate_payment_hash($user_id, $allocate, $sys_tx_id);
         $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisdssdds", $user_id, $bill['type'], $bill['id'], $p_month, $bill['total_amount'], $payment_mode, $allocate, $transaction_id, $sys_tx_id, $vhash);
+        mysqli_stmt_bind_param($stmt, "isissddsss", $user_id, $bill['type'], $bill['id'], $p_month, $bill['total_amount'], $payment_mode, $allocate, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
