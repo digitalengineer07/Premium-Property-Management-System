@@ -5,56 +5,67 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <aside id="unified-mobile-sidebar" class="mobile-sidebar-drawer">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">
+    <div class="m-sidebar-header">
+        <div class="m-sidebar-logo">
             <i class='bx bx-home-heart'></i>
         </div>
-        <div class="sidebar-brand">
+        <div class="m-sidebar-brand">
             <h2><?php echo htmlspecialchars(HOUSE_NAME); ?></h2>
             <p>Resident Dashboard</p>
         </div>
     </div>
     
-    <nav class="nav-menu">
-        <a href="dashboard.php" class="nav-item <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
+    <nav class="m-nav-menu">
+        <a href="dashboard.php" class="m-nav-item <?php echo $current_page == 'dashboard.php' ? 'active' : ''; ?>">
             <i class='bx bx-grid-alt'></i>
             <span>Dashboard</span>
         </a>
-        <a href="my-payments.php" class="nav-item <?php echo $current_page == 'my-payments.php' ? 'active' : ''; ?>">
+        <a href="my-payments.php" class="m-nav-item <?php echo $current_page == 'my-payments.php' ? 'active' : ''; ?>">
             <i class='bx bx-wallet'></i>
             <span>My Payments</span>
         </a>
-        <a href="payment-approvals.php" class="nav-item <?php echo $current_page == 'payment-approvals.php' ? 'active' : ''; ?>">
+        <a href="payment-approvals.php" class="m-nav-item <?php echo $current_page == 'payment-approvals.php' ? 'active' : ''; ?>">
             <i class='bx bx-check-shield'></i>
             <span>Approvals</span>
         </a>
-        <a href="electricity-record.php" class="nav-item <?php echo $current_page == 'electricity-record.php' ? 'active' : ''; ?>">
+        <a href="electricity-record.php" class="m-nav-item <?php echo $current_page == 'electricity-record.php' ? 'active' : ''; ?>">
             <i class='bx bx-bolt-circle'></i>
             <span>Electricity Record</span>
         </a>
-        <a href="my-bills.php" class="nav-item <?php echo $current_page == 'my-bills.php' ? 'active' : ''; ?>">
+        <a href="my-bills.php" class="m-nav-item <?php echo $current_page == 'my-bills.php' ? 'active' : ''; ?>">
             <i class='bx bx-receipt'></i>
             <span>My Bills</span>
         </a>
-        <a href="queries.php" class="nav-item <?php echo $current_page == 'queries.php' ? 'active' : ''; ?>">
+        <a href="queries.php" class="m-nav-item <?php echo $current_page == 'queries.php' ? 'active' : ''; ?>">
             <i class='bx bx-message-square-dots'></i>
             <span>Raise Query</span>
         </a>
-        <a href="notices.php" class="nav-item <?php echo $current_page == 'notices.php' ? 'active' : ''; ?>">
+        <a href="notices.php" class="m-nav-item <?php echo $current_page == 'notices.php' ? 'active' : ''; ?>">
             <i class='bx bx-bell'></i>
             <span>Notices</span>
         </a>
-        <a href="documents.php" class="nav-item <?php echo $current_page == 'documents.php' ? 'active' : ''; ?>">
+        <a href="documents.php" class="m-nav-item <?php echo $current_page == 'documents.php' ? 'active' : ''; ?>">
             <i class='bx bx-folder'></i>
             <span>Documents</span>
         </a>
-        <a href="profile.php" class="nav-item <?php echo $current_page == 'profile.php' ? 'active' : ''; ?>">
+        <a href="profile.php" class="m-nav-item <?php echo $current_page == 'profile.php' ? 'active' : ''; ?>">
             <i class='bx bx-user'></i>
             <span>Profile Settings</span>
         </a>
     </nav>
-    <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border, #E2E8F0);">
-        <a href="../logout.php" class="nav-item" style="color: #FF4B6B;">
+
+    <!-- Stay Updated Widget shifted slightly UP as requested -->
+    <div class="m-go-mobile-widget" style="background: linear-gradient(145deg, rgba(74,111,255,0.05) 0%, rgba(74,111,255,0.02) 100%); border: 1px solid rgba(74,111,255,0.1); border-radius: 16px; padding: 12px; margin: 4px 16px 12px 16px; text-align: center; position: relative; overflow: hidden; margin-top: auto;">
+        <div style="position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: rgba(74,111,255,0.1); border-radius: 50%; filter: blur(10px);"></div>
+        <i class='bx bx-bell' style="font-size: 20px; color: var(--primary); margin-bottom: 6px;"></i>
+        <h4 style="font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">Stay Updated</h4>
+        <p style="font-size: 11px; color: var(--text-gray); margin-bottom: 8px; line-height: 1.4;">Turn on notifications for rent updates.</p>
+        <button style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s ease;">Enable Now</button>
+    </div>
+
+    <!-- Fix Logout Button (shifted UP slightly as requested by user) -->
+    <div style="padding: 10px 16px 12px 16px; border-top: 1px solid var(--border, #E2E8F0); margin-bottom: 12px;">
+        <a href="../logout.php" class="m-nav-item" style="color: #FF4B6B;">
             <i class='bx bx-log-out'></i>
             <span>Logout</span>
         </a>
@@ -92,22 +103,5 @@ function closeMobileSidebar(e) {
         overlay.classList.remove('open');
         document.body.style.overflow = '';
     }
-}
-
-// Close sidebar on swipe left
-let touchStartX = 0;
-let touchEndX = 0;
-const drawer = document.getElementById('unified-mobile-sidebar');
-if (drawer) {
-    drawer.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, {passive: true});
-
-    drawer.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        if (touchStartX - touchEndX > 50) {
-            closeMobileSidebar();
-        }
-    }, {passive: true});
 }
 </script>
