@@ -176,6 +176,7 @@
                         'status' => 'Allocated',
                         'paid_on' => date('d M Y', strtotime($row['p_date'])),
                         'p_ts' => strtotime($row['p_date']),
+                        'max_id' => (int)$row['id'],
                         'payment_mode' => $row['payment_mode'] ?: 'System'
                     ];
                 }
