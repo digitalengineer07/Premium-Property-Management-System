@@ -112,6 +112,29 @@ if ($res) {
             min-height: 100vh;
         }
 
+        /* Modern Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .status-approved {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        .status-pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        .status-rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
         /* Sidebar Styles */
         .sidebar {
             width: 230px;
