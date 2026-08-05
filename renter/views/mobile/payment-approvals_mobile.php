@@ -188,6 +188,7 @@
             </div>
         <?php endif; ?>
     </div>
+</div> <!-- Close m-approvals-wrapper -->
 
     <!-- Mobile Bottom Navigation -->
     <?php include_once __DIR__ . '/mobile_bottom_nav.php'; ?>
