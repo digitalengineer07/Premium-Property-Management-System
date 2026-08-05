@@ -426,8 +426,17 @@
                             $title = 'Rent Payment';
                             if ($is_elec) $title = 'Electricity Payment';
                             if ($is_adv) $title = 'Advance Payment';
+                            
+                            $is_corrupted = false;
+                            if (!empty($tx['verification_hash'])) {
+                                $expected_hash = generate_payment_hash($user_id, $tx['amount'], $tx['sys_tx_id']);
+                                if ($tx['verification_hash'] !== $expected_hash) {
+                                    $is_corrupted = true;
+                                    $title .= ' <span style="color:var(--danger); font-size: 11px;"><i class="bx bx-error-circle"></i> CORRUPTED</span>';
+                                }
+                            }
                         ?>
-                        <div class="transaction-item">
+                        <div class="transaction-item <?php echo $is_corrupted ? 'corrupted' : ''; ?>">
                             <div class="tx-left">
                                 <div class="tx-icon <?php echo $icon_class; ?>"><i class='bx <?php echo $icon_bx; ?>'></i></div>
                                 <div class="tx-info">
@@ -436,7 +445,7 @@
                                 </div>
                             </div>
                             <div class="tx-right">
-                                <div class="tx-amount"><?php echo money($tx['amount']); ?></div>
+                                <div class="tx-amount"><?php echo $is_corrupted ? '<s>' . money($tx['amount']) . '</s>' : money($tx['amount']); ?></div>
                                 <div class="tx-status paid"><?php echo htmlspecialchars($tx['status']); ?></div>
                                 <div class="tx-date"><?php echo !empty($tx['payment_date']) ? date('d M Y', strtotime($tx['payment_date'])) : '-'; ?></div>
                             </div>
