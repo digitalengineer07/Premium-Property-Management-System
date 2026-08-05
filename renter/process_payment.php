@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             } elseif ($b_type === 'onboarding') {
                 $p_month = 'Onboarding & Advance';
             } else {
-                $p_month = 'Miscellaneous';
+                $p_month = 'Advance / General';
             }
         }
         $payment_method = $_POST['payment_method'] ?? 'UPI';
