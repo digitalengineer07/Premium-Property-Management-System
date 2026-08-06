@@ -1,8 +1,8 @@
 <?php
 // fix_db3.php
 $_SERVER['SERVER_NAME'] = 'localhost';
-require_once "db.php";
-require_once "admin/allocate_payment.php";
+require_once "../db.php";
+require_once "allocate_payment.php";
 
 $q2 = mysqli_query($conn, "SELECT e.id, e.user_id, e.month, e.amount as elec_part, (e.rent_amount + e.maintenance + e.dues + e.extra_charges) as rent_part, SUM(p.paid_amount) as total_rpaid FROM electricity e JOIN payments p ON e.id = p.bill_id WHERE p.bill_type='elec_rent' GROUP BY e.id HAVING total_rpaid > rent_part + 0.01");
 
