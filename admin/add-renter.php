@@ -54,14 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Split the total collected amount based on protocol
                     if ($total_collected == ($fixed_rent * 2)) {
                         $amount_to_sec = $fixed_rent;
-                        $amount_to_adv = $fixed_rent;
+                        $amount_to_first_month = $fixed_rent;
                     } else if ($total_collected == $fixed_rent) {
                         $amount_to_sec = $fixed_rent;
-                        $amount_to_adv = 0;
+                        $amount_to_first_month = 0;
                     } else {
                         // For 0 or other cases handled above
                         $amount_to_sec = 0;
-                        $amount_to_adv = 0;
+                        $amount_to_first_month = 0;
                     }
                 
                 // Set onboarding completed flag if they fully paid
@@ -81,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $amount_to_adv, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
+                $zero_advance = 0; // We do not put it in the advance wallet anymore
+                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $zero_advance, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
@@ -92,8 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($amount_to_sec > 0) {
                         mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, 'Cash/Offline', $amount_to_sec, CURDATE(), 'Cash', '$sys_tx_id')");
                     }
-                    if ($amount_to_adv > 0) {
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, 'Cash/Offline', $amount_to_adv, CURDATE(), 'Cash', '$sys_tx_id')");
+                    if ($amount_to_first_month > 0) {
+                        $joining_month = date('M Y', strtotime($joining_date));
+                        mysqli_query($conn, "INSERT INTO rent (user_id, month, rent_amount, status, due_date, paid_date) VALUES ($new_id, '$joining_month', $amount_to_first_month, 'Paid', CURDATE(), CURDATE())");
+                        $new_rent_id = mysqli_insert_id($conn);
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'rent', $new_rent_id, '$joining_month', $amount_to_first_month, 'Cash/Offline', $amount_to_first_month, CURDATE(), 'Cash', '$sys_tx_id')");
                     }
 
                     // Welcome Email Logic
