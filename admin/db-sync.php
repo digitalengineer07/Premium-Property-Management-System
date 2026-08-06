@@ -196,6 +196,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sync_results[] = "<span style='color:#8B5CF6;'>✔ Grandfathered $grandfathered legacy users (Fixed false onboarding dues).</span>";
     }
 
+    // 5. Backfill NULL Transaction IDs for Old Payments
+    $backfilled = 0;
+    $null_tx_res = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id IS NULL OR sys_tx_id = ''");
+    if ($null_tx_res) {
+        while($ntx = mysqli_fetch_assoc($null_tx_res)) {
+            $p_id = $ntx['id'];
+            $new_sys_tx = 'SYS_REC_' . strtoupper(substr(md5(uniqid('', true) . $p_id), 0, 8));
+            mysqli_query($conn, "UPDATE payments SET transaction_id = IF(transaction_id IS NULL OR transaction_id = '', 'Manual/Old', transaction_id), sys_tx_id = '$new_sys_tx' WHERE id = $p_id");
+            $backfilled++;
+        }
+    }
+    
+    // Also check payment_notifications just in case
+    $null_notif_res = mysqli_query($conn, "SELECT id FROM payment_notifications WHERE sys_tx_id IS NULL OR sys_tx_id = ''");
+    if ($null_notif_res) {
+        while($nntx = mysqli_fetch_assoc($null_notif_res)) {
+            $pn_id = $nntx['id'];
+            $new_sys_tx = 'SYS_REQ_' . strtoupper(substr(md5(uniqid('', true) . $pn_id), 0, 8));
+            mysqli_query($conn, "UPDATE payment_notifications SET sys_tx_id = '$new_sys_tx' WHERE id = $pn_id");
+        }
+    }
+
+    if ($backfilled > 0) {
+        $sync_results[] = "<span style='color:#F59E0B;'>✔ Generated unique transaction IDs for $backfilled legacy payment records.</span>";
+    }
+
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];

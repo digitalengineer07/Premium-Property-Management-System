@@ -41,7 +41,7 @@
                             </div>
                         <?php else: ?>
                             <?php foreach ($unread_notifications as $notif): ?>
-                                <div class="notif-item animate-up" data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
+                                <div class="notif-item " data-id="<?php echo $notif['id']; ?>" style="border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: var(--white); cursor: default;">
                                     <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 80px; background: #EF4444; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; z-index: 1;">
                                         <i class='bx bx-trash'></i>
                                     </div>
@@ -108,16 +108,16 @@
     </header>
 
     <?php if ($errmsg): ?>
-        <div id="statusAlert" class="animate-up" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #FEE2E2; transition: opacity 0.5s ease;">
+        <div id="statusAlert" class="" style="background: #FEF2F2; color: #EF4444; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #FEE2E2; transition: opacity 0.5s ease;">
             <i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($errmsg); ?>
         </div>
     <?php elseif ($success): ?>
-        <div id="statusAlert" class="animate-up" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease;">
+        <div id="statusAlert" class="" style="background: #F0FDF4; color: #10B981; padding: 16px; border-radius: 14px; margin-bottom: 24px; border: 1px solid #DCFCE7; transition: opacity 0.5s ease;">
             <i class='bx bx-check-circle'></i> <?php echo htmlspecialchars($success); ?>
         </div>
     <?php endif; ?>
 
-    <div class="profile-grid animate-up">
+    <div class="profile-grid">
         <!-- LEFT COLUMN -->
         <div class="grid-col-left">
             <!-- Avatar Card -->

@@ -1,7 +1,7 @@
 <?php
 // views/desktop/payment-approvals_desktop.php
 ?>
-                <div class="top-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <header class="top-header">
             <div class="header-greeting" style="display: flex; align-items: center; gap: 16px;">
                 <div style="width: 48px; height: 48px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5); flex-shrink: 0;">
                     <i class='bx bx-check-shield' style="font-size: 24px; color: var(--primary-purple);"></i>
@@ -11,12 +11,10 @@
                     <p style="margin: 4px 0 0 0; color: var(--text-gray); font-size: 14px;">Track your cash and UPI payment verifications</p>
                 </div>
             </div>
-            <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
-
+            <div class="header-actions">
                 <button class="btn-primary" style="display: flex; align-items: center; gap: 8px; margin-right: 12px; background: var(--primary-purple); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="openApprovalModal()">
                     <i class='bx bx-plus'></i> Apply for Approval
                 </button>
-            <div class="header-actions">
                 <div class="notification-wrapper" style="position: relative; display: inline-block;">
                     <div class="icon-btn bell-icon" onclick="document.getElementById('notifDropdown').style.display = document.getElementById('notifDropdown').style.display === 'none' ? 'block' : 'none';">
                         <i class='bx bx-bell'></i>
@@ -28,7 +26,7 @@
                     </div>
                     
                     <!-- Notification Dropdown -->
-                    <div id="notifDropdown" style="display: none;">
+                    <div id="notifDropdown" style="display: none; position: absolute; top: 110%; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); width: 320px; z-index: 1000; overflow: hidden;">
                         <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #f8fafc;">
                             <h3 style="margin: 0; font-size: 15px; font-weight: 700; color: var(--text-dark);">Notifications</h3>
                             <?php if($unread_count > 0): ?>
@@ -107,9 +105,7 @@
                     </div>
                 </div>
             </div>
-
-            </div>
-        </div>
+        </header>
 
 
         <?php if (!empty($payment_success)): ?>
@@ -125,7 +121,7 @@
 
         <div class="approvals-table-container">
             <?php if (count($approvals) > 0): ?>
-            <table>
+            <table class="payments-table">
                 <thead>
                     <tr>
                         <th>Date & Time</th>

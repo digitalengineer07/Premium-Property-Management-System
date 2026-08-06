@@ -4,7 +4,7 @@ require_once "../db.php";   // include DB BEFORE session_start
 session_start();
 require_once "../audit.php";
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'renter') {
     header("Location: ../login.php");
     exit;
 }
@@ -646,7 +646,6 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             <?php include __DIR__ . '/views/mobile/profile_mobile.php'; ?>
         </div>
 
-        <!-- 2. EXCLUSIVE DESKTOP VIEW CODE (Isolated in views/desktop/profile_desktop.php) -->
         <div class="desktop-view-wrapper">
             <?php include __DIR__ . '/views/desktop/profile_desktop.php'; ?>
         </div>
