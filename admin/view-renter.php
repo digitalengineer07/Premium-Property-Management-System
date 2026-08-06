@@ -300,12 +300,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
                   
                   <!-- Advance Wallet -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card-front'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Advance Wallet</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500;">Available Credit</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Advance Wallet</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Available Credit</div>
                           </div>
                       </div>
                       <div style="text-align: right;">
@@ -324,12 +324,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
                         $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
                     ?>
-                    <div style="background: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
+                    <div style="background: var(--white); border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
                         <div style="display: flex; align-items: center; gap: 16px;">
                             <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
-                                <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
+                                <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
+                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
@@ -340,12 +340,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         </div>
                     </div>
                   <!-- Fixed Charges -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 28px; flex-shrink: 0;"><i class='bx bx-home'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Fixed Charges</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Fixed Charges</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
                           </div>
                       </div>
                       <div style="text-align: right;">
@@ -354,30 +354,30 @@ $admin_user = s($_SESSION['admin'] ?? '');
                   </div>
   
                   <!-- Total Outstanding -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(239,68,68,0.1); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 28px; flex-shrink: 0;"><i class='bx bx-file'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Total Outstanding</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Total Outstanding</div>
                               <?php if(($user['pending_adjustment'] ?? 0) > 0): ?>
                                   <div style="color: #EF4444; font-size: 13px; font-weight: 600; background: #FEF2F2; padding: 4px 10px; border-radius: 6px; display: inline-block;">Action required</div>
                               <?php else: ?>
-                                  <div style="color: #64748B; font-size: 13px; font-weight: 500;">All pending dues cleared</div>
+                                  <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">All pending dues cleared</div>
                               <?php endif; ?>
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: #475569;">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: var(--text-dark);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                       </div>
                   </div>
   
                   <!-- Payment History -->
-                  <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.05)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.03)';" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px)'">
+                  <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.05)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.03)';" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px)'">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; flex-shrink: 0;"><i class='bx bx-history'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Payment History</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500;"><?php echo count($payment_history); ?> transactions</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Payment History</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;"><?php echo count($payment_history); ?> transactions</div>
                           </div>
                       </div>
                       <div style="text-align: right;">
