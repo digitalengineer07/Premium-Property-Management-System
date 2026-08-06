@@ -56,7 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $parking = trim($_POST['parking'] ?? '');
                 
                 // Check if onboarding_completed column exists
-                mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+                $check_col = mysqli_query($conn, "SHOW COLUMNS FROM users LIKE 'onboarding_completed'");
+                if (mysqli_num_rows($check_col) == 0) {
+                    mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+                }
 
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
