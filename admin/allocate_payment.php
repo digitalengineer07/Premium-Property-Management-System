@@ -33,10 +33,18 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'] + (float)$b['extra_charges'];
             
             $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
-            $total_elec_paid = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
+            $total_elec_specific = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
             
-            $qRentPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
-            $total_rent_paid = (float)(mysqli_fetch_assoc($qRentPaid)['tp'] ?? 0);
+            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
+            $total_combined_paid = (float)(mysqli_fetch_assoc($qCombinedPaid)['tp'] ?? 0);
+            
+            // Distribute combined (elec_rent) payment: First to Electricity, then to Rent
+            $elec_due_after_specific = max(0, $elec_part - $total_elec_specific);
+            $applied_to_elec = min($elec_due_after_specific, $total_combined_paid);
+            $applied_to_rent = max(0, $total_combined_paid - $applied_to_elec);
+            
+            $total_elec_paid = $total_elec_specific + $applied_to_elec;
+            $total_rent_paid = $applied_to_rent;
             
             $elec_status = 'Due';
             if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
