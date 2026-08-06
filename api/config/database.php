@@ -11,29 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once __DIR__ . "/../../config.php";
-
-$is_localhost = ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['REMOTE_ADDR'] === '127.0.0.1' || strpos($_SERVER['SERVER_NAME'], '192.168.') !== false);
-
-if ($is_localhost) {
-    $DB_HOST = 'localhost';
-    $DB_USER = 'root';
-    $DB_PASS = ''; 
-    $DB_NAME = 'renter_system';
-} else {
-    $DB_HOST = 'localhost';
-    $DB_USER = 'u123456789_root';
-    $DB_PASS = 'Your_DB_Password';
-    $DB_NAME = 'u123456789_renter';
-}
-
 if (function_exists('mysqli_report')) { mysqli_report(MYSQLI_REPORT_OFF); }
-$conn = @mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+
+// Require the central root DB connection which already handles local vs prod
+require_once __DIR__ . "/../../db.php";
 
 if (!$conn) {
     http_response_code(500);
     echo json_encode(["status" => "error", "message" => "Database Connection Error"]);
-    exit;
+    exit();
 }
 
 mysqli_set_charset($conn, "utf8mb4");
