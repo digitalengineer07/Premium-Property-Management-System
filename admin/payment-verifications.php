@@ -129,7 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         }
                     }
 
-                    $success = "Payment #{$notif['transaction_id']} approved successfully.";
+                    $safe_tx = htmlspecialchars($notif['transaction_id']);
+                    $success = "Payment #{$safe_tx} approved successfully.";
                     
                     // Send email
                     if (!empty($notif['user_email'])) {
@@ -149,7 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
             } elseif ($action == 'reject') {
                 $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 if ($upd_status && mysqli_affected_rows($conn) > 0) {
-                    $success = "Payment #{$notif['transaction_id']} rejected.";
+                    $safe_tx = htmlspecialchars($notif['transaction_id']);
+                    $success = "Payment #{$safe_tx} rejected.";
                     
                     if (!empty($notif['user_email'])) {
                         $sub = "Payment Rejected - " . HOUSE_NAME;
