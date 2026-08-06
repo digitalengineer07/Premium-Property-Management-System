@@ -259,11 +259,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 
                 <div style="position: relative; flex: 1; max-width: 350px;">
                     <i class='bx bx-search' style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
-                    <input name="q" placeholder="Search by name, phone or email..." value="<?php echo htmlspecialchars($query); ?>" style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC; min-width: 150px;">
+                    <input name="q" placeholder="Search by name, phone or email..." value="<?php echo htmlspecialchars($query); ?>" style="width: 100%; padding: 10px 16px 10px 42px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: var(--bg-main); color: var(--text-dark); min-width: 150px;">
                 </div>
                 
                 <div style="position: relative; width: 110px;">
-                    <input name="room" placeholder="Room" value="<?php echo htmlspecialchars($room); ?>" style="width: 100%; padding: 10px 30px 10px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: #F8FAFC;">
+                    <input name="room" placeholder="Room" value="<?php echo htmlspecialchars($room); ?>" style="width: 100%; padding: 10px 30px 10px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; outline: none; background: var(--bg-main); color: var(--text-dark);">
                     <i class='bx bx-chevron-down' style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #94A3B8;"></i>
                 </div>
 
@@ -291,13 +291,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </thead>
                 <tbody id="renterTable">
                     <?php if (empty($users)): ?>
-                        <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-gray); background: #FFFFFF; border-radius: 12px;">No residents found.</td></tr>
+                        <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-gray); background: var(--white); border-radius: 12px;">No residents found.</td></tr>
                     <?php else: foreach ($users as $u): ?>
-                    <tr style="background: #FFFFFF; box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: all 0.2s ease;">
+                    <tr style="background: var(--white); box-shadow: 0 2px 10px rgba(0,0,0,0.02); transition: all 0.2s ease;">
                         <td style="padding: 12px 16px; border-radius: 12px 0 0 12px;">
                             <div style="display: flex; gap: 12px; align-items: center;">
                                 <?php if ($u['profile_pic']): ?>
-                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($u['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($u['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid var(--bg-main);"></div>
                                 <?php else: ?>
                                     <?php 
                                         $initials = '';
@@ -305,7 +305,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                         if (isset($nameParts[0])) $initials .= strtoupper(substr($nameParts[0], 0, 1));
                                         if (isset($nameParts[1])) $initials .= strtoupper(substr($nameParts[1], 0, 1));
                                     ?>
-                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 2px solid #FFFFFF; box-shadow: 0 2px 5px rgba(98, 75, 255, 0.1); overflow: hidden;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(98, 75, 255, 0.05); color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; border: 2px solid var(--white); box-shadow: 0 2px 5px rgba(98, 75, 255, 0.1); overflow: hidden;">
                                           <?php if (!empty($r['profile_pic'])): ?>
                                               <img src="../<?php echo htmlspecialchars($r['profile_pic']); ?>" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
                                           <?php else: ?>
@@ -370,7 +370,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
                                     <i class='bx bx-lock-alt'></i>
                                 </button>
-                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: #F8FAFC; color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
+                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-main); color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
                                     <i class='bx bx-exit'></i>
                                 </button>
                                 <?php endif; ?>
@@ -417,7 +417,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         }
                         
                         $qs['page'] = $i;
-                        echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #F8FAFC; color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500;">' . $i . '</a>';
+                        echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--bg-main); color: var(--text-dark); text-decoration: none; font-size: 14px; font-weight: 500;">' . $i . '</a>';
                     }
                 }
 
