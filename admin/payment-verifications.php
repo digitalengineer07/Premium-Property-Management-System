@@ -27,7 +27,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         
         if ($notif && $notif['status'] == 'Pending') {
             if ($action == 'approve') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
+                $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
+                $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
+                
+                // Strict Pre-Check: Prevent double-processing if UTR already exists in payments
+                if (!empty($p_tx) && $p_pmode !== 'Cash') {
+                    $chk_dup = mysqli_query($conn, "SELECT id FROM payments WHERE transaction_id = '$p_tx'");
+                    if (mysqli_num_rows($chk_dup) > 0) {
+                        $error = "Strict Validation Failed: The Transaction ID / UTR ($p_tx) has already been processed and recorded in the system. Please reject this duplicate notification.";
+                    }
+                }
+                
+                if (empty($error)) {
+                    $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 
                 if ($upd_status && mysqli_affected_rows($conn) > 0) {
                     require_once "allocate_payment.php";
