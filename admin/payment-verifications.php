@@ -861,7 +861,7 @@ include "sidebar.php";
                         <td>
                             <div class="pv-action-cell">
                                 <?php if($n['status'] == 'Pending'): ?>
-                                    <form action="" method="POST" style="margin:0;" onsubmit="if(confirm('Confirm this payment matches your bank statement?')) { var btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.style.opacity = '0.7'; btn.innerText = 'Approving...'; return true; } return false;">
+                                    <form action="" method="POST" style="margin:0;" onsubmit="if(confirm('Confirm this payment matches your bank statement?')) { var btn = this.querySelector('button[type=submit]'); setTimeout(function(){ btn.disabled = true; btn.style.opacity = '0.7'; btn.innerText = 'Approving...'; }, 0); return true; } return false;">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                                         <input type="hidden" name="id" value="<?php echo $n['id']; ?>">
                                         <input type="hidden" name="action" value="approve">
