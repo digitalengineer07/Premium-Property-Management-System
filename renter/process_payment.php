@@ -50,6 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             header("Location: " . $return_url);
             exit;
         } else {
+            if (empty($tr_id)) {
+                $prefix = ($payment_method === 'Cash') ? 'CASH-' : 'BANK-';
+                $tr_id = $prefix . date('Ymd') . '-' . strtoupper(substr(md5($sys_tx_id), 0, 6));
+            }
             $is_duplicate = false;
             if ($payment_method === 'UPI' && !empty($tr_id)) {
                 $check_stmt = mysqli_prepare($conn, "

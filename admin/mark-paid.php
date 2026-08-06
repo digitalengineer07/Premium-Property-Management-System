@@ -73,14 +73,22 @@ if ($paid_amount <= 0) {
 
 /* 2. Process via Unified Engine */
 $sys_prefix = 'SYS_MAN_';
-if ($payment_mode === 'Cash') $sys_prefix = 'SYS_OFF_';
-else if ($payment_mode === 'UPI') $sys_prefix = 'SYS_UPI_';
+$usr_prefix = 'MAN-';
+if ($payment_mode === 'Cash') { $sys_prefix = 'SYS_OFF_'; $usr_prefix = 'CASH-'; }
+else if ($payment_mode === 'UPI') { $sys_prefix = 'SYS_UPI_'; $usr_prefix = 'UPI-'; }
+
 $sys_tx_id = $sys_prefix . strtoupper(bin2hex(random_bytes(6)));
+$transaction_id = $_POST['transaction_id'] ?? '';
+if (empty(trim($transaction_id))) {
+    $transaction_id = $usr_prefix . date('Ymd') . '-' . strtoupper(substr(md5($sys_tx_id), 0, 6));
+} else {
+    $transaction_id = trim($transaction_id);
+}
 
 if ($type === 'advance') {
     $vhash = generate_payment_hash($user_id, $paid_amount, $sys_tx_id);
-    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "iddsssss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id, $vhash);
+    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "iddssssss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
     mysqli_stmt_execute($stmt);
     
     mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $paid_amount WHERE id=$user_id");
@@ -97,8 +105,8 @@ if ($type === 'advance') {
     // Insert core payment
     if ($amount_to_apply > 0) {
         $vhash = generate_payment_hash($user_id, $amount_to_apply, $sys_tx_id);
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisdsdssss", $user_id, $type, $id, $bill['month'], $bill_amount, $payment_mode, $amount_to_apply, $payment_date, $payment_time, $sys_tx_id, $vhash);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "isisdsdsssss", $user_id, $type, $id, $bill['month'], $bill_amount, $payment_mode, $amount_to_apply, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
         mysqli_stmt_execute($stmt);
         
         // Use central engine to recalculate status mathematically
@@ -108,8 +116,8 @@ if ($type === 'advance') {
     // Deposit any excess into advance_payment automatically
     if ($excess > 0) {
         $vhash = generate_payment_hash($user_id, $excess, $sys_tx_id);
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "iddsssss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id, $vhash);
+        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "iddssssss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
         mysqli_stmt_execute($stmt);
         
         mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$user_id");

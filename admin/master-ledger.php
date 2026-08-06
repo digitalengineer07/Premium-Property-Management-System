@@ -22,13 +22,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_manual_payment'])
     
     $amount = (float)$_POST['amount'];
     $payment_mode = mysqli_real_escape_string($conn, $_POST['payment_mode']);
-    $transaction_id = mysqli_real_escape_string($conn, $_POST['transaction_id']);
-    if(empty($transaction_id)) $transaction_id = "Manual/Cash";
+    $sys_tx_id = 'SYS_REC_' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
+    
+    $transaction_id = mysqli_real_escape_string($conn, $_POST['transaction_id'] ?? '');
+    if(empty(trim($transaction_id))) {
+        $prefix = ($payment_mode === 'Cash') ? 'CASH-' : (($payment_mode === 'UPI') ? 'UPI-' : 'MAN-');
+        $transaction_id = $prefix . date('Ymd') . '-' . strtoupper(substr(md5($sys_tx_id), 0, 6));
+    }
+    
     $payment_date = date('Y-m-d');
     $payment_time = date('H:i:s');
     $admin_name = $_SESSION['admin'];
     
-    $sys_tx_id = 'SYS_REC_' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
     $vhash = generate_payment_hash($user_id, $amount, $sys_tx_id);
     
     // We need to resolve the bill_id if possible
