@@ -1,6 +1,77 @@
 <?php
 // views/mobile/payment-approvals_mobile.php
 ?>
+<style>
+    /* Mobile Card Styles */
+    .approval-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 16px;
+        margin: 0 16px 16px 16px;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .ac-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+    .ac-date {
+        font-size: 12px;
+        color: #64748b;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .ac-amount {
+        font-size: 24px;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 16px;
+    }
+    .ac-details {
+        display: flex;
+        justify-content: space-between;
+        background: #f8fafc;
+        padding: 12px;
+        border-radius: 12px;
+    }
+    .ac-label {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .ac-value {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+    .ac-note {
+        margin-top: 12px;
+        padding: 10px;
+        background: rgba(245, 158, 11, 0.05);
+        border: 1px solid rgba(245, 158, 11, 0.1);
+        border-radius: 8px;
+        font-size: 12px;
+        color: #b45309;
+    }
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+    .status-approved { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+    .status-pending { background: rgba(245, 158, 11, 0.1); color: #F59E0B; }
+    .status-rejected { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+</style>
 <div class="m-approvals-wrapper animate-up">
     <header class="premium-header-pill" style="position: fixed; top: 0; left: 0;">
             <div class="m-header-left-group" style="display: flex; align-items: center; gap: 12px;">
@@ -31,14 +102,14 @@
             </div>
         </header>
 
-    <div class="content-area" style="padding-top: 100px;">
+    <div class="content-area" style="padding-top: 100px; padding-bottom: 80px;">
         <?php if (!empty($payment_success)): ?>
-            <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+            <div style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 12px; border-radius: 12px; margin: 0 16px 16px 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
                 <i class='bx bx-check-circle' style="font-size: 18px;"></i> <?php echo $payment_success; ?>
             </div>
         <?php endif; ?>
         <?php if (!empty($payment_error)): ?>
-            <div style="background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 12px; border-radius: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
+            <div style="background: rgba(239, 68, 68, 0.1); color: var(--danger); padding: 12px; border-radius: 12px; margin: 0 16px 16px 16px; display: flex; align-items: center; gap: 2px; font-size: 13px; font-weight: 600;">
                 <i class='bx bx-error-circle' style="font-size: 18px;"></i> <?php echo $payment_error; ?>
             </div>
         <?php endif; ?>
@@ -117,6 +188,7 @@
             </div>
         <?php endif; ?>
     </div>
+</div> <!-- Close m-approvals-wrapper -->
 
     <!-- Mobile Bottom Navigation -->
     <?php include_once __DIR__ . '/mobile_bottom_nav.php'; ?>

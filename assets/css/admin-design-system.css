@@ -185,7 +185,7 @@ body {
     font-weight: 500;
 }
 
-.nav-menu {
+.nav, .nav-menu {
     display: flex !important;
     flex-direction: column !important;
     gap: 8px !important;
@@ -199,13 +199,13 @@ body {
     overscroll-behavior: contain;
 }
 
-.nav-menu::-webkit-scrollbar {
+.nav::-webkit-scrollbar, .nav-menu::-webkit-scrollbar {
     width: 4px;
 }
-.nav-menu::-webkit-scrollbar-track {
+.nav::-webkit-scrollbar-track, .nav-menu::-webkit-scrollbar-track {
     background: transparent;
 }
-.nav-menu::-webkit-scrollbar-thumb {
+.nav::-webkit-scrollbar-thumb, .nav-menu::-webkit-scrollbar-thumb {
     background: #E2E8F0;
     border-radius: 4px;
 }
@@ -1673,7 +1673,7 @@ body.dark-theme thead th:last-child {
     .sidebar.mobile-drawer-open .go-mobile-widget {
         display: block !important;
     }
-    .sidebar.mobile-drawer-open .nav-menu {
+    .sidebar.mobile-drawer-open .nav, .sidebar.mobile-drawer-open .nav-menu {
         flex: 1 1 auto !important; /* Allow shrinking so logout button doesn't overflow */
         justify-content: flex-start !important;
         min-height: 0 !important; /* Crucial for proper scrolling on short screens */
@@ -1689,16 +1689,16 @@ body.dark-theme thead th:last-child {
     .sidebar.mobile-drawer-open > div:last-child {
         flex-shrink: 0 !important; /* Prevent bottom logout button div from getting squished */
     }
-    .sidebar.mobile-drawer-open .nav-menu::-webkit-scrollbar {
+    .sidebar.mobile-drawer-open .nav::-webkit-scrollbar, .sidebar.mobile-drawer-open .nav-menu::-webkit-scrollbar {
         display: none !important;
     }
-    .sidebar.mobile-drawer-open .nav-menu::after {
+    .sidebar.mobile-drawer-open .nav::after, .sidebar.mobile-drawer-open .nav-menu::after {
         content: '' !important;
         display: block !important;
         min-height: 80px !important;
         flex-shrink: 0 !important;
     }
-    .sidebar.mobile-drawer-open .nav-menu a[href*="logout.php"] {
+    .sidebar.mobile-drawer-open .nav a[href*="logout.php"], .sidebar.mobile-drawer-open .nav-menu a[href*="logout.php"] {
         margin-top: auto !important;
         margin-bottom: 0 !important;
     }

@@ -497,7 +497,8 @@ $linked_docs_count = (!empty($user['aadhaar_file']) ? 1 : 0) + (!empty($user['ag
         <a href="../logout.php" class="mp-btn-logout">
             <i class='bx bx-log-out'></i> Logout
         </a>
-</div>
+</div> <!-- Closing mp-promo-card -->
+</div> <!-- Closing m-profile-wrapper -->
 
 <?php include_once __DIR__ . '/mobile_bottom_nav.php'; ?>
 
