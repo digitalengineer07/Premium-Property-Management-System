@@ -4,12 +4,12 @@
 <style>
     /* Mobile Card Styles */
     .approval-card {
-        background: #ffffff;
+        background: var(--white);
         border-radius: 16px;
         padding: 16px;
         margin: 0 16px 16px 16px;
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        border: 1px solid var(--border);
+        box-shadow: var(--card-shadow);
     }
     .ac-header {
         display: flex;
@@ -19,7 +19,7 @@
     }
     .ac-date {
         font-size: 12px;
-        color: #64748b;
+        color: var(--text-gray);
         font-weight: 500;
         display: flex;
         align-items: center;
@@ -28,19 +28,19 @@
     .ac-amount {
         font-size: 24px;
         font-weight: 800;
-        color: #1e293b;
+        color: var(--text-dark);
         margin-bottom: 16px;
     }
     .ac-details {
         display: flex;
         justify-content: space-between;
-        background: #f8fafc;
+        background: var(--bg-main);
         padding: 12px;
         border-radius: 12px;
     }
     .ac-label {
         font-size: 11px;
-        color: #64748b;
+        color: var(--text-gray);
         font-weight: 600;
         text-transform: uppercase;
         margin-bottom: 4px;
@@ -48,7 +48,7 @@
     .ac-value {
         font-size: 13px;
         font-weight: 700;
-        color: #1e293b;
+        color: var(--text-dark);
     }
     .ac-note {
         margin-top: 12px;
@@ -165,7 +165,7 @@
                     <?php if ($page > 1): ?>
                         <a href="?page=<?php echo $page - 1; ?>" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); text-decoration: none; font-size: 18px; font-weight: 800; transition: 0.2s;"><i class='bx bx-chevron-left'></i></a>
                     <?php else: ?>
-                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 0, 0, 0.05); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>
+                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--border); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-left'></i></span>
                     <?php endif; ?>
                     
                     <span style="font-size: 14px; font-weight: 800; color: var(--text-dark); min-width: 24px; text-align: center;"><?php echo $page; ?></span>
@@ -173,7 +173,7 @@
                     <?php if ($page < $total_pages): ?>
                         <a href="?page=<?php echo $page + 1; ?>" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); text-decoration: none; font-size: 18px; font-weight: 800; transition: 0.2s;"><i class='bx bx-chevron-right'></i></a>
                     <?php else: ?>
-                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: rgba(0, 0, 0, 0.05); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>
+                        <span style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: var(--border); color: var(--text-gray); font-size: 18px; font-weight: 800; opacity: 0.5; cursor: not-allowed;"><i class='bx bx-chevron-right'></i></span>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
