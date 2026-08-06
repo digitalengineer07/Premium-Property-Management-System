@@ -91,9 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                                 if ($p_btype == 'rent') {
                                     $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
                                     if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['rent_amount']; }
-                                } elseif ($p_btype == 'electricity') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, total_amount FROM electricity WHERE id=$p_bid"));
-                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['total_amount']; }
+                                } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, amount, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE id=$p_bid"));
+                                    if ($mr) {
+                                        $p_month = $mr['month'];
+                                        $bill_amount = ($p_btype == 'electricity') ? (float)$mr['amount'] : (float)$mr['rent_part'];
+                                    }
                                 }
                                 
                                 $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$p_btype' AND bill_id=$p_bid");
