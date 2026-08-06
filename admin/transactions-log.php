@@ -219,8 +219,15 @@ $total_pages = ceil($total_rows / $limit);
                             <?php endif; ?>
                         </td>
                         <td data-label="Type & Mode" style="font-size: 12px;">
-                            <span style="text-transform: capitalize; font-weight: 600;"><?php echo $tx['type']; ?></span>
-                            <div style="color: var(--text-gray); font-size: 11px;"><?php echo $tx['mode'] ?: 'Unknown'; ?></div>
+                            <span style="font-weight: 600;">
+                                <?php 
+                                    if ($tx['type'] == 'elec_rent') echo 'Total Bill';
+                                    elseif ($tx['type'] == 'electricity') echo 'Electricity Bill';
+                                    elseif ($tx['type'] == 'rent') echo 'Rent Bill';
+                                    else echo ucfirst($tx['type']); 
+                                ?>
+                            </span>
+                            <div style="color: var(--text-gray); font-size: 11px;"><?php echo $tx['mode'] ?: 'Offline / Cash'; ?></div>
                         </td>
                         <td data-label="Date & Time">
                             <div style="font-weight: 500;"><?php echo date('M d, Y', strtotime($tx['payment_date'])); ?></div>
