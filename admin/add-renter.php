@@ -114,8 +114,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $error = "Error creating profile: " . mysqli_error($conn);
                 }
-                mysqli_stmt_close($stmt);
-            }
+                }
+                if (isset($stmt)) {
+                    mysqli_stmt_close($stmt);
+                }
+            } // Close protocol else
+            } // Close username check else
             mysqli_stmt_close($check);
         }
     }
