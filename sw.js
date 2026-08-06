@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rms-v2';
+const CACHE_NAME = 'rms-v3';
 const urlsToCache = [
   'assets/css/main.css',
   'assets/css/admin-design-system.css',
