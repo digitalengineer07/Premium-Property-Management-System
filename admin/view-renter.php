@@ -229,7 +229,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 
                 <div style="position: relative; display: inline-block;">
                     <button onclick="document.getElementById('moreDropdown').style.display = document.getElementById('moreDropdown').style.display === 'flex' ? 'none' : 'flex'" class="btn-outline" style="padding: 8px 12px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 13.5px; font-weight: 500;"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
-                    <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: #FFFFFF; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 210px; z-index: 100; flex-direction: column; overflow: hidden;">
+                    <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: var(--white); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 210px; z-index: 100; flex-direction: column; overflow: hidden;">
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
@@ -607,7 +607,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             <?php endif; ?>
 
             <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document']) && empty($user['electricity_document'])): ?>
-            <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: #F8FAFC;">
+            <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: transparent;">
                 <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: #CBD5E1;"></i><br>
                 No documents uploaded yet
             </div>
