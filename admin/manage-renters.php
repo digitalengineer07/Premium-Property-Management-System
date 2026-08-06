@@ -367,14 +367,14 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <a href="bill-generator.php?user_id=<?php echo $u['id']; ?>" style="height: 32px; padding: 0 8px; border-radius: 8px; background: rgba(98, 75, 255, 0.1); color: #624BFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; text-decoration: none; gap: 4px;" title="Generate Bill">
                                     <i class='bx bx-receipt'></i> Bill
                                 </a>
-                                <button onclick="resetPassword(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
+                                <button onclick="resetPassword(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
                                     <i class='bx bx-lock-alt'></i>
                                 </button>
-                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-main); color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
+                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-main); color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
                                     <i class='bx bx-exit'></i>
                                 </button>
                                 <?php endif; ?>
-                                <button onclick="deleteRenter(<?php echo $u['id']; ?>, '<?php echo addslashes($u['name']); ?>')" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Delete Resident">
+                                <button onclick="deleteRenter(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #EF4444; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Delete Resident">
                                     <i class='bx bx-trash'></i>
                                 </button>
                             </div>
