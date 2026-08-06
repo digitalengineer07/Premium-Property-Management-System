@@ -469,11 +469,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['amount'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
-                                        <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
-                                    <?php else: ?>
-                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
-                                    <?php endif; ?>
+                                    <?php $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
+                                      <?php if ($e['status'] === 'Paid' || $remaining <= 0): ?>
+                                          <span style="color: #10B981; font-weight: 700; font-size: 11px;"><i class='bx bx-check-circle'></i> Paid</span>
+                                      <?php else: ?>
+                                          <span style="color: var(--text-gray); font-size: 11px; font-weight: 600;">Due</span>
+                                      <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -515,14 +516,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($r['status'] != 'Paid'): 
+                                    <?php 
                                         $rent_paid_so_far = ($r['source'] == 'electricity') ? max(0, $r['total_paid'] - $r['elec_amount']) : $r['total_paid'];
                                         $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $rent_paid_so_far); 
                                     ?>
-                                        <button onclick="openPaymentModal('<?php echo $r['source']; ?>', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
-                                    <?php else: ?>
-                                        <span style="color: var(--text-gray); padding: 4px 12px; font-size: 11px; font-weight: 600;">-</span>
-                                    <?php endif; ?>
+                                      <?php if ($r['status'] === 'Paid' || $remaining <= 0): ?>
+                                          <span style="color: #10B981; font-weight: 700; font-size: 11px;"><i class='bx bx-check-circle'></i> Paid</span>
+                                      <?php else: ?>
+                                          <span style="color: var(--text-gray); font-size: 11px; font-weight: 600;">Due</span>
+                                      <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
