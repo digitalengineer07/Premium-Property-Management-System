@@ -354,9 +354,12 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                     <select name="user_id" id="modal_user_id" required class="filter-input" style="width: 100%;">
                         <option value="">-- Choose Renter --</option>
                         <?php foreach($all_users as $u): ?>
-                            <option value="<?php echo $u['id']; ?>"><?php echo htmlspecialchars($u['name']); ?> (Room <?php echo $u['room_no']; ?>)</option>
+                            <option value="<?php echo $u['id']; ?>" data-pending="<?php echo $u['pending_count']; ?>"><?php echo htmlspecialchars($u['name']); ?> (Room <?php echo $u['room_no']; ?>)</option>
                         <?php endforeach; ?>
                     </select>
+                    <div id="pending_notification_warning" style="display: none; margin-top: 8px; padding: 10px; background: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 8px; font-size: 13px; font-weight: 600;">
+                        ⚠️ <span id="pending_count_text"></span> pending payment notifications! Check the <a href="payment-verifications.php" style="color: #991B1B; text-decoration: underline;">verifications page</a> before adding a manual payment.
+                    </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
@@ -394,14 +397,33 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                     <input type="text" name="transaction_id" class="filter-input" style="width: 100%;" placeholder="e.g. UTR or Cash Receipt No">
                 </div>
                 
-                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700;">Record Payment</button>
+                <button type="submit" id="btn_record_payment" class="btn-primary" style="width: 100%; padding: 12px; font-size: 15px; border-radius: 12px; border: none; cursor: pointer; font-weight: 700;">Record Payment</button>
             </form>
         </div>
     </div>
 
     <script>
+        function checkPendingNotifications() {
+            const select = document.getElementById('modal_user_id');
+            const selectedOption = select.options[select.selectedIndex];
+            const pendingCount = parseInt(selectedOption.getAttribute('data-pending') || '0', 10);
+            
+            const warningDiv = document.getElementById('pending_notification_warning');
+            const countText = document.getElementById('pending_count_text');
+            
+            if (pendingCount > 0) {
+                countText.textContent = pendingCount;
+                warningDiv.style.display = 'block';
+            } else {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        document.getElementById('modal_user_id').addEventListener('change', checkPendingNotifications);
+
         function openPaymentModal(userId, billType, amount, month) {
             document.getElementById('modal_user_id').value = userId;
+            checkPendingNotifications(); // Check when opened via button
             document.getElementById('modal_bill_type').value = billType;
             document.getElementById('modal_amount').value = amount;
             document.getElementById('modal_month').value = month;
@@ -410,6 +432,13 @@ while ($row = mysqli_fetch_assoc($users_res)) {
         
         document.getElementById('manualPaymentModal').addEventListener('click', function(e) {
             if (e.target === this) this.style.display = 'none';
+        });
+
+        // Prevent double submit
+        document.querySelector('#manualPaymentModal form').addEventListener('submit', function() {
+            const btn = document.getElementById('btn_record_payment');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
         });
     </script>
 </body>
