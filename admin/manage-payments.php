@@ -291,8 +291,8 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                                             <div style="font-weight: 600; color: var(--text-dark);"><?php echo date('d M Y', strtotime($p['payment_date'])); ?></div>
                                             <div style="font-size: 12px; color: var(--text-gray);"><?php echo date('h:i A', strtotime($p['payment_time'])); ?></div>
                                         </td>
-                                        <td>
-                                            <div style="font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($p['renter_name']); ?></div>
+                                        <td style="max-width: 140px;">
+                                            <div style="font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;" title="<?php echo htmlspecialchars($p['renter_name']); ?>"><?php echo htmlspecialchars($p['renter_name']); ?></div>
                                             <div style="font-size: 12px; color: var(--text-gray);">Room: <?php echo htmlspecialchars($p['room_no'] ?: 'N/A'); ?></div>
                                         </td>
                                         <td>
