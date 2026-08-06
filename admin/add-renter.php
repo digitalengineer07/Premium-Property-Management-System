@@ -48,6 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($total_collected > 0 && $total_collected != $fixed_rent && $total_collected != ($fixed_rent * 2)) {
                     $error = "System Protocol Violation: The total collected amount (₹$total_collected) must be exactly equal to 1 month's rent (₹$fixed_rent) OR exactly double the rent (₹" . ($fixed_rent * 2) . "). Partial amounts are not accepted.";
                 } else {
+                    // Security Deposit Target is ALWAYS equal to 1 month's rent
+                    $security_deposit = $fixed_rent;
+                    
                     // Split the total collected amount based on protocol
                     if ($total_collected == ($fixed_rent * 2)) {
                         $amount_to_sec = $fixed_rent;
@@ -59,11 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // For 0 or other cases handled above
                         $amount_to_sec = 0;
                         $amount_to_adv = 0;
-                    }
-                    
-                    // Force the security deposit target in DB to match the rent if they paid 1x or 2x
-                    if ($total_collected > 0) {
-                        $security_deposit = $fixed_rent;
                     }
                 
                 // Set onboarding completed flag if they fully paid
@@ -349,18 +347,11 @@ $admin_user = s($_SESSION['admin']);
                                     <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
                             </div>
-                                <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Security Deposit (₹)</label>
-                                <div style="position: relative; height: 48px;">
-                                    <i class='bx bx-lock-alt' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
-                                    <input type="number" step="0.01" name="security_deposit" id="securityDepositInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
-                                </div>
-                            </div>
                                 <div style="display: flex; align-items: flex-end;">
                                     <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
                                 </div>
                             </div>
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the security/advance deposit received from the renter.</p>
+                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the total payment received during onboarding. Security Deposit will be automatically set equal to 1 month's rent.</p>
                             <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
                                 <img id="advanceQRImg" src="" alt="Advance QR" style="width: 150px; height: 150px; display: inline-block;">
                                 <p style="font-size: 11px; font-weight: 600; color: #10B981; margin-top: 8px;">Scan to pay Advance via UPI</p>
