@@ -311,7 +311,7 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                                         <button class="btn-pay" onclick="openPaymentModal(<?php echo $rec['user_id']; ?>, 'elec_rent', <?php echo $rec['due']; ?>, '<?php echo sprintf('%04d-%02d', $f_year, $f_month); ?>')">Pay</button>
                                         <a href="#" onclick="alert('Reminder sent!'); return false;" class="btn-remind">Remind</a>
                                     <?php else: ?>
-                                        <a href="slip.php?id=<?php echo $rec['bill_id']; ?>" class="btn-outline" style="padding:6px 12px; font-size:12px; border-radius:8px; text-decoration:none;">Slip</a>
+                                        <a href="receipt.php?id=<?php echo $rec['bill_id']; ?>" class="btn-outline" style="padding:6px 12px; font-size:12px; border-radius:8px; text-decoration:none;">Receipt</a>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <span style="color:var(--text-gray); font-size:12px;">No Action</span>
