@@ -11,7 +11,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
     
     // 1. Calculate total paid
     $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
-    $total_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
+    $total_paid = round((float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0), 2);
     
     // 2. Fetch bill amount and update status
     if ($bill_type === 'rent') {
@@ -19,7 +19,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
         if ($b = mysqli_fetch_assoc($qBill)) {
             $bill_amount = (float)$b['rent_amount'];
             $new_status = 'Due';
-            if ($total_paid >= $bill_amount - 0.01) $new_status = 'Paid';
+            if ($total_paid >= round($bill_amount - 0.01, 2)) $new_status = 'Paid';
             elseif ($total_paid > 0) $new_status = 'Partial';
             mysqli_query($conn, "UPDATE rent SET status='$new_status', paid_date=IF('$new_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
@@ -43,15 +43,15 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $applied_to_elec = min($elec_due_after_specific, $total_combined_paid);
             $applied_to_rent = max(0, $total_combined_paid - $applied_to_elec);
             
-            $total_elec_paid = $total_elec_specific + $applied_to_elec;
-            $total_rent_paid = $applied_to_rent;
+            $total_elec_paid = round($total_elec_specific + $applied_to_elec, 2);
+            $total_rent_paid = round($applied_to_rent, 2);
             
             $elec_status = 'Due';
-            if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
+            if ($total_elec_paid >= round($elec_part - 0.01, 2)) $elec_status = 'Paid';
             elseif ($total_elec_paid > 0) $elec_status = 'Partial';
             
             $rent_status = 'Due';
-            if ($total_rent_paid >= $rent_part - 0.01) $rent_status = 'Paid';
+            if ($total_rent_paid >= round($rent_part - 0.01, 2)) $rent_status = 'Paid';
             elseif ($total_rent_paid > 0) $rent_status = 'Partial';
             
             $overall_status = 'Due';
