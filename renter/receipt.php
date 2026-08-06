@@ -102,8 +102,8 @@ $due_date = 'N/A';
 $total_paid_so_far = 0;
 
 if ($bill_id_param) {
-    $all_pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? AND bill_id = ? AND bill_type = ? ORDER BY id ASC");
-    mysqli_stmt_bind_param($all_pay_stmt, "isis", $user_id, $month, $bill_id_param, $payment['bill_type']);
+    $all_pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? AND bill_id = ? AND bill_type IN ('elec_rent', 'electricity', 'rent') ORDER BY id ASC");
+    mysqli_stmt_bind_param($all_pay_stmt, "isi", $user_id, $month, $bill_id_param);
 } else {
     $all_pay_stmt = mysqli_prepare($conn, "SELECT * FROM payments WHERE user_id = ? AND month = ? ORDER BY id ASC");
     mysqli_stmt_bind_param($all_pay_stmt, "is", $user_id, $month);
@@ -146,18 +146,17 @@ if ($payment['bill_type'] == 'electricity' || $payment['bill_type'] == 'elec_ren
     if ($bill) {
         $due_date = $bill['due_date'] ? date('d M Y', strtotime($bill['due_date'])) : 'N/A';
         
-        if ($payment['bill_type'] == 'elec_rent') {
-            $breakdown = [];
-            if ($bill['rent_amount'] > 0) $breakdown[] = ['particular' => 'Room Rent', 'amount' => number_format($bill['rent_amount'], 2)];
-            $elec_amt = ($bill['current_reading'] - $bill['previous_reading']) * $bill['rate_per_unit'];
-            if ($elec_amt > 0) $breakdown[] = ['particular' => 'Electricity Charges', 'amount' => number_format($elec_amt, 2)];
-            if ($bill['maintenance'] > 0) $breakdown[] = ['particular' => 'Maintenance', 'amount' => number_format($bill['maintenance'], 2)];
-            if ($bill['dues'] > 0) $breakdown[] = ['particular' => 'Previous Dues', 'amount' => number_format($bill['dues'], 2)];
-            if ($bill['extra_charges'] > 0) $breakdown[] = ['particular' => ($bill['extra_charges_desc'] ?: 'Extra Charges'), 'amount' => number_format($bill['extra_charges'], 2)];
-            
-            if (!empty($breakdown)) {
-                $charges = array_merge($breakdown, [['particular' => '--- Payments Received ---', 'amount' => '']], $charges);
-            }
+        // Fix: always show the breakdown if it's an electricity record, because elec_rent and electricity are often split.
+        $breakdown = [];
+        if ($bill['rent_amount'] > 0) $breakdown[] = ['particular' => 'Room Rent', 'amount' => number_format($bill['rent_amount'], 2)];
+        $elec_amt = ($bill['current_reading'] - $bill['previous_reading']) * $bill['rate_per_unit'];
+        if ($elec_amt > 0) $breakdown[] = ['particular' => 'Electricity Charges', 'amount' => number_format($elec_amt, 2)];
+        if ($bill['maintenance'] > 0) $breakdown[] = ['particular' => 'Maintenance', 'amount' => number_format($bill['maintenance'], 2)];
+        if ($bill['dues'] > 0) $breakdown[] = ['particular' => 'Previous Dues', 'amount' => number_format($bill['dues'], 2)];
+        if ($bill['extra_charges'] > 0) $breakdown[] = ['particular' => ($bill['extra_charges_desc'] ?: 'Extra Charges'), 'amount' => number_format($bill['extra_charges'], 2)];
+        
+        if (!empty($breakdown)) {
+            $charges = array_merge($breakdown, [['particular' => '--- Payments Received ---', 'amount' => '']], $charges);
         }
     }
 } elseif ($payment['bill_type'] == 'rent') {
