@@ -95,9 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     if ($amount_to_first_month > 0) {
                         $joining_month = date('M Y', strtotime($joining_date));
-                        mysqli_query($conn, "INSERT INTO rent (user_id, month, rent_amount, status, due_date, paid_date) VALUES ($new_id, '$joining_month', $amount_to_first_month, 'Paid', CURDATE(), CURDATE())");
-                        $new_rent_id = mysqli_insert_id($conn);
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'rent', $new_rent_id, '$joining_month', $amount_to_first_month, 'Cash/Offline', $amount_to_first_month, CURDATE(), 'Cash', '$sys_tx_id')");
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'rent', 0, '$joining_month', $amount_to_first_month, 'Cash/Offline', $amount_to_first_month, CURDATE(), 'Cash', '$sys_tx_id')");
                     }
 
                     // Welcome Email Logic
