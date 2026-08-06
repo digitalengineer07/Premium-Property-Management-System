@@ -4,7 +4,7 @@
 <!-- EXCLUSIVE MOBILE-ONLY HEADER (<= 768px) -->
 
 
-    <header class="top-header">
+    <header class="header-renter">
         <div class="header-greeting">
             <div class="header-icon-wrapper">
                 <i class='bx bx-user-circle' style="font-size: 24px; color: var(--primary-purple);"></i>
