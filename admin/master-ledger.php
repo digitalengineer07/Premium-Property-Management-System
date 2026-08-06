@@ -138,10 +138,12 @@ while ($row = mysqli_fetch_assoc($res)) {
     $records[] = $row;
 }
 
-// Fetch all users for dropdown
-$users_res = mysqli_query($conn, "SELECT id, name, room_no FROM users WHERE status='active' ORDER BY name ASC");
+// Fetch all users for dropdown with pending notification count
+$users_res = mysqli_query($conn, "SELECT u.id, u.name, u.room_no, (SELECT COUNT(*) FROM payment_notifications WHERE user_id = u.id AND status='Pending') as pending_count FROM users u WHERE u.status='active' ORDER BY u.name ASC");
 $all_users = [];
-while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
+while ($row = mysqli_fetch_assoc($users_res)) {
+    $all_users[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
