@@ -927,6 +927,18 @@ $admin_user = s($_SESSION['admin'] ?? '');
     function closeElectricityModal() {
         document.getElementById('electricityModal').style.display = 'none';
     }
+
+    // Prevent double submit
+    const formMarkPaid = document.getElementById('formMarkPaid');
+    if (formMarkPaid) {
+        formMarkPaid.addEventListener('submit', function() {
+            const btn = this.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = 'Processing...';
+            }
+        });
+    }
 </script>
 
 </body>
