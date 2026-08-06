@@ -66,6 +66,9 @@ if (!isset($current_page)) {
                 <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #624BFF; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid var(--white);"><?php echo $pending_pay_count; ?></span>
             <?php endif; ?>
         </a>
+        <a href="manage-payments.php" class="nav-item <?php echo $current_page == 'manage-payments.php' ? 'active' : ''; ?>">
+            <i class='bx bx-book-open'></i> <span>Master Ledger</span>
+        </a>
         <a href="manage-announcements.php" class="nav-item <?php echo $current_page == 'manage-announcements.php' ? 'active' : ''; ?>">
             <i class='bx bxs-megaphone'></i> <span>Announcements</span>
         </a>
