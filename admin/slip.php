@@ -58,7 +58,8 @@ $dues = (float)($row['dues'] ?? 0);
 $extra_charges = (float)($row['extra_charges'] ?? 0);
 $extra_charges_desc = $row['extra_charges_desc'] ?? '';
 
-$total_amount = $electricity_amount;
+$has_rent_details = ($rent_amount > 0 || $maintenance > 0 || $dues > 0 || $extra_charges > 0);
+$total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
 
 // Back URL for fallback
 $back_url = "dashboard.php";
