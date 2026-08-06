@@ -308,8 +308,10 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                                     <?php if ($rec['display_status'] == 'Pending Verif.'): ?>
                                         <a href="payment-verifications.php" class="btn-pay" style="text-decoration:none; display:inline-block; background: #D97706;">Verify</a>
                                     <?php elseif ($rec['due'] > 0): ?>
-                                        <button class="btn-pay" onclick="openPaymentModal(<?php echo $rec['user_id']; ?>, 'elec_rent', <?php echo $rec['due']; ?>, '<?php echo sprintf('%04d-%02d', $f_year, $f_month); ?>')">Pay</button>
-                                        <a href="#" onclick="alert('Reminder sent!'); return false;" class="btn-remind">Remind</a>
+                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                            <button class="btn-pay" onclick="openPaymentModal(<?php echo $rec['user_id']; ?>, 'elec_rent', <?php echo $rec['due']; ?>, '<?php echo sprintf('%04d-%02d', $f_year, $f_month); ?>')">Pay</button>
+                                            <a href="#" onclick="alert('Reminder sent!'); return false;" class="btn-remind">Remind</a>
+                                        </div>
                                     <?php else: ?>
                                         <a href="../renter/receipt.php?uid=<?php echo $rec['user_id']; ?>&month=<?php echo urlencode(sprintf('%04d-%02d', $f_year, $f_month)); ?>&bill_id=<?php echo $rec['bill_id']; ?>" class="btn-outline" style="padding:6px 12px; font-size:12px; border-radius:8px; text-decoration:none;">Receipt</a>
                                     <?php endif; ?>
