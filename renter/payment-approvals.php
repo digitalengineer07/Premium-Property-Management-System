@@ -529,5 +529,7 @@ if ($res) {
     }
 </script>
 
+<?php require_once __DIR__ . "/approval_modal.php"; ?>
+
 </body>
 </html>
