@@ -250,7 +250,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" autocomplete="off">
+                <form id="addRenterForm" method="POST" autocomplete="off">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="margin-bottom: 30px;">
                         <div class="section-title">Security & Login</div>
@@ -378,8 +378,10 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
-                            <i class='bx bx-user-plus'></i> Confirm and Create Account
+                        <button type="submit" id="submitBtn" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px; transition: all 0.3s ease;">
+                            <span class="btn-content" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class='bx bx-user-plus'></i> Confirm and Create Account
+                            </span>
                         </button>
                         <p style="text-align: center; color: var(--text-gray); font-size: 13px; margin-top: 20px;">
                             <i class='bx bx-shield-quarter'></i> New accounts are activated and ready to use immediately.
@@ -485,6 +487,17 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
             this.value = '0';
         }
     });
+});
+
+document.getElementById('addRenterForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    if (btn) {
+        btn.querySelector('.btn-content').innerHTML = `<i class='bx bx-loader-alt bx-spin' style='font-size: 20px;'></i> <span>Creating Secure Profile...</span>`;
+        btn.style.opacity = '0.9';
+        btn.style.cursor = 'wait';
+        btn.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)';
+        setTimeout(() => { btn.style.pointerEvents = 'none'; }, 10);
+    }
 });
 </script>
 
