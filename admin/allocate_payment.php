@@ -101,9 +101,20 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 2. Electricity (elec_rent part and electricity part)
     $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
-        // Elec part
         $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
-        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+        $epaid_specific = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+        
+        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+        $rpaid_combined = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+        
+        $edue_after_specific = max(0, (float)$r['elec_part'] - $epaid_specific);
+        $applied_to_elec = min($edue_after_specific, $rpaid_combined);
+        $applied_to_rent = max(0, $rpaid_combined - $applied_to_elec);
+        
+        $epaid = $epaid_specific + $applied_to_elec;
+        $rpaid = $applied_to_rent;
+        
+        // Elec part
         $edue = max(0, (float)$r['elec_part'] - $epaid);
         if ($edue > 0) {
             $pending_bills[] = [
@@ -112,8 +123,6 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         }
         
         // Rent part
-        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
-        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
         $rdue = max(0, (float)$r['rent_part'] - $rpaid);
         if ($rdue > 0) {
             $pending_bills[] = [
