@@ -86,6 +86,14 @@ $payment_history = [];
 while ($r = mysqli_fetch_assoc($payment_res)) $payment_history[] = $r;
 mysqli_stmt_close($stmt);
 
+/* Fetch pending notifications count */
+$stmt = mysqli_prepare($conn, "SELECT COUNT(*) as cnt FROM payment_notifications WHERE user_id = ? AND status = 'Pending'");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$res = mysqli_stmt_get_result($stmt);
+$pending_notif_count = mysqli_fetch_assoc($res)['cnt'] ?? 0;
+mysqli_stmt_close($stmt);
+
 $admin_user = s($_SESSION['admin'] ?? '');
 ?>
 <!DOCTYPE html>
