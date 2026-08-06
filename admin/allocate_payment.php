@@ -172,7 +172,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         // Always insert leftover advance (the initial negative offset balances this)
         $vhash = generate_payment_hash($user_id, $remaining_payment, $sys_tx_id);
         $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "iddsss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id, $vhash);
+        mysqli_stmt_bind_param($stmt, "idsdsss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         
