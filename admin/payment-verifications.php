@@ -158,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 } else {
                     $error = "Failed to approve payment: " . mysqli_error($conn);
                 }
+                } // End of if (empty($error))
                 
             } elseif ($action == 'reject') {
                 $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
