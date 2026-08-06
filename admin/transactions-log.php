@@ -237,9 +237,9 @@ $total_pages = ceil($total_rows / $limit);
                         </td>
                         <td data-label="Action">
                             <?php if($tx['status'] == 'Approved' || $tx['status'] == 'Success'): ?>
-                                <?php if($tx['type'] == 'rent' && !empty($tx['month'])): ?>
+                                <?php if(($tx['type'] == 'rent' || $tx['type'] == 'elec_rent') && !empty($tx['month'])): ?>
                                     <a href="../renter/receipt.php?uid=<?php echo $tx['user_id']; ?>&month=<?php echo urlencode($tx['month']); ?>&bill_id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
-                                <?php elseif($tx['type'] == 'electricity' || $tx['type'] == 'elec_rent'): ?>
+                                <?php elseif($tx['type'] == 'electricity'): ?>
                                     <a href="slip.php?elec_id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
                                 <?php endif; ?>
                             <?php elseif($tx['status'] == 'Pending' && $tx['source'] == 'renter'): ?>
