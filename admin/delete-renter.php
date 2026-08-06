@@ -29,7 +29,11 @@ mysqli_begin_transaction($conn);
 
 function deleteIfExists($conn, $table, $id) {
     // Attempt delete, ignore errors if table doesn't exist
-    mysqli_query($conn, "DELETE FROM `$table` WHERE user_id = $id");
+    try {
+        mysqli_query($conn, "DELETE FROM `$table` WHERE user_id = $id");
+    } catch (Throwable $e) {
+        // Ignore missing table error
+    }
 }
 
 try {
@@ -46,26 +50,30 @@ try {
     deleteIfExists($conn, 'welcome_logs', $id);
     
     // Fetch and delete query attachments before deleting DB rows
-    $query_q = mysqli_query($conn, "SELECT attachment FROM queries WHERE user_id = $id AND attachment IS NOT NULL AND attachment != ''");
-    if ($query_q) {
-        while ($q_row = mysqli_fetch_assoc($query_q)) {
-            if (!empty($q_row['attachment']) && file_exists("../" . $q_row['attachment'])) {
-                unlink("../" . $q_row['attachment']);
+    try {
+        $query_q = mysqli_query($conn, "SELECT attachment FROM queries WHERE user_id = $id AND attachment IS NOT NULL AND attachment != ''");
+        if ($query_q) {
+            while ($q_row = mysqli_fetch_assoc($query_q)) {
+                if (!empty($q_row['attachment']) && file_exists("../" . $q_row['attachment'])) {
+                    unlink("../" . $q_row['attachment']);
+                }
             }
+            deleteIfExists($conn, 'queries', $id);
         }
-        deleteIfExists($conn, 'queries', $id);
-    }
+    } catch (Throwable $e) {}
 
     // Fetch and delete uploaded documents before deleting DB rows
-    $doc_q = mysqli_query($conn, "SELECT file_path FROM documents WHERE user_id = $id");
-    if ($doc_q) {
-        while ($doc = mysqli_fetch_assoc($doc_q)) {
-            if (!empty($doc['file_path']) && file_exists("../" . $doc['file_path'])) {
-                unlink("../" . $doc['file_path']);
+    try {
+        $doc_q = mysqli_query($conn, "SELECT file_path FROM documents WHERE user_id = $id");
+        if ($doc_q) {
+            while ($doc = mysqli_fetch_assoc($doc_q)) {
+                if (!empty($doc['file_path']) && file_exists("../" . $doc['file_path'])) {
+                    unlink("../" . $doc['file_path']);
+                }
             }
+            deleteIfExists($conn, 'documents', $id);
         }
-        deleteIfExists($conn, 'documents', $id);
-    }
+    } catch (Throwable $e) {}
 
     // 3. Delete user profile and their profile picture
     $user_q = mysqli_query($conn, "SELECT profile_pic FROM users WHERE id = $id");
