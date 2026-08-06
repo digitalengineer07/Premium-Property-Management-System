@@ -4,7 +4,7 @@ require_once "../db.php";   // include DB BEFORE session_start
 session_start();
 require_once "../audit.php";
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'renter') {
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
     exit;
 }
