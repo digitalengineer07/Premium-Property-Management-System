@@ -114,7 +114,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $error = "Error creating profile: " . mysqli_error($conn);
                 }
-                }
                 if (isset($stmt)) {
                     mysqli_stmt_close($stmt);
                 }
