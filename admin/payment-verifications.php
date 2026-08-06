@@ -529,8 +529,21 @@ if ($res) {
             .pv-kpi-grid { grid-template-columns: 1fr; }
             .pv-header-illustration { display: none; }
             .pv-table th { display: none; }
-            .pv-table td { display: block; width: 100%; border: none; padding: 10px; }
-            .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
+            .pv-table td { display: block; width: 100%; border: none; padding: 10px; text-align: left !important; }
+            .pv-table td::before { content: attr(data-label); font-weight: 700; color: #64748B; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+            .pv-table tr { 
+                display: block; 
+                border: 1px solid #E2E8F0; 
+                border-radius: 12px; 
+                padding: 16px; 
+                margin-bottom: 16px; 
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                position: relative;
+            }
+            /* Action Buttons aligned properly on mobile */
+            .pv-action-cell { flex-wrap: wrap; margin-top: 8px; }
+            .dark-theme .pv-table td::before { color: var(--text-gray); }
+            .dark-theme .pv-table tr { border-color: var(--border); background: rgba(255, 255, 255, 0.02); box-shadow: none; }
         }
         /* Dark Mode Overrides */
         .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td, .dark-theme .pv-table-title, .dark-theme .pv-bill-info-type, .dark-theme .pv-utr-text, .dark-theme .pv-date-text, .dark-theme .pv-mode-text, .dark-theme .pv-user-name { color: var(--text-dark) !important; }

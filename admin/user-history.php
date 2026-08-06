@@ -166,11 +166,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                     </span>
                                 </td>
                                 <td style="padding: 16px 12px;">
-                                    <?php if($h['status'] != 'Paid'): $remaining = max(0, $h['total_amount'] - $h['total_paid']); ?>
-                                        <button onclick="openPaymentModal('electricity', <?php echo $h['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($h['month']); ?>')" class="btn-primary" style="padding: 6px 14px; border-radius: 6px; font-size: 12px;">Pay</button>
-                                    <?php else: ?>
-                                        <a href="slip.php?elec_id=<?php echo $h['id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 14px; border-radius: 6px; font-size: 12px; text-decoration: none;">Slip</a>
-                                    <?php endif; ?>
+                                    <a href="slip.php?elec_id=<?php echo $h['id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 14px; border-radius: 6px; font-size: 12px; text-decoration: none;">Slip</a>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
