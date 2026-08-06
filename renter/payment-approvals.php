@@ -20,6 +20,16 @@ $display_name = $user['name'] ?: $user['username'];
 $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
 mysqli_stmt_close($stmt);
 
+// Handle success/error messages from process_payment.php
+$payment_success = $_SESSION['payment_success'] ?? '';
+$payment_error = $_SESSION['payment_error'] ?? '';
+unset($_SESSION['payment_success'], $_SESSION['payment_error']);
+
+// Generate CSRF token if missing
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+
 
 
 
