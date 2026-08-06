@@ -41,10 +41,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
-                
-                // Split the total collected amount
-                $amount_to_sec = min($total_collected, $security_deposit);
-                $amount_to_adv = max(0, $total_collected - $amount_to_sec);
+                // --- STRICT ONBOARDING PROTOCOL ---
+                // The collected amount must be either exactly 1x Rent (goes to Sec Deposit) 
+                // or exactly 2x Rent (1x Sec Deposit, 1x Advance for first month).
+                // Or 0 if they haven't paid yet.
+                if ($total_collected > 0 && $total_collected != $fixed_rent && $total_collected != ($fixed_rent * 2)) {
+                    $error = "System Protocol Violation: The total collected amount (₹$total_collected) must be exactly equal to 1 month's rent (₹$fixed_rent) OR exactly double the rent (₹" . ($fixed_rent * 2) . "). Partial amounts are not accepted.";
+                } else {
+                    // Split the total collected amount based on protocol
+                    if ($total_collected == ($fixed_rent * 2)) {
+                        $amount_to_sec = $fixed_rent;
+                        $amount_to_adv = $fixed_rent;
+                    } else if ($total_collected == $fixed_rent) {
+                        $amount_to_sec = $fixed_rent;
+                        $amount_to_adv = 0;
+                    } else {
+                        // For 0 or other cases handled above
+                        $amount_to_sec = 0;
+                        $amount_to_adv = 0;
+                    }
+                    
+                    // Force the security deposit target in DB to match the rent if they paid 1x or 2x
+                    if ($total_collected > 0) {
+                        $security_deposit = $fixed_rent;
+                    }
                 
                 // Set onboarding completed flag if they fully paid
                 $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
