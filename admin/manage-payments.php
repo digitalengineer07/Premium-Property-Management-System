@@ -180,10 +180,11 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
         <?php include 'header.php'; ?>
         
         <div style="padding: 24px;">
-            <div class="welcome" style="margin-bottom: 32px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="padding: 24px;">
+            <div class="welcome" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 style="font-size: 26px; font-weight: 900; color: var(--text-dark); margin: 0;">Master Ledger</h1>
-                    <p style="color: var(--text-gray); font-size: 14px; margin: 4px 0 0 0;">View and manage all historical payments across all renters.</p>
+                    <h1 style="font-size: 26px; font-weight: 900; color: var(--text-dark); margin: 0;">Payments & Ledger</h1>
+                    <p style="color: var(--text-gray); font-size: 14px; margin: 4px 0 0 0;">Complete history of payments and monthly billing status</p>
                 </div>
                 <div style="display: flex; gap: 12px;">
                     <a href="export_payments.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
@@ -193,6 +194,15 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                         <i class='bx bx-plus'></i> Add Payment
                     </button>
                 </div>
+            </div>
+            
+            <div class="view-toggle" style="background: var(--bg-main); padding: 6px; border-radius: 12px; display: inline-flex; gap: 4px; border: 1px solid var(--border); margin-bottom: 24px;">
+                <a href="manage-payments.php" class="toggle-btn active" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; background: var(--primary-purple); color: white; box-shadow: var(--card-shadow);">
+                    <i class='bx bx-list-ul'></i> Transaction History
+                </a>
+                <a href="master-ledger.php" class="toggle-btn" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; color: var(--text-gray); transition: 0.2s;">
+                    <i class='bx bx-book-open'></i> Monthly Ledger
+                </a>
             </div>
 
             <?php if(isset($success_msg)): ?>
