@@ -259,7 +259,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Login Username</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-at' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password">
+                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -277,38 +277,38 @@ $admin_user = s($_SESSION['admin']);
                         <div class="section-title">Personal Profile</div>
                         <div class="form-group">
                             <label>Resident Full Name</label>
-                            <input type="text" name="name" required placeholder="Legal Name of Resident">
+                            <input type="text" name="name" required placeholder="Legal Name of Resident" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
                         </div>
 
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Flat / Room No.</label>
-                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104">
+                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104" value="<?php echo htmlspecialchars($_POST['room_no'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Block / Building</label>
-                                <input type="text" name="block" placeholder="e.g. Block A">
+                                <input type="text" name="block" placeholder="e.g. Block A" value="<?php echo htmlspecialchars($_POST['block'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Floor</label>
-                                <input type="text" name="floor" placeholder="e.g. 2nd Floor">
+                                <input type="text" name="floor" placeholder="e.g. 2nd Floor" value="<?php echo htmlspecialchars($_POST['floor'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Parking Slot</label>
-                                <input type="text" name="parking" placeholder="e.g. A-15">
+                                <input type="text" name="parking" placeholder="e.g. A-15" value="<?php echo htmlspecialchars($_POST['parking'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Phone Number</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-phone' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="phone" placeholder="91XXXXXXXX" style="padding-left: 45px;">
+                                    <input type="text" name="phone" placeholder="91XXXXXXXX" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Email Address</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-envelope' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="email" name="email" placeholder="renter@example.com" style="padding-left: 45px;">
+                                    <input type="email" name="email" placeholder="renter@example.com" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                                 </div>
                             </div>
                         </div>
@@ -318,7 +318,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Joining Date</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-calendar' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="date" name="joining_date" style="padding-left: 45px;" value="<?php echo date('Y-m-d'); ?>">
+                                    <input type="date" name="joining_date" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['joining_date'] ?? date('Y-m-d')); ?>">
                                 </div>
                             </div>
                         </div>
@@ -330,7 +330,7 @@ $admin_user = s($_SESSION['admin']);
                             <label>Starting Meter Reading (Previous Month Units)</label>
                             <div style="position: relative;">
                                 <i class='bx bx-bolt-circle' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                <input type="number" id="baseReadingInput" name="base_reading" value="0" style="padding-left: 45px; transition: background-color 0.3s ease;">
+                                <input type="number" id="baseReadingInput" name="base_reading" value="<?php echo htmlspecialchars($_POST['base_reading'] ?? '0'); ?>" style="padding-left: 45px; transition: background-color 0.3s ease;">
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">This will be used as the "Last Reading" for the first bill.</p>
                         </div>
@@ -362,7 +362,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Rent Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="<?php echo htmlspecialchars($_POST['fixed_rent'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
@@ -370,7 +370,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Maintenance Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_maintenance" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo htmlspecialchars($_POST['fixed_maintenance'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly maintenance for this renter.</p>
                             </div>
