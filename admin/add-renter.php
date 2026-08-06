@@ -109,6 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     mysqli_query($conn, "INSERT IGNORE INTO welcome_logs (user_id) VALUES ($new_id)");
 
+                    // Clear the form data so it's not retained after successful creation
+                    $_POST = [];
+
                 } else {
                     $error = "Error creating profile: " . mysqli_error($conn);
                 }
