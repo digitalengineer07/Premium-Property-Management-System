@@ -81,13 +81,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'
             if (!$is_duplicate) {
                 if ($b_id > 0) {
                     // Specific bill check
-                    $chk_stmt = mysqli_prepare($conn, "SELECT status FROM payment_notifications WHERE user_id = ? AND bill_id = ? AND status IN ('Pending', 'Approved')");
+                    $chk_stmt = mysqli_prepare($conn, "SELECT status FROM payment_notifications WHERE user_id = ? AND bill_id = ? AND status = 'Pending'");
                     mysqli_stmt_bind_param($chk_stmt, "ii", $user_id, $b_id);
                     mysqli_stmt_execute($chk_stmt);
                     $res = mysqli_stmt_get_result($chk_stmt);
                     if ($row = mysqli_fetch_assoc($res)) {
                         $is_duplicate_request = true;
-                        $duplicate_msg = "You already have a " . $row['status'] . " payment request for this bill.";
+                        $duplicate_msg = "You already have a Pending payment request for this bill.";
                     }
                 } else if ($b_type === 'total') {
                     // Clear all dues check
