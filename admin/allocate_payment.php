@@ -38,17 +38,24 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $qRentPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
             $total_rent_paid = (float)(mysqli_fetch_assoc($qRentPaid)['tp'] ?? 0);
             
-            $elec_status = 'Due';
-            if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
-            elseif ($total_elec_paid > 0) $elec_status = 'Partial';
-            
-            $rent_status = 'Due';
-            if ($total_rent_paid >= $rent_part - 0.01) $rent_status = 'Paid';
-            elseif ($total_rent_paid > 0) $rent_status = 'Partial';
-            
-            $overall_status = 'Due';
-            if ($elec_status === 'Paid' && $rent_status === 'Paid') $overall_status = 'Paid';
-            elseif ($total_elec_paid > 0 || $total_rent_paid > 0) $overall_status = 'Partial';
+            // Allow elec_rent to satisfy both if it covers the total
+            if ($total_rent_paid >= ($elec_part + $rent_part) - 0.01) {
+                $elec_status = 'Paid';
+                $rent_status = 'Paid';
+                $overall_status = 'Paid';
+            } else {
+                $elec_status = 'Due';
+                if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
+                elseif ($total_elec_paid > 0) $elec_status = 'Partial';
+                
+                $rent_status = 'Due';
+                if ($total_rent_paid >= $rent_part - 0.01) $rent_status = 'Paid';
+                elseif ($total_rent_paid > 0) $rent_status = 'Partial';
+                
+                $overall_status = 'Due';
+                if ($elec_status === 'Paid' && $rent_status === 'Paid') $overall_status = 'Paid';
+                elseif ($total_elec_paid > 0 || $total_rent_paid > 0) $overall_status = 'Partial';
+            }
             
             mysqli_query($conn, "UPDATE electricity SET status='$overall_status', elec_status='$elec_status', rent_status='$rent_status', paid_date=IF('$overall_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
@@ -90,26 +97,16 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         }
     }
     
-    // 2. Electricity (elec_rent part and electricity part)
-    $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+    // 2. Electricity (Total Bill)
+    $qElec = mysqli_query($conn, "SELECT id, month, due_date, (amount + rent_amount + maintenance + dues + extra_charges) as total_amount FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
-        // Elec part
-        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
-        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
-        $edue = max(0, (float)$r['elec_part'] - $epaid);
-        if ($edue > 0) {
+        // Calculate total paid across both types to be safe
+        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE (bill_type='electricity' OR bill_type='elec_rent') AND bill_id={$r['id']}");
+        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+        $due = max(0, (float)$r['total_amount'] - $paid);
+        if ($due > 0) {
             $pending_bills[] = [
-                'id' => $r['id'], 'month' => $r['month'], 'due_date' => $r['due_date'], 'total_amount' => $r['elec_part'], 'type' => 'electricity', 'due' => $edue
-            ];
-        }
-        
-        // Rent part
-        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
-        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
-        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
-        if ($rdue > 0) {
-            $pending_bills[] = [
-                'id' => $r['id'], 'month' => $r['month'], 'due_date' => $r['due_date'], 'total_amount' => $r['rent_part'], 'type' => 'elec_rent', 'due' => $rdue
+                'id' => $r['id'], 'month' => $r['month'], 'due_date' => $r['due_date'], 'total_amount' => $r['total_amount'], 'type' => 'elec_rent', 'due' => $due
             ];
         }
     }
