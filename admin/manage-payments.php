@@ -21,8 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_manual_payment'])
     $payment_time = date('H:i:s');
     $admin_name = $_SESSION['admin'];
     
-    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, month, total_amount, paid_amount, payment_mode, payment_date, payment_time, transaction_id, admin_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "issddsssss", $user_id, $bill_type, $month, $amount, $amount, $payment_mode, $payment_date, $payment_time, $transaction_id, $admin_name);
+    $sys_tx_id = uniqid('sys_');
+    $vhash = generate_payment_hash($user_id, $amount, $sys_tx_id);
+    
+    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, month, total_amount, paid_amount, payment_mode, payment_date, payment_time, transaction_id, admin_name, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($stmt, "issddsssssss", $user_id, $bill_type, $month, $amount, $amount, $payment_mode, $payment_date, $payment_time, $transaction_id, $admin_name, $sys_tx_id, $vhash);
     
     if (mysqli_stmt_execute($stmt)) {
         $success_msg = "Manual payment recorded successfully!";
