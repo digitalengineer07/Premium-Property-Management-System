@@ -125,12 +125,21 @@ $total_pages = ceil($total_rows / $limit);
     <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <div>
-                <h1><i class='bx bx-history' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Transaction Log</h1>
-                <p>Complete history of all recorded payments and verifications</p>
+                <h1><i class='bx bx-history' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Payments & Ledger</h1>
+                <p>Complete history of payments and monthly billing status</p>
             </div>
             <a href="dashboard.php" class="btn-outline"><i class='bx bx-arrow-back'></i> Back to Dashboard</a>
+        </div>
+        
+        <div class="view-toggle" style="background: var(--bg-main); padding: 6px; border-radius: 12px; display: inline-flex; gap: 4px; border: 1px solid var(--border); margin-bottom: 24px;">
+            <a href="transactions-log.php" class="toggle-btn active" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; background: var(--primary-purple); color: white; box-shadow: var(--card-shadow);">
+                <i class='bx bx-list-ul'></i> Transaction History
+            </a>
+            <a href="master-ledger.php" class="toggle-btn" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; color: var(--text-gray); transition: 0.2s;">
+                <i class='bx bx-book-open'></i> Monthly Ledger
+            </a>
         </div>
     </div>
 
