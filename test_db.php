@@ -1,5 +1,5 @@
 <?php
-require 'includes/db.php';
+require 'db.php';
 $res = mysqli_query($conn, "SELECT e.* FROM electricity e JOIN users u ON e.user_id = u.id WHERE u.name LIKE '%Anurag%' ORDER BY e.id DESC LIMIT 1");
 print_r(mysqli_fetch_assoc($res));
 ?>
