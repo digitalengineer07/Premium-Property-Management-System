@@ -201,7 +201,7 @@ $total_pages = ceil($total_rows / $limit);
                     <?php else: while ($tx = mysqli_fetch_assoc($transactions)): ?>
                     <tr>
                         <td data-label="Resident">
-                            <div style="font-weight: 600; color: var(--primary-purple);"><?php echo s($tx['renter_name']); ?></div>
+                            <div style="font-weight: 600; color: var(--primary-purple); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;" title="<?php echo s($tx['renter_name']); ?>"><?php echo s($tx['renter_name']); ?></div>
                             <div style="font-size: 11px; color: var(--text-gray);">Room <?php echo s($tx['room_no']); ?></div>
                         </td>
                         <td data-label="Ref / ID">

@@ -291,9 +291,11 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                         <?php foreach($records as $rec): ?>
                         <tr>
                             <td style="font-weight: 700; color: var(--primary-purple);"><?php echo htmlspecialchars($rec['room_no']); ?></td>
-                            <td>
-                                <?php echo htmlspecialchars($rec['name']); ?>
-                                <?php if($rec['user_status'] == 'inactive') echo '<span style="color:#EF4444; font-size:10px; border:1px solid #EF4444; border-radius:4px; padding:2px 4px; margin-left:6px;">Inactive</span>'; ?>
+                            <td style="max-width: 130px;">
+                                <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 100%; vertical-align: middle;" title="<?php echo htmlspecialchars($rec['name']); ?>">
+                                    <?php echo htmlspecialchars($rec['name']); ?>
+                                </div>
+                                <?php if($rec['user_status'] == 'inactive') echo '<span style="color:#EF4444; font-size:10px; border:1px solid #EF4444; border-radius:4px; padding:2px 4px; margin-left:6px; vertical-align: middle;">Inactive</span>'; ?>
                             </td>
                             <td>₹<?php echo number_format((float)$rec['total_amount'], 2); ?></td>
                             <td style="color:#10B981;">₹<?php echo number_format((float)$rec['paid'], 2); ?></td>
