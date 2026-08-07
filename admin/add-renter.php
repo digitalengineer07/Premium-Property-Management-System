@@ -217,7 +217,7 @@ $admin_user = s($_SESSION['admin']);
     <?php include 'header.php'; ?>
 
     <div class="welcome animate-up" style="margin-bottom: 40px; padding: 10px 0;">
-        <h1 style="font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #ffffff 30%, #a5b4fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; margin-bottom: 12px; display: flex; align-items: center; gap: 18px;">
+        <h1 class="page-title" style="margin-bottom: 12px; display: flex; align-items: center; gap: 18px;">
             <div style="background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2); padding: 12px; border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);">
                 <i class='bx bx-user-pin' style="font-size: 32px; color: #818cf8; -webkit-text-fill-color: initial;"></i>
             </div>
