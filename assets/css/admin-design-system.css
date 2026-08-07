@@ -2456,3 +2456,19 @@ body.dark-theme .pending-payment-notice {
 .user-avatar { width: 40px; height: 40px; background: var(--primary-purple); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; box-shadow: 0 4px 10px rgba(98,75,255,0.2); }
 .user-info h4 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-dark); }
 .user-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
+/* Gradient Headings */
+h1, .page-title, .panel-header h2 {
+    font-weight: 800 !important;
+    letter-spacing: -1px !important;
+    background: linear-gradient(135deg, #1E293B 0%, #624BFF 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+:root.dark-theme h1, body.dark-theme h1,
+:root.dark-theme .page-title, body.dark-theme .page-title,
+:root.dark-theme .panel-header h2, body.dark-theme .panel-header h2 {
+    background: linear-gradient(135deg, #E2E8F0 0%, #818CF8 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
