@@ -302,17 +302,12 @@
                         if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
                     }
                     // Fetch accurate pending dues from electricity (unified)
-                    $qE = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
+                    $qE = mysqli_query($conn, "SELECT id, month, due_date, total_amount FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
                     while ($r = mysqli_fetch_assoc($qE)) {
-                        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
-                        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
-                        $edue = max(0, (float)$r['elec_part'] - $epaid);
-                        if ($edue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $edue];
-                        
-                        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
-                        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
-                        $rdue = max(0, (float)$r['rent_part'] - $rpaid);
-                        if ($rdue > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $rdue];
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id={$r['id']}");
+                        $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+                        $due = max(0, (float)$r['total_amount'] - $paid);
+                        if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
                     }
                     
                     // Group by month
@@ -344,7 +339,7 @@
                                 <div class="bill-icon"><i class='bx bx-receipt'></i></div>
                                 <div class="bill-info">
                                     <h4>Total Bill for <?php echo htmlspecialchars($pb['month']); ?></h4>
-                                    <p>Due Date: <?php echo date('d M Y', strtotime($pb['due_date'])); ?></p>
+                                    <p>Due Date: <?php echo !empty($pb['due_date']) && $pb['due_date'] !== '0000-00-00' ? date('d M Y', strtotime($pb['due_date'])) : 'Not Set'; ?></p>
                                 </div>
                             </div>
                             <div class="bill-right">
