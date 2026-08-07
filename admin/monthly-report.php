@@ -200,8 +200,8 @@ $disp_total = $disp_rent + $disp_elec;
                             ?>
                                 <tr class="animate-up">
                                     <td data-label="Month / Period" style="font-weight: 600;"><?php echo htmlspecialchars($m); ?></td>
-                                    <td data-label="Rent Revenue" style="color: #4B5563;">₹<?php echo number_format($tr, 2); ?></td>
-                                    <td data-label="Elec. Revenue" style="color: #4B5563;">₹<?php echo number_format($te, 2); ?></td>
+                                    <td data-label="Rent Revenue" style="color: var(--text-gray);">₹<?php echo number_format($tr, 2); ?></td>
+                                    <td data-label="Elec. Revenue" style="color: var(--text-gray);">₹<?php echo number_format($te, 2); ?></td>
                                     <td data-label="Grand Total" style="font-weight: 700; color: var(--primary-purple);">₹<?php echo number_format($tr + $te, 2); ?></td>
                                 </tr>
                             <?php endforeach; endif; ?>

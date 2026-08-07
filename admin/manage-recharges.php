@@ -120,7 +120,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                 <i class='bx bx-receipt' style="color: white; font-size: 30px;"></i>
             </div>
             <div>
-                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Meter Recharges</h1>
+                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.2;">Meter Recharges</h1>
                 <p style="margin: 6px 0 0 0; color: var(--text-gray); font-size: 15px; font-weight: 500;">Log and track your electricity meter expenses</p>
             </div>
         </div>
@@ -143,7 +143,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         <div class="animate-up" style="animation-delay: 0.1s;">
             <div class="panel" style="background: var(--white); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 32px; border: 1px solid #F1F5F9;">
                 <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 20px; margin-bottom: 24px;">
-                    <h2 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 10px;">
                         <i class='bx bx-plus-circle' style="color: #F59E0B; font-size: 26px;"></i> Log New Recharge
                     </h2>
                 </div>
@@ -197,7 +197,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
         <div id="history" class="animate-up" style="animation-delay: 0.2s;">
             <div class="panel" style="background: var(--white); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); padding: 32px; border: 1px solid #F1F5F9;">
                 <div class="panel-header" style="border-bottom: 1px solid #F1F5F9; padding-bottom: 20px; margin-bottom: 24px;">
-                    <h2 style="font-size: 22px; font-weight: 800; color: #0F172A; margin: 0; display: flex; align-items: center; gap: 10px;">
+                    <h2 style="font-size: 22px; font-weight: 800; color: var(--text-dark); margin: 0; display: flex; align-items: center; gap: 10px;">
                         <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(100,116,139,0.1); display: flex; align-items: center; justify-content: center; color: var(--text-gray);"><i class='bx bx-history' style="font-size: 24px;"></i></div> Recharge History
                     </h2>
                 </div>
@@ -227,7 +227,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                                     </td>
                                     <td data-label="Note" style="padding: 24px; background: var(--white); border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">
                                         <div style="font-size: 15px; color: var(--text-gray); max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500;" title="<?php echo htmlspecialchars($r['notes']); ?>">
-                                            <?php echo htmlspecialchars($r['notes']) ?: '<span style="color: #CBD5E1; font-style: italic;">No notes provided</span>'; ?>
+                                            <?php echo htmlspecialchars($r['notes']) ?: '<span style="color: var(--text-gray); font-style: italic;">No notes provided</span>'; ?>
                                         </div>
                                     </td>
                                     <td data-label="Actions" style="padding: 24px; background: var(--white); border: 1px solid #F1F5F9; border-left: none; border-radius: 0 16px 16px 0; text-align: right;">

@@ -297,7 +297,7 @@ $admin_user = s($_SESSION['admin']);
 
         :root.dark-theme .opt-room {
             background: rgba(255, 255, 255, 0.1);
-            color: #CBD5E1;
+            color: var(--text-gray);
         }
 
         @keyframes fadeIn {
@@ -683,7 +683,7 @@ $admin_user = s($_SESSION['admin']);
 
             <div class="bill-grid">
                 <div class="left-col">
-                    <div class="aesthetic-card animate-up" style="z-index: 50; background: #F4F7FF; border-color: #E0E7FF;">
+                    <div class="aesthetic-card animate-up" style="z-index: 50; background: var(--bg-main); border-color: var(--border);">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-user'></i>
@@ -779,7 +779,7 @@ $admin_user = s($_SESSION['admin']);
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                                     <span style="font-weight: 700; color: var(--text-dark);">Invoice Issue Date</span>
-                                    <span style="background: #F3F4F6; color: #4B5563; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;"><i class='bx bx-calendar'></i> Date Generated</span>
+                                    <span style="background: var(--bg-main); color: var(--text-gray); font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;"><i class='bx bx-calendar'></i> Date Generated</span>
                                 </label>
                                 <input type="date" id="billDate" style="font-weight: 600;">
                                 <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 4px;">Actual date when this invoice is created (defaults to today).</small>
@@ -788,7 +788,7 @@ $admin_user = s($_SESSION['admin']);
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                                     <span style="font-weight: 700; color: var(--text-dark);">Bill For Month <span style="color: #EF4444;">*</span></span>
-                                    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;"><i class='bx bx-time'></i> Consumption Period</span>
+                                    <span style="background: var(--bg-main); color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;"><i class='bx bx-time'></i> Consumption Period</span>
                                 </label>
                                 <div style="display: flex; gap: 10px;">
                                     <select id="selectMonth" onchange="updateMonthField()" style="flex: 1.5; font-weight: 600;">

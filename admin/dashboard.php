@@ -1087,7 +1087,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                         <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
                         <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                             <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
-                            <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
+                            <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
                         </div>
                     </div>
                 </div>

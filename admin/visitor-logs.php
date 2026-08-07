@@ -150,7 +150,7 @@ $admin_user = s($_SESSION['admin']);
         .log-user {
             font-size: 16px;
             font-weight: 800;
-            color: #0F172A;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -166,7 +166,7 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .log-role.admin {
-            background: #EEF2FF;
+            background: var(--bg-main);
             color: #4F46E5;
         }
 
@@ -299,7 +299,7 @@ $admin_user = s($_SESSION['admin']);
         <?php include 'header.php'; ?>
 
         <div class="welcome animate-up" style="margin-bottom: 40px; text-align: center;">
-            <h1 style="font-size: 36px; font-weight: 900; color: #0F172A; margin-bottom: 8px;">Visitor Logs</h1>
+            <h1 style="font-size: 36px; font-weight: 900; color: var(--text-dark); margin-bottom: 8px;">Visitor Logs</h1>
             <p style="color: var(--text-gray); font-size: 16px;">Tracking the last 200 login events for transparency</p>
         </div>
 
@@ -335,7 +335,7 @@ $admin_user = s($_SESSION['admin']);
                                     <i class='bx bx-log-in-circle' style="color: var(--text-gray);"></i>
                                     <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
                                 </span>
-                                <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
+                                <i class='bx bx-right-arrow-alt' style="color: var(--text-gray);"></i>
                                 <?php if (!empty($row['logout_time'])): ?>
                                     <span class="log-time">
                                         <i class='bx bx-log-out-circle' style="color: var(--text-gray);"></i>

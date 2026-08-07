@@ -109,7 +109,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     <div class="form-group">
                         <label style="display: flex; justify-content: space-between; align-items: center;">
                             <span>Bill For Month <span style="color:#EF4444">*</span></span>
-                            <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">Consumption Period</span>
+                            <span style="background: var(--bg-main); color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">Consumption Period</span>
                         </label>
                         <input type="text" name="month" required placeholder="February 2026">
                         <small style="color: var(--text-gray); font-size: 11px;">The consumption month for which this bill applies.</small>

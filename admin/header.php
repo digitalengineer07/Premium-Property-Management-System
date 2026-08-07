@@ -25,7 +25,7 @@
         align-items: center;
         gap: 10px;
         padding: 12px 16px;
-        color: #0F172A;
+        color: var(--text-dark);
         text-decoration: none;
         font-size: 13px;
         font-weight: 600;
@@ -115,7 +115,7 @@
                     <?php else: ?>
                         <div style="padding: 30px 20px; text-align: center; color: #94A3B8; background: #1E293B;">
                             <i class='bx bx-bell-off' style="font-size: 32px; margin-bottom: 12px; opacity: 0.3;"></i>
-                            <p style="margin: 0; font-size: 13px; font-weight: 500; color: #CBD5E1;">You're all caught up!</p>
+                            <p style="margin: 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">You're all caught up!</p>
                             <p style="margin: 4px 0 0 0; font-size: 11px;">No new notifications</p>
                         </div>
                     <?php endif; ?>

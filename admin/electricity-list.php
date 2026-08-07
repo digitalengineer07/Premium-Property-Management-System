@@ -186,7 +186,7 @@ $admin_user = s($_SESSION['admin']);
                 <i class='bx bxs-zap' style="color: white; font-size: 30px;"></i>
             </div>
             <div>
-                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Electricity Records</h1>
+                <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; line-height: 1.2;">Electricity Records</h1>
                 <p style="margin: 6px 0 0 0; color: var(--text-gray); font-size: 15px; font-weight: 500;">Viewing all historical utility billing</p>
             </div>
         </div>
@@ -530,7 +530,7 @@ $admin_user = s($_SESSION['admin']);
                             <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
                             <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
-                                <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
+                                <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>
                         </div>
                     </div>
@@ -626,7 +626,7 @@ $admin_user = s($_SESSION['admin']);
     .custom-options { position: absolute; display: block; top: 100%; left: 0; right: 0; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); background: var(--white); transition: all 0.2s ease; opacity: 0; visibility: hidden; pointer-events: none; z-index: 99; margin-top: 8px; max-height: 250px; overflow-y: auto; padding: 6px; }
     .custom-select.open .custom-options { opacity: 1; visibility: visible; pointer-events: all; margin-top: 4px; }
     .custom-option { position: relative; display: block; padding: 10px 14px; font-size: 14px; font-weight: 500; color: var(--text-gray); cursor: pointer; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
-    .custom-option:hover, .custom-option.selected { background: #EEF2FF; color: #624BFF; }
+    .custom-option:hover, .custom-option.selected { background: var(--bg-main); color: #624BFF; }
     </style>
     <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -23,12 +23,12 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* SaaS Dashboard Core Styles */
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: #0F172A; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: var(--text-dark); margin: 0; padding: 0; }
         
         /* Typography */
-        .page-title { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, #0F172A 0%, #312E81 50%, #6C4DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; white-space: nowrap; display: inline-block; }
+        .page-title { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, var(--text-dark) 0%, #312E81 50%, #6C4DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; white-space: nowrap; display: inline-block; }
         .page-subtitle { font-size: 13px; font-weight: 500; color: var(--text-gray); margin-bottom: 0; white-space: nowrap; }
-        .section-title { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0; }
+        .section-title { font-size: 16px; font-weight: 700; color: var(--text-dark); margin: 0; }
         
         /* Grid System */
         .saas-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 24px; }
@@ -63,7 +63,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         
         .quick-filters { display: flex; gap: 4px; background: var(--white); padding: 4px; border-radius: 12px; border: 1px solid var(--border); width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
         .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-gray); border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .filter-btn:hover { color: #0F172A; background: var(--bg-main); }
+        .filter-btn:hover { color: var(--text-dark); background: var(--bg-main); }
         .filter-btn.active { background: #6C4DFF; color: #fff; }
 
         /* SaaS Panel (Card) */
@@ -79,7 +79,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; flex-shrink: 0; }
         .kpi-title-block { display: flex; flex-direction: column; }
         .kpi-label { font-size: 11px; font-weight: 600; color: var(--text-gray); margin-bottom: 2px; }
-        .kpi-val { font-size: 20px; font-weight: 800; color: #0F172A; }
+        .kpi-val { font-size: 20px; font-weight: 800; color: var(--text-dark); }
         .kpi-trend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 12px; }
         .kpi-trend { color: #10B981; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
         .kpi-trend.down { color: #EF4444; }
@@ -91,7 +91,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .receivable-card:hover { border-color: var(--border); background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         .r-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: var(--text-dark); }
         .r-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
-        .r-amount { font-size: 16px; font-weight: 700; color: #0F172A; text-align: right; }
+        .r-amount { font-size: 16px; font-weight: 700; color: var(--text-dark); text-align: right; }
         .r-sub { font-size: 11px; color: var(--text-gray); font-weight: 500; text-align: right; margin-top: 2px; }
 
         /* Profile Cards */
@@ -99,7 +99,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .profile-card:last-child { border-bottom: none; padding-bottom: 0; }
         .p-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #E2E8F0; }
         .p-info { flex: 1; min-width: 0; }
-        .p-name { font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .p-name { font-size: 14px; font-weight: 700; color: var(--text-dark); margin: 0 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .p-room { font-size: 12px; color: var(--text-gray); font-weight: 500; }
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
 
@@ -117,7 +117,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .tl-item { position: relative; padding-bottom: 24px; padding-left: 24px; }
         .tl-item:last-child { padding-bottom: 0; }
         .tl-dot { position: absolute; left: -16px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); border: 2px solid #6C4DFF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6C4DFF; }
-        .tl-title { font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
+        .tl-title { font-size: 13px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
         .tl-desc { font-size: 12px; color: var(--text-gray); line-height: 1.4; }
         .tl-time { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; display: block; }
 
@@ -453,7 +453,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 6, font: { family: 'Inter', size: 12 } } } },
                     scales: {
                         x: { grid: { display: false } },
-                        y: { grid: { color: '#F1F5F9', borderDash: [5, 5] }, border: { display: false } }
+                        y: { grid: { color: 'rgba(100, 116, 139, 0.15)', borderDash: [5, 5] }, border: { display: false } }
                     }
                 }
             });
@@ -532,7 +532,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             document.getElementById('elecStatsContainer').innerHTML = `
                 <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
                     <div style="font-size:12px; color: var(--text-gray); font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
-                    <div style="font-size:26px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
+                    <div style="font-size:26px; font-weight:800; color: var(--text-dark);">${eStats.avg_units}</div>
                 </div>
                 <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
                     <div style="font-size:12px; color: var(--text-gray); font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
@@ -625,7 +625,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     ctx.textBaseline = "middle";
                     
                     ctx.font = "bold " + fontSize + "em Inter";
-                    ctx.fillStyle = "#0F172A";
+                    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--text-dark").trim() || "#0F172A";
                     var text = formatCur(totalExp);
                     ctx.fillText(text, centerX, centerY - 10);
                     
@@ -650,7 +650,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 options: {
                     responsive: true, maintainAspectRatio: false, cutout: '82%',
                     plugins: { 
-                        legend: { position: 'right', labels: { usePointStyle: true, padding: 20, font: { family: 'Inter', size: 12, weight: '500' }, color: '#475569' } },
+                        legend: { position: 'right', labels: { usePointStyle: true, padding: 20, font: { family: 'Inter', size: 12, weight: '500' }, color: '#94A3B8' } },
                         tooltip: { backgroundColor: '#0F172A', padding: 12, cornerRadius: 8, displayColors: true }
                     }
                 },

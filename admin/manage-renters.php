@@ -401,7 +401,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     $qs['page'] = $page - 1;
                     echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-dark); text-decoration: none; font-size: 14px;"><i class="bx bx-chevron-left"></i></a>';
                 } else {
-                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: #CBD5E1; font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-left"></i></div>';
+                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-left"></i></div>';
                 }
 
                 // Page numbers
@@ -426,7 +426,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     $qs['page'] = $page + 1;
                     echo '<a href="?' . http_build_query($qs) . '" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-dark); text-decoration: none; font-size: 14px;"><i class="bx bx-chevron-right"></i></a>';
                 } else {
-                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: #CBD5E1; font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-right"></i></div>';
+                    echo '<div style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--border); color: var(--text-gray); font-size: 14px; opacity: 0.5;"><i class="bx bx-chevron-right"></i></div>';
                 }
                 ?>
             </div>

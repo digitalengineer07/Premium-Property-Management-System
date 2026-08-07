@@ -202,7 +202,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <?php if ($user['profile_pic']): ?>
                         <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
                     <?php else: ?>
-                        <div style="width: 80px; height: 80px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-main); color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
                     <?php endif; ?>
                     <?php if (($user['status'] ?? 'active') == 'active'): ?>
                         <span style="color: #10B981; font-weight: 600; font-size: 12px; background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px;"><i class='bx bxs-circle' style="font-size: 8px;"></i> Active</span>
@@ -412,7 +412,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <i class='bx bx-user' style="color: var(--text-gray); font-size: 16px;"></i>
                         <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
                 </div>
                 
                 <!-- Relationship Box -->
@@ -421,7 +421,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <i class='bx bx-group' style="color: var(--text-gray); font-size: 16px;"></i>
                         <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
                 </div>
 
                 <!-- Phone Box -->
@@ -430,7 +430,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <i class='bx bx-phone' style="color: var(--text-gray); font-size: 16px;"></i>
                         <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
                 </div>
 
                 <!-- Address Box -->
@@ -439,7 +439,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <i class='bx bx-map' style="color: var(--text-gray); font-size: 16px;"></i>
                         <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
                 </div>
             </div>
         </div>
@@ -608,7 +608,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
             <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document']) && empty($user['electricity_document'])): ?>
             <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: transparent;">
-                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: #CBD5E1;"></i><br>
+                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: var(--text-gray);"></i><br>
                 No documents uploaded yet
             </div>
             <?php endif; ?>
@@ -819,7 +819,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
                             <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
-                                <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
+                                <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>
                         </div>
                     </div>

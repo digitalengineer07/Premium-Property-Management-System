@@ -287,7 +287,7 @@ if ($res) {
         .pv-header-text h1 {
             font-size: 28px;
             font-weight: 800;
-            color: #0F172A;
+            color: var(--text-dark);
             margin: 0 0 6px 0;
             line-height: 1.2;
         }
@@ -332,13 +332,13 @@ if ($res) {
             font-size: 24px;
             flex-shrink: 0;
         }
-        .pv-kpi-blue { background: #EEF2FF; color: #6366F1; }
+        .pv-kpi-blue { background: var(--bg-main); color: #6366F1; }
         .pv-kpi-yellow { background: #FEF9C3; color: #EAB308; }
         .pv-kpi-green { background: #DCFCE7; color: #10B981; }
         .pv-kpi-red { background: #FEE2E2; color: #EF4444; }
         .pv-kpi-details { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
         .pv-kpi-label { font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pv-kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1; }
+        .pv-kpi-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
         .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
         .pv-filter-panel {
@@ -373,7 +373,7 @@ if ($res) {
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--white);
-            color: #0F172A;
+            color: var(--text-dark);
             font-size: 13px;
             outline: none;
             transition: all 0.2s;
@@ -424,7 +424,7 @@ if ($res) {
             transition: 0.2s;
             text-decoration: none;
         }
-        .pv-btn-reset:hover { background: var(--bg-main); color: #0F172A; }
+        .pv-btn-reset:hover { background: var(--bg-main); color: var(--text-dark); }
 
         .pv-table-panel {
             background: var(--white);
@@ -443,7 +443,7 @@ if ($res) {
         .pv-table-title {
             font-size: 16px;
             font-weight: 700;
-            color: #0F172A;
+            color: var(--text-dark);
             margin: 0;
         }
         .pv-btn-export {
@@ -494,15 +494,15 @@ if ($res) {
         .pv-avatar-rs { background: #D1FAE5; color: #047857; }
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
+        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
         .pv-bill-info-inv { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
         
-        .pv-utr-text { font-size: 12px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .pv-utr-text { font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
         .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 14px; }
         
-        .pv-date-text { font-size: 12px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 2px; white-space: nowrap; }
+        .pv-date-text { font-size: 12px; font-weight: 600; color: var(--text-dark); display: block; margin-bottom: 2px; white-space: nowrap; }
         .pv-time-text { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-status-pill {
@@ -515,7 +515,7 @@ if ($res) {
         .pv-status-approved { background: #DCFCE7; color: #059669; }
         .pv-status-rejected { background: #FEE2E2; color: #DC2626; }
         
-        .pv-mode-text { font-size: 11px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .pv-mode-text { font-size: 11px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         
         .pv-action-cell { display: flex; align-items: center; gap: 4px; }
         .pv-action-cell form { display: flex; margin: 0; }
@@ -805,7 +805,7 @@ include "sidebar.php";
                                     $name_parts = explode(' ', $raw_name);
                                     $display_name = count($name_parts) > 2 ? $name_parts[0] . ' ' . $name_parts[1] . '...' : $raw_name;
                                     ?>
-                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
+                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: var(--text-dark); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
                                         <?php echo s($display_name); ?>
                                     </div>
                                     <div style="font-size: 11px; color: var(--text-gray);">Room <?php echo s($n['room_no']); ?></div>
@@ -950,12 +950,12 @@ include "sidebar.php";
 <div id="rejectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
     <div class="pv-filter-panel animate-up" style="max-width: 420px; width: 100%; padding: 24px; position: relative;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="font-size: 18px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
+            <h2 style="font-size: 18px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
             <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
         </div>
         <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
         
-        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); color: var(--text-dark); outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
         
         <div style="display: flex; gap: 12px;">
             <button type="button" class="pv-btn-reset" onclick="closeRejectModal()">Cancel</button>

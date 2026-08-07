@@ -63,7 +63,7 @@ if ($action === 'repair_adjustments') {
     <style>
         body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-dark); margin: 0; padding: 40px; }
         .container { max-width: 800px; margin: 0 auto; background: var(--white); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
-        h1 { margin-top: 0; color: #0F172A; }
+        h1 { margin-top: 0; color: var(--text-dark); }
         .alert { padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: 500; }
         .alert.success { background: #ECFDF5; color: #10B981; border: 1px solid #A7F3D0; }
         .alert.error { background: #FEF2F2; color: #EF4444; border: 1px solid #FECACA; }
