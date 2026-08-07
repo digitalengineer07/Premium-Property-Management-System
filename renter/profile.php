@@ -632,6 +632,21 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             border-color: var(--border) !important;
             color: var(--text-gray) !important;
         }
+
+        /* Fix Inputs in Dark Mode */
+        .dark-theme input, 
+        .dark-theme select, 
+        .dark-theme textarea {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+        .dark-theme input:focus, 
+        .dark-theme select:focus, 
+        .dark-theme textarea:focus {
+            border-color: var(--primary-purple) !important;
+            background: #0F172A !important;
+        }
     </style>
 </head>
 <body class="<?php echo ($is_dark ?? false) ? 'dark-theme' : ''; ?>" style="display: block;">
