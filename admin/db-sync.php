@@ -222,6 +222,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sync_results[] = "<span style='color:#F59E0B;'>✔ Generated unique transaction IDs for $backfilled legacy payment records.</span>";
     }
 
+    // 6. Repair Empty Bill Types
+    $repaired_bill_types = 0;
+    $q_empty = mysqli_query($conn, "SELECT id, bill_id, month FROM payments WHERE bill_type='' OR bill_type IS NULL");
+    if ($q_empty) {
+        while($r = mysqli_fetch_assoc($q_empty)) {
+            $p_id = $r['id'];
+            if (stripos($r['month'], 'Advance') !== false) {
+                mysqli_query($conn, "UPDATE payments SET bill_type='advance' WHERE id=$p_id");
+                $repaired_bill_types++;
+            } elseif ($r['bill_id'] > 0) {
+                $b_id = $r['bill_id'];
+                $chk_e = mysqli_query($conn, "SELECT id FROM electricity WHERE id=$b_id");
+                if (mysqli_num_rows($chk_e) > 0) {
+                    mysqli_query($conn, "UPDATE payments SET bill_type='electricity' WHERE id=$p_id");
+                    $repaired_bill_types++;
+                }
+            }
+        }
+    }
+    if ($repaired_bill_types > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Repaired $repaired_bill_types payment records with missing bill types.</span>";
+    }
+
+    // 7. Repair Overpayment Advance Credits (Missing Wallet Credits)
+    $repaired_advances = 0;
+    $q_extra = mysqli_query($conn, "SELECT id, user_id, adjustment_amount, payment_date FROM payments WHERE adjustment_type='extra' AND adjustment_amount > 0");
+    if ($q_extra) {
+        while($r = mysqli_fetch_assoc($q_extra)) {
+            $uid = $r['user_id'];
+            $amt = $r['adjustment_amount'];
+            $pdate = $r['payment_date'];
+            // Check if there is an advance payment on the same day for this amount
+            $chk_adv = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$uid AND bill_type='advance' AND paid_amount=$amt AND payment_date='$pdate'");
+            if (mysqli_num_rows($chk_adv) == 0) {
+                // Missing advance credit! Let's insert it and update the wallet.
+                mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $amt WHERE id=$uid");
+                $sys_tx = 'SYS_REC_' . strtoupper(substr(md5(uniqid()), 0, 8));
+                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, paid_amount, payment_mode, payment_date, sys_tx_id, transaction_id) VALUES ($uid, 'advance', 0, 'Advance', $amt, $amt, 'Extra from Bill', '$pdate', '$sys_tx', 'Auto-Recovered')");
+                $repaired_advances++;
+            }
+        }
+    }
+    if ($repaired_advances > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Recovered $repaired_advances missing advance wallet credits from overpayments.</span>";
+    }
+
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
