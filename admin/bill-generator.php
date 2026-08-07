@@ -913,10 +913,6 @@ $admin_user = s($_SESSION['admin']);
                                         <i class='bx bx-user' style="margin-top: 2px;"></i> 
                                         <span id="receiptRenter" style="line-height: 1.4;">Not Selected</span>
                                     </div>
-                                    <div style="display: flex; align-items: center; gap: 6px;">
-                                        <i class='bx bx-calendar'></i> 
-                                        <span id="receiptMonthYear">--</span>
-                                    </div>
                                 </div>
                             </div>
                             
@@ -937,6 +933,9 @@ $admin_user = s($_SESSION['admin']);
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
                                         <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Billing Month</span><strong style="white-space: nowrap; text-align: right; display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <span id="receiptMonthYear">--</span></strong>
                                     </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;" id="extraChargesDiv">
                                         <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
