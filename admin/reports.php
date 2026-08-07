@@ -23,7 +23,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* SaaS Dashboard Core Styles */
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-main); color: #0F172A; margin: 0; padding: 0; }
         
         /* Typography */
         .page-title { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, #0F172A 0%, #312E81 50%, #6C4DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; white-space: nowrap; display: inline-block; }
@@ -56,24 +56,24 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         /* Buttons & Controls */
         .header-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; justify-content: flex-end; }
         .btn-saas { padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; white-space: nowrap; }
-        .btn-saas-outline { background: #fff; border: 1px solid #E2E8F0; color: #334155; }
-        .btn-saas-outline:hover { background: #F8FAFC; border-color: #CBD5E1; }
+        .btn-saas-outline { background: var(--white); border: 1px solid #E2E8F0; color: #334155; }
+        .btn-saas-outline:hover { background: var(--bg-main); border-color: #CBD5E1; }
         .btn-saas-primary { background: #6C4DFF; color: #fff; box-shadow: 0 4px 12px rgba(108, 77, 255, 0.2); }
         .btn-saas-primary:hover { background: #5a3df0; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(108, 77, 255, 0.3); }
         
-        .quick-filters { display: flex; gap: 4px; background: #fff; padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+        .quick-filters { display: flex; gap: 4px; background: var(--white); padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
         .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748B; border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        .filter-btn:hover { color: #0F172A; background: #F1F5F9; }
+        .filter-btn:hover { color: #0F172A; background: var(--bg-main); }
         .filter-btn.active { background: #6C4DFF; color: #fff; }
 
         /* SaaS Panel (Card) */
-        .saas-panel { background: #fff; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); padding: 24px; display: flex; flex-direction: column; transition: box-shadow 0.3s; }
+        .saas-panel { background: var(--white); border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(226, 232, 240, 0.6); padding: 24px; display: flex; flex-direction: column; transition: box-shadow 0.3s; }
         .saas-panel:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.05); }
         .saas-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         
         /* KPI Cards */
         .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-        .kpi-card { background: #fff; padding: 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .kpi-card { background: var(--white); padding: 16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
         .kpi-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .kpi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; flex-shrink: 0; }
@@ -87,8 +87,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .kpi-sparkline { width: 100%; height: 36px; margin-top: auto; }
 
         /* Specific Elements */
-        .receivable-card { background: #F8FAFC; border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
-        .receivable-card:hover { border-color: #E2E8F0; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .receivable-card { background: var(--bg-main); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
+        .receivable-card:hover { border-color: #E2E8F0; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         .r-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: #334155; }
         .r-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .r-amount { font-size: 16px; font-weight: 700; color: #0F172A; text-align: right; }
@@ -108,7 +108,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .defaulter-card:last-child { border-bottom: none; }
         .defaulter-card-left { display: flex; align-items: center; gap: 12px; }
         .defaulter-card-right { display: flex; align-items: center; gap: 16px; }
-        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: #F1F5F9; color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; text-decoration: none; }
+        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: var(--bg-main); color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; text-decoration: none; }
         .defaulter-action:hover { background: #6C4DFF; color: #fff; }
 
         /* Timeline */
@@ -116,7 +116,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #E2E8F0; }
         .tl-item { position: relative; padding-bottom: 24px; padding-left: 24px; }
         .tl-item:last-child { padding-bottom: 0; }
-        .tl-dot { position: absolute; left: -16px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid #6C4DFF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6C4DFF; }
+        .tl-dot { position: absolute; left: -16px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); border: 2px solid #6C4DFF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6C4DFF; }
         .tl-title { font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
         .tl-desc { font-size: 12px; color: #64748B; line-height: 1.4; }
         .tl-time { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; display: block; }
@@ -125,7 +125,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid #E2E8F0; }
         .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; color: #6C4DFF; font-size: 14px; }
         .ai-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
-        .ai-list li { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; align-items: flex-start; gap: 10px; }
+        .ai-list li { background: var(--white); padding: 16px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; align-items: flex-start; gap: 10px; }
         .ai-list li::before { content: '✨'; font-size: 16px; flex-shrink: 0; }
 
         .spinner { border: 3px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #6C4DFF; animation: spin 1s linear infinite; margin: 0 auto; }
@@ -530,11 +530,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const eStatsRes = await fetch('api_reports_saas.php?endpoint=electricity_insights&range=' + range);
             const eStats = await eStatsRes.json();
             document.getElementById('elecStatsContainer').innerHTML = `
-                <div style="background:#F8FAFC; padding:12px 20px; border-radius:12px; min-width: 140px;">
+                <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
                     <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
                     <div style="font-size:26px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
                 </div>
-                <div style="background:#F8FAFC; padding:12px 20px; border-radius:12px; min-width: 140px;">
+                <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
                     <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
                     <div style="font-size:26px; font-weight:800; color:#EF4444;">${eStats.highest}</div>
                 </div>

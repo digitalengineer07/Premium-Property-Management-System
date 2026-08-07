@@ -357,7 +357,7 @@ $admin_user = s($_SESSION['admin']);
                                 </div>
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the total payment received during onboarding. Security Deposit will be automatically set equal to 1 month's rent.</p>
-                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: var(--white); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
                                 <img id="advanceQRImg" src="" alt="Advance QR" style="width: 150px; height: 150px; display: inline-block;">
                                 <p style="font-size: 11px; font-weight: 600; color: #10B981; margin-top: 8px;">Scan to pay Advance via UPI</p>
                             </div>

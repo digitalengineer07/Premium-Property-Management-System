@@ -128,7 +128,7 @@ $queries_res = mysqli_query($conn, "
                             </div>
                             <div style="min-width: 0;">
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
-                                    <span style="font-size: 10px; font-weight: 800; background: #F1F5F9; color: #475569; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase;"><?php echo $q['category']; ?></span>
+                                    <span style="font-size: 10px; font-weight: 800; background: var(--bg-main); color: #475569; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase;"><?php echo $q['category']; ?></span>
                                     <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);"><i class='bx bx-time-five' style="vertical-align: middle; margin-top: -2px;"></i> <?php echo date('M d, Y \a\t h:i A', strtotime($q['created_at'])); ?></span>
                                 </div>
                                 <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;"><?php echo htmlspecialchars($q['subject']); ?></h2>
@@ -145,7 +145,7 @@ $queries_res = mysqli_query($conn, "
                     </div>
 
                     <div style="background: #FAFBFC; padding: 24px;">
-                        <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <div style="background: var(--white); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                             <p style="margin: 0; line-height: 1.6; color: var(--text-dark); font-size: 14px;"><?php echo nl2br(htmlspecialchars($q['message'])); ?></p>
                             <?php if(!empty($q['attachment'])): ?>
                                 <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #EDEDF5;">
@@ -157,13 +157,13 @@ $queries_res = mysqli_query($conn, "
                         </div>
                     </div>
 
-                    <form method="POST" class="query-action-form" style="padding: 20px 24px; display: grid; grid-template-columns: 200px 1fr auto; gap: 16px; align-items: end; border-top: 1px solid var(--border); background: white;">
+                    <form method="POST" class="query-action-form" style="padding: 20px 24px; display: grid; grid-template-columns: 200px 1fr auto; gap: 16px; align-items: end; border-top: 1px solid var(--border); background: var(--white);">
                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                         <input type="hidden" name="query_id" value="<?php echo $q['id']; ?>">
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);">Update Status</label>
                             <div style="position: relative;">
-                                <select name="status" style="width: 100%; padding: 10px 16px; height: 44px; border-radius: 8px; border: 1px solid var(--border); background: white; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-dark); appearance: none; outline: none; cursor: pointer;">
+                                <select name="status" style="width: 100%; padding: 10px 16px; height: 44px; border-radius: 8px; border: 1px solid var(--border); background: var(--white); font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-dark); appearance: none; outline: none; cursor: pointer;">
                                     <option value="Pending" <?php echo $q['status'] == 'Pending' ? 'selected' : ''; ?>>Pending</option>
                                     <option value="In Progress" <?php echo $q['status'] == 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
                                     <option value="Resolved" <?php echo $q['status'] == 'Resolved' ? 'selected' : ''; ?>>Resolved</option>

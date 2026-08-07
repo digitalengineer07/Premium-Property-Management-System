@@ -9,7 +9,7 @@
         top: 100%;
         right: 0;
         margin-top: 12px;
-        background: #ffffff;
+        background: var(--white);
         border: 1px solid #E2E8F0;
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         border-radius: 12px;
@@ -32,7 +32,7 @@
         transition: background 0.2s ease;
     }
     .dropdown-menu-custom a:hover {
-        background: #F8FAFC;
+        background: var(--bg-main);
     }
     .dropdown-menu-custom a i {
         font-size: 16px;

@@ -216,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     .card-logo {
-        width: 42px; height: 42px; background: #F8FAFC; border-radius: 50%;
+        width: 42px; height: 42px; background: var(--bg-main); border-radius: 50%;
         margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center;
         color: var(--primary-purple); font-size: 22px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
     }
@@ -236,10 +236,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     .form-input {
         width: 100%; padding: 8px 14px 8px 36px; font-size: 13px; color: var(--text-dark);
-        background: #ffffff; border: 1.5px solid #E2E8F0; border-radius: 10px;
+        background: var(--white); border: 1.5px solid #E2E8F0; border-radius: 10px;
         outline: none; transition: all 0.2s ease; font-weight: 500;
     }
-    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: #ffffff; }
+    .form-input:focus { border-color: var(--primary-purple); box-shadow: 0 0 0 3px rgba(98, 75, 255, 0.1); background: var(--white); }
 
     .form-options {
         display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: -2px;

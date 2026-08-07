@@ -88,7 +88,7 @@ $admin_user = s($_SESSION['admin']);
             font-size: 24px;
             z-index: 1;
             flex-shrink: 0;
-            background: #ffffff;
+            background: var(--white);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
             border: 2px solid #ffffff;
             transition: transform 0.3s ease;
@@ -113,7 +113,7 @@ $admin_user = s($_SESSION['admin']);
         /* The Content Card (Horizontal Layout) */
         .pt-card {
             flex: 1;
-            background: #ffffff;
+            background: var(--white);
             border: 1px solid #E2E8F0;
             border-radius: 16px;
             padding: 20px 24px;
@@ -193,7 +193,7 @@ $admin_user = s($_SESSION['admin']);
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #F8FAFC;
+            background: var(--bg-main);
             padding: 6px 12px;
             border-radius: 8px;
             border: 1px solid #F1F5F9;
@@ -236,7 +236,7 @@ $admin_user = s($_SESSION['admin']);
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
             color: #475569;
-            background: #F1F5F9;
+            background: var(--bg-main);
             padding: 6px 12px;
             border-radius: 8px;
         }
@@ -367,7 +367,7 @@ $admin_user = s($_SESSION['admin']);
             style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; margin-top: 40px; position: relative; z-index: 10;">
             <?php if ($page > 1): ?>
                 <a href="?page=<?php echo $page - 1; ?>#pagination"
-                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;"
+                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;"
                     onmouseover="this.style.borderColor='var(--text-gray)'"
                     onmouseout="this.style.borderColor='var(--border)'">
                     <i class='bx bx-chevron-left' style="font-size: 24px;"></i>
@@ -381,7 +381,7 @@ $admin_user = s($_SESSION['admin']);
 
             <?php if ($page < $total_pages): ?>
                 <a href="?page=<?php echo $page + 1; ?>"
-                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;"
+                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;"
                     onmouseover="this.style.borderColor='var(--text-gray)'"
                     onmouseout="this.style.borderColor='var(--border)'">
                     <i class='bx bx-chevron-right' style="font-size: 24px;"></i>

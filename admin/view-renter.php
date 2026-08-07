@@ -407,7 +407,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-plus-medical'></i></div> Emergency Contact</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <!-- Contact Name Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                         <i class='bx bx-user' style="color: #64748B; font-size: 16px;"></i>
                         <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
@@ -416,7 +416,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
                 
                 <!-- Relationship Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                         <i class='bx bx-group' style="color: #64748B; font-size: 16px;"></i>
                         <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
@@ -425,7 +425,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
 
                 <!-- Phone Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                         <i class='bx bx-phone' style="color: #64748B; font-size: 16px;"></i>
                         <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
@@ -434,7 +434,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
 
                 <!-- Address Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                         <i class='bx bx-map' style="color: #64748B; font-size: 16px;"></i>
                         <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
@@ -553,7 +553,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
             <?php if (!empty($user['aadhaar_file'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-id-card'></i>
@@ -564,14 +564,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($user['agreement_document'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-file-blank'></i>
@@ -582,14 +582,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($user['electricity_document'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-bolt-circle'></i>
@@ -600,8 +600,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
@@ -630,11 +630,11 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
                 <div style="margin-bottom: 24px;">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Select Electricity Bill Copy (PDF, PNG, JPG)</label>
-                    <input type="file" name="electricity_file" accept=".pdf,.png,.jpg,.jpeg" required style="width: 100%; padding: 14px; border: 1px dashed var(--border); border-radius: 14px; background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    <input type="file" name="electricity_file" accept=".pdf,.png,.jpg,.jpeg" required style="width: 100%; padding: 14px; border: 1px dashed var(--border); border-radius: 14px; background: var(--bg-main); font-size: 14px; box-sizing: border-box;">
                     <div style="font-size: 12px; color: var(--text-gray); margin-top: 8px; display: flex; align-items: center; gap: 6px;"><i class='bx bx-shield-check' style="color: #10B981; font-size: 16px;"></i> Secure encrypted upload channel (Max 200MB)</div>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px;">
-                    <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="padding: 12px 20px; background: #F1F5F9; color: var(--text-dark); border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="padding: 12px 20px; background: var(--bg-main); color: var(--text-dark); border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
                     <button type="submit" style="padding: 12px 24px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);"><i class='bx bx-upload'></i> Upload Document</button>
                 </div>
             </form>
@@ -758,7 +758,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- Payment Mode Modal -->
     <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-        <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
+        <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: var(--white); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px;">
                 <div style="width: 48px; height: 48px; background: #ECFDF5; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
@@ -785,7 +785,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div>
                         <div class="form-group" style="margin-bottom: 20px;">
                             <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Payment Mode</label>
-                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
                                 <option value="Online">Online</option>
                                 <option value="Cash">Cash</option>
                                 <option value="UPI">UPI</option>
@@ -797,7 +797,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
                             </div>
                             <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                         </div>
@@ -807,17 +807,17 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                             <div class="form-group">
                                 <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Date</label>
-                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
                             </div>
                             <div class="form-group">
                                 <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Time</label>
-                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
                             </div>
                         </div>
 
                         <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 20px;">
                             <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Cash Received By</label>
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: #F1F5F9;">
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
                                 <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>

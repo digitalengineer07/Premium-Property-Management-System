@@ -137,7 +137,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         .reminder-card {
-            background: #ffffff; 
+            background: var(--white); 
             border-radius: 16px; 
             padding: 24px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.02); 
@@ -151,7 +151,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             border-color: #CBD5E1;
         }
         .reminder-card.disabled { 
-            background: #F8FAFC; 
+            background: var(--bg-main); 
             opacity: 0.8; 
             border-style: dashed;
         }
@@ -246,7 +246,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     <!-- KPI Grid -->
     <div class="kpi-grid-4 animate-up">
-        <div style="background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
+        <div style="background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(239, 68, 68, 0.1); color: #EF4444; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
                 <i class='bx bxs-file-blank'></i>
             </div>
@@ -257,7 +257,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
         </div>
 
-        <div style="background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
+        <div style="background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
                 <i class='bx bx-time-five'></i>
             </div>
@@ -272,7 +272,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
         </div>
 
-        <div style="background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
+        <div style="background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
                 <i class='bx bx-send'></i>
             </div>
@@ -283,7 +283,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
         </div>
 
-        <div style="background: #ffffff; border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
+        <div style="background: var(--white); border-radius: 16px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border: 1px solid #E2E8F0; display: flex; gap: 16px; align-items: center;">
             <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); color: #10B981; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;">
                 <i class='bx bx-check-circle'></i>
             </div>
@@ -324,7 +324,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         <span class="badge" style="background: #FEF2F2; color: #EF4444; font-weight: 700; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: none; white-space: nowrap;"><?php echo count($dues); ?> Unpaid Bills</span>
                         <div style="position: relative;">
                             <button onclick="document.getElementById('remindersMenu').style.display = document.getElementById('remindersMenu').style.display === 'block' ? 'none' : 'block'; event.stopPropagation();" style="background: none; border: none; color: var(--text-dark); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;"><i class='bx bx-dots-vertical-rounded'></i></button>
-                            <div id="remindersMenu" style="display: none; position: absolute; right: 0; top: 24px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #E2E8F0; width: 160px; z-index: 100; overflow: hidden;">
+                            <div id="remindersMenu" style="display: none; position: absolute; right: 0; top: 24px; background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #E2E8F0; width: 160px; z-index: 100; overflow: hidden;">
                                 <a href="manage-reminders.php?action=remind_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-send' style="font-size: 14px; color: var(--primary-purple);"></i> Send All</a>
                                 <a href="manage-reminders.php?action=enable_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-play-circle' style="font-size: 14px; color: #10B981;"></i> Resume All</a>
                                 <a href="manage-reminders.php?action=disable_all&csrf=<?php echo $csrf_token; ?>" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; color: var(--text-dark); text-decoration: none; font-size: 12px; font-weight: 600; transition: background 0.2s;"><i class='bx bx-pause-circle' style="font-size: 14px; color: #EF4444;"></i> Pause All</a>
@@ -427,7 +427,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </div>
                     </div>
                     <div style="padding-top: 2px;">
-                        <select style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 11px; font-weight: 700; background: #fff; color: var(--text-dark); cursor: pointer; outline: none;">
+                        <select style="padding: 6px 10px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 11px; font-weight: 700; background: var(--white); color: var(--text-dark); cursor: pointer; outline: none;">
                             <option>All Types</option>
                             <option>Manual</option>
                             <option>Auto</option>
@@ -472,7 +472,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             <?php endif; ?>
                             
                             <div style="position: relative; z-index: 2; flex-shrink: 0;">
-                                <div style="position: absolute; left: 1px; top: 12px; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--primary-purple); background: #fff; z-index: 3;"></div>
+                                <div style="position: absolute; left: 1px; top: 12px; width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--primary-purple); background: var(--white); z-index: 3;"></div>
                                 
                                 <div style="margin-left: 20px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #fff; background: <?php echo $color; ?>;">
                                     <?php echo $initial; ?>
@@ -519,7 +519,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($csrf_token); ?>">
             <div style="margin-bottom: 16px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px;">Select Pending Bill</label>
-                <select name="bill_selection" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; background: #fff; color: #1e293b; outline: none;">
+                <select name="bill_selection" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; background: var(--white); color: #1e293b; outline: none;">
                     <option value="">-- Choose an unpaid bill --</option>
                     <?php foreach($dues as $d): ?>
                         <option value="<?php echo $d['type'].'_'.$d['id']; ?>">
@@ -530,7 +530,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             </div>
             <div style="margin-bottom: 24px;">
                 <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px;">Custom Note (Optional)</label>
-                <textarea name="remark" rows="3" placeholder="E.g., Please pay before Friday to avoid late fees." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; resize: none; background: #fff; color: #1e293b; outline: none;"></textarea>
+                <textarea name="remark" rows="3" placeholder="E.g., Please pay before Friday to avoid late fees." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-family: 'Inter', sans-serif; resize: none; background: var(--white); color: #1e293b; outline: none;"></textarea>
             </div>
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
                 <button type="button" onclick="document.getElementById('customReminderModal').style.display='none'" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #E2E8F0; background: transparent; color: var(--text-gray); font-weight: 700; cursor: pointer; transition: all 0.2s;">Cancel</button>

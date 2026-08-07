@@ -59,7 +59,7 @@ while ($table_row = mysqli_fetch_array($tables_result)) {
 $json = json_encode($schema, JSON_PRETTY_PRINT);
 file_put_contents(__DIR__ . '/schema.json', $json);
 
-echo "<div style='font-family: sans-serif; padding: 40px; background: #F8FAFC; border-radius: 12px; max-width: 600px; margin: 40px auto; border: 1px solid #E2E8F0; text-align: center;'>";
+echo "<div style='font-family: sans-serif; padding: 40px; background: var(--bg-main); border-radius: 12px; max-width: 600px; margin: 40px auto; border: 1px solid #E2E8F0; text-align: center;'>";
 echo "<div style='font-size: 40px; margin-bottom: 20px;'>✅</div>";
 echo "<h2 style='color: #1E293B; margin-top: 0;'>Schema Generated Successfully!</h2>";
 echo "<p style='color: #64748B;'>The current database structure has been exported to <strong>schema.json</strong>.</p>";

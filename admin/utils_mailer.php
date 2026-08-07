@@ -56,7 +56,7 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
                 .header { background: #624BFF; color: white; padding: 40px 20px; text-align: center; }
                 .content { padding: 40px; }
                 .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -123,7 +123,7 @@ function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $a
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
                 .header { background: #624BFF; color: white; padding: 40px 20px; text-align: center; }
                 .content { padding: 40px; }
                 .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -201,7 +201,7 @@ function send_password_reset_otp($to_email, $renter_name, $otp) {
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+            .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
             .header { background: #624BFF; color: white; padding: 30px 20px; text-align: center; }
             .content { padding: 40px; text-align: center; }
             .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -252,7 +252,7 @@ function send_payment_receipt_email($to_email, $renter_name, $details, $amount_p
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+            .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
             .header { background: #10B981; color: white; padding: 40px 20px; text-align: center; }
             .content { padding: 40px; }
             .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -341,7 +341,7 @@ function send_announcement_email($to_email, $renter_name, $announcement_title, $
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
         <style>
             body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+            .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
             .header { background: {$priorityColor}; color: white; padding: 40px 20px; text-align: center; }
             .badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px; text-transform: uppercase; font-weight: 700; display: inline-block; margin-bottom: 15px; letter-spacing: 1px; }
             .content { padding: 40px; }
@@ -406,7 +406,7 @@ function send_welcome_email($to_email, $renter_name, $user_id = 0, $username = '
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
                 .header { background: #10B981; color: white; padding: 40px 20px; text-align: center; }
                 .content { padding: 40px; }
                 .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -482,7 +482,7 @@ function send_move_out_thank_you_email($to_email, $renter_name) {
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
                 .header { background: #6366F1; color: white; padding: 40px 20px; text-align: center; }
                 .content { padding: 40px; }
                 .footer { text-align: center; color: #64748b; font-size: 12px; padding: 30px; background: #f8fafc; }
@@ -546,7 +546,7 @@ function sendEmail($to_email, $subject, $msg) {
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <style>
                 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background-color: #f1f5f9; padding: 20px; }
-                .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+                .container { max-width: 600px; margin: 0 auto; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
                 .header { background: #624BFF; color: white; padding: 30px 20px; text-align: center; }
                 .header h2 { margin: 0; font-size: 22px; font-weight: 800; }
                 .content { padding: 40px; font-size: 15px; color: #334155; }

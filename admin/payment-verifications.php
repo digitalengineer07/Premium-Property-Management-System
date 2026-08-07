@@ -312,7 +312,7 @@ if ($res) {
             margin-bottom: 24px;
         }
         .pv-kpi-card {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -342,7 +342,7 @@ if ($res) {
         .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
         .pv-filter-panel {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -372,7 +372,7 @@ if ($res) {
             padding: 12px 16px;
             border: 1px solid #E2E8F0;
             border-radius: 10px;
-            background: #ffffff;
+            background: var(--white);
             color: #0F172A;
             font-size: 13px;
             outline: none;
@@ -424,10 +424,10 @@ if ($res) {
             transition: 0.2s;
             text-decoration: none;
         }
-        .pv-btn-reset:hover { background: #F8FAFC; color: #0F172A; }
+        .pv-btn-reset:hover { background: var(--bg-main); color: #0F172A; }
 
         .pv-table-panel {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             overflow: hidden;
@@ -464,7 +464,7 @@ if ($res) {
         
         .pv-table { width: 100%; border-collapse: collapse; }
         .pv-table th {
-            background: #ffffff;
+            background: var(--white);
             padding: 12px 16px;
             text-align: left;
             font-size: 10px;
@@ -478,10 +478,10 @@ if ($res) {
             padding: 14px 16px;
             border-bottom: 1px solid #F1F5F9;
             vertical-align: middle;
-            background: #ffffff;
+            background: var(--white);
         }
         .pv-table tr:last-child td { border-bottom: none; }
-        .pv-table tr:hover td { background: #F8FAFC; }
+        .pv-table tr:hover td { background: var(--bg-main); }
         
         .pv-user-cell { display: flex; align-items: center; gap: 10px; }
         .pv-avatar-circle {
@@ -531,11 +531,11 @@ if ($res) {
         .pv-pagination-controls { display: flex; gap: 6px; align-items: center; }
         .pv-page-btn { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; border: 1px solid #E2E8F0; background: #ffffff;
+            border-radius: 8px; border: 1px solid #E2E8F0; background: var(--white);
             color: #64748B; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
         }
         .pv-page-btn.active { background: #6C4DFF; color: white; border-color: #6C4DFF; }
-        .pv-page-btn:hover:not(.active) { background: #F8FAFC; }
+        .pv-page-btn:hover:not(.active) { background: var(--bg-main); }
 
         @media(max-width: 1024px) {
             .pv-filter-grid, .pv-filter-grid-row2 { grid-template-columns: 1fr 1fr; }
@@ -955,7 +955,7 @@ include "sidebar.php";
         </div>
         <p style="font-size: 13px; color: #64748B; margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
         
-        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff; color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: var(--white); color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
         
         <div style="display: flex; gap: 12px;">
             <button type="button" class="pv-btn-reset" onclick="closeRejectModal()">Cancel</button>
