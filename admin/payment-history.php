@@ -91,7 +91,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;">
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 20px;"><i class='bx bx-history'></i></div>
                         <div>
@@ -102,7 +102,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                     <div style="font-weight: 800; font-size: 20px; color: var(--primary-purple);"><?php echo $total_transactions; ?></div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(16,185,129,0.1); display: flex; align-items: center; justify-content: center; color: #10B981; font-size: 20px;"><i class='bx bx-check-shield'></i></div>
                         <div>
@@ -126,7 +126,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                         <?php foreach ($payment_history as $p): ?>
                             <div style="position: relative; z-index: 2; margin-bottom: 24px;">
                                 <div style="position: absolute; left: -32px; top: 14px; width: 14px; height: 14px; border-radius: 50%; background: #10B981; border: 3px solid #fff; box-shadow: 0 0 0 1px #10B981;"></div>
-                                <div style="background: #fff; padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;" onmouseover="this.style.borderColor='#CBD5E1'" onmouseout="this.style.borderColor='var(--border)'">
+                                <div style="background: var(--white); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;" onmouseover="this.style.borderColor='#CBD5E1'" onmouseout="this.style.borderColor='var(--border)'">
                                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
                                         <div style="display: flex; flex-direction: column; gap: 4px;">
                                             <div style="font-weight: 800; color: var(--text-dark); font-size: 20px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
@@ -141,7 +141,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                                 $bill_status = ($p['bill_type'] == 'rent') ? $p['rent_status'] : $p['elec_status'];
                                                 if ($bill_status == 'Paid'): 
                                                 ?>
-                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: #F8FAFC; border: 1px solid #E2E8F0; color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
+                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: var(--bg-main); border: 1px solid var(--border); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
                                                 <?php endif; ?>
                                                 <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
                                             </div>
@@ -156,7 +156,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                     </div>
 
                                     <?php if ($p['bill_type'] === 'electricity' && (isset($p['elec_amount']) || isset($p['rent_amount']))): ?>
-                                        <div style="margin-top: 16px; background: #F8FAFC; padding: 12px 16px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                                        <div style="margin-top: 16px; background: var(--bg-main); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
                                             <div style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Bill Breakdown</div>
                                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-dark);">
                                                 <?php if ($p['rent_amount'] > 0): ?>
@@ -191,17 +191,17 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                     <?php if ($total_pages > 1): ?>
                         <div id="pagination" style="display: flex; justify-content: center; gap: 12px; margin-top: 24px; margin-bottom: 0px; position: relative; z-index: 10; align-items: center;">
                             <?php if ($page > 1): ?>
-                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page - 1; ?>#pagination" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></a>
                             <?php else: ?>
-                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
+                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: var(--white); cursor: not-allowed;"><i class='bx bx-chevron-left' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
                             
                             <div style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: var(--primary-purple); color: #fff; font-weight: 800; font-size: 18px; box-shadow: 0 8px 16px -4px rgba(98, 75, 255, 0.4);"><?php echo $page; ?></div>
                             
                             <?php if ($page < $total_pages): ?>
-                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></a>
+                                <a href="?id=<?php echo $id; ?>&page=<?php echo $page + 1; ?>" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;" onmouseover="this.style.borderColor='var(--text-gray)'" onmouseout="this.style.borderColor='var(--border)'"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></a>
                             <?php else: ?>
-                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: #fff; cursor: not-allowed;"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></div>
+                                <div style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: #e2e8f0; background: var(--white); cursor: not-allowed;"><i class='bx bx-chevron-right' style="font-size: 24px;"></i></div>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>

@@ -41,10 +41,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
-                
-                // Split the total collected amount
-                $amount_to_sec = min($total_collected, $security_deposit);
-                $amount_to_adv = max(0, $total_collected - $amount_to_sec);
+                // --- STRICT ONBOARDING PROTOCOL ---
+                // The collected amount must be either exactly 1x Rent (goes to Sec Deposit) 
+                // or exactly 2x Rent (1x Sec Deposit, 1x Advance for first month).
+                // Or 0 if they haven't paid yet.
+                if ($total_collected > 0 && $total_collected != $fixed_rent && $total_collected != ($fixed_rent * 2)) {
+                    $error = "System Protocol Violation: The total collected amount (₹$total_collected) must be exactly equal to 1 month's rent (₹$fixed_rent) OR exactly double the rent (₹" . ($fixed_rent * 2) . "). Partial amounts are not accepted.";
+                } else {
+                    // Split the total collected amount based on protocol
+                    if ($total_collected == ($fixed_rent * 2)) {
+                        $amount_to_sec = $fixed_rent;
+                        $amount_to_first_month = $fixed_rent;
+                    } else if ($total_collected == $fixed_rent) {
+                        $amount_to_sec = $fixed_rent;
+                        $amount_to_first_month = 0;
+                    } else {
+                        // For 0 or other cases handled above
+                        $amount_to_sec = 0;
+                        $amount_to_first_month = 0;
+                    }
+                    
+                    // The actual security deposit stored in the DB is what they paid
+                    $security_deposit = $amount_to_sec;
+                }
                 
                 // Set onboarding completed flag if they fully paid
                 $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
@@ -56,11 +75,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $parking = trim($_POST['parking'] ?? '');
                 
                 // Check if onboarding_completed column exists
-                mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+                $check_col = mysqli_query($conn, "SHOW COLUMNS FROM users LIKE 'onboarding_completed'");
+                if (mysqli_num_rows($check_col) == 0) {
+                    mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
+                }
 
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
-                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $amount_to_adv, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
+                $zero_advance = 0; // We do not put it in the advance wallet anymore
+                mysqli_stmt_bind_param($stmt, "ssssssiddddissssi", $username, $hashed, $name, $room_no, $phone, $email, $base_reading, $zero_advance, $security_deposit, $fixed_rent, $fixed_maintenance, $admin_id, $joining_date, $block, $floor, $parking, $onboarding_completed);
                 
                 if (mysqli_stmt_execute($stmt)) {
                     $new_id = mysqli_insert_id($conn);
@@ -71,8 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($amount_to_sec > 0) {
                         mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, 'Cash/Offline', $amount_to_sec, CURDATE(), 'Cash', '$sys_tx_id')");
                     }
-                    if ($amount_to_adv > 0) {
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, 'Cash/Offline', $amount_to_adv, CURDATE(), 'Cash', '$sys_tx_id')");
+                    if ($amount_to_first_month > 0) {
+                        $joining_month = date('M Y', strtotime($joining_date));
+                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'rent', 0, '$joining_month', $amount_to_first_month, 'Cash/Offline', $amount_to_first_month, CURDATE(), 'Cash', '$sys_tx_id')");
                     }
 
                     // Welcome Email Logic
@@ -88,10 +112,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     mysqli_query($conn, "INSERT IGNORE INTO welcome_logs (user_id) VALUES ($new_id)");
 
+                    // Clear the form data so it's not retained after successful creation
+                    $_POST = [];
+
                 } else {
                     $error = "Error creating profile: " . mysqli_error($conn);
                 }
-                mysqli_stmt_close($stmt);
+                if (isset($stmt)) {
+                    mysqli_stmt_close($stmt);
+                }
             }
             mysqli_stmt_close($check);
         }
@@ -142,7 +171,7 @@ $admin_user = s($_SESSION['admin']);
             outline: none !important;
         }
         .form-group i {
-            color: #64748B !important;
+            color: var(--text-gray) !important;
             transition: color 0.3s ease;
         }
         .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
@@ -226,7 +255,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" autocomplete="off">
+                <form id="addRenterForm" method="POST" autocomplete="off">
                     <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                     <div style="margin-bottom: 30px;">
                         <div class="section-title">Security & Login</div>
@@ -235,7 +264,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Login Username</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-at' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password">
+                                    <input type="text" name="username" required placeholder="e.g. rajesh_101" style="padding-left: 45px;" autocomplete="new-password" value="<?php echo htmlspecialchars($_POST['username'] ?? ''); ?>">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -253,38 +282,38 @@ $admin_user = s($_SESSION['admin']);
                         <div class="section-title">Personal Profile</div>
                         <div class="form-group">
                             <label>Resident Full Name</label>
-                            <input type="text" name="name" required placeholder="Legal Name of Resident">
+                            <input type="text" name="name" required placeholder="Legal Name of Resident" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
                         </div>
 
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
                             <div class="form-group">
                                 <label>Flat / Room No.</label>
-                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104">
+                                <input type="text" id="roomNoInput" name="room_no" placeholder="e.g. 104" value="<?php echo htmlspecialchars($_POST['room_no'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Block / Building</label>
-                                <input type="text" name="block" placeholder="e.g. Block A">
+                                <input type="text" name="block" placeholder="e.g. Block A" value="<?php echo htmlspecialchars($_POST['block'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Floor</label>
-                                <input type="text" name="floor" placeholder="e.g. 2nd Floor">
+                                <input type="text" name="floor" placeholder="e.g. 2nd Floor" value="<?php echo htmlspecialchars($_POST['floor'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Parking Slot</label>
-                                <input type="text" name="parking" placeholder="e.g. A-15">
+                                <input type="text" name="parking" placeholder="e.g. A-15" value="<?php echo htmlspecialchars($_POST['parking'] ?? ''); ?>">
                             </div>
                             <div class="form-group">
                                 <label>Phone Number</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-phone' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="text" name="phone" placeholder="91XXXXXXXX" style="padding-left: 45px;">
+                                    <input type="text" name="phone" placeholder="91XXXXXXXX" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Email Address</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-envelope' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="email" name="email" placeholder="renter@example.com" style="padding-left: 45px;">
+                                    <input type="email" name="email" placeholder="renter@example.com" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                                 </div>
                             </div>
                         </div>
@@ -294,7 +323,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Joining Date</label>
                                 <div style="position: relative;">
                                     <i class='bx bx-calendar' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                    <input type="date" name="joining_date" style="padding-left: 45px;" value="<?php echo date('Y-m-d'); ?>">
+                                    <input type="date" name="joining_date" style="padding-left: 45px;" value="<?php echo htmlspecialchars($_POST['joining_date'] ?? date('Y-m-d')); ?>">
                                 </div>
                             </div>
                         </div>
@@ -306,7 +335,7 @@ $admin_user = s($_SESSION['admin']);
                             <label>Starting Meter Reading (Previous Month Units)</label>
                             <div style="position: relative;">
                                 <i class='bx bx-bolt-circle' style="position: absolute; left: 16px; top: 14px; color: var(--text-gray);"></i>
-                                <input type="number" id="baseReadingInput" name="base_reading" value="0" style="padding-left: 45px; transition: background-color 0.3s ease;">
+                                <input type="number" id="baseReadingInput" name="base_reading" value="<?php echo htmlspecialchars($_POST['base_reading'] ?? '0'); ?>" style="padding-left: 45px; transition: background-color 0.3s ease;">
                             </div>
                             <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">This will be used as the "Last Reading" for the first bill.</p>
                         </div>
@@ -317,25 +346,18 @@ $admin_user = s($_SESSION['admin']);
                         <div class="form-group">
                             <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
                                 <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: #1E293B;" title="Total cash collected at joining">Total Initial Payment (₹)</label>
+                                    <label class="form-label" style="font-weight: 600; color: var(--text-dark);" title="Total cash collected at joining">Total Initial Payment (₹)</label>
                                 <div style="position: relative; height: 48px;">
                                     <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
                                     <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
-                                </div>
-                            </div>
-                                <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: #1E293B;">Security Deposit (₹)</label>
-                                <div style="position: relative; height: 48px;">
-                                    <i class='bx bx-lock-alt' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
-                                    <input type="number" step="0.01" name="security_deposit" id="securityDepositInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
                                 </div>
                             </div>
                                 <div style="display: flex; align-items: flex-end;">
                                     <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
                                 </div>
                             </div>
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the security/advance deposit received from the renter.</p>
-                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: white; padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the total payment received during onboarding. Security Deposit will be automatically set equal to 1 month's rent.</p>
+                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: var(--white); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
                                 <img id="advanceQRImg" src="" alt="Advance QR" style="width: 150px; height: 150px; display: inline-block;">
                                 <p style="font-size: 11px; font-weight: 600; color: #10B981; margin-top: 8px;">Scan to pay Advance via UPI</p>
                             </div>
@@ -345,7 +367,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Rent Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="<?php echo htmlspecialchars($_POST['fixed_rent'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
@@ -353,7 +375,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Maintenance Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_maintenance" value="0" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo htmlspecialchars($_POST['fixed_maintenance'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly maintenance for this renter.</p>
                             </div>
@@ -361,8 +383,10 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
                     <div style="margin-top: 20px;">
-                        <button type="submit" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px;">
-                            <i class='bx bx-user-plus'></i> Confirm and Create Account
+                        <button type="submit" id="submitBtn" class="btn-primary submit-btn" style="width: 100%; justify-content: center; padding: 18px; font-size: 16px; border-radius: 16px; transition: all 0.3s ease;">
+                            <span class="btn-content" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class='bx bx-user-plus'></i> Confirm and Create Account
+                            </span>
                         </button>
                         <p style="text-align: center; color: var(--text-gray); font-size: 13px; margin-top: 20px;">
                             <i class='bx bx-shield-quarter'></i> New accounts are activated and ready to use immediately.
@@ -468,6 +492,17 @@ document.querySelectorAll('input[type="number"]').forEach(input => {
             this.value = '0';
         }
     });
+});
+
+document.getElementById('addRenterForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    if (btn) {
+        btn.querySelector('.btn-content').innerHTML = `<i class='bx bx-loader-alt bx-spin' style='font-size: 20px;'></i> <span>Creating Secure Profile...</span>`;
+        btn.style.opacity = '0.9';
+        btn.style.cursor = 'wait';
+        btn.style.background = 'linear-gradient(135deg, #4F46E5, #7C3AED)';
+        setTimeout(() => { btn.style.pointerEvents = 'none'; }, 10);
+    }
 });
 </script>
 

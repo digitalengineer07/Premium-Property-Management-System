@@ -1,0 +1,47 @@
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `bill_type` varchar(50) NOT NULL,
+  `bill_id` int(11) DEFAULT NULL,
+  `month` varchar(50) DEFAULT NULL,
+  `total_amount` int(10) NOT NULL,
+  `payment_mode` enum('Online','Offline') DEFAULT 'Online',
+  `paid_amount` decimal(10,2) DEFAULT NULL,
+  `adjustment_amount` decimal(10,2) DEFAULT 0.00,
+  `adjustment_type` enum('extra','remaining') DEFAULT NULL,
+  `payment_date` date NOT NULL,
+  `payment_time` time DEFAULT NULL,
+  `transaction_id` varchar(100) DEFAULT NULL,
+  `sys_tx_id` varchar(50) DEFAULT NULL,
+  `admin_name` varchar(100) DEFAULT NULL,
+  `verification_hash` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+
+CREATE TABLE `payment_notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `bill_type` varchar(50) NOT NULL,
+  `bill_id` int(11) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `transaction_id` varchar(50) NOT NULL,
+  `payment_method` varchar(50) DEFAULT 'UPI',
+  `status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',
+  `admin_note` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_dismissed` tinyint(1) DEFAULT 0,
+  `verified_by` varchar(100) DEFAULT NULL,
+  `verified_at` datetime DEFAULT NULL,
+  `month` varchar(50) DEFAULT NULL,
+  `sys_tx_id` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `payment_notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+
+<br />
+<b>Fatal error</b>:  Uncaught mysqli_sql_exception: Table 'renter_system.bills' doesn't exist in C:\xampp\htdocs\renter-system\db_check.php:11
+Stack trace:
+#0 C:\xampp\htdocs\renter-system\db_check.php(11): mysqli_query(Object(mysqli), 'SHOW CREATE TAB...')
+#1 {main}
+  thrown in <b>C:\xampp\htdocs\renter-system\db_check.php</b> on line <b>11</b><br />

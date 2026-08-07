@@ -46,12 +46,12 @@ $unified_tx_sql = "
     FROM (
         SELECT 
             id, user_id, bill_type as type, bill_id, paid_amount as amount, adjustment_amount, payment_mode as mode, 
-            payment_date, payment_time, 'Success' as status, 'admin' as source
+            payment_date, payment_time, 'Success' as status, 'admin' as source, month
         FROM payments
         UNION ALL
         SELECT 
             id, user_id, bill_type as type, bill_id, amount, 0 as adjustment_amount, payment_method as mode, 
-            DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source
+            DATE(created_at) as payment_date, TIME(created_at) as payment_time, status, 'renter' as source, '' as month
         FROM payment_notifications
     ) as combined_tx
     JOIN users u ON combined_tx.user_id = u.id
@@ -125,12 +125,21 @@ $total_pages = ceil($total_rows / $limit);
     <?php include 'header.php'; ?>
 
     <div class="welcome animate-up">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <div>
-                <h1><i class='bx bx-history' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Transaction Log</h1>
-                <p>Complete history of all recorded payments and verifications</p>
+                <h1><i class='bx bx-history' style="color: var(--primary-purple); font-size: 32px; vertical-align: middle;"></i> Payments & Ledger</h1>
+                <p>Complete history of payments and monthly billing status</p>
             </div>
             <a href="dashboard.php" class="btn-outline"><i class='bx bx-arrow-back'></i> Back to Dashboard</a>
+        </div>
+        
+        <div class="view-toggle" style="background: var(--bg-main); padding: 6px; border-radius: 12px; display: inline-flex; gap: 4px; border: 1px solid var(--border); margin-bottom: 24px;">
+            <a href="transactions-log.php" class="toggle-btn active" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; background: var(--primary-purple); color: white; box-shadow: var(--card-shadow);">
+                <i class='bx bx-list-ul'></i> Transaction History
+            </a>
+            <a href="master-ledger.php" class="toggle-btn" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; color: var(--text-gray); transition: 0.2s;">
+                <i class='bx bx-book-open'></i> Monthly Ledger
+            </a>
         </div>
     </div>
 
@@ -192,7 +201,7 @@ $total_pages = ceil($total_rows / $limit);
                     <?php else: while ($tx = mysqli_fetch_assoc($transactions)): ?>
                     <tr>
                         <td data-label="Resident">
-                            <div style="font-weight: 600; color: var(--primary-purple);"><?php echo s($tx['renter_name']); ?></div>
+                            <div style="font-weight: 600; color: var(--primary-purple); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;" title="<?php echo s($tx['renter_name']); ?>"><?php echo s($tx['renter_name']); ?></div>
                             <div style="font-size: 11px; color: var(--text-gray);">Room <?php echo s($tx['room_no']); ?></div>
                         </td>
                         <td data-label="Ref / ID">
@@ -204,14 +213,18 @@ $total_pages = ceil($total_rows / $limit);
                             </div>
                         </td>
                         <td data-label="Amount">
-                            <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
-                            <?php if ($tx['adjustment_amount'] < 0): ?>
-                            <div style="font-size: 10px; color: var(--primary-purple); font-weight: 600; margin-top: 4px;">(+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet)</div>
-                            <?php endif; ?>
+                              <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount']); ?></div>
                         </td>
                         <td data-label="Type & Mode" style="font-size: 12px;">
-                            <span style="text-transform: capitalize; font-weight: 600;"><?php echo $tx['type']; ?></span>
-                            <div style="color: var(--text-gray); font-size: 11px;"><?php echo $tx['mode'] ?: 'Unknown'; ?></div>
+                            <span style="font-weight: 600;">
+                                <?php 
+                                    if ($tx['type'] == 'elec_rent') echo 'Total Bill';
+                                    elseif ($tx['type'] == 'electricity') echo 'Electricity Bill';
+                                    elseif ($tx['type'] == 'rent') echo 'Rent Bill';
+                                    else echo ucfirst($tx['type']); 
+                                ?>
+                            </span>
+                            <div style="color: var(--text-gray); font-size: 11px;"><?php echo $tx['mode'] ?: 'Offline / Cash'; ?></div>
                         </td>
                         <td data-label="Date & Time">
                             <div style="font-weight: 500;"><?php echo date('M d, Y', strtotime($tx['payment_date'])); ?></div>
@@ -228,10 +241,10 @@ $total_pages = ceil($total_rows / $limit);
                         </td>
                         <td data-label="Action">
                             <?php if($tx['status'] == 'Approved' || $tx['status'] == 'Success'): ?>
-                                <?php if($tx['type'] == 'rent'): ?>
-                                    <a href="slip.php?rent_id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
+                                <?php if(($tx['type'] == 'rent' || $tx['type'] == 'elec_rent') && !empty($tx['month'])): ?>
+                                    <a href="../renter/receipt.php?uid=<?php echo $tx['user_id']; ?>&month=<?php echo urlencode($tx['month']); ?>&bill_id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
                                 <?php elseif($tx['type'] == 'electricity'): ?>
-                                    <a href="generate-bill.php?id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
+                                    <a href="slip.php?elec_id=<?php echo $tx['bill_id']; ?>" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-receipt'></i> Receipt</a>
                                 <?php endif; ?>
                             <?php elseif($tx['status'] == 'Pending' && $tx['source'] == 'renter'): ?>
                                 <a href="payment-verifications.php" class="btn-primary" style="padding: 6px 12px; font-size: 11px;"><i class='bx bx-check-shield'></i> Verify</a>

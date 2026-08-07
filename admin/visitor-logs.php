@@ -88,7 +88,7 @@ $admin_user = s($_SESSION['admin']);
             font-size: 24px;
             z-index: 1;
             flex-shrink: 0;
-            background: #ffffff;
+            background: var(--white);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
             border: 2px solid #ffffff;
             transition: transform 0.3s ease;
@@ -113,8 +113,8 @@ $admin_user = s($_SESSION['admin']);
         /* The Content Card (Horizontal Layout) */
         .pt-card {
             flex: 1;
-            background: #ffffff;
-            border: 1px solid #E2E8F0;
+            background: var(--white);
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 20px 24px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -131,7 +131,7 @@ $admin_user = s($_SESSION['admin']);
         .pt-card:hover {
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
             transform: translateY(-2px);
-            border-color: #CBD5E1;
+            border-color: var(--border);
         }
 
         .pt-left {
@@ -150,7 +150,7 @@ $admin_user = s($_SESSION['admin']);
         .log-user {
             font-size: 16px;
             font-weight: 800;
-            color: #0F172A;
+            color: var(--text-dark);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -166,7 +166,7 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .log-role.admin {
-            background: #EEF2FF;
+            background: var(--bg-main);
             color: #4F46E5;
         }
 
@@ -181,7 +181,7 @@ $admin_user = s($_SESSION['admin']);
             gap: 12px;
             font-size: 13px;
             font-weight: 600;
-            color: #64748B;
+            color: var(--text-gray);
         }
 
         .log-meta .bx {
@@ -193,7 +193,7 @@ $admin_user = s($_SESSION['admin']);
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #F8FAFC;
+            background: var(--bg-main);
             padding: 6px 12px;
             border-radius: 8px;
             border: 1px solid #F1F5F9;
@@ -235,8 +235,8 @@ $admin_user = s($_SESSION['admin']);
             gap: 6px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
-            color: #475569;
-            background: #F1F5F9;
+            color: var(--text-gray);
+            background: var(--bg-main);
             padding: 6px 12px;
             border-radius: 8px;
         }
@@ -299,8 +299,8 @@ $admin_user = s($_SESSION['admin']);
         <?php include 'header.php'; ?>
 
         <div class="welcome animate-up" style="margin-bottom: 40px; text-align: center;">
-            <h1 style="font-size: 36px; font-weight: 900; color: #0F172A; margin-bottom: 8px;">Visitor Logs</h1>
-            <p style="color: #64748B; font-size: 16px;">Tracking the last 200 login events for transparency</p>
+            <h1 style="font-size: 36px; font-weight: 900; color: var(--text-dark); margin-bottom: 8px;">Visitor Logs</h1>
+            <p style="color: var(--text-gray); font-size: 16px;">Tracking the last 200 login events for transparency</p>
         </div>
 
         <div class="premium-timeline animate-up" id="logTable">
@@ -332,13 +332,13 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                             <div class="log-meta">
                                 <span class="log-time">
-                                    <i class='bx bx-log-in-circle' style="color: #64748B;"></i>
+                                    <i class='bx bx-log-in-circle' style="color: var(--text-gray);"></i>
                                     <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
                                 </span>
-                                <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
+                                <i class='bx bx-right-arrow-alt' style="color: var(--text-gray);"></i>
                                 <?php if (!empty($row['logout_time'])): ?>
                                     <span class="log-time">
-                                        <i class='bx bx-log-out-circle' style="color: #64748B;"></i>
+                                        <i class='bx bx-log-out-circle' style="color: var(--text-gray);"></i>
                                         <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
                                     </span>
                                 <?php else: ?>
@@ -367,7 +367,7 @@ $admin_user = s($_SESSION['admin']);
             style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 40px; margin-top: 40px; position: relative; z-index: 10;">
             <?php if ($page > 1): ?>
                 <a href="?page=<?php echo $page - 1; ?>#pagination"
-                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;"
+                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;"
                     onmouseover="this.style.borderColor='var(--text-gray)'"
                     onmouseout="this.style.borderColor='var(--border)'">
                     <i class='bx bx-chevron-left' style="font-size: 24px;"></i>
@@ -381,7 +381,7 @@ $admin_user = s($_SESSION['admin']);
 
             <?php if ($page < $total_pages): ?>
                 <a href="?page=<?php echo $page + 1; ?>"
-                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: #fff; transition: 0.2s;"
+                    style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 14px; border: 1px solid var(--border); color: var(--text-gray); text-decoration: none; background: var(--white); transition: 0.2s;"
                     onmouseover="this.style.borderColor='var(--text-gray)'"
                     onmouseout="this.style.borderColor='var(--border)'">
                     <i class='bx bx-chevron-right' style="font-size: 24px;"></i>

@@ -396,10 +396,9 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         }
         
         .kpi-card {
-            background: rgba(255, 255, 255, 0.7) !important;
-            backdrop-filter: blur(20px) !important;
-            border: 1px solid rgba(255,255,255,0.5) !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important;
+            background: var(--white) !important;
+            border: 1px solid var(--border) !important;
+            box-shadow: var(--card-shadow) !important;
             border-radius: 20px !important;
             padding: 24px !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -408,8 +407,8 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         }
         .kpi-card:hover {
             transform: translateY(-5px) !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
-            border-color: rgba(98, 75, 255, 0.2) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+            border-color: rgba(98, 75, 255, 0.4) !important;
         }
         .kpi-card::before {
             content: '';
@@ -426,15 +425,13 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         .kpi-value {
             font-size: 28px !important;
             font-weight: 800 !important;
-            background: linear-gradient(90deg, #0F172A, #334155);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--text-dark) !important;
             margin: 12px 0 4px 0 !important;
         }
         .kpi-label {
             font-size: 13px !important;
             font-weight: 600 !important;
-            color: #64748B !important;
+            color: var(--text-gray) !important;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -449,20 +446,20 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         }
         
         .panel {
-            background: white !important;
+            background: var(--white) !important;
             border-radius: 24px !important;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02), 0 1px 3px rgba(0,0,0,0.01) !important;
-            border: 1px solid rgba(226, 232, 240, 0.6) !important;
+            box-shadow: var(--card-shadow) !important;
+            border: 1px solid var(--border) !important;
             padding: 28px !important;
             transition: all 0.3s ease !important;
         }
         .panel:hover {
-            box-shadow: 0 20px 40px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02) !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08) !important;
         }
         .panel-header h2 {
             font-size: 18px !important;
             font-weight: 800 !important;
-            color: #1E293B !important;
+            color: var(--text-dark) !important;
         }
         
         /* Table enhancements */
@@ -472,7 +469,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         }
         th {
             background: transparent !important;
-            color: #64748B !important;
+            color: var(--text-gray) !important;
             font-size: 12px !important;
             font-weight: 700 !important;
             text-transform: uppercase !important;
@@ -481,15 +478,17 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
             padding: 0 16px 8px 16px !important;
         }
         td {
-            background: #F8FAFC !important;
-            border: none !important;
+            background: var(--bg-main) !important;
+            border: 1px solid var(--border) !important;
+            border-width: 1px 0 !important;
             padding: 16px !important;
             transition: background 0.2s ease !important;
+            color: var(--text-dark) !important;
         }
-        td:first-child { border-radius: 12px 0 0 12px !important; }
-        td:last-child { border-radius: 0 12px 12px 0 !important; }
+        td:first-child { border-radius: 12px 0 0 12px !important; border-left-width: 1px !important; }
+        td:last-child { border-radius: 0 12px 12px 0 !important; border-right-width: 1px !important; }
         tr:hover td {
-            background: #F1F5F9 !important;
+            background: rgba(98, 75, 255, 0.05) !important;
         }
         
         /* Status Badges Premium */
@@ -1033,14 +1032,14 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
 
 <!-- Payment Mode Modal -->
 <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
+    <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: var(--white); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px;">
             <div style="width: 48px; height: 48px; background: #ECFDF5; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                 <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
             </div>
             <div>
-                <h3 style="font-size: 18px; font-weight: 800; color: #1E293B; margin: 0;">Record Payment</h3>
-                <p id="paymentBillInfo" style="color: #64748B; font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+                <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
             </div>
         </div>
         
@@ -1053,8 +1052,8 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div>
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Payment Mode</label>
-                        <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Payment Mode</label>
+                        <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                             <option value="Online">Online</option>
                             <option value="Cash">Cash</option>
                             <option value="UPI">UPI</option>
@@ -1063,10 +1062,10 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
+                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Amount Paid</label>
                         <div style="position: relative; display: flex; align-items: center;">
                             <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                            <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                            <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; font-weight: 600; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                         </div>
                         <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                     </div>
@@ -1075,27 +1074,27 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 <div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                         <div class="form-group">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Date</label>
-                            <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Date</label>
+                            <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                         </div>
                         <div class="form-group">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Time</label>
-                            <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Time</label>
+                            <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                         </div>
                     </div>
 
                     <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 20px;">
-                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Cash Received By</label>
-                        <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: #F1F5F9;">
+                        <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                             <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
-                            <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
+                            <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 12px; padding-top: 24px; border-top: 1px solid #E2E8F0;">
-                <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: #64748B; border-color: #CBD5E1;">Cancel</button>
+                <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: var(--text-gray); border-color: var(--border);">Cancel</button>
                 <button type="submit" class="btn-primary" style="background: #10B981; padding: 12px 28px; border-radius: 10px; font-weight: 600; border: none;">Confirm Payment</button>
             </div>
         </form>

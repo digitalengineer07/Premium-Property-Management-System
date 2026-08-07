@@ -27,7 +27,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         
         if ($notif && $notif['status'] == 'Pending') {
             if ($action == 'approve') {
-                $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
+                $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
+                $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
+                
+                // Strict Pre-Check: Prevent double-processing if UTR already exists in payments
+                if (!empty($p_tx) && $p_pmode !== 'Cash') {
+                    $chk_dup = mysqli_query($conn, "SELECT id FROM payments WHERE transaction_id = '$p_tx'");
+                    if (mysqli_num_rows($chk_dup) > 0) {
+                        $error = "Strict Validation Failed: The Transaction ID / UTR ($p_tx) has already been processed and recorded in the system. Please reject this duplicate notification.";
+                    }
+                }
+                
+                if (empty($error)) {
+                    $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Approved', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 
                 if ($upd_status && mysqli_affected_rows($conn) > 0) {
                     require_once "allocate_payment.php";
@@ -91,9 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                                 if ($p_btype == 'rent') {
                                     $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
                                     if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['rent_amount']; }
-                                } elseif ($p_btype == 'electricity') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, total_amount FROM electricity WHERE id=$p_bid"));
-                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['total_amount']; }
+                                } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
+                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, amount, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE id=$p_bid"));
+                                    if ($mr) {
+                                        $p_month = $mr['month'];
+                                        $bill_amount = ($p_btype == 'electricity') ? (float)$mr['amount'] : (float)$mr['rent_part'];
+                                    }
                                 }
                                 
                                 $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$p_btype' AND bill_id=$p_bid");
@@ -126,7 +141,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                         }
                     }
 
-                    $success = "Payment #{$notif['transaction_id']} approved successfully.";
+                    $safe_tx = htmlspecialchars($notif['transaction_id']);
+                    $success = "Payment #{$safe_tx} approved successfully.";
                     
                     // Send email
                     if (!empty($notif['user_email'])) {
@@ -142,11 +158,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                 } else {
                     $error = "Failed to approve payment: " . mysqli_error($conn);
                 }
+                } // End of if (empty($error))
                 
             } elseif ($action == 'reject') {
                 $upd_status = mysqli_query($conn, "UPDATE payment_notifications SET status='Rejected', admin_note='$admin_note', verified_by='$admin_user', verified_at=NOW() WHERE id=$id AND status='Pending'");
                 if ($upd_status && mysqli_affected_rows($conn) > 0) {
-                    $success = "Payment #{$notif['transaction_id']} rejected.";
+                    $safe_tx = htmlspecialchars($notif['transaction_id']);
+                    $success = "Payment #{$safe_tx} rejected.";
                     
                     if (!empty($notif['user_email'])) {
                         $sub = "Payment Rejected - " . HOUSE_NAME;
@@ -269,13 +287,13 @@ if ($res) {
         .pv-header-text h1 {
             font-size: 28px;
             font-weight: 800;
-            color: #0F172A;
+            color: var(--text-dark);
             margin: 0 0 6px 0;
             line-height: 1.2;
         }
         .pv-header-text p {
             font-size: 15px;
-            color: #64748B;
+            color: var(--text-gray);
             margin: 0;
         }
         .pv-header-illustration {
@@ -294,7 +312,7 @@ if ($res) {
             margin-bottom: 24px;
         }
         .pv-kpi-card {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             padding: 20px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -314,17 +332,17 @@ if ($res) {
             font-size: 24px;
             flex-shrink: 0;
         }
-        .pv-kpi-blue { background: #EEF2FF; color: #6366F1; }
+        .pv-kpi-blue { background: var(--bg-main); color: #6366F1; }
         .pv-kpi-yellow { background: #FEF9C3; color: #EAB308; }
         .pv-kpi-green { background: #DCFCE7; color: #10B981; }
         .pv-kpi-red { background: #FEE2E2; color: #EF4444; }
         .pv-kpi-details { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
-        .pv-kpi-label { font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .pv-kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1; }
+        .pv-kpi-label { font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pv-kpi-value { font-size: 26px; font-weight: 800; color: var(--text-dark); margin: 0; line-height: 1; }
         .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
         .pv-filter-panel {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -346,16 +364,16 @@ if ($res) {
             display: block;
             font-size: 12px;
             font-weight: 600;
-            color: #64748B;
+            color: var(--text-gray);
             margin-bottom: 8px;
         }
         .pv-filter-group input, .pv-filter-group select {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--border);
             border-radius: 10px;
-            background: #ffffff;
-            color: #0F172A;
+            background: var(--white);
+            color: var(--text-dark);
             font-size: 13px;
             outline: none;
             transition: all 0.2s;
@@ -391,8 +409,8 @@ if ($res) {
         
         .pv-btn-reset {
             background: transparent;
-            color: #64748B;
-            border: 1px solid #E2E8F0;
+            color: var(--text-gray);
+            border: 1px solid var(--border);
             padding: 14px 24px;
             border-radius: 10px;
             font-weight: 600;
@@ -406,10 +424,10 @@ if ($res) {
             transition: 0.2s;
             text-decoration: none;
         }
-        .pv-btn-reset:hover { background: #F8FAFC; color: #0F172A; }
+        .pv-btn-reset:hover { background: var(--bg-main); color: var(--text-dark); }
 
         .pv-table-panel {
-            background: #ffffff;
+            background: var(--white);
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
             overflow: hidden;
@@ -425,7 +443,7 @@ if ($res) {
         .pv-table-title {
             font-size: 16px;
             font-weight: 700;
-            color: #0F172A;
+            color: var(--text-dark);
             margin: 0;
         }
         .pv-btn-export {
@@ -446,7 +464,7 @@ if ($res) {
         
         .pv-table { width: 100%; border-collapse: collapse; }
         .pv-table th {
-            background: #ffffff;
+            background: var(--white);
             padding: 12px 16px;
             text-align: left;
             font-size: 10px;
@@ -460,10 +478,10 @@ if ($res) {
             padding: 14px 16px;
             border-bottom: 1px solid #F1F5F9;
             vertical-align: middle;
-            background: #ffffff;
+            background: var(--white);
         }
         .pv-table tr:last-child td { border-bottom: none; }
-        .pv-table tr:hover td { background: #F8FAFC; }
+        .pv-table tr:hover td { background: var(--bg-main); }
         
         .pv-user-cell { display: flex; align-items: center; gap: 10px; }
         .pv-avatar-circle {
@@ -476,16 +494,16 @@ if ($res) {
         .pv-avatar-rs { background: #D1FAE5; color: #047857; }
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
-        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
-        .pv-bill-info-inv { font-size: 11px; color: #64748B; white-space: nowrap; }
+        .pv-bill-info-type { font-size: 12px; font-weight: 600; color: var(--text-dark); margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
+        .pv-bill-info-inv { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
         
-        .pv-utr-text { font-size: 12px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .pv-utr-text { font-size: 12px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
         .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 14px; }
         
-        .pv-date-text { font-size: 12px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 2px; white-space: nowrap; }
-        .pv-time-text { font-size: 11px; color: #64748B; white-space: nowrap; }
+        .pv-date-text { font-size: 12px; font-weight: 600; color: var(--text-dark); display: block; margin-bottom: 2px; white-space: nowrap; }
+        .pv-time-text { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-status-pill {
             display: inline-flex; align-items: center; gap: 3px;
@@ -497,7 +515,7 @@ if ($res) {
         .pv-status-approved { background: #DCFCE7; color: #059669; }
         .pv-status-rejected { background: #FEE2E2; color: #DC2626; }
         
-        .pv-mode-text { font-size: 11px; font-weight: 600; color: #0F172A; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .pv-mode-text { font-size: 11px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 4px; white-space: nowrap; }
         
         .pv-action-cell { display: flex; align-items: center; gap: 4px; }
         .pv-action-cell form { display: flex; margin: 0; }
@@ -509,15 +527,15 @@ if ($res) {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 24px; border-top: 1px solid #E2E8F0;
         }
-        .pv-page-info { font-size: 12px; font-weight: 500; color: #64748B; }
+        .pv-page-info { font-size: 12px; font-weight: 500; color: var(--text-gray); }
         .pv-pagination-controls { display: flex; gap: 6px; align-items: center; }
         .pv-page-btn { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; border: 1px solid #E2E8F0; background: #ffffff;
-            color: #64748B; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+            border-radius: 8px; border: 1px solid var(--border); background: var(--white);
+            color: var(--text-gray); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
         }
         .pv-page-btn.active { background: #6C4DFF; color: white; border-color: #6C4DFF; }
-        .pv-page-btn:hover:not(.active) { background: #F8FAFC; }
+        .pv-page-btn:hover:not(.active) { background: var(--bg-main); }
 
         @media(max-width: 1024px) {
             .pv-filter-grid, .pv-filter-grid-row2 { grid-template-columns: 1fr 1fr; }
@@ -529,8 +547,21 @@ if ($res) {
             .pv-kpi-grid { grid-template-columns: 1fr; }
             .pv-header-illustration { display: none; }
             .pv-table th { display: none; }
-            .pv-table td { display: block; width: 100%; border: none; padding: 10px; }
-            .pv-table tr { display: block; border-bottom: 1px solid #E2E8F0; padding: 10px 0; }
+            .pv-table td { display: block; width: 100%; border: none; padding: 10px; text-align: left !important; }
+            .pv-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-gray); font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+            .pv-table tr { 
+                display: block; 
+                border: 1px solid var(--border); 
+                border-radius: 12px; 
+                padding: 16px; 
+                margin-bottom: 16px; 
+                box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+                position: relative;
+            }
+            /* Action Buttons aligned properly on mobile */
+            .pv-action-cell { flex-wrap: wrap; margin-top: 8px; }
+            .dark-theme .pv-table td::before { color: var(--text-gray); }
+            .dark-theme .pv-table tr { border-color: var(--border); background: rgba(255, 255, 255, 0.02); box-shadow: none; }
         }
         /* Dark Mode Overrides */
         .dark-theme .pv-header-text h1, .dark-theme .pv-kpi-value, .dark-theme .pv-table th, .dark-theme .pv-table td, .dark-theme .pv-table-title, .dark-theme .pv-bill-info-type, .dark-theme .pv-utr-text, .dark-theme .pv-date-text, .dark-theme .pv-mode-text, .dark-theme .pv-user-name { color: var(--text-dark) !important; }
@@ -774,10 +805,10 @@ include "sidebar.php";
                                     $name_parts = explode(' ', $raw_name);
                                     $display_name = count($name_parts) > 2 ? $name_parts[0] . ' ' . $name_parts[1] . '...' : $raw_name;
                                     ?>
-                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
+                                    <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: var(--text-dark); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
                                         <?php echo s($display_name); ?>
                                     </div>
-                                    <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
+                                    <div style="font-size: 11px; color: var(--text-gray);">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
                         </td>
@@ -835,7 +866,7 @@ include "sidebar.php";
                                 <?php endif; ?>
                             </div>
                             <?php if(!empty($n['sys_tx_id'])): ?>
-                                <div style="font-size:11px; color:#64748B; display:flex; align-items:center; gap:4px;">
+                                <div style="font-size:11px; color: var(--text-gray); display:flex; align-items:center; gap:4px;">
                                     <i class='bx bx-barcode-reader'></i> <?php echo s($n['sys_tx_id']); ?>
                                 </div>
                             <?php endif; ?>
@@ -845,7 +876,7 @@ include "sidebar.php";
                             <span class="pv-time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
                         </td>
                         <td>
-                            <span class="pv-date-text" style="color: #64748B; font-weight: 500;">
+                            <span class="pv-date-text" style="color: var(--text-gray); font-weight: 500;">
                                 <?php echo !empty($n['month']) ? s($n['month']) : '-'; ?>
                             </span>
                         </td>
@@ -861,11 +892,11 @@ include "sidebar.php";
                         <td>
                             <div class="pv-action-cell">
                                 <?php if($n['status'] == 'Pending'): ?>
-                                    <form action="" method="POST" style="margin:0;" onsubmit="if(confirm('Confirm this payment matches your bank statement?')) { var btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.style.opacity = '0.7'; btn.innerText = 'Approving...'; return true; } return false;">
+                                    <form action="" method="POST" style="margin:0;" id="approveForm_<?php echo $n['id']; ?>">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                                         <input type="hidden" name="id" value="<?php echo $n['id']; ?>">
                                         <input type="hidden" name="action" value="approve">
-                                        <button type="submit" class="pv-btn-approve-sm">Approve</button>
+                                        <button type="button" class="pv-btn-approve-sm" onclick="if(confirm('Confirm this payment matches your bank statement?')) { this.disabled=true; this.style.opacity='0.7'; this.innerText='Approving...'; document.getElementById('approveForm_<?php echo $n['id']; ?>').submit(); }">Approve</button>
                                     </form>
                                     <form action="" method="POST" style="margin:0;" id="rejectForm_<?php echo $n['id']; ?>">
                                         <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
@@ -919,12 +950,12 @@ include "sidebar.php";
 <div id="rejectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.85); z-index: 9999; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
     <div class="pv-filter-panel animate-up" style="max-width: 420px; width: 100%; padding: 24px; position: relative;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="font-size: 18px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
-            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: #64748B;"></i>
+            <h2 style="font-size: 18px; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
+            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
         </div>
-        <p style="font-size: 13px; color: #64748B; margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
+        <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
         
-        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: #ffffff; color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); color: var(--text-dark); outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
         
         <div style="display: flex; gap: 12px;">
             <button type="button" class="pv-btn-reset" onclick="closeRejectModal()">Cancel</button>

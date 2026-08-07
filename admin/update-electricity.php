@@ -270,7 +270,7 @@ if ($elec_id > 0) {
             align-items: center;
             gap: 6px;
             padding: 8px 16px;
-            background: #F8FAFC;
+            background: var(--bg-main);
             border: 1px solid var(--border);
             border-radius: 20px;
             font-size: 11px;
@@ -290,7 +290,7 @@ if ($elec_id > 0) {
             margin-bottom: 30px;
         }
         .premium-block {
-            background: #F8FAFC;
+            background: var(--bg-main);
             border: 1px solid rgba(0,0,0,0.04);
             border-radius: 16px;
             padding: 24px;
@@ -342,7 +342,7 @@ if ($elec_id > 0) {
 
         <div class="aesthetic-card">
             <div class="welcome" style="display: flex; align-items: center; gap: 20px;">
-                <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: -4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; background: #ffffff; text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';"><i class='bx bx-arrow-back' style="font-size: 24px; color: #64748B;"></i></a>
+                <a href="electricity-list.php" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: -4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); background: var(--white); text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';"><i class='bx bx-arrow-back' style="font-size: 24px; color: var(--text-gray);"></i></a>
                 <div style="background: linear-gradient(135deg, rgba(98,75,255,0.1), rgba(217,70,239,0.1)); padding: 18px; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px rgba(98,75,255,0.2);">
                     <i class='bx bx-edit-alt' style="font-size: 38px; color: var(--primary-purple);"></i>
                 </div>
@@ -380,7 +380,7 @@ if ($elec_id > 0) {
                             <div class="form-group">
                                 <label style="display: flex; justify-content: space-between; align-items: center;">
                                     <span>Bill For Month <span style="color:#EF4444">*</span></span>
-                                    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">Consumption Period</span>
+                                    <span style="background: var(--bg-main); color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;">Consumption Period</span>
                                 </label>
                                 <input name="month" value="<?php echo htmlspecialchars($elec_row['month'] ?? ''); ?>" required placeholder="e.g. February 2026">
                             </div>

@@ -86,6 +86,14 @@ $payment_history = [];
 while ($r = mysqli_fetch_assoc($payment_res)) $payment_history[] = $r;
 mysqli_stmt_close($stmt);
 
+/* Fetch pending notifications count */
+$stmt = mysqli_prepare($conn, "SELECT COUNT(*) as cnt FROM payment_notifications WHERE user_id = ? AND status = 'Pending'");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$res = mysqli_stmt_get_result($stmt);
+$pending_notif_count = mysqli_fetch_assoc($res)['cnt'] ?? 0;
+mysqli_stmt_close($stmt);
+
 $admin_user = s($_SESSION['admin'] ?? '');
 ?>
 <!DOCTYPE html>
@@ -194,7 +202,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <?php if ($user['profile_pic']): ?>
                         <div style="width: 80px; height: 80px; border-radius: 50%; background-image: url('../<?php echo htmlspecialchars($user['profile_pic']); ?>'); background-size: cover; background-position: center; border: 2px solid #F8FAFC;"></div>
                     <?php else: ?>
-                        <div style="width: 80px; height: 80px; border-radius: 50%; background: #F4F7FF; color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--bg-main); color: #624BFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 28px; border: 2px solid #FFFFFF; box-shadow: 0 4px 10px rgba(98, 75, 255, 0.1);"><?php echo $initials ?: '?'; ?></div>
                     <?php endif; ?>
                     <?php if (($user['status'] ?? 'active') == 'active'): ?>
                         <span style="color: #10B981; font-weight: 600; font-size: 12px; background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 20px;"><i class='bx bxs-circle' style="font-size: 8px;"></i> Active</span>
@@ -221,7 +229,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 
                 <div style="position: relative; display: inline-block;">
                     <button onclick="document.getElementById('moreDropdown').style.display = document.getElementById('moreDropdown').style.display === 'flex' ? 'none' : 'flex'" class="btn-outline" style="padding: 8px 12px; border-radius: 8px; background: transparent; white-space: nowrap; font-size: 13.5px; font-weight: 500;"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
-                    <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: #FFFFFF; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 210px; z-index: 100; flex-direction: column; overflow: hidden;">
+                    <div id="moreDropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background: var(--white); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 210px; z-index: 100; flex-direction: column; overflow: hidden;">
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
@@ -292,12 +300,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
               <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
                   
                   <!-- Advance Wallet -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; flex-shrink: 0;"><i class='bx bx-credit-card-front'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Advance Wallet</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500;">Available Credit</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Advance Wallet</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Available Credit</div>
                           </div>
                       </div>
                       <div style="text-align: right;">
@@ -316,12 +324,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
                         $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
                     ?>
-                    <div style="background: white; border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
+                    <div style="background: var(--white); border-radius: 20px; padding: 24px; display: flex; justify-content: space-between; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: all 0.2s ease;">
                         <div style="display: flex; align-items: center; gap: 16px;">
                             <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
-                                <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: #64748B; font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
+                                <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
+                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
@@ -332,12 +340,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         </div>
                     </div>
                   <!-- Fixed Charges -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 28px; flex-shrink: 0;"><i class='bx bx-home'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Fixed Charges</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Fixed Charges</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
                           </div>
                       </div>
                       <div style="text-align: right;">
@@ -346,30 +354,30 @@ $admin_user = s($_SESSION['admin'] ?? '');
                   </div>
   
                   <!-- Total Outstanding -->
-                  <div style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
+                  <div style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; transition: all 0.2s ease;">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(239,68,68,0.1); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 28px; flex-shrink: 0;"><i class='bx bx-file'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Total Outstanding</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Total Outstanding</div>
                               <?php if(($user['pending_adjustment'] ?? 0) > 0): ?>
                                   <div style="color: #EF4444; font-size: 13px; font-weight: 600; background: #FEF2F2; padding: 4px 10px; border-radius: 6px; display: inline-block;">Action required</div>
                               <?php else: ?>
-                                  <div style="color: #64748B; font-size: 13px; font-weight: 500;">All pending dues cleared</div>
+                                  <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">All pending dues cleared</div>
                               <?php endif; ?>
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: #475569;">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: var(--text-dark);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
                       </div>
                   </div>
   
                   <!-- Payment History -->
-                  <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="padding: 24px; border: 1px solid #F1F5F9; border-radius: 20px; background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.05)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.03)';" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px)'">
+                  <div onclick="window.location.href='payment-history.php?id=<?php echo $user['id']; ?>'" style="padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--white); box-shadow: 0 10px 30px rgba(0,0,0,0.03); display: flex; justify-content: space-between; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.05)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 10px 30px rgba(0,0,0,0.03)';" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='translateY(-2px)'">
                       <div style="display: flex; gap: 16px;">
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(98,75,255,0.1); display: flex; align-items: center; justify-content: center; color: var(--primary-purple); font-size: 28px; flex-shrink: 0;"><i class='bx bx-history'></i></div>
                           <div>
-                              <div style="font-weight: 800; color: #0F172A; font-size: 17px; margin-bottom: 6px;">Payment History</div>
-                              <div style="color: #64748B; font-size: 13px; font-weight: 500;"><?php echo count($payment_history); ?> transactions</div>
+                              <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Payment History</div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;"><?php echo count($payment_history); ?> transactions</div>
                           </div>
                       </div>
                       <div style="text-align: right;">
@@ -399,39 +407,39 @@ $admin_user = s($_SESSION['admin'] ?? '');
             <h4 style="font-size: 14px; color: var(--text-dark); margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 8px;"><div style="width: 32px; height: 32px; background: rgba(239,68,68,0.1); color: #EF4444; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-plus-medical'></i></div> Emergency Contact</h4>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                 <!-- Contact Name Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-user' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
+                        <i class='bx bx-user' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
                 </div>
                 
                 <!-- Relationship Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-group' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
+                        <i class='bx bx-group' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
                 </div>
 
                 <!-- Phone Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-phone' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
+                        <i class='bx bx-phone' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
                 </div>
 
                 <!-- Address Box -->
-                <div style="padding: 16px; background: #F8FAFC; border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
+                <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-map' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
+                        <i class='bx bx-map' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
                     </div>
-                    <div style="font-size: 15px; color: #0F172A; font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
+                    <div style="font-size: 15px; color: var(--text-dark); font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
                 </div>
             </div>
         </div>
@@ -469,11 +477,12 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['amount'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($e['status'] != 'Paid'): $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
-                                        <button onclick="openPaymentModal('electricity', <?php echo $e['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($e['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
-                                    <?php else: ?>
-                                        <a href="slip.php?elec_id=<?php echo $e['id']; ?>" style="color: var(--text-gray); text-decoration: none; border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;">Slip</a>
-                                    <?php endif; ?>
+                                    <?php $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
+                                      <?php if ($e['status'] === 'Paid' || $remaining <= 0): ?>
+                                          <span style="color: #10B981; font-weight: 700; font-size: 11px;"><i class='bx bx-check-circle'></i> Paid</span>
+                                      <?php else: ?>
+                                          <span style="color: var(--text-gray); font-size: 11px; font-weight: 600;">Due</span>
+                                      <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -515,14 +524,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
                                 <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
-                                    <?php if($r['status'] != 'Paid'): 
+                                    <?php 
                                         $rent_paid_so_far = ($r['source'] == 'electricity') ? max(0, $r['total_paid'] - $r['elec_amount']) : $r['total_paid'];
                                         $remaining = max(0, ($r['rent_amount'] + $r['maintenance']) - $rent_paid_so_far); 
                                     ?>
-                                        <button onclick="openPaymentModal('<?php echo $r['source']; ?>', <?php echo $r['id']; ?>, <?php echo $remaining; ?>, '<?php echo addslashes($r['month']); ?>')" style="background: var(--primary-purple); color: #FFF; border: none; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;">Pay</button>
-                                    <?php else: ?>
-                                        <span style="color: var(--text-gray); padding: 4px 12px; font-size: 11px; font-weight: 600;">-</span>
-                                    <?php endif; ?>
+                                      <?php if ($r['status'] === 'Paid' || $remaining <= 0): ?>
+                                          <span style="color: #10B981; font-weight: 700; font-size: 11px;"><i class='bx bx-check-circle'></i> Paid</span>
+                                      <?php else: ?>
+                                          <span style="color: var(--text-gray); font-size: 11px; font-weight: 600;">Due</span>
+                                      <?php endif; ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -543,7 +553,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
         
         <div style="display: flex; gap: 24px; flex-wrap: wrap;">
             <?php if (!empty($user['aadhaar_file'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(59, 130, 246, 0.1); color: #3B82F6; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-id-card'></i>
@@ -554,14 +564,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=aadhaar&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Aadhaar document?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($user['agreement_document'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-file-blank'></i>
@@ -572,14 +582,14 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download-agreement.php?id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=agreement&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Agreement?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
 
             <?php if (!empty($user['electricity_document'])): ?>
-            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #F8FAFC; border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
+            <div style="flex: 1; min-width: 280px; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s ease;">
                 <div style="display: flex; align-items: center; gap: 16px;">
                     <div style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
                         <i class='bx bx-bolt-circle'></i>
@@ -590,15 +600,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                    <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
-                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: #FFFFFF; border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
+                    <a href="download.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>" target="_blank" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-show'></i></a>
+                    <a href="delete-doc.php?type=electricity&user_id=<?php echo (int)$user['id']; ?>&csrf=<?php echo getCsrfToken(); ?>" onclick="return confirm('Delete this Electricity document?');" style="width: 36px; height: 36px; border-radius: 8px; background: var(--white); border: 1px solid var(--border); color: #EF4444; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s ease;"><i class='bx bx-trash'></i></a>
                 </div>
             </div>
             <?php endif; ?>
 
             <?php if (empty($user['aadhaar_file']) && empty($user['agreement_document']) && empty($user['electricity_document'])): ?>
-            <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: #F8FAFC;">
-                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: #CBD5E1;"></i><br>
+            <div style="width: 100%; padding: 32px 16px; text-align: center; border: 1px dashed var(--border); border-radius: 12px; color: var(--text-gray); font-size: 13px; background: transparent;">
+                <i class='bx bx-folder-open' style="font-size: 32px; margin-bottom: 12px; color: var(--text-gray);"></i><br>
                 No documents uploaded yet
             </div>
             <?php endif; ?>
@@ -620,11 +630,11 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
                 <div style="margin-bottom: 24px;">
                     <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Select Electricity Bill Copy (PDF, PNG, JPG)</label>
-                    <input type="file" name="electricity_file" accept=".pdf,.png,.jpg,.jpeg" required style="width: 100%; padding: 14px; border: 1px dashed var(--border); border-radius: 14px; background: #F8FAFC; font-size: 14px; box-sizing: border-box;">
+                    <input type="file" name="electricity_file" accept=".pdf,.png,.jpg,.jpeg" required style="width: 100%; padding: 14px; border: 1px dashed var(--border); border-radius: 14px; background: var(--bg-main); font-size: 14px; box-sizing: border-box;">
                     <div style="font-size: 12px; color: var(--text-gray); margin-top: 8px; display: flex; align-items: center; gap: 6px;"><i class='bx bx-shield-check' style="color: #10B981; font-size: 16px;"></i> Secure encrypted upload channel (Max 200MB)</div>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px;">
-                    <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="padding: 12px 20px; background: #F1F5F9; color: var(--text-dark); border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+                    <button type="button" onclick="document.getElementById('uploadElecModal').style.display='none'" style="padding: 12px 20px; background: var(--bg-main); color: var(--text-dark); border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
                     <button type="submit" style="padding: 12px 24px; background: linear-gradient(135deg, #10B981, #059669); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);"><i class='bx bx-upload'></i> Upload Document</button>
                 </div>
             </form>
@@ -748,18 +758,24 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     <!-- Payment Mode Modal -->
     <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-        <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: #FFFFFF; box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
+        <div class="panel animate-up" style="max-width: 650px; width: 100%; padding: 32px; background: var(--white); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-radius: 20px;">
             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid #E2E8F0; padding-bottom: 16px;">
                 <div style="width: 48px; height: 48px; background: #ECFDF5; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 18px; font-weight: 800; color: #1E293B; margin: 0;">Record Payment</h3>
-                    <p id="paymentBillInfo" style="color: #64748B; font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                    <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
                 </div>
             </div>
             
-            <form action="mark-paid.php" method="POST">
+            <form action="mark-paid.php" method="POST" id="formMarkPaid">
+                <?php if ($pending_notif_count > 0): ?>
+                <div style="margin-bottom: 20px; padding: 12px; background: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 8px; font-size: 13px; font-weight: 600;">
+                    ⚠️ This user has <?php echo $pending_notif_count; ?> pending payment notifications! Check the <a href="payment-verifications.php" target="_blank" style="color: #991B1B; text-decoration: underline;">verifications page</a> before adding a manual payment to avoid duplication.
+                </div>
+                <?php endif; ?>
+                
                 <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="id" id="paymentBillId">
                 <input type="hidden" name="type" id="paymentBillType">
@@ -768,8 +784,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <div>
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Payment Mode</label>
-                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Payment Mode</label>
+                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                                 <option value="Online">Online</option>
                                 <option value="Cash">Cash</option>
                                 <option value="UPI">UPI</option>
@@ -778,10 +794,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         </div>
                         
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Amount Paid</label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: #F8FAFC; transition: all 0.2s; outline: none;">
+                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; font-weight: 600; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                             </div>
                             <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                         </div>
@@ -790,27 +806,27 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Date</label>
-                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Date</label>
+                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Time</label>
-                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: #F8FAFC; outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Time</label>
+                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                         </div>
 
                         <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Cash Received By</label>
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: #F1F5F9;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
-                                <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
+                                <span style="font-size: 15px; font-weight: 600; color: var(--text-dark);"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 12px; padding-top: 24px; border-top: 1px solid #E2E8F0;">
-                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: #64748B; border-color: #CBD5E1;">Cancel</button>
+                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: var(--text-gray); border-color: var(--border);">Cancel</button>
                     <button type="submit" class="btn-primary" style="background: #10B981; padding: 12px 28px; border-radius: 10px; font-weight: 600; border: none;">Confirm Payment</button>
                 </div>
             </form>
@@ -910,6 +926,18 @@ $admin_user = s($_SESSION['admin'] ?? '');
 
     function closeElectricityModal() {
         document.getElementById('electricityModal').style.display = 'none';
+    }
+
+    // Prevent double submit
+    const formMarkPaid = document.getElementById('formMarkPaid');
+    if (formMarkPaid) {
+        formMarkPaid.addEventListener('submit', function() {
+            const btn = this.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = 'Processing...';
+            }
+        });
     }
 </script>
 

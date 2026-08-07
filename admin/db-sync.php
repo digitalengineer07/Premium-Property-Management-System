@@ -222,6 +222,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sync_results[] = "<span style='color:#F59E0B;'>✔ Generated unique transaction IDs for $backfilled legacy payment records.</span>";
     }
 
+    // 6. Repair Empty Bill Types
+    $repaired_bill_types = 0;
+    $q_empty = mysqli_query($conn, "SELECT id, bill_id, month FROM payments WHERE bill_type='' OR bill_type IS NULL");
+    if ($q_empty) {
+        while($r = mysqli_fetch_assoc($q_empty)) {
+            $p_id = $r['id'];
+            if (stripos($r['month'], 'Advance') !== false) {
+                mysqli_query($conn, "UPDATE payments SET bill_type='advance' WHERE id=$p_id");
+                $repaired_bill_types++;
+            } elseif ($r['bill_id'] > 0) {
+                $b_id = $r['bill_id'];
+                $chk_e = mysqli_query($conn, "SELECT id FROM electricity WHERE id=$b_id");
+                if (mysqli_num_rows($chk_e) > 0) {
+                    mysqli_query($conn, "UPDATE payments SET bill_type='electricity' WHERE id=$p_id");
+                    $repaired_bill_types++;
+                }
+            }
+        }
+    }
+    if ($repaired_bill_types > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Repaired $repaired_bill_types payment records with missing bill types.</span>";
+    }
+
+    // 7. Repair Overpayment Advance Credits (Missing Wallet Credits)
+    $repaired_advances = 0;
+    $q_extra = mysqli_query($conn, "SELECT id, user_id, adjustment_amount, payment_date FROM payments WHERE adjustment_type='extra' AND adjustment_amount > 0");
+    if ($q_extra) {
+        while($r = mysqli_fetch_assoc($q_extra)) {
+            $uid = $r['user_id'];
+            $amt = $r['adjustment_amount'];
+            $pdate = $r['payment_date'];
+            // Check if there is an advance payment on the same day for this amount
+            $chk_adv = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$uid AND bill_type='advance' AND paid_amount=$amt AND payment_date='$pdate'");
+            if (mysqli_num_rows($chk_adv) == 0) {
+                // Missing advance credit! Let's insert it and update the wallet.
+                mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $amt WHERE id=$uid");
+                $sys_tx = 'SYS_REC_' . strtoupper(substr(md5(uniqid()), 0, 8));
+                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, paid_amount, payment_mode, payment_date, sys_tx_id, transaction_id) VALUES ($uid, 'advance', 0, 'Advance', $amt, $amt, 'Extra from Bill', '$pdate', '$sys_tx', 'Auto-Recovered')");
+                $repaired_advances++;
+            }
+        }
+    }
+    if ($repaired_advances > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✔ Recovered $repaired_advances missing advance wallet credits from overpayments.</span>";
+    }
+
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
@@ -240,18 +286,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { font-family: 'Outfit', sans-serif; background: #F8FAFC; color: #1E293B; margin: 0; padding: 40px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg-main); color: var(--text-dark); margin: 0; padding: 40px; }
+        .container { max-width: 800px; margin: 0 auto; background: var(--white); border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
         .badge { background: #FEE2E2; color: #EF4444; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
         .badge.ok { background: #D1FAE5; color: #10B981; }
-        .alert { background: #F1F5F9; padding: 15px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; border-left: 4px solid #624BFF; }
-        .card { border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .card h4 { margin: 0 0 10px 0; color: #334155; }
+        .alert { background: var(--bg-main); padding: 15px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; border-left: 4px solid #624BFF; }
+        .card { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .card h4 { margin: 0 0 10px 0; color: var(--text-dark); }
         .btn { background: #624BFF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-family: 'Outfit'; font-weight: 600; cursor: pointer; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn:hover { background: #4F39F6; }
         .btn:disabled { background: #CBD5E1; cursor: not-allowed; }
-        ul { margin: 0; padding-left: 20px; color: #64748B; font-size: 14px; }
+        ul { margin: 0; padding-left: 20px; color: var(--text-gray); font-size: 14px; }
         li { margin-bottom: 5px; }
         .log-box { background: #1E293B; color: #F8FAFC; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.6; }
     </style>
@@ -283,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="card" style="text-align: center; padding: 40px;">
                     <div style="font-size: 48px; color: #10B981;"><i class='bx bx-check-circle'></i></div>
                     <h3>Database is perfectly synchronized!</h3>
-                    <p style="color: #64748B;">No missing tables, columns, or orphaned data were found.</p>
+                    <p style="color: var(--text-gray);">No missing tables, columns, or orphaned data were found.</p>
                 </div>
             <?php else: ?>
                 <form method="POST">
@@ -326,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <?php endif; ?>
         
         <div style="text-align: center; margin-top: 30px;">
-            <a href="dashboard.php" style="color: #64748B; text-decoration: none; font-size: 14px; font-weight: 500;">&larr; Back to Dashboard</a>
+            <a href="dashboard.php" style="color: var(--text-gray); text-decoration: none; font-size: 14px; font-weight: 500;">&larr; Back to Dashboard</a>
         </div>
     </div>
 </body>

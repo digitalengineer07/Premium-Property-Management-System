@@ -155,8 +155,8 @@
                 while ($row = mysqli_fetch_assoc($q)) {
                     $title = 'Ledger Split';
                     if ($row['bill_type'] == 'rent') $title = 'Rent Split';
-                    if ($row['bill_type'] == 'electricity') $title = 'Electricity Split';
-                    if ($row['bill_type'] == 'elec_rent') $title = 'Bill Component (Rent)';
+                    if ($row['bill_type'] == 'electricity') $title = 'Unified Bill Payment';
+                    if ($row['bill_type'] == 'elec_rent') $title = 'Unified Bill Payment';
                     if ($row['bill_type'] == 'advance') $title = 'Advance Application';
                     
                     $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
@@ -201,7 +201,8 @@
                 
                 $title = 'Online Payment';
                 if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
-                if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
+                if ($row['bill_type'] == 'electricity') $title = 'Unified Bill Payment';
+                if ($row['bill_type'] == 'elec_rent') $title = 'Unified Bill Payment';
                 
                 $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
                 $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
@@ -309,15 +310,14 @@
         // KPI Calculations
         $total_all_amount = 0;
         $valid_payment_count = 0;
-        foreach($all_bills as $b) {
-            if (in_array(strtolower($b['status']), ['paid', 'approved', 'allocated'])) {
-                $total_all_amount += (float)($b['actual_amount'] ?? $b['amount']);
-                // Don't increment count for pure 0-actual internal transfers
-                if ((float)($b['actual_amount'] ?? $b['amount']) > 0.01) {
-                    $valid_payment_count++;
-                }
-            }
+        
+        // Use a true global sum query for accurate Total Payments instead of relying on the TOP 50 UI array
+        $q_sum = mysqli_query($conn, "SELECT SUM(paid_amount) as grand_total, COUNT(DISTINCT CASE WHEN paid_amount > 0 THEN sys_tx_id ELSE NULL END) as total_count FROM payments WHERE user_id = $user_id AND bill_type != 'onboarding_temp'");
+        if ($sum_row = mysqli_fetch_assoc($q_sum)) {
+            $total_all_amount = (float)($sum_row['grand_total'] ?? 0);
+            $valid_payment_count = (int)($sum_row['total_count'] ?? 0);
         }
+        
         $avg_payment = $valid_payment_count > 0 ? ($total_all_amount / $valid_payment_count) : 0;
         ?>
 
@@ -443,7 +443,7 @@
                                 </td>
                                 <td><?php echo htmlspecialchars($bill['period']); ?></td>
                                 <td><?php echo $bill['bill_date']; ?></td>
-                                <td style="font-weight: 800;"><?php echo money($bill['amount']); ?></td>
+                                <td style="font-weight: 800;"><?php echo money($bill['actual_amount'] ?? $bill['amount']); ?></td>
                                 <td><span class="td-status <?php echo strtolower($bill['status']); ?>"><?php echo $bill['status']; ?></span></td>
                                 <td><?php echo $bill['paid_on']; ?></td>
                                 <td>

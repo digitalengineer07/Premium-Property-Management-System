@@ -99,7 +99,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         .invoice-wrapper {
             max-width: 900px;
             margin: 40px auto;
-            background: white;
+            background: var(--white);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.08);
@@ -238,7 +238,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             border-radius: 16px;
             margin-bottom: 24px;
             overflow: hidden;
-            background: white;
+            background: var(--white);
         }
         .section-header {
             padding: 12px 20px;
@@ -521,13 +521,13 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         .btn:active { transform: scale(0.96); box-shadow: none; }
         
         .btn-outline {
-            background: white; border: 1px solid var(--border); color: var(--text-dark);
+            background: var(--white); border: 1px solid var(--border); color: var(--text-dark);
         }
         .btn-outline:hover { background: #f8f9fa; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .btn-outline:active { background: #e9ecef; transform: scale(0.96); box-shadow: none; }
 
         @media print {
-            body { background: white; margin: 0; }
+            body { background: var(--white); margin: 0; }
             @page { margin: 0.5cm; } /* Reduce default browser margins */
             .invoice-wrapper {
                 margin: 0; padding: 0; box-shadow: none; max-width: 100%;
@@ -582,7 +582,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             }
             .brand-icon {
                 font-size: 28px;
-                background: white;
+                background: var(--white);
                 width: 48px;
                 height: 48px;
                 display: flex;
@@ -626,7 +626,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 font-size: 16px;
                 margin-top: 1px;
                 color: var(--primary);
-                background: white;
+                background: var(--white);
                 padding: 6px;
                 border-radius: 8px;
                 border: 1px solid var(--border);

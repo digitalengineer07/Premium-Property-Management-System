@@ -82,6 +82,19 @@ $upiLink = generateUPILink(
   </div>
 </div>
 
+<script>
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', function() {
+      const btn = this.querySelector('button[type="submit"]');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Uploading...';
+      }
+    });
+  }
+</script>
+
 <!-- Universal Mobile Bottom Navigation Bar (Visible only on mobile <= 768px) -->
 <?php include_once __DIR__ . '/views/mobile/mobile_bottom_nav.php'; ?>
 </body>

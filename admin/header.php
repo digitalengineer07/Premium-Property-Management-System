@@ -9,8 +9,8 @@
         top: 100%;
         right: 0;
         margin-top: 12px;
-        background: #ffffff;
-        border: 1px solid #E2E8F0;
+        background: var(--white);
+        border: 1px solid var(--border);
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         border-radius: 12px;
         width: 180px;
@@ -25,18 +25,18 @@
         align-items: center;
         gap: 10px;
         padding: 12px 16px;
-        color: #0F172A;
+        color: var(--text-dark);
         text-decoration: none;
         font-size: 13px;
         font-weight: 600;
         transition: background 0.2s ease;
     }
     .dropdown-menu-custom a:hover {
-        background: #F8FAFC;
+        background: var(--bg-main);
     }
     .dropdown-menu-custom a i {
         font-size: 16px;
-        color: #64748B;
+        color: var(--text-gray);
     }
     .dropdown-menu-custom a.logout-link {
         color: #EF4444;
@@ -46,7 +46,7 @@
     }
     body.dark-theme .dropdown-menu-custom {
         background: #1E293B;
-        border-color: #334155;
+        border-color: var(--text-dark);
     }
     body.dark-theme .dropdown-menu-custom a {
         color: #F8FAFC;
@@ -115,7 +115,7 @@
                     <?php else: ?>
                         <div style="padding: 30px 20px; text-align: center; color: #94A3B8; background: #1E293B;">
                             <i class='bx bx-bell-off' style="font-size: 32px; margin-bottom: 12px; opacity: 0.3;"></i>
-                            <p style="margin: 0; font-size: 13px; font-weight: 500; color: #CBD5E1;">You're all caught up!</p>
+                            <p style="margin: 0; font-size: 13px; font-weight: 500; color: var(--text-gray);">You're all caught up!</p>
                             <p style="margin: 4px 0 0 0; font-size: 11px;">No new notifications</p>
                         </div>
                     <?php endif; ?>

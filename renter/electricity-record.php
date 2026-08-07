@@ -39,12 +39,32 @@ $q_pending = "SELECT SUM(amount) as total FROM electricity WHERE user_id = $user
 $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
-// Fetch all electricity records
-$records_q = mysqli_query($conn, "SELECT * FROM electricity WHERE user_id = $user_id ORDER BY id DESC");
-$electricity_records = [];
-while($row = mysqli_fetch_assoc($records_q)) {
-    $electricity_records[] = $row;
-}
+  // Fetch all electricity records with total paid amounts
+  $records_q = mysqli_query($conn, "SELECT e.*, (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid FROM electricity e WHERE user_id = $user_id ORDER BY e.id DESC");
+  $electricity_records = [];
+  while($row = mysqli_fetch_assoc($records_q)) {
+      $r = (float)($row['rent_amount'] ?? 0);
+      $m = (float)($row['maintenance'] ?? 0);
+      $e = (float)($row['amount'] ?? 0);
+      $tp = (float)($row['total_paid'] ?? 0);
+      
+      if ($tp >= $r + $m + $e) {
+          $row['computed_elec_status'] = 'Paid';
+      } elseif ($tp > $r + $m) {
+          $row['computed_elec_status'] = 'Partial';
+      } else {
+          $row['computed_elec_status'] = 'Unpaid';
+      }
+      
+      if ($row['status'] == 'Paid' || $row['elec_status'] == 'Paid') {
+          $row['computed_elec_status'] = 'Paid';
+      }
+      if ($e <= 0) {
+          $row['computed_elec_status'] = 'Paid';
+      }
+      
+      $electricity_records[] = $row;
+  }
 
 // Chart Data (last 12 chronological)
 $chart_records = array_slice($electricity_records, 0, 12);

@@ -11,7 +11,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
     
     // 1. Calculate total paid
     $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
-    $total_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
+    $total_paid = round((float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0), 2);
     
     // 2. Fetch bill amount and update status
     if ($bill_type === 'rent') {
@@ -19,7 +19,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
         if ($b = mysqli_fetch_assoc($qBill)) {
             $bill_amount = (float)$b['rent_amount'];
             $new_status = 'Due';
-            if ($total_paid >= $bill_amount - 0.01) $new_status = 'Paid';
+            if ($total_paid >= round($bill_amount - 0.01, 2)) $new_status = 'Paid';
             elseif ($total_paid > 0) $new_status = 'Partial';
             mysqli_query($conn, "UPDATE rent SET status='$new_status', paid_date=IF('$new_status'='Paid', CURDATE(), paid_date) WHERE id=$bill_id");
             
@@ -33,17 +33,25 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'] + (float)$b['extra_charges'];
             
             $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
-            $total_elec_paid = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
+            $total_elec_specific = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
             
-            $qRentPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
-            $total_rent_paid = (float)(mysqli_fetch_assoc($qRentPaid)['tp'] ?? 0);
+            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
+            $total_combined_paid = (float)(mysqli_fetch_assoc($qCombinedPaid)['tp'] ?? 0);
+            
+            // Distribute combined (elec_rent) payment: First to Electricity, then to Rent
+            $elec_due_after_specific = max(0, $elec_part - $total_elec_specific);
+            $applied_to_elec = min($elec_due_after_specific, $total_combined_paid);
+            $applied_to_rent = max(0, $total_combined_paid - $applied_to_elec);
+            
+            $total_elec_paid = round($total_elec_specific + $applied_to_elec, 2);
+            $total_rent_paid = round($applied_to_rent, 2);
             
             $elec_status = 'Due';
-            if ($total_elec_paid >= $elec_part - 0.01) $elec_status = 'Paid';
+            if ($total_elec_paid >= round($elec_part - 0.01, 2)) $elec_status = 'Paid';
             elseif ($total_elec_paid > 0) $elec_status = 'Partial';
             
             $rent_status = 'Due';
-            if ($total_rent_paid >= $rent_part - 0.01) $rent_status = 'Paid';
+            if ($total_rent_paid >= round($rent_part - 0.01, 2)) $rent_status = 'Paid';
             elseif ($total_rent_paid > 0) $rent_status = 'Partial';
             
             $overall_status = 'Due';
@@ -93,9 +101,20 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 2. Electricity (elec_rent part and electricity part)
     $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
-        // Elec part
         $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
-        $epaid = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+        $epaid_specific = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
+        
+        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+        $rpaid_combined = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+        
+        $edue_after_specific = max(0, (float)$r['elec_part'] - $epaid_specific);
+        $applied_to_elec = min($edue_after_specific, $rpaid_combined);
+        $applied_to_rent = max(0, $rpaid_combined - $applied_to_elec);
+        
+        $epaid = $epaid_specific + $applied_to_elec;
+        $rpaid = $applied_to_rent;
+        
+        // Elec part
         $edue = max(0, (float)$r['elec_part'] - $epaid);
         if ($edue > 0) {
             $pending_bills[] = [
@@ -104,8 +123,6 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         }
         
         // Rent part
-        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
-        $rpaid = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
         $rdue = max(0, (float)$r['rent_part'] - $rpaid);
         if ($rdue > 0) {
             $pending_bills[] = [
@@ -155,7 +172,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         // Always insert leftover advance (the initial negative offset balances this)
         $vhash = generate_payment_hash($user_id, $remaining_payment, $sys_tx_id);
         $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, CURDATE(), ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "iddsss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id, $vhash);
+        mysqli_stmt_bind_param($stmt, "idsdsss", $user_id, $remaining_payment, $payment_mode, $remaining_payment, $transaction_id, $sys_tx_id, $vhash);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
         

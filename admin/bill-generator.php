@@ -92,7 +92,7 @@ $admin_user = s($_SESSION['admin']);
             margin-bottom: 6px;
             font-weight: 800;
             font-size: 11.5px;
-            color: #475569;
+            color: var(--text-gray);
             text-transform: uppercase;
             letter-spacing: 0.6px;
         }
@@ -120,7 +120,7 @@ $admin_user = s($_SESSION['admin']);
         }
 
         .info-pill {
-            background: #F8FAFC;
+            background: var(--bg-main);
             border: 1px dashed var(--border);
             border-radius: 12px;
             padding: 16px;
@@ -274,13 +274,13 @@ $admin_user = s($_SESSION['admin']);
 
         :root.dark-theme .custom-options-container {
             background: #1E293B;
-            border-color: #334155;
+            border-color: var(--text-dark);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         :root.dark-theme .custom-search-box {
             background: #0F172A;
-            border-color: #334155;
+            border-color: var(--text-dark);
         }
 
         :root.dark-theme .custom-option {
@@ -297,7 +297,7 @@ $admin_user = s($_SESSION['admin']);
 
         :root.dark-theme .opt-room {
             background: rgba(255, 255, 255, 0.1);
-            color: #CBD5E1;
+            color: var(--text-gray);
         }
 
         @keyframes fadeIn {
@@ -506,7 +506,7 @@ $admin_user = s($_SESSION['admin']);
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #F1F5F9;
+            background: var(--bg-main);
             color: var(--text-gray);
             display: flex;
             align-items: center;
@@ -596,7 +596,7 @@ $admin_user = s($_SESSION['admin']);
         .guide-card p { margin: 0; font-size: 12px; color: var(--text-gray); line-height: 1.4; }
 
         .empty-state {
-            background: #F8FAFC;
+            background: var(--bg-main);
             border-radius: 12px;
             border: 1px dashed #CBD5E1;
             padding: 20px;
@@ -683,7 +683,7 @@ $admin_user = s($_SESSION['admin']);
 
             <div class="bill-grid">
                 <div class="left-col">
-                    <div class="aesthetic-card animate-up" style="z-index: 50; background: #F4F7FF; border-color: #E0E7FF;">
+                    <div class="aesthetic-card animate-up" style="z-index: 50; background: var(--bg-main); border-color: var(--border);">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bx-user'></i>
@@ -765,7 +765,7 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                     </div>
 
-                    <div class="aesthetic-card" id="electricitySection" style="background: #FFFFFF;">
+                    <div class="aesthetic-card" id="electricitySection" style="background: var(--white);">
                         <div class="panel-header">
                             <div class="section-title">
                                 <i class='bx bxs-zap' style="color: #F59E0B; background: rgba(245, 158, 11, 0.15);"></i>
@@ -779,7 +779,7 @@ $admin_user = s($_SESSION['admin']);
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                                     <span style="font-weight: 700; color: var(--text-dark);">Invoice Issue Date</span>
-                                    <span style="background: #F3F4F6; color: #4B5563; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;"><i class='bx bx-calendar'></i> Date Generated</span>
+                                    <span style="background: var(--bg-main); color: var(--text-gray); font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600;"><i class='bx bx-calendar'></i> Date Generated</span>
                                 </label>
                                 <input type="date" id="billDate" style="font-weight: 600;">
                                 <small style="color: var(--text-gray); font-size: 11px; display: block; margin-top: 4px;">Actual date when this invoice is created (defaults to today).</small>
@@ -788,7 +788,7 @@ $admin_user = s($_SESSION['admin']);
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                                     <span style="font-weight: 700; color: var(--text-dark);">Bill For Month <span style="color: #EF4444;">*</span></span>
-                                    <span style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;"><i class='bx bx-time'></i> Consumption Period</span>
+                                    <span style="background: var(--bg-main); color: #4F46E5; font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 700;"><i class='bx bx-time'></i> Consumption Period</span>
                                 </label>
                                 <div style="display: flex; gap: 10px;">
                                     <select id="selectMonth" onchange="updateMonthField()" style="flex: 1.5; font-weight: 600;">
@@ -849,7 +849,7 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Advance Applied (Auto)</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" id="dues" placeholder="0" readonly style="padding-left: 40px; background-color: #f1f5f9; cursor: not-allowed; color: #10B981; font-weight: 700;">
+                                    <input type="number" id="dues" placeholder="0" readonly style="padding-left: 40px; background-color: var(--bg-main); cursor: not-allowed; color: #10B981; font-weight: 700;">
                                 </div>
                             </div>
                         </div>
@@ -895,7 +895,7 @@ $admin_user = s($_SESSION['admin']);
                         <div class="form-group" style="margin-top: 16px; margin-bottom: 0;">
                             <label><i class='bx bx-camera'></i> Attach Meter Screenshot (Optional)</label>
                             <input type="file" id="meterScreenshot" accept="image/*"
-                                style="padding: 10px; border: 1px dashed var(--border); border-radius: 10px; height: auto; width: 100%; cursor: pointer; background: #F8FAFC;">
+                                style="padding: 10px; border: 1px dashed var(--border); border-radius: 10px; height: auto; width: 100%; cursor: pointer; background: var(--bg-main);">
                         </div>
                     </div>
                 </div>
@@ -908,9 +908,11 @@ $admin_user = s($_SESSION['admin']);
                             <div style="flex: 1; min-width: 250px;">
                                 <p style="color: rgba(255,255,255,0.8); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Total Payable</p>
                                 <h1 id="calcTotal" style="font-size: 42px; margin: 0; font-weight: 800; letter-spacing: -1px;">₹0</h1>
-                                <div style="margin-top: 12px; display: flex; gap: 16px; font-size: 14px; color: rgba(255,255,255,0.9);">
-                                    <div><i class='bx bx-user'></i> <span id="receiptRenter">Not Selected</span></div>
-                                    <div><i class='bx bx-calendar'></i> <span id="receiptMonthYear">--</span></div>
+                                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,0.95);">
+                                    <div style="display: flex; align-items: flex-start; gap: 6px;">
+                                        <i class='bx bx-user' style="margin-top: 2px;"></i> 
+                                        <span id="receiptRenter" style="line-height: 1.4;">Not Selected</span>
+                                    </div>
                                 </div>
                             </div>
                             
@@ -932,6 +934,9 @@ $admin_user = s($_SESSION['admin']);
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
                                         <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Advance Applied</span><strong id="calcDues" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                                        <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Billing Month</span><strong style="white-space: nowrap; text-align: right; display: flex; align-items: center; gap: 4px;"><i class='bx bx-calendar'></i> <span id="receiptMonthYear">--</span></strong>
+                                    </div>
                                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;" id="extraChargesDiv">
                                         <span style="color: rgba(255,255,255,0.8); line-height: 1.2; white-space: nowrap;">Extra Charges</span><strong id="calcExtraCharges" style="white-space: nowrap; text-align: right;">₹0</strong>
                                     </div>
@@ -940,7 +945,7 @@ $admin_user = s($_SESSION['admin']);
                             
                             <!-- Right: Actions -->
                             <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px;">
-                                <button type="button" id="generateBtn" class="btn-primary hover-scale" style="width: 100%; background: white; color: #624BFF; border: none; padding: 16px; font-weight: 700; font-size: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onclick="generateBill()">
+                                <button type="button" id="generateBtn" class="btn-primary hover-scale" style="width: 100%; background: var(--white); color: #624BFF; border: none; padding: 16px; font-weight: 700; font-size: 15px; border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.3s;" onclick="generateBill()">
                                     <i class='bx bx-printer' style="font-size: 20px;"></i> Generate Bill
                                 </button>
                                 <button type="button" class="btn-outline" style="width: 100%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="resetForm()">
@@ -953,7 +958,7 @@ $admin_user = s($_SESSION['admin']);
                     </div>
 
             <!-- Bottom Guide Section -->
-            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px; background: #F8FAFC;">
+            <div class="aesthetic-card animate-up" style="width: 100%; box-sizing: border-box; padding: 16px 32px; background: var(--bg-main);">
                 <div class="panel-header">
                     <div class="section-title">
                         <i class='bx bx-book-open'></i>

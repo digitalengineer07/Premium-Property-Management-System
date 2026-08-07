@@ -84,20 +84,20 @@ while($row = mysqli_fetch_assoc($res2)) {
     <link rel="stylesheet" href="../assets/css/admin-design-system.css?v=<?php echo time(); ?>">
     <style>
         .reminder-card {
-            background: #ffffff; 
+            background: var(--white); 
             border-radius: 16px; 
             padding: 24px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.02); 
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--border);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .reminder-card:hover {
             box-shadow: 0 12px 30px rgba(0,0,0,0.06);
             transform: translateY(-2px);
-            border-color: #CBD5E1;
+            border-color: var(--border);
         }
         .reminder-card.disabled { 
-            background: #F8FAFC; 
+            background: var(--bg-main); 
             opacity: 0.8; 
             border-style: dashed;
         }
@@ -125,7 +125,7 @@ while($row = mysqli_fetch_assoc($res2)) {
 
     <div class="welcome animate-up" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="manage-reminders.php" style="width: 48px; height: 48px; border-radius: 12px; background: #fff; border: 1px solid #E2E8F0; color: var(--text-dark); display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s;">
+            <a href="manage-reminders.php" style="width: 48px; height: 48px; border-radius: 12px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s;">
                 <i class='bx bx-arrow-back'></i>
             </a>
             <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 24px;">
@@ -151,7 +151,7 @@ while($row = mysqli_fetch_assoc($res2)) {
 
     <div class="dues-grid animate-up">
         <?php if(empty($dues)): ?>
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: #fff; border-radius: 16px; border: 1px solid #E2E8F0;">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; background: var(--white); border-radius: 16px; border: 1px solid var(--border);">
                 <i class='bx bx-smile' style="font-size: 48px; color: var(--text-gray); opacity: 0.3; margin-bottom: 16px;"></i>
                 <h3 style="font-size: 18px; color: var(--text-dark); margin-bottom: 8px;">All Clear!</h3>
                 <p style="font-size: 14px; color: var(--text-gray);">No pending dues found across all active residents.</p>
