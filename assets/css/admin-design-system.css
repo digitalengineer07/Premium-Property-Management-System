@@ -2472,3 +2472,14 @@ h1, .page-title, .panel-header h2 {
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
+
+
+/* Dark mode fix for Edit Profile Modal Inputs */
+.dark-theme #editProfileModal input, .dark-theme #editProfileModal select {
+    background: var(--bg-main) !important;
+    border-color: var(--border) !important;
+    color: var(--text-dark) !important;
+}
+.dark-theme #editProfileModal input:focus, .dark-theme #editProfileModal select:focus {
+    border-color: var(--primary-purple) !important;
+}
