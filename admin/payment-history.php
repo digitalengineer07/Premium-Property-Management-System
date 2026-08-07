@@ -81,7 +81,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                         <i class='bx bx-credit-card-front'></i>
                     </div>
                     <div>
-                        <h1 style="font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--primary-purple), #10B981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; display: inline-block;">Payment History</h1>
+                        <h1 class="page-title" style="margin: 0; display: inline-block;">Payment History</h1>
                         <p style="color: var(--text-gray); font-size: 14px; margin: 6px 0 0 0; font-weight: 500; display: flex; align-items: center; gap: 6px;"><i class='bx bx-user-circle' style="font-size: 16px; color: #10B981;"></i> All transactions for <span style="color: var(--text-dark); font-weight: 700;"><?php echo htmlspecialchars($user['name']); ?></span> (Room <?php echo htmlspecialchars($user['room_no'] ?: 'N/A'); ?>)</p>
                     </div>
                 </div>
