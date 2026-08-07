@@ -908,9 +908,15 @@ $admin_user = s($_SESSION['admin']);
                             <div style="flex: 1; min-width: 250px;">
                                 <p style="color: rgba(255,255,255,0.8); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px 0;">Total Payable</p>
                                 <h1 id="calcTotal" style="font-size: 42px; margin: 0; font-weight: 800; letter-spacing: -1px;">₹0</h1>
-                                <div style="margin-top: 12px; display: flex; gap: 16px; font-size: 14px; color: rgba(255,255,255,0.9);">
-                                    <div><i class='bx bx-user'></i> <span id="receiptRenter">Not Selected</span></div>
-                                    <div><i class='bx bx-calendar'></i> <span id="receiptMonthYear">--</span></div>
+                                <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 14.5px; font-weight: 500; color: rgba(255,255,255,0.95);">
+                                    <div style="display: flex; align-items: flex-start; gap: 6px;">
+                                        <i class='bx bx-user' style="margin-top: 2px;"></i> 
+                                        <span id="receiptRenter" style="line-height: 1.4;">Not Selected</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <i class='bx bx-calendar'></i> 
+                                        <span id="receiptMonthYear">--</span>
+                                    </div>
                                 </div>
                             </div>
                             
