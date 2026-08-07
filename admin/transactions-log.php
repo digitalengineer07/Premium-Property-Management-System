@@ -213,10 +213,7 @@ $total_pages = ceil($total_rows / $limit);
                             </div>
                         </td>
                         <td data-label="Amount">
-                            <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
-                            <?php if ($tx['adjustment_amount'] < 0): ?>
-                            <div style="font-size: 10px; color: var(--primary-purple); font-weight: 600; margin-top: 4px;">(+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet)</div>
-                            <?php endif; ?>
+                              <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount']); ?></div>
                         </td>
                         <td data-label="Type & Mode" style="font-size: 12px;">
                             <span style="font-weight: 600;">
