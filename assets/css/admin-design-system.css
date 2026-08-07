@@ -643,13 +643,13 @@ body.dark-theme .support-box .support-icon {
 table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0;
+    border-spacing: 0 10px;
 }
 
 th {
     text-align: left;
     padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     background: var(--bg-main);
     color: var(--text-gray);
     font-weight: 600;
@@ -663,13 +663,49 @@ th {
     z-index: 10;
 }
 
+th:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+th:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+tbody tr {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+
+tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+}
+
 td {
-    padding: 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--text-dark);
+    padding: 16px 16px;
     vertical-align: middle;
+    color: var(--text-dark);
+    font-size: 13px;
+    border-top: 1px solid rgba(0,0,0,0.03);
+    border-bottom: 1px solid rgba(0,0,0,0.03);
+    background: inherit;
     transition: background 0.2s ease;
+}
+
+td:first-child {
+    border-left: 1px solid rgba(0,0,0,0.03);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+td:last-child {
+    border-right: 1px solid rgba(0,0,0,0.03);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 tr:hover td {
@@ -1460,17 +1496,33 @@ body.dark-theme thead th {
 
 :root.dark-theme tbody tr,
 body.dark-theme tbody tr {
-    border-bottom: 1px solid #1E293B !important;
+    background: #151c2c !important;
+    border: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
 }
 
 :root.dark-theme tbody tr:hover,
 body.dark-theme tbody tr:hover {
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: #1c2538 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3) !important;
 }
 
 :root.dark-theme tbody td,
 body.dark-theme tbody td {
     color: #E2E8F0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.03) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+:root.dark-theme tbody td:first-child,
+body.dark-theme tbody td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.03) !important;
+}
+
+:root.dark-theme tbody td:last-child,
+body.dark-theme tbody td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
 }
 
 :root.dark-theme select,
