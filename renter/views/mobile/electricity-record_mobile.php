@@ -194,7 +194,7 @@
             foreach($electricity_records as $idx => $rec): 
                 if ($idx >= 5) break;
                 $is_current = ($idx === 0);
-                $status_class = strtolower($rec['elec_status']);
+                $status_class = strtolower($rec['computed_elec_status'] ?? $rec['elec_status'] ?? $rec['status']);
                 if ($status_class == 'due') $status_class = 'unpaid';
                 $status_text = ucfirst($status_class);
                 if ($status_text == 'Due') $status_text = 'Unpaid';

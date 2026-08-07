@@ -155,8 +155,8 @@
                 while ($row = mysqli_fetch_assoc($q)) {
                     $title = 'Ledger Split';
                     if ($row['bill_type'] == 'rent') $title = 'Rent Split';
-                    if ($row['bill_type'] == 'electricity') $title = 'Electricity Split';
-                    if ($row['bill_type'] == 'elec_rent') $title = 'Bill Component (Rent)';
+                    if ($row['bill_type'] == 'electricity') $title = 'Unified Bill Payment';
+                    if ($row['bill_type'] == 'elec_rent') $title = 'Unified Bill Payment';
                     if ($row['bill_type'] == 'advance') $title = 'Advance Application';
                     
                     $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
@@ -201,7 +201,8 @@
                 
                 $title = 'Online Payment';
                 if ($row['bill_type'] == 'rent') $title = 'Rent Payment';
-                if ($row['bill_type'] == 'electricity') $title = 'Electricity Bill';
+                if ($row['bill_type'] == 'electricity') $title = 'Unified Bill Payment';
+                if ($row['bill_type'] == 'elec_rent') $title = 'Unified Bill Payment';
                 
                 $ref = htmlspecialchars(trim($row['transaction_id'] ?? ''));
                 $sys_id = htmlspecialchars(trim($row['sys_tx_id'] ?? 'N/A'));
