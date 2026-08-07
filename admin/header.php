@@ -10,7 +10,7 @@
         right: 0;
         margin-top: 12px;
         background: var(--white);
-        border: 1px solid #E2E8F0;
+        border: 1px solid var(--border);
         box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         border-radius: 12px;
         width: 180px;
@@ -36,7 +36,7 @@
     }
     .dropdown-menu-custom a i {
         font-size: 16px;
-        color: #64748B;
+        color: var(--text-gray);
     }
     .dropdown-menu-custom a.logout-link {
         color: #EF4444;
@@ -46,7 +46,7 @@
     }
     body.dark-theme .dropdown-menu-custom {
         background: #1E293B;
-        border-color: #334155;
+        border-color: var(--text-dark);
     }
     body.dark-theme .dropdown-menu-custom a {
         color: #F8FAFC;

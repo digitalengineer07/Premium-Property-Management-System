@@ -26,7 +26,7 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--border);
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -41,7 +41,7 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
 
     <div class="welcome animate-up" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 16px;">
-            <a href="manage-reminders.php" style="width: 48px; height: 48px; border-radius: 12px; background: var(--white); border: 1px solid #E2E8F0; color: var(--text-dark); display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s;">
+            <a href="manage-reminders.php" style="width: 48px; height: 48px; border-radius: 12px; background: var(--white); border: 1px solid var(--border); color: var(--text-dark); display: flex; align-items: center; justify-content: center; font-size: 24px; text-decoration: none; transition: all 0.2s;">
                 <i class='bx bx-arrow-back'></i>
             </a>
             <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(98, 75, 255, 0.1); color: var(--primary-purple); display: flex; align-items: center; justify-content: center; font-size: 24px;">

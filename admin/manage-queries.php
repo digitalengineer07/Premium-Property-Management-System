@@ -128,7 +128,7 @@ $queries_res = mysqli_query($conn, "
                             </div>
                             <div style="min-width: 0;">
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap;">
-                                    <span style="font-size: 10px; font-weight: 800; background: var(--bg-main); color: #475569; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase;"><?php echo $q['category']; ?></span>
+                                    <span style="font-size: 10px; font-weight: 800; background: var(--bg-main); color: var(--text-gray); padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; text-transform: uppercase;"><?php echo $q['category']; ?></span>
                                     <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);"><i class='bx bx-time-five' style="vertical-align: middle; margin-top: -2px;"></i> <?php echo date('M d, Y \a\t h:i A', strtotime($q['created_at'])); ?></span>
                                 </div>
                                 <h2 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0 0 4px 0;"><?php echo htmlspecialchars($q['subject']); ?></h2>

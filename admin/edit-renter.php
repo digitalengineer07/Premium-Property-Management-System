@@ -171,8 +171,8 @@ $admin_user = s($_SESSION['admin']);
     <?php include 'header.php'; ?>
 
     <div class="animate-up" style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; max-width: 1000px; margin-left: auto; margin-right: auto; width: 100%;">
-        <a href="view-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #E2E8F0; background: var(--white); text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
-            <i class='bx bx-arrow-back' style="font-size: 24px; color: #64748B;"></i>
+        <a href="view-renter.php?id=<?php echo $user['id']; ?>" class="btn-outline" style="padding: 8px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; border-radius: 16px; margin-right: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); background: var(--white); text-decoration: none; transition: all 0.2s ease;" onmouseover="this.style.background='#F8FAFC'; this.style.borderColor='#CBD5E1'; this.style.transform='translateY(-1px)';" onmouseout="this.style.background='#ffffff'; this.style.borderColor='#E2E8F0'; this.style.transform='none';">
+            <i class='bx bx-arrow-back' style="font-size: 24px; color: var(--text-gray);"></i>
         </a>
         <div style="width: 56px; height: 56px; background: linear-gradient(135deg, rgba(98, 75, 255, 0.1), rgba(16, 185, 129, 0.1)); color: var(--primary-purple); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
             <i class='bx bx-user-pin' style="font-size: 28px;"></i>
@@ -203,108 +203,108 @@ $admin_user = s($_SESSION['admin']);
                         
                         <!-- Card 1: PERSONAL INFO -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-user-circle' style="font-size: 16px;"></i> BASIC INFO
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Resident Full Name <span style="color:#EF4444">*</span></label>
-                                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Resident Full Name <span style="color:#EF4444">*</span></label>
+                                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" required style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Room No</label>
-                                    <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Room No</label>
+                                    <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Joining Date</label>
-                                    <input type="date" name="joining_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Joining Date</label>
+                                    <input type="date" name="joining_date" value="<?php echo htmlspecialchars($user['joining_date'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card 2: CONTACT DETAILS -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-phone' style="font-size: 16px;"></i> CONTACT DETAILS
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Email Address</label>
-                                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Email Address</label>
+                                    <input type="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Phone Number</label>
-                                    <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Phone Number</label>
+                                    <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone']); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">WhatsApp</label>
-                                    <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">WhatsApp</label>
+                                    <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card 2.5: EMERGENCY CONTACT -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9; margin-bottom: 24px;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-plus-medical' style="font-size: 16px;"></i> EMERGENCY CONTACT
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Contact Name</label>
-                                    <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Contact Name</label>
+                                    <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Relationship</label>
-                                    <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Relationship</label>
+                                    <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;">
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Phone Number</label>
-                                    <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Phone Number</label>
+                                    <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;">
                                 </div>
                                 <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Address</label>
-                                    <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Address</label>
+                                    <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;">
                                 </div>
                             </div>
                         </div>
 
                         <!-- Card 3: LEASE & FINANCIALS -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9; margin-bottom: 24px;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-wallet' style="font-size: 16px;"></i> LEASE CHARGES
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Monthly Rent</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Monthly Rent</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="fixed_rent" value="<?php echo number_format($user['fixed_rent'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="fixed_rent" value="<?php echo number_format($user['fixed_rent'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Maintenance</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Maintenance</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Advance Wallet</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Advance Wallet</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Security Dep.</label>
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Security Dep.</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid #E2E8F0; background: var(--white); font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Initial Meter</label>
-                                    <input type="number" name="base_reading" value="<?php echo (int)$user['base_reading']; ?>" <?php echo $has_bills ? 'readonly' : ''; ?> style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid #E2E8F0; background: <?php echo $has_bills ? '#F1F5F9' : '#ffffff'; ?>; font-size: 14px; font-weight: 500; color: #1E293B; outline: none; transition: all 0.2s ease;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Initial Meter</label>
+                                    <input type="number" name="base_reading" value="<?php echo (int)$user['base_reading']; ?>" <?php echo $has_bills ? 'readonly' : ''; ?> style="width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); background: <?php echo $has_bills ? '#F1F5F9' : '#ffffff'; ?>; font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;">
                                     <?php if($has_bills): ?>
                                         <div style="font-size: 10px; color: #EF4444; margin-top: 4px; font-weight: 600;"><i class='bx bx-lock'></i> Locked</div>
                                     <?php endif; ?>
@@ -314,20 +314,20 @@ $admin_user = s($_SESSION['admin']);
 
                         <!-- Card 4: DOCUMENTS & NOTES -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-folder' style="font-size: 16px;"></i> DOCUMENTS & FILES
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Identity Proof (Aadhaar)</label>
-                                    <input type="file" name="aadhaar_file" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-purple); background: var(--white); font-size: 13px; color: #1E293B; cursor: pointer;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Identity Proof (Aadhaar)</label>
+                                    <input type="file" name="aadhaar_file" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-purple); background: var(--white); font-size: 13px; color: var(--text-dark); cursor: pointer;">
                                     <?php if (!empty($user['aadhaar_file'])): ?>
                                         <div style="font-size: 11px; color: #10B981; margin-top: 4px; font-weight: 600;"><i class='bx bx-check-circle'></i> File uploaded.</div>
                                     <?php endif; ?>
                                 </div>
                                 <div class="form-group" style="margin: 0;">
-                                    <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Rental Agreement</label>
-                                    <input type="file" name="agreement_document" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-purple); background: var(--white); font-size: 13px; color: #1E293B; cursor: pointer;">
+                                    <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Rental Agreement</label>
+                                    <input type="file" name="agreement_document" accept=".pdf, .png, .jpg, .jpeg" style="width: 100%; padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-purple); background: var(--white); font-size: 13px; color: var(--text-dark); cursor: pointer;">
                                     <?php if (!empty($user['agreement_document'])): ?>
                                         <div style="font-size: 11px; color: #10B981; margin-top: 4px; font-weight: 600;"><i class='bx bx-check-circle'></i> File uploaded.</div>
                                     <?php endif; ?>
@@ -337,12 +337,12 @@ $admin_user = s($_SESSION['admin']);
 
                         <!-- Card 5: EXTRA ADJUSTMENTS (Full Width) -->
                         <div style="background: var(--bg-main); border-radius: 20px; padding: 28px; border: 1px solid #F1F5F9; grid-column: 1 / -1;">
-                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid #E2E8F0;">
+                            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--white); padding: 8px 16px; border-radius: 20px; color: var(--primary-purple); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 24px; border: 1px solid var(--border);">
                                 <i class='bx bx-note' style="font-size: 16px;"></i> EXTRA ADJUSTMENTS / NOTES
                             </div>
                             <div class="form-group" style="margin: 0;">
-                                <label style="font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Admin Notes / About</label>
-                                <textarea name="about" rows="3" style="width:100%; padding:14px; border-radius:12px; border: 1px solid #E2E8F0; background: var(--white); color:#1E293B; outline:none; font-family:inherit; font-size: 14px; transition: all 0.2s ease; resize: vertical;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';"><?php echo htmlspecialchars($user['about']); ?></textarea>
+                                <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Admin Notes / About</label>
+                                <textarea name="about" rows="3" style="width:100%; padding:14px; border-radius:12px; border: 1px solid var(--border); background: var(--white); color: var(--text-dark); outline:none; font-family:inherit; font-size: 14px; transition: all 0.2s ease; resize: vertical;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';"><?php echo htmlspecialchars($user['about']); ?></textarea>
                             </div>
                         </div>
 

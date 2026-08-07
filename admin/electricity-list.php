@@ -187,7 +187,7 @@ $admin_user = s($_SESSION['admin']);
             </div>
             <div>
                 <h1 style="margin: 0; font-size: 30px; font-weight: 800; color: #0F172A; letter-spacing: -0.5px; line-height: 1.2;">Electricity Records</h1>
-                <p style="margin: 6px 0 0 0; color: #64748B; font-size: 15px; font-weight: 500;">Viewing all historical utility billing</p>
+                <p style="margin: 6px 0 0 0; color: var(--text-gray); font-size: 15px; font-weight: 500;">Viewing all historical utility billing</p>
             </div>
         </div>
         <div>
@@ -236,8 +236,8 @@ $admin_user = s($_SESSION['admin']);
                     
                     <!-- Month Filter -->
                     <div style="flex: 1; min-width: 130px; position: relative;">
-                        <i class='bx bx-calendar' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
-                        <select name="month" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
+                        <i class='bx bx-calendar' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px;"></i>
+                        <select name="month" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
                             <option value="">All Months</option>
                             <?php foreach ($months as $m): ?>
                                 <option value="<?php echo htmlspecialchars($m); ?>" <?php if ($filter_month == $m) echo 'selected'; ?>><?php echo htmlspecialchars($m); ?></option>
@@ -248,14 +248,14 @@ $admin_user = s($_SESSION['admin']);
                     
                     <!-- Resident Filter -->
                     <div style="flex: 1.2; min-width: 150px; position: relative;">
-                        <i class='bx bx-user' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
-                        <input name="user" placeholder="Search Resident..." value="<?php echo htmlspecialchars($filter_user); ?>" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s;">
+                        <i class='bx bx-user' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px;"></i>
+                        <input name="user" placeholder="Search Resident..." value="<?php echo htmlspecialchars($filter_user); ?>" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; outline: none; transition: all 0.3s;">
                     </div>
                     
                     <!-- Status Filter -->
                     <div style="flex: 0.8; min-width: 120px; position: relative;">
-                        <i class='bx bx-pie-chart-alt-2' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748B; font-size: 18px;"></i>
-                        <select name="status" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); border: 1px solid #E2E8F0; border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
+                        <i class='bx bx-pie-chart-alt-2' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-gray); font-size: 18px;"></i>
+                        <select name="status" style="width: 100%; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; outline: none; transition: all 0.3s; cursor: pointer; appearance: none;">
                             <option value="">All Status</option>
                             <option value="Paid" <?php if($filter_status == 'Paid') echo 'selected'; ?>>Paid</option>
                             <option value="Due" <?php if($filter_status == 'Due') echo 'selected'; ?>>Due</option>
@@ -269,7 +269,7 @@ $admin_user = s($_SESSION['admin']);
                     <button type="submit" class="btn-primary" style="padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(98, 75, 255, 0.2); border: none; cursor: pointer; background: linear-gradient(135deg, #624BFF 0%, #8B78FF 100%); transition: all 0.3s ease;">
                         <i class='bx bx-filter-alt' style="font-size: 18px;"></i> Filter
                     </button>
-                    <a href="electricity-list.php#records-panel" class="btn-outline" style="padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 12px; display: flex; align-items: center; gap: 6px; color: #64748B; border-color: #E2E8F0; text-decoration: none; background: var(--white); transition: all 0.3s ease;">
+                    <a href="electricity-list.php#records-panel" class="btn-outline" style="padding: 12px 24px; font-weight: 600; font-size: 14px; border-radius: 12px; display: flex; align-items: center; gap: 6px; color: var(--text-gray); border-color: var(--border); text-decoration: none; background: var(--white); transition: all 0.3s ease;">
                         <i class='bx bx-reset' style="font-size: 18px;"></i> Reset
                     </a>
                 </div>
@@ -481,8 +481,8 @@ $admin_user = s($_SESSION['admin']);
                     <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 18px; font-weight: 800; color: #1E293B; margin: 0;">Record Payment</h3>
-                    <p id="paymentBillInfo" style="color: #64748B; font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                    <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
                 </div>
             </div>
             
@@ -495,8 +495,8 @@ $admin_user = s($_SESSION['admin']);
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <div>
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Payment Mode</label>
-                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Payment Mode</label>
+                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                                 <option value="Online">Online</option>
                                 <option value="Cash">Cash</option>
                                 <option value="UPI">UPI</option>
@@ -505,10 +505,10 @@ $admin_user = s($_SESSION['admin']);
                         </div>
                         
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Amount Paid</label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
+                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; font-weight: 600; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                             </div>
                             <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                         </div>
@@ -517,18 +517,18 @@ $admin_user = s($_SESSION['admin']);
                     <div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Date</label>
-                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Date</label>
+                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Time</label>
-                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Time</label>
+                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                         </div>
 
                         <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Cash Received By</label>
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: var(--bg-main);">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
                                 <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>
@@ -537,7 +537,7 @@ $admin_user = s($_SESSION['admin']);
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 12px; padding-top: 24px; border-top: 1px solid #E2E8F0;">
-                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: #64748B; border-color: #CBD5E1;">Cancel</button>
+                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: var(--text-gray); border-color: var(--border);">Cancel</button>
                     <button type="submit" class="btn-primary" style="background: #10B981; padding: 12px 28px; border-radius: 10px; font-weight: 600; border: none;">Confirm Payment</button>
                 </div>
             </form>
@@ -621,11 +621,11 @@ $admin_user = s($_SESSION['admin']);
     /* Custom Select Dropdown UI */
     .custom-select-wrapper { position: relative; user-select: none; width: 100%; }
     .custom-select { position: relative; display: flex; flex-direction: column; }
-    .custom-select__trigger { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); border: 1px solid #E2E8F0; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+    .custom-select__trigger { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px 12px 42px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.3s; }
     .custom-select__trigger:hover { border-color: #624BFF; background: var(--white); }
-    .custom-options { position: absolute; display: block; top: 100%; left: 0; right: 0; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); background: var(--white); transition: all 0.2s ease; opacity: 0; visibility: hidden; pointer-events: none; z-index: 99; margin-top: 8px; max-height: 250px; overflow-y: auto; padding: 6px; }
+    .custom-options { position: absolute; display: block; top: 100%; left: 0; right: 0; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); background: var(--white); transition: all 0.2s ease; opacity: 0; visibility: hidden; pointer-events: none; z-index: 99; margin-top: 8px; max-height: 250px; overflow-y: auto; padding: 6px; }
     .custom-select.open .custom-options { opacity: 1; visibility: visible; pointer-events: all; margin-top: 4px; }
-    .custom-option { position: relative; display: block; padding: 10px 14px; font-size: 14px; font-weight: 500; color: #475569; cursor: pointer; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
+    .custom-option { position: relative; display: block; padding: 10px 14px; font-size: 14px; font-weight: 500; color: var(--text-gray); cursor: pointer; border-radius: 8px; transition: all 0.2s; margin-bottom: 2px; }
     .custom-option:hover, .custom-option.selected { background: #EEF2FF; color: #624BFF; }
     </style>
     <script>

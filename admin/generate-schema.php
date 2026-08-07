@@ -59,10 +59,10 @@ while ($table_row = mysqli_fetch_array($tables_result)) {
 $json = json_encode($schema, JSON_PRETTY_PRINT);
 file_put_contents(__DIR__ . '/schema.json', $json);
 
-echo "<div style='font-family: sans-serif; padding: 40px; background: var(--bg-main); border-radius: 12px; max-width: 600px; margin: 40px auto; border: 1px solid #E2E8F0; text-align: center;'>";
+echo "<div style='font-family: sans-serif; padding: 40px; background: var(--bg-main); border-radius: 12px; max-width: 600px; margin: 40px auto; border: 1px solid var(--border); text-align: center;'>";
 echo "<div style='font-size: 40px; margin-bottom: 20px;'>✅</div>";
-echo "<h2 style='color: #1E293B; margin-top: 0;'>Schema Generated Successfully!</h2>";
-echo "<p style='color: #64748B;'>The current database structure has been exported to <strong>schema.json</strong>.</p>";
+echo "<h2 style='color: var(--text-dark); margin-top: 0;'>Schema Generated Successfully!</h2>";
+echo "<p style='color: var(--text-gray);'>The current database structure has been exported to <strong>schema.json</strong>.</p>";
 echo "<a href='db-sync.php' style='display: inline-block; padding: 10px 20px; background: #624BFF; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px;'>Go to Sync Tool</a>";
 echo "</div>";
 ?>

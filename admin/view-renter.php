@@ -409,8 +409,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <!-- Contact Name Box -->
                 <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-user' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
+                        <i class='bx bx-user' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contact Name</div>
                     </div>
                     <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_name']); ?></div>
                 </div>
@@ -418,8 +418,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <!-- Relationship Box -->
                 <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-group' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
+                        <i class='bx bx-group' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Relationship</div>
                     </div>
                     <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_relation'] ?: 'N/A'); ?></div>
                 </div>
@@ -427,8 +427,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <!-- Phone Box -->
                 <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-phone' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
+                        <i class='bx bx-phone' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Phone Number</div>
                     </div>
                     <div style="font-size: 15px; color: #0F172A; font-weight: 600;"><?php echo htmlspecialchars($user['emergency_contact_phone'] ?: 'N/A'); ?></div>
                 </div>
@@ -436,8 +436,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <!-- Address Box -->
                 <div style="padding: 16px; background: var(--bg-main); border: 1px solid #F1F5F9; border-radius: 16px; transition: all 0.2s ease;">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <i class='bx bx-map' style="color: #64748B; font-size: 16px;"></i>
-                        <div style="font-size: 12px; color: #64748B; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
+                        <i class='bx bx-map' style="color: var(--text-gray); font-size: 16px;"></i>
+                        <div style="font-size: 12px; color: var(--text-gray); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Address</div>
                     </div>
                     <div style="font-size: 15px; color: #0F172A; font-weight: 600; line-height: 1.4;"><?php echo htmlspecialchars($user['emergency_contact_address'] ?: 'N/A'); ?></div>
                 </div>
@@ -764,8 +764,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <i class='bx bx-credit-card' style="font-size: 24px; color: #10B981;"></i>
                 </div>
                 <div>
-                    <h3 style="font-size: 18px; font-weight: 800; color: #1E293B; margin: 0;">Record Payment</h3>
-                    <p id="paymentBillInfo" style="color: #64748B; font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
+                    <h3 style="font-size: 18px; font-weight: 800; color: var(--text-dark); margin: 0;">Record Payment</h3>
+                    <p id="paymentBillInfo" style="color: var(--text-gray); font-size: 13px; margin: 4px 0 0 0;">Select payment method and amount.</p>
                 </div>
             </div>
             
@@ -784,8 +784,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                     <div>
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Payment Mode</label>
-                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Payment Mode</label>
+                            <select name="payment_mode" id="paymentMode" required onchange="handlePaymentModeChange()" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                                 <option value="Online">Online</option>
                                 <option value="Cash">Cash</option>
                                 <option value="UPI">UPI</option>
@@ -794,10 +794,10 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         </div>
                         
                         <div class="form-group" style="margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Amount Paid</label>
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Amount Paid</label>
                             <div style="position: relative; display: flex; align-items: center;">
                                 <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-weight: 600; color: #334155; background: var(--bg-main); transition: all 0.2s; outline: none;">
+                                <input type="number" step="0.01" name="paid_amount" id="paidAmountInput" placeholder="Enter amount" required style="width: 100%; padding: 12px 16px 12px 40px; border: 1px solid var(--border); border-radius: 10px; font-size: 15px; font-weight: 600; color: var(--text-dark); background: var(--bg-main); transition: all 0.2s; outline: none;">
                             </div>
                             <small style="color: #94A3B8; font-size: 12px; display: block; margin-top: 6px;">Partial payments are allowed.</small>
                         </div>
@@ -806,18 +806,18 @@ $admin_user = s($_SESSION['admin'] ?? '');
                     <div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Date</label>
-                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Date</label>
+                                <input type="date" name="payment_date" id="paymentDateInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                             <div class="form-group">
-                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Time</label>
-                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 14px; font-weight: 500; color: #334155; background: var(--bg-main); outline: none;">
+                                <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Time</label>
+                                <input type="time" name="payment_time" id="paymentTimeInput" required style="width: 100%; padding: 11px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--text-dark); background: var(--bg-main); outline: none;">
                             </div>
                         </div>
 
                         <div class="form-group" id="cashReceiverGroup" style="display: none; margin-bottom: 20px;">
-                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #64748B; margin-bottom: 8px; display: block;">Cash Received By</label>
-                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid #E2E8F0; border-radius: 10px; background: var(--bg-main);">
+                            <label style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-gray); margin-bottom: 8px; display: block;">Cash Received By</label>
+                            <div style="display: flex; align-items: center; gap: 10px; padding: 11px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main);">
                                 <i class='bx bx-user' style="color: #6366F1; font-size: 18px;"></i>
                                 <span style="font-size: 15px; font-weight: 600; color: #0F172A;"><?php echo htmlspecialchars($admin_user); ?></span>
                             </div>
@@ -826,7 +826,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 12px; padding-top: 24px; border-top: 1px solid #E2E8F0;">
-                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: #64748B; border-color: #CBD5E1;">Cancel</button>
+                    <button type="button" onclick="closePaymentModal()" class="btn-outline" style="padding: 12px 28px; border-radius: 10px; font-weight: 600; color: var(--text-gray); border-color: var(--border);">Cancel</button>
                     <button type="submit" class="btn-primary" style="background: #10B981; padding: 12px 28px; border-radius: 10px; font-weight: 600; border: none;">Confirm Payment</button>
                 </div>
             </form>

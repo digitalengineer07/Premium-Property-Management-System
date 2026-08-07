@@ -141,7 +141,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                                 $bill_status = ($p['bill_type'] == 'rent') ? $p['rent_status'] : $p['elec_status'];
                                                 if ($bill_status == 'Paid'): 
                                                 ?>
-                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: var(--bg-main); border: 1px solid #E2E8F0; color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
+                                                <a href="../renter/receipt.php?uid=<?php echo $id; ?>&month=<?php echo urlencode($p['month']); ?>&bill_id=<?php echo $p['bill_id']; ?>" target="_blank" style="background: var(--bg-main); border: 1px solid var(--border); color: var(--primary-purple); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;" onmouseover="this.style.background='#F1F5F9';" onmouseout="this.style.background='#F8FAFC';"><i class='bx bx-receipt' style="font-size: 14px;"></i> Receipt</a>
                                                 <?php endif; ?>
                                                 <span style="background: rgba(16,185,129,0.1); color: #10B981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;"><i class='bx bx-check-circle' style="font-size: 14px;"></i> <?php echo htmlspecialchars($p['payment_mode']); ?></span>
                                             </div>
@@ -156,7 +156,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                     </div>
 
                                     <?php if ($p['bill_type'] === 'electricity' && (isset($p['elec_amount']) || isset($p['rent_amount']))): ?>
-                                        <div style="margin-top: 16px; background: var(--bg-main); padding: 12px 16px; border-radius: 8px; border: 1px solid #E2E8F0;">
+                                        <div style="margin-top: 16px; background: var(--bg-main); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border);">
                                             <div style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Bill Breakdown</div>
                                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-dark);">
                                                 <?php if ($p['rent_amount'] > 0): ?>

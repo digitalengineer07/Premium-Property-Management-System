@@ -293,7 +293,7 @@ if ($res) {
         }
         .pv-header-text p {
             font-size: 15px;
-            color: #64748B;
+            color: var(--text-gray);
             margin: 0;
         }
         .pv-header-illustration {
@@ -337,7 +337,7 @@ if ($res) {
         .pv-kpi-green { background: #DCFCE7; color: #10B981; }
         .pv-kpi-red { background: #FEE2E2; color: #EF4444; }
         .pv-kpi-details { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
-        .pv-kpi-label { font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pv-kpi-label { font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .pv-kpi-value { font-size: 26px; font-weight: 800; color: #0F172A; margin: 0; line-height: 1; }
         .pv-kpi-sub { font-size: 11px; color: #94A3B8; margin-top: 6px; }
 
@@ -364,13 +364,13 @@ if ($res) {
             display: block;
             font-size: 12px;
             font-weight: 600;
-            color: #64748B;
+            color: var(--text-gray);
             margin-bottom: 8px;
         }
         .pv-filter-group input, .pv-filter-group select {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--white);
             color: #0F172A;
@@ -409,8 +409,8 @@ if ($res) {
         
         .pv-btn-reset {
             background: transparent;
-            color: #64748B;
-            border: 1px solid #E2E8F0;
+            color: var(--text-gray);
+            border: 1px solid var(--border);
             padding: 14px 24px;
             border-radius: 10px;
             font-weight: 600;
@@ -495,7 +495,7 @@ if ($res) {
         .pv-avatar-pk { background: #FCE7F3; color: #BE185D; }
         
         .pv-bill-info-type { font-size: 12px; font-weight: 600; color: #0F172A; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px; cursor: default; }
-        .pv-bill-info-inv { font-size: 11px; color: #64748B; white-space: nowrap; }
+        .pv-bill-info-inv { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-amount-text { font-size: 13px; font-weight: 800; color: #6C4DFF; white-space: nowrap; }
         
@@ -503,7 +503,7 @@ if ($res) {
         .pv-utr-text i { color: #94A3B8; cursor: pointer; font-size: 14px; }
         
         .pv-date-text { font-size: 12px; font-weight: 600; color: #0F172A; display: block; margin-bottom: 2px; white-space: nowrap; }
-        .pv-time-text { font-size: 11px; color: #64748B; white-space: nowrap; }
+        .pv-time-text { font-size: 11px; color: var(--text-gray); white-space: nowrap; }
         
         .pv-status-pill {
             display: inline-flex; align-items: center; gap: 3px;
@@ -527,12 +527,12 @@ if ($res) {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 24px; border-top: 1px solid #E2E8F0;
         }
-        .pv-page-info { font-size: 12px; font-weight: 500; color: #64748B; }
+        .pv-page-info { font-size: 12px; font-weight: 500; color: var(--text-gray); }
         .pv-pagination-controls { display: flex; gap: 6px; align-items: center; }
         .pv-page-btn { 
             width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; border: 1px solid #E2E8F0; background: var(--white);
-            color: #64748B; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
+            border-radius: 8px; border: 1px solid var(--border); background: var(--white);
+            color: var(--text-gray); font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none;
         }
         .pv-page-btn.active { background: #6C4DFF; color: white; border-color: #6C4DFF; }
         .pv-page-btn:hover:not(.active) { background: var(--bg-main); }
@@ -548,10 +548,10 @@ if ($res) {
             .pv-header-illustration { display: none; }
             .pv-table th { display: none; }
             .pv-table td { display: block; width: 100%; border: none; padding: 10px; text-align: left !important; }
-            .pv-table td::before { content: attr(data-label); font-weight: 700; color: #64748B; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+            .pv-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-gray); font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 4px; }
             .pv-table tr { 
                 display: block; 
-                border: 1px solid #E2E8F0; 
+                border: 1px solid var(--border); 
                 border-radius: 12px; 
                 padding: 16px; 
                 margin-bottom: 16px; 
@@ -808,7 +808,7 @@ include "sidebar.php";
                                     <div title="<?php echo s($raw_name); ?>" class="pv-user-name" style="font-weight: 700; color: #0F172A; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; cursor: default;">
                                         <?php echo s($display_name); ?>
                                     </div>
-                                    <div style="font-size: 11px; color: #64748B;">Room <?php echo s($n['room_no']); ?></div>
+                                    <div style="font-size: 11px; color: var(--text-gray);">Room <?php echo s($n['room_no']); ?></div>
                                 </div>
                             </div>
                         </td>
@@ -866,7 +866,7 @@ include "sidebar.php";
                                 <?php endif; ?>
                             </div>
                             <?php if(!empty($n['sys_tx_id'])): ?>
-                                <div style="font-size:11px; color:#64748B; display:flex; align-items:center; gap:4px;">
+                                <div style="font-size:11px; color: var(--text-gray); display:flex; align-items:center; gap:4px;">
                                     <i class='bx bx-barcode-reader'></i> <?php echo s($n['sys_tx_id']); ?>
                                 </div>
                             <?php endif; ?>
@@ -876,7 +876,7 @@ include "sidebar.php";
                             <span class="pv-time-text"><?php echo date('h:i A', strtotime($n['created_at'])); ?></span>
                         </td>
                         <td>
-                            <span class="pv-date-text" style="color: #64748B; font-weight: 500;">
+                            <span class="pv-date-text" style="color: var(--text-gray); font-weight: 500;">
                                 <?php echo !empty($n['month']) ? s($n['month']) : '-'; ?>
                             </span>
                         </td>
@@ -951,11 +951,11 @@ include "sidebar.php";
     <div class="pv-filter-panel animate-up" style="max-width: 420px; width: 100%; padding: 24px; position: relative;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h2 style="font-size: 18px; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 8px;"><div style="width:32px; height:32px; background:#FEE2E2; color:#EF4444; border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class='bx bx-error-circle'></i></div> Reject Payment</h2>
-            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: #64748B;"></i>
+            <i class='bx bx-x' onclick="closeRejectModal()" style="font-size: 24px; cursor: pointer; color: var(--text-gray);"></i>
         </div>
-        <p style="font-size: 13px; color: #64748B; margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
+        <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 16px; line-height: 1.5;">Please provide a clear reason for rejecting this payment. The renter will see this reason on their dashboard.</p>
         
-        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid #E2E8F0; border-radius: 12px; background: var(--white); color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
+        <textarea id="rejectReasonInput" placeholder="e.g. UTR mismatch, Insufficient amount, etc." style="width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--white); color: #0F172A; outline: none; font-size: 13px; min-height: 100px; margin-bottom: 24px; font-family: inherit; resize: vertical; box-sizing: border-box;"></textarea>
         
         <div style="display: flex; gap: 12px;">
             <button type="button" class="pv-btn-reset" onclick="closeRejectModal()">Cancel</button>

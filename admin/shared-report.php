@@ -373,7 +373,7 @@ if (!$shared_info) {
             } else {
                 anomTable.innerHTML = anomaliesReq.map(a => `
                     <tr>
-                        <td style="font-weight:600;">${a.name} <span class="badge" style="background: var(--bg-main); color:#475569;">Room ${a.room_no}</span></td>
+                        <td style="font-weight:600;">${a.name} <span class="badge" style="background: var(--bg-main); color: var(--text-gray);">Room ${a.room_no}</span></td>
                         <td>${a.month}</td>
                         <td style="color:#F59E0B; font-weight:700;">+${a.units}</td>
                         <td><a href="electricity-list.php" class="action-link"><i class='bx bx-check-shield'></i> Audit Photo</a></td>

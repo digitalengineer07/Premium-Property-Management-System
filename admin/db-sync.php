@@ -286,18 +286,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        body { font-family: 'Outfit', sans-serif; background: var(--bg-main); color: #1E293B; margin: 0; padding: 40px; }
+        body { font-family: 'Outfit', sans-serif; background: var(--bg-main); color: var(--text-dark); margin: 0; padding: 40px; }
         .container { max-width: 800px; margin: 0 auto; background: var(--white); border-radius: 16px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         h2 { margin-top: 0; display: flex; align-items: center; gap: 10px; }
         .badge { background: #FEE2E2; color: #EF4444; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
         .badge.ok { background: #D1FAE5; color: #10B981; }
         .alert { background: var(--bg-main); padding: 15px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; border-left: 4px solid #624BFF; }
-        .card { border: 1px solid #E2E8F0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .card h4 { margin: 0 0 10px 0; color: #334155; }
+        .card { border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .card h4 { margin: 0 0 10px 0; color: var(--text-dark); }
         .btn { background: #624BFF; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-family: 'Outfit'; font-weight: 600; cursor: pointer; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; }
         .btn:hover { background: #4F39F6; }
         .btn:disabled { background: #CBD5E1; cursor: not-allowed; }
-        ul { margin: 0; padding-left: 20px; color: #64748B; font-size: 14px; }
+        ul { margin: 0; padding-left: 20px; color: var(--text-gray); font-size: 14px; }
         li { margin-bottom: 5px; }
         .log-box { background: #1E293B; color: #F8FAFC; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.6; }
     </style>
@@ -329,7 +329,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="card" style="text-align: center; padding: 40px;">
                     <div style="font-size: 48px; color: #10B981;"><i class='bx bx-check-circle'></i></div>
                     <h3>Database is perfectly synchronized!</h3>
-                    <p style="color: #64748B;">No missing tables, columns, or orphaned data were found.</p>
+                    <p style="color: var(--text-gray);">No missing tables, columns, or orphaned data were found.</p>
                 </div>
             <?php else: ?>
                 <form method="POST">
@@ -372,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <?php endif; ?>
         
         <div style="text-align: center; margin-top: 30px;">
-            <a href="dashboard.php" style="color: #64748B; text-decoration: none; font-size: 14px; font-weight: 500;">&larr; Back to Dashboard</a>
+            <a href="dashboard.php" style="color: var(--text-gray); text-decoration: none; font-size: 14px; font-weight: 500;">&larr; Back to Dashboard</a>
         </div>
     </div>
 </body>

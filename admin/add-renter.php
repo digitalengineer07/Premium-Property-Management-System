@@ -171,7 +171,7 @@ $admin_user = s($_SESSION['admin']);
             outline: none !important;
         }
         .form-group i {
-            color: #64748B !important;
+            color: var(--text-gray) !important;
             transition: color 0.3s ease;
         }
         .form-group input:focus ~ i, .form-group input:focus + i, .form-group:focus-within i.bx {
@@ -346,7 +346,7 @@ $admin_user = s($_SESSION['admin']);
                         <div class="form-group">
                             <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
                                 <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: #1E293B;" title="Total cash collected at joining">Total Initial Payment (₹)</label>
+                                    <label class="form-label" style="font-weight: 600; color: var(--text-dark);" title="Total cash collected at joining">Total Initial Payment (₹)</label>
                                 <div style="position: relative; height: 48px;">
                                     <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
                                     <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">

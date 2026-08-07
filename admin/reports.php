@@ -27,7 +27,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         
         /* Typography */
         .page-title { font-size: 26px; font-weight: 800; background: linear-gradient(90deg, #0F172A 0%, #312E81 50%, #6C4DFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; letter-spacing: -0.5px; white-space: nowrap; display: inline-block; }
-        .page-subtitle { font-size: 13px; font-weight: 500; color: #64748B; margin-bottom: 0; white-space: nowrap; }
+        .page-subtitle { font-size: 13px; font-weight: 500; color: var(--text-gray); margin-bottom: 0; white-space: nowrap; }
         .section-title { font-size: 16px; font-weight: 700; color: #0F172A; margin: 0; }
         
         /* Grid System */
@@ -56,13 +56,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         /* Buttons & Controls */
         .header-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; justify-content: flex-end; }
         .btn-saas { padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s; border: none; font-family: inherit; white-space: nowrap; }
-        .btn-saas-outline { background: var(--white); border: 1px solid #E2E8F0; color: #334155; }
-        .btn-saas-outline:hover { background: var(--bg-main); border-color: #CBD5E1; }
+        .btn-saas-outline { background: var(--white); border: 1px solid var(--border); color: var(--text-dark); }
+        .btn-saas-outline:hover { background: var(--bg-main); border-color: var(--border); }
         .btn-saas-primary { background: #6C4DFF; color: #fff; box-shadow: 0 4px 12px rgba(108, 77, 255, 0.2); }
         .btn-saas-primary:hover { background: #5a3df0; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(108, 77, 255, 0.3); }
         
-        .quick-filters { display: flex; gap: 4px; background: var(--white); padding: 4px; border-radius: 12px; border: 1px solid #E2E8F0; width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
-        .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #64748B; border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+        .quick-filters { display: flex; gap: 4px; background: var(--white); padding: 4px; border-radius: 12px; border: 1px solid var(--border); width: max-content; margin: 24px auto 0 auto; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+        .filter-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--text-gray); border: none; background: transparent; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .filter-btn:hover { color: #0F172A; background: var(--bg-main); }
         .filter-btn.active { background: #6C4DFF; color: #fff; }
 
@@ -78,7 +78,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .kpi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
         .kpi-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; flex-shrink: 0; }
         .kpi-title-block { display: flex; flex-direction: column; }
-        .kpi-label { font-size: 11px; font-weight: 600; color: #64748B; margin-bottom: 2px; }
+        .kpi-label { font-size: 11px; font-weight: 600; color: var(--text-gray); margin-bottom: 2px; }
         .kpi-val { font-size: 20px; font-weight: 800; color: #0F172A; }
         .kpi-trend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; margin-bottom: 12px; }
         .kpi-trend { color: #10B981; font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
@@ -88,11 +88,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
         /* Specific Elements */
         .receivable-card { background: var(--bg-main); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid transparent; transition: 0.2s; }
-        .receivable-card:hover { border-color: #E2E8F0; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .r-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: #334155; }
+        .receivable-card:hover { border-color: var(--border); background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .r-title { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; color: var(--text-dark); }
         .r-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
         .r-amount { font-size: 16px; font-weight: 700; color: #0F172A; text-align: right; }
-        .r-sub { font-size: 11px; color: #64748B; font-weight: 500; text-align: right; margin-top: 2px; }
+        .r-sub { font-size: 11px; color: var(--text-gray); font-weight: 500; text-align: right; margin-top: 2px; }
 
         /* Profile Cards */
         .profile-card { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid #F1F5F9; }
@@ -100,7 +100,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .p-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #E2E8F0; }
         .p-info { flex: 1; min-width: 0; }
         .p-name { font-size: 14px; font-weight: 700; color: #0F172A; margin: 0 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .p-room { font-size: 12px; color: #64748B; font-weight: 500; }
+        .p-room { font-size: 12px; color: var(--text-gray); font-weight: 500; }
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
 
         /* Defaulters */
@@ -108,7 +108,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .defaulter-card:last-child { border-bottom: none; }
         .defaulter-card-left { display: flex; align-items: center; gap: 12px; }
         .defaulter-card-right { display: flex; align-items: center; gap: 16px; }
-        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: var(--bg-main); color: #64748B; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; text-decoration: none; }
+        .defaulter-action { width: 36px; height: 36px; border-radius: 10px; background: var(--bg-main); color: var(--text-gray); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 18px; text-decoration: none; }
         .defaulter-action:hover { background: #6C4DFF; color: #fff; }
 
         /* Timeline */
@@ -118,13 +118,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .tl-item:last-child { padding-bottom: 0; }
         .tl-dot { position: absolute; left: -16px; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--white); border: 2px solid #6C4DFF; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6C4DFF; }
         .tl-title { font-size: 13px; font-weight: 700; color: #0F172A; margin-bottom: 2px; }
-        .tl-desc { font-size: 12px; color: #64748B; line-height: 1.4; }
+        .tl-desc { font-size: 12px; color: var(--text-gray); line-height: 1.4; }
         .tl-time { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; display: block; }
 
         /* AI Insights */
-        .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid #E2E8F0; }
+        .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid var(--border); }
         .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; color: #6C4DFF; font-size: 14px; }
-        .ai-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
+        .ai-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; font-size: 13px; color: var(--text-dark); line-height: 1.6; }
         .ai-list li { background: var(--white); padding: 16px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(226, 232, 240, 0.8); display: flex; align-items: flex-start; gap: 10px; }
         .ai-list li::before { content: '✨'; font-size: 16px; flex-shrink: 0; }
 
@@ -186,7 +186,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             <div class="saas-panel" style="height: 100%;">
                 <div class="saas-panel-header">
                     <h2 class="section-title">Revenue Overview</h2>
-                    <select style="padding: 6px 12px; border-radius: 8px; border: 1px solid #E2E8F0; font-size: 12px; font-weight: 600; outline:none;">
+                    <select style="padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 12px; font-weight: 600; outline:none;">
                         <option>Monthly</option>
                         <option>Quarterly</option>
                     </select>
@@ -246,7 +246,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 </div>
                 
                 <div style="position: relative; margin-top: 24px; border-top: 1px dashed #E2E8F0; padding-top: 24px;">
-                    <h3 style="font-size:13px; font-weight:700; color:#64748B; margin-top:0; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px; display: flex; align-items: center; gap: 8px;"><i class='bx bxs-bar-chart-alt-2' style="color:#6C4DFF; font-size:18px;"></i> Top Consumers</h3>
+                    <h3 style="font-size:13px; font-weight:700; color: var(--text-gray); margin-top:0; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px; display: flex; align-items: center; gap: 8px;"><i class='bx bxs-bar-chart-alt-2' style="color:#6C4DFF; font-size:18px;"></i> Top Consumers</h3>
                     <div style="height: 250px; position: relative;">
                         <canvas id="elecBarChart"></canvas>
                     </div>
@@ -317,8 +317,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     </div>
     
     <div class="fade-in" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #E2E8F0; padding-top:20px; margin-top:20px; animation-delay: 0.7s;">
-        <div style="font-size:12px; color:#64748B; font-weight:500;">Data source: Real-time Database sync active.</div>
-        <div style="font-size:12px; color:#64748B; font-weight:500; display:flex; align-items:center; gap:6px;">
+        <div style="font-size:12px; color: var(--text-gray); font-weight:500;">Data source: Real-time Database sync active.</div>
+        <div style="font-size:12px; color: var(--text-gray); font-weight:500; display:flex; align-items:center; gap:6px;">
             <i class='bx bx-time'></i> Last updated: <span id="updateTime">Just now</span>
         </div>
     </div>
@@ -514,11 +514,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                     <div class="text-right" style="margin-right:24px;">
                         <div style="font-size:14px; font-weight:700;">${formatCur(p.paid)}</div>
-                        <div style="font-size:11px; color:#64748B;">Total Paid</div>
+                        <div style="font-size:11px; color: var(--text-gray);">Total Paid</div>
                     </div>
                     <div class="text-right" style="margin-right:24px;">
                         <div style="font-size:14px; font-weight:700; color:#EF4444;">${formatCur(p.due)}</div>
-                        <div style="font-size:11px; color:#64748B;">Pending</div>
+                        <div style="font-size:11px; color: var(--text-gray);">Pending</div>
                     </div>
                     <div style="width: 80px; text-align:right;">
                         <span class="badge" style="background:${p.statusBg}; color:${p.statusColor};">${p.status}</span>
@@ -531,11 +531,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const eStats = await eStatsRes.json();
             document.getElementById('elecStatsContainer').innerHTML = `
                 <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
-                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
+                    <div style="font-size:12px; color: var(--text-gray); font-weight:600; margin-bottom:4px; text-transform:uppercase;">Avg Units/Res</div>
                     <div style="font-size:26px; font-weight:800; color:#0F172A;">${eStats.avg_units}</div>
                 </div>
                 <div style="background: var(--bg-main); padding:12px 20px; border-radius:12px; min-width: 140px;">
-                    <div style="font-size:12px; color:#64748B; font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
+                    <div style="font-size:12px; color: var(--text-gray); font-weight:600; margin-bottom:4px; text-transform:uppercase;">Highest Usage</div>
                     <div style="font-size:26px; font-weight:800; color:#EF4444;">${eStats.highest}</div>
                 </div>
             `;
@@ -578,7 +578,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     <div class="defaulter-card-left">
                         <img src="${d.photo}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
                         <div>
-                            <div class="p-name">${d.name} <span style="color:#64748B; font-weight:500; font-size:12px;">(Rm ${d.room})</span></div>
+                            <div class="p-name">${d.name} <span style="color: var(--text-gray); font-weight:500; font-size:12px;">(Rm ${d.room})</span></div>
                             <div style="font-size:11px; color:#EF4444; font-weight:600;">${d.days_overdue} days overdue</div>
                         </div>
                     </div>

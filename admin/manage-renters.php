@@ -324,7 +324,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                         $displayName = count($words) > $keepWords ? implode(' ', array_slice($words, 0, $keepWords)) . '...' : $fullName;
                                     ?>
                                     <div style="font-weight: 700; color: var(--text-dark); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;" title="<?php echo htmlspecialchars($fullName); ?>"><?php echo htmlspecialchars($displayName); ?></div>
-                                    <div style="font-size: 12px; color: #64748B; margin-top: 2px; display: flex; align-items: center; gap: 6px;">
+                                    <div style="font-size: 12px; color: var(--text-gray); margin-top: 2px; display: flex; align-items: center; gap: 6px;">
                                         <?php echo htmlspecialchars($u['phone']); ?>
                                         <i class='bx bx-envelope' style="font-size: 14px; color: #94A3B8; cursor: pointer;" title="<?php echo htmlspecialchars($u['email']); ?>"></i>
                                     </div>
@@ -352,7 +352,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 </span>
                             <?php endif; ?>
                         </td>
-                        <td style="padding: 12px 10px; color: #64748B; font-size: 13px; font-weight: 500;">
+                        <td style="padding: 12px 10px; color: var(--text-gray); font-size: 13px; font-weight: 500;">
                             <div style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                                 <i class='bx bx-calendar' style="font-size: 16px; color: #94A3B8;"></i>
                                 <?php echo $u['joining_date'] ? date('d M Y', strtotime($u['joining_date'])) : 'N/A'; ?>
@@ -370,7 +370,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                                 <button onclick="resetPassword(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #F59E0B; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Change Password">
                                     <i class='bx bx-lock-alt'></i>
                                 </button>
-                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-main); color: #64748B; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
+                                <button onclick="moveOutRenter(<?php echo $u['id']; ?>, <?php echo htmlspecialchars(json_encode($u['name']), ENT_QUOTES, 'UTF-8'); ?>)" style="width: 32px; height: 32px; border-radius: 8px; background: var(--bg-main); color: var(--text-gray); border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;" title="Move Out Renter">
                                     <i class='bx bx-exit'></i>
                                 </button>
                                 <?php endif; ?>
@@ -466,7 +466,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         <div class="panel animate-up" style="max-width: 400px; width: 100%; padding: 32px; background: var(--white);">
             <div style="text-align: center; margin-bottom: 24px;">
                 <div style="width: 64px; height: 64px; background: rgba(100, 116, 139, 0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                    <i class='bx bx-exit' style="font-size: 32px; color: #64748B;"></i>
+                    <i class='bx bx-exit' style="font-size: 32px; color: var(--text-gray);"></i>
                 </div>
                 <h3 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Move Out Resident</h3>
                 <p id="moveOutUsername" style="color: var(--text-gray); font-size: 14px; margin-top: 4px;">They will be archived but history is saved.</p>

@@ -92,7 +92,7 @@ $admin_user = s($_SESSION['admin']);
             margin-bottom: 6px;
             font-weight: 800;
             font-size: 11.5px;
-            color: #475569;
+            color: var(--text-gray);
             text-transform: uppercase;
             letter-spacing: 0.6px;
         }
@@ -274,13 +274,13 @@ $admin_user = s($_SESSION['admin']);
 
         :root.dark-theme .custom-options-container {
             background: #1E293B;
-            border-color: #334155;
+            border-color: var(--text-dark);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         :root.dark-theme .custom-search-box {
             background: #0F172A;
-            border-color: #334155;
+            border-color: var(--text-dark);
         }
 
         :root.dark-theme .custom-option {

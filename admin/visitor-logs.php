@@ -114,7 +114,7 @@ $admin_user = s($_SESSION['admin']);
         .pt-card {
             flex: 1;
             background: var(--white);
-            border: 1px solid #E2E8F0;
+            border: 1px solid var(--border);
             border-radius: 16px;
             padding: 20px 24px;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -131,7 +131,7 @@ $admin_user = s($_SESSION['admin']);
         .pt-card:hover {
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
             transform: translateY(-2px);
-            border-color: #CBD5E1;
+            border-color: var(--border);
         }
 
         .pt-left {
@@ -181,7 +181,7 @@ $admin_user = s($_SESSION['admin']);
             gap: 12px;
             font-size: 13px;
             font-weight: 600;
-            color: #64748B;
+            color: var(--text-gray);
         }
 
         .log-meta .bx {
@@ -235,7 +235,7 @@ $admin_user = s($_SESSION['admin']);
             gap: 6px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 13px;
-            color: #475569;
+            color: var(--text-gray);
             background: var(--bg-main);
             padding: 6px 12px;
             border-radius: 8px;
@@ -300,7 +300,7 @@ $admin_user = s($_SESSION['admin']);
 
         <div class="welcome animate-up" style="margin-bottom: 40px; text-align: center;">
             <h1 style="font-size: 36px; font-weight: 900; color: #0F172A; margin-bottom: 8px;">Visitor Logs</h1>
-            <p style="color: #64748B; font-size: 16px;">Tracking the last 200 login events for transparency</p>
+            <p style="color: var(--text-gray); font-size: 16px;">Tracking the last 200 login events for transparency</p>
         </div>
 
         <div class="premium-timeline animate-up" id="logTable">
@@ -332,13 +332,13 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                             <div class="log-meta">
                                 <span class="log-time">
-                                    <i class='bx bx-log-in-circle' style="color: #64748B;"></i>
+                                    <i class='bx bx-log-in-circle' style="color: var(--text-gray);"></i>
                                     <?php echo date('M d, Y • g:i A', strtotime($row['login_time'])); ?>
                                 </span>
                                 <i class='bx bx-right-arrow-alt' style="color: #CBD5E1;"></i>
                                 <?php if (!empty($row['logout_time'])): ?>
                                     <span class="log-time">
-                                        <i class='bx bx-log-out-circle' style="color: #64748B;"></i>
+                                        <i class='bx bx-log-out-circle' style="color: var(--text-gray);"></i>
                                         <?php echo date('M d, Y • g:i A', strtotime($row['logout_time'])); ?>
                                     </span>
                                 <?php else: ?>
