@@ -48,9 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($total_collected > 0 && $total_collected != $fixed_rent && $total_collected != ($fixed_rent * 2)) {
                     $error = "System Protocol Violation: The total collected amount (₹$total_collected) must be exactly equal to 1 month's rent (₹$fixed_rent) OR exactly double the rent (₹" . ($fixed_rent * 2) . "). Partial amounts are not accepted.";
                 } else {
-                    // Security Deposit Target is ALWAYS equal to 1 month's rent
-                    $security_deposit = $fixed_rent;
-                    
                     // Split the total collected amount based on protocol
                     if ($total_collected == ($fixed_rent * 2)) {
                         $amount_to_sec = $fixed_rent;
@@ -63,6 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $amount_to_sec = 0;
                         $amount_to_first_month = 0;
                     }
+                    
+                    // The actual security deposit stored in the DB is what they paid
+                    $security_deposit = $amount_to_sec;
+                }
                 
                 // Set onboarding completed flag if they fully paid
                 $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
@@ -120,8 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (isset($stmt)) {
                     mysqli_stmt_close($stmt);
                 }
-            } // Close protocol else
-            } // Close username check else
+            }
             mysqli_stmt_close($check);
         }
     }
