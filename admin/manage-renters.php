@@ -184,7 +184,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 <i class='bx bx-group' style="font-size: 28px; color: #624BFF;"></i>
             </div>
             <div>
-                <h1 class="page-title" style="margin: 0 0 4px 0;">
+                <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -1px; margin: 0 0 4px 0; background: linear-gradient(135deg, #1E293B 0%, #624BFF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                     Manage Residents
                 </h1>
                 <p style="font-size: 15px; color: var(--text-gray); margin: 0; font-weight: 500;">View, manage and organize all residents in your property</p>
