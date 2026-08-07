@@ -497,7 +497,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             display: flex; align-items: center; justify-content: center; color: var(--text-dark); font-size: 20px;
             position: relative; cursor: pointer; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
-        .header-actions .icon-btn:hover { background: #f8fafc; transform: translateY(-1px); }
+        .header-actions .icon-btn:hover { background: var(--bg-main); transform: translateY(-1px); }
         .header-actions .icon-btn .badge { position: absolute; top: -5px; right: -5px; background: #EF4444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border: 2px solid white; }
         
         .user-profile-pill { display: flex; align-items: center; gap: 12px; cursor: pointer; padding-left: 12px; border-left: 1px solid var(--border); white-space: nowrap; }
@@ -510,7 +510,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
             padding: 10px 14px; border-radius: 20px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 2px; text-decoration: none; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.02);
             white-space: nowrap;
         }
-        .btn-outline-support:hover { background: #f8fafc; transform: translateY(-1px); }
+        .btn-outline-support:hover { background: var(--bg-main); transform: translateY(-1px); }
 
         .profile-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; align-items: start; }
         .grid-col-left { display: flex; flex-direction: column; gap: 24px; }
@@ -543,7 +543,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
 
         /* Preferences Toggles */
         .preferences-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .pref-item { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px; background: #F8FAFC; border-radius: 14px; border: 1px solid var(--border); }
+        .pref-item { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px; background: var(--bg-main); border-radius: 14px; border: 1px solid var(--border); }
         .pref-info h4 { margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 6px; }
         .pref-info p { margin: 0; font-size: 11px; color: var(--text-gray); }
         
@@ -558,7 +558,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
         .value-green { color: #10B981 !important; font-weight: 700; }
         
         /* Document List */
-        .doc-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: #F8FAFC; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .doc-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--bg-main); border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); }
         .doc-item:last-child { margin-bottom: 0; }
         .doc-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .doc-icon.green { background: rgba(16, 185, 129, 0.1); color: #10B981; }
@@ -695,27 +695,27 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Full Name</label>
-                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;" required>
+                        <input type="text" name="name" value="<?php echo htmlspecialchars($user['name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;" required>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Email Address</label>
-                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="email" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Alternate Number</label>
-                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="whatsapp" value="<?php echo htmlspecialchars($user['whatsapp'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Date of Birth</label>
-                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="date" name="dob" value="<?php echo htmlspecialchars($user['dob'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Gender</label>
-                        <select name="gender" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <select name="gender" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                             <option value="">Select Gender</option>
                             <option value="Male" <?php echo ($user['gender'] ?? '') === 'Male' ? 'selected' : ''; ?>>Male</option>
                             <option value="Female" <?php echo ($user['gender'] ?? '') === 'Female' ? 'selected' : ''; ?>>Female</option>
@@ -724,7 +724,7 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Address</label>
-                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                 </div>
 
@@ -736,19 +736,19 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Name</label>
-                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_name" value="<?php echo htmlspecialchars($user['emergency_contact_name'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Relationship</label>
-                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_relation" value="<?php echo htmlspecialchars($user['emergency_contact_relation'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Phone Number</label>
-                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_phone" value="<?php echo htmlspecialchars($user['emergency_contact_phone'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                     <div style="grid-column: span 2;">
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Contact Address</label>
-                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box;">
+                        <input type="text" name="emergency_contact_address" value="<?php echo htmlspecialchars($user['emergency_contact_address'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box;">
                     </div>
                 </div>
                 </div> <!-- CLOSING DIV FOR modalEmergencyContactSection -->
@@ -766,21 +766,21 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Current Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
+                            <input type="password" name="current_password" id="current_password" placeholder="Enter your current password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required>
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('current_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">New Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <input type="password" name="new_password" id="new_password" placeholder="Min. 6 characters" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('new_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;">Confirm New Password <span style="color: #EF4444;">*</span></label>
                         <div style="position: relative;">
-                            <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
+                            <input type="password" name="confirm_password" id="confirm_password" placeholder="Re-enter new password" style="width: 100%; padding: 13px 44px 13px 16px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; color: var(--text-dark); outline: none; transition: 0.2s;" required minlength="6">
                             <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('confirm_password')" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #94A3B8; cursor: pointer; transition: 0.2s;"></i>
                         </div>
                     </div>
@@ -830,30 +830,30 @@ $aadhaar_file = $user['aadhaar_file'] ?? null;
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-door-open' style="font-size: 16px; vertical-align: middle;"></i> Room Number</label>
-                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="room_no" value="<?php echo htmlspecialchars($user['room_no'] ?? ''); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-calendar' style="font-size: 16px; vertical-align: middle;"></i> Join Date</label>
-                        <input type="text" name="join_date" value="<?php echo $user['joining_date'] ? date('d M Y', strtotime($user['joining_date'])) : 'Not Set'; ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="join_date" value="<?php echo $user['joining_date'] ? date('d M Y', strtotime($user['joining_date'])) : 'Not Set'; ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Base Rent (₹)</label>
-                        <input type="text" name="rent_amount" value="<?php echo number_format($user['fixed_rent'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="rent_amount" value="<?php echo number_format($user['fixed_rent'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
 
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wrench' style="font-size: 16px; vertical-align: middle;"></i> Maintenance (₹)</label>
-                        <input type="text" name="maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="maintenance" value="<?php echo number_format($user['fixed_maintenance'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-wallet' style="font-size: 16px; vertical-align: middle;"></i> Advance Wallet (₹)</label>
-                        <input type="text" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                     <div>
                         <label style="display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px;"><i class='bx bx-check-shield' style="font-size: 16px; vertical-align: middle;"></i> Security Deposit (₹)</label>
-                        <input type="text" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: #F8FAFC; font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
+                        <input type="text" name="security_deposit" value="<?php echo number_format($user['security_deposit'] ?? 0); ?>" style="width: 100%; padding: 10px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-main); font-size: 13px; box-sizing: border-box; cursor: not-allowed; color: var(--text-gray);" readonly>
                     </div>
                 </div>
                 
