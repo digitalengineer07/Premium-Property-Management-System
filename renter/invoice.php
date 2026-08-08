@@ -824,7 +824,23 @@ $email = $bill['email'] ?? 'renter@example.com';
             .totals-box { width: 100%; }
             .bottom-section { grid-template-columns: 1fr; }
             .footer-banner { flex-direction: column; gap: 24px; text-align: center; }
-            .support-info { text-align: left; flex-direction: row; justify-content: center; }
+            .support-info { 
+                text-align: left; 
+                flex-direction: row; 
+                justify-content: center; 
+                background: var(--white);
+                padding: 16px;
+                border-radius: 12px;
+                width: 100%;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+                gap: 16px;
+            }
+            .support-info i {
+                font-size: 28px;
+                background: #EEF2FF;
+                padding: 12px;
+                border-radius: 50%;
+            }
             .actions-bar { flex-direction: column; }
         }
 
