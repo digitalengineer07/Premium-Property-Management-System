@@ -309,8 +309,8 @@ height: 32px !important;
     .mobile-page-body .tabs-header {
         display: grid !important;
         grid-template-columns: 1fr 1fr 1fr !important;
-        gap: 12px !important;
-        padding: 16px 20px !important;
+        gap: 8px !important;
+        padding: 16px 12px !important;
     }
     .mobile-page-body .filter-group {
         width: 100% !important;
@@ -337,25 +337,14 @@ height: 32px !important;
     .mobile-page-body .filter-group > div i {
         margin-right: 4px !important;
     }
-    .mobile-page-body .filter-group:nth-child(4) {
-        grid-column: 1 / -1 !important;
-        margin-top: 4px !important;
-    }
+    .mobile-page-body .filter-group:nth-child(4),
     .mobile-page-body .filter-group:nth-child(5) {
         grid-column: 1 / -1 !important;
-        display: flex !important;
-        justify-content: center !important;
-        margin-top: 8px !important;
     }
     .mobile-page-body .btn-outline-support {
-        width: auto !important;
-        min-width: 160px !important;
-        padding: 10px 24px !important;
-        border-radius: 24px !important;
+        width: 100% !important;
         justify-content: center !important;
-        margin-top: 0;
-        font-weight: 600 !important;
-        background: rgba(98, 75, 255, 0.05) !important;
+        margin-top: 4px;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
