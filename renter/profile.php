@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // renter/profile.php
 require_once "../db.php";   // include DB BEFORE session_start
 session_start();
