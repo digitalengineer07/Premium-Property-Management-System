@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         width: 220px;
         height: 220px;
         border-radius: 50%;
-        border: 36px solid rgba(220, 38, 38, 0.04);
+        border: 36px solid rgba(220, 38, 38, 0.12);
         pointer-events: none;
         z-index: 0;
     }
