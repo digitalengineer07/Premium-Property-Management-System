@@ -337,7 +337,7 @@ foreach ($notices as $n) {
                             <?php endif; ?>
                         </div>
                     </div>
-                    <p class="m-notice-desc"><?php echo htmlspecialchars($n['full_desc']); ?></p>
+                    <p class="m-notice-desc"><?php echo nl2br(htmlspecialchars($n['full_desc'])); ?></p>
                 </div>
             </div>
         <?php endforeach; ?>
