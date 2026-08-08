@@ -25,10 +25,14 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <script>
-        // Instant JS redirect based on screen width
-        if (window.innerWidth > 768) {
-            window.location.replace('index.php');
+        // Instant JS redirect based on screen width with resize listener for DevTools testing
+        function checkDesktopRedirect() {
+            if (window.innerWidth > 768) {
+                window.location.replace('index.php');
+            }
         }
+        checkDesktopRedirect();
+        window.addEventListener('resize', checkDesktopRedirect);
     </script>
 
     <!-- Fonts + Icons -->
