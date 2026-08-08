@@ -356,10 +356,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
     }
 
+    .mobile-home-btn {
+        display: none;
+    }
+
     @media (max-width: 992px) {
-        .split-layout { flex-direction: column; padding: 20px; }
-        .left-panel { padding: 20px; display: none; }
-        .right-panel { padding: 0; }
+        body {
+            background: #f4f7f6;
+            background-image: 
+                url('assets/img/vector_house_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+            z-index: -1;
+        }
+        .split-layout { 
+            flex-direction: column; 
+            padding: 24px; 
+            min-height: 100vh; 
+            justify-content: center; 
+            position: relative;
+            z-index: 1;
+        }
+        .left-panel { display: none; }
+        .right-panel { 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+        }
+        
+        .mobile-home-btn {
+            position: absolute;
+            top: 24px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px 8px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 100px;
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .mobile-home-btn:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        .mobile-home-btn i {
+            font-size: 18px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 36px 24px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.98);
+            margin-top: 20px;
+        }
     }
   </style>
 </head>
@@ -428,6 +503,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Right Login Card Panel -->
     <div class="right-panel">
+        
+        <a href="index.php" class="mobile-home-btn">
+            <i class='bx bx-home-alt-2'></i> Back to Home
+        </a>
+
         <div class="login-card">
             
             <div class="card-logo" style="color: var(--primary-purple);">
