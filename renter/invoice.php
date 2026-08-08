@@ -111,6 +111,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             box-shadow: 0 10px 40px rgba(0,0,0,0.05);
             overflow: hidden;
             border: 1px solid var(--border);
+            position: relative;
         }
 
         .invoice-content {
@@ -119,21 +120,33 @@ $email = $bill['email'] ?? 'renter@example.com';
 
         /* Header Section */
         .back-btn-wrapper {
-            padding: 20px 40px 0;
-            margin-bottom: -10px;
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
         }
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: var(--text-gray);
-            font-size: 14px;
-            font-weight: 600;
+            color: var(--primary);
+            background: #EEF2FF;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
             text-decoration: none;
-            transition: 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
         }
         .back-btn:hover {
-            color: var(--primary);
+            background: #E0E7FF;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(79, 70, 229, 0.1);
         }
         .back-btn i { font-size: 18px; }
 
@@ -849,7 +862,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             .invoice-container { width: 100%; max-width: 100%; }
             body { padding: 16px 10px; }
             .invoice-content { padding: 20px 16px; }
-            .back-btn-wrapper { padding: 16px 16px 0; margin-bottom: 0; }
+            .back-btn-wrapper { top: 16px; left: 16px; }
             .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
             .brand-section { flex-direction: column; align-items: center; text-align: center; }
             .brand-contact { flex-direction: column; gap: 6px; align-items: center; }
