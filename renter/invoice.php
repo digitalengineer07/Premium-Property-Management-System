@@ -1106,10 +1106,12 @@ $email = $bill['email'] ?? 'renter@example.com';
                 
                 <div class="support-info">
                     <i class='bx bx-support'></i>
-                    <div>
-                        <h4>Need Help?</h4>
-                        <p style="font-size: 13px;">+91 6206936907</p>
-                        <span>madhavkunj@succorkart.in</span>
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;">
+                            <h4 style="margin: 0; font-size: 13px;">Need Help?</h4>
+                            <p style="font-size: 14px; margin: 0; font-weight: 700; color: var(--text-dark);">+91 6206936907</p>
+                        </div>
+                        <span style="font-size: 11px; color: var(--text-gray);">madhavkunj@succorkart.in</span>
                     </div>
                 </div>
             </div>
