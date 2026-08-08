@@ -939,7 +939,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                             <th style="width: 40px;">#</th>
                             <th style="width: 180px;">Particulars</th>
                             <th>Description</th>
-                            <th style="text-align: right;">Amount (₹)</th>
+                            <th style="text-align: center;">Amount (₹)</th>
                         </tr>
                     </thead>
                     <tbody>
