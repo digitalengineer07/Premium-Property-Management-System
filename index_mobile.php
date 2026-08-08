@@ -25,8 +25,8 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <script>
-        if (window.innerWidth <= 768) {
-            window.location.replace('index_mobile.php');
+        if (window.innerWidth > 768) {
+            window.location.replace('index.php');
         }
     </script>
 
@@ -1202,20 +1202,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="hero-desc">A unified digital experience to manage your property, view bills, track payments,
                     and access important records &ndash; all in one secure place.</p>
 
-                <div class="hero-mini-features">
-                    <div class="mini-feat mf-1">
-                        <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
-                        <div class="mini-feat-text">Easy Bill<br>Management</div>
-                    </div>
-                    <div class="mini-feat mf-2">
-                        <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
-                        <div class="mini-feat-text">Secure<br>Payments</div>
-                    </div>
-                    <div class="mini-feat mf-3">
-                        <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
-                        <div class="mini-feat-text">Real-time<br>Updates</div>
-                    </div>
-                </div>
+                <!-- Hero mini features moved below login section -->
 
 
             </div>
@@ -1275,6 +1262,22 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
 
+        </div>
+
+        <!-- Moved Hero mini features -->
+        <div class="hero-mini-features" style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 0 1rem;">
+            <div class="mini-feat mf-1">
+                <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
+                <div class="mini-feat-text">Easy Bill<br>Management</div>
+            </div>
+            <div class="mini-feat mf-2">
+                <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
+                <div class="mini-feat-text">Secure<br>Payments</div>
+            </div>
+            <div class="mini-feat mf-3">
+                <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                <div class="mini-feat-text">Real-time<br>Updates</div>
+            </div>
         </div>
 
         <!-- Bottom Features Strip -->
