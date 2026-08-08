@@ -10,7 +10,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
     $bill_id = (int)$bill_id;
     
     // 1. Calculate total paid
-    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
     $total_paid = round((float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0), 2);
     
     // 2. Fetch bill amount and update status
@@ -32,10 +32,10 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $elec_part = (float)$b['amount'];
             $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'] + (float)$b['extra_charges'];
             
-            $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
+            $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
             $total_elec_specific = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
             
-            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
+            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
             $total_combined_paid = (float)(mysqli_fetch_assoc($qCombinedPaid)['tp'] ?? 0);
             
             // Distribute combined (elec_rent) payment: First to Electricity, then to Rent
