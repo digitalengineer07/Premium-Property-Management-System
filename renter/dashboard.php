@@ -28,7 +28,7 @@ $room_no = $user['room_no'];
 // 1. Rent from pure 'rent' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
     IFNULL(SUM(
-        rent_amount - IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
+        rent_amount - IFNULL((SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
     ), 0) AS total 
     FROM rent r WHERE user_id = ? AND status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -48,7 +48,7 @@ $stmt = mysqli_prepare($conn, "SELECT
     ), 0) as rent_portion_total 
 FROM electricity e 
 LEFT JOIN (
-    SELECT bill_id, SUM(paid_amount) as total_paid 
+    SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
     FROM payments 
     WHERE bill_type IN ('electricity', 'elec_rent') 
     GROUP BY bill_id
@@ -161,7 +161,7 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
     SELECT e.id, e.month, e.units_consumed, e.amount, e.total_amount, COALESCE(NULLIF(e.elec_status, ''), e.status) as status, p.adjustment_amount, p.adjustment_type, COALESCE(p.payment_date, e.paid_date, (SELECT DATE(verified_at) FROM payment_notifications WHERE user_id = e.user_id AND status = 'Approved' ORDER BY id DESC LIMIT 1)) as payment_date,
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid
+           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type, MAX(payment_date) as payment_date FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
     WHERE e.user_id = ? 

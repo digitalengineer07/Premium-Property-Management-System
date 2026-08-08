@@ -296,7 +296,7 @@
                     // Fetch accurate pending dues from rent
                     $qR = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
                     while ($r = mysqli_fetch_assoc($qR)) {
-                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
                         $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
                         $due = max(0, (float)$r['total_amount'] - $paid);
                         if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
@@ -304,7 +304,7 @@
                     // Fetch accurate pending dues from electricity (unified)
                     $qE = mysqli_query($conn, "SELECT id, month, due_date, total_amount FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
                     while ($r = mysqli_fetch_assoc($qE)) {
-                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id={$r['id']}");
+                        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id={$r['id']}");
                         $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
                         $due = max(0, (float)$r['total_amount'] - $paid);
                         if ($due > 0) $pb_raw[] = ['month' => $r['month'], 'due_date' => $r['due_date'], 'due' => $due];
