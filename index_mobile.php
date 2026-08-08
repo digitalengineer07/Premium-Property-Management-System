@@ -1258,6 +1258,21 @@ if (isset($_SESSION['user_id'])) {
 
         </div>
 
+        <!-- Moved Hero mini features -->
+        <div class="hero-mini-features" style="margin-top: 1rem; margin-bottom: 1.5rem; padding: 0 1rem;">
+            <div class="mini-feat mf-1">
+                <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
+                <div class="mini-feat-text">Easy Bill<br>Management</div>
+            </div>
+            <div class="mini-feat mf-2">
+                <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
+                <div class="mini-feat-text">Secure<br>Payments</div>
+            </div>
+            <div class="mini-feat mf-3">
+                <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                <div class="mini-feat-text">Real-time<br>Updates</div>
+            </div>
+        </div>
 
         <!-- Bottom Features Strip -->
         <div class="bottom-features">
