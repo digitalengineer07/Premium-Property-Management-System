@@ -268,6 +268,16 @@ $show_banner = ($is_late && !empty($overdue_list));
     
     <style>
         /* New Sidebar Dashboard CSS */
+        /* Emergency Override for Logout Buttons */
+        a[href*="logout.php"], 
+        a[href*="logout.php"] *,
+        a[href*="logout.php"] i,
+        a[href*="logout.php"] span,
+        .nav-item[href*="logout.php"],
+        .nav-item[href*="logout.php"] * {
+            color: #FF4B6B !important;
+        }
+
         :root {
             --bg-main: #FAFBFC;
             --sidebar-bg: #FFFFFF;
