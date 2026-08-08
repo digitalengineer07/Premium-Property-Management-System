@@ -117,6 +117,7 @@ if (isset($_SESSION['user_id'])) {
         @keyframes fadeSlide {
             0% {
                 opacity: 1;
+                transform: scale(1);
             }
 
             16% {
@@ -125,21 +126,24 @@ if (isset($_SESSION['user_id'])) {
 
             20% {
                 opacity: 0;
+                transform: scale(1.1);
             }
 
             96% {
                 opacity: 0;
+                transform: scale(1);
             }
 
             100% {
                 opacity: 1;
+                transform: scale(1);
             }
         }
 
         .bg-overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to right, rgba(11, 28, 60, 0.85) 0%, rgba(11, 28, 60, 0.4) 45%, rgba(11, 28, 60, 0) 100%);
+            background: linear-gradient(to bottom, rgba(11, 28, 60, 0.2) 0%, rgba(11, 28, 60, 0.6) 40%, rgba(11, 28, 60, 0.95) 100%);
             z-index: -2;
             pointer-events: none;
         }
