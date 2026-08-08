@@ -24,6 +24,13 @@ if (isset($_SESSION['user_id'])) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <script>
+        // Instant JS redirect based on screen width
+        if (window.innerWidth > 768) {
+            window.location.replace('index.php');
+        }
+    </script>
+
     <!-- Fonts + Icons -->
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"

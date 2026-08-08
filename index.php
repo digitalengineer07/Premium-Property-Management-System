@@ -3,15 +3,6 @@
 require_once "db.php";
 session_start();
 
-// Mobile Detection for instant switch
-$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : '';
-$is_mobile = preg_match('/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i', $user_agent);
-
-if ($is_mobile && file_exists('index_mobile.php')) {
-    require 'index_mobile.php';
-    exit;
-}
-
 // If logged in, redirect to their dashboard
 if (isset($_SESSION['admin_id'])) {
     header("Location: admin/dashboard.php");
@@ -32,6 +23,13 @@ if (isset($_SESSION['user_id'])) {
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <script>
+        // Instant JS redirect based on screen width
+        if (window.innerWidth <= 768) {
+            window.location.replace('index_mobile.php');
+        }
+    </script>
 
     <!-- Fonts + Icons -->
     <link
