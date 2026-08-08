@@ -118,6 +118,25 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         /* Header Section */
+        .back-btn-wrapper {
+            padding: 20px 40px 0;
+            margin-bottom: -10px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-gray);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .back-btn:hover {
+            color: var(--primary);
+        }
+        .back-btn i { font-size: 18px; }
+
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -805,7 +824,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             .totals-box { width: 100%; }
             .bottom-section { grid-template-columns: 1fr; }
             .footer-banner { flex-direction: column; gap: 24px; text-align: center; }
-            .support-info { text-align: center; flex-direction: column; }
+            .support-info { text-align: left; flex-direction: row; justify-content: center; }
             .actions-bar { flex-direction: column; }
         }
 
@@ -814,8 +833,11 @@ $email = $bill['email'] ?? 'renter@example.com';
             .invoice-container { width: 100%; max-width: 100%; }
             body { padding: 16px 10px; }
             .invoice-content { padding: 20px 16px; }
+            .back-btn-wrapper { padding: 16px 16px 0; margin-bottom: 0; }
             .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
             .brand-section { flex-direction: column; align-items: center; text-align: center; }
+            .brand-contact { flex-direction: column; gap: 6px; align-items: center; }
+            .title-section { transform: none; margin-top: 0; width: 100%; }
             .meta-section { width: 100%; }
         }
         
@@ -836,6 +858,9 @@ $email = $bill['email'] ?? 'renter@example.com';
 <body>
 
     <div class="invoice-container">
+        <div class="back-btn-wrapper d-print-none">
+            <a href="my-bills.php" class="back-btn"><i class='bx bx-arrow-back'></i> Back to Bills</a>
+        </div>
         <div class="invoice-content" id="invoiceArea">
             
             <!-- Header -->
@@ -995,7 +1020,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                         
                         <div style="background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 2px; border-radius: 14px; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);">
                             <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $total_payable; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px;">
+                                <?php $upi_data = urlencode("upi://pay?pa=nikhil119124-1@oksbi&pn=" . HOUSE_NAME . " Residence&cu=INR&am=" . $total_payable); ?>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=<?php echo $upi_data; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px; max-width: 100%; height: auto;">
                             </div>
                         </div>
 
