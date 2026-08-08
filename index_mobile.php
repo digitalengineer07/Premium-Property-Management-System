@@ -77,14 +77,15 @@ if (isset($_SESSION['user_id'])) {
             right: -10px;
             bottom: -10px;
             z-index: -3;
-            background: transparent;
+            background: #0b1c3c;
         }
 
         .bg-slider .slide {
             position: absolute;
             inset: 0;
-            background-size: cover;
-            background-position: center;
+            background-size: auto 75%;
+            background-position: center top;
+            background-repeat: no-repeat;
             filter: brightness(0.95);
             animation: fadeSlide 30s infinite;
         }
@@ -126,7 +127,7 @@ if (isset($_SESSION['user_id'])) {
 
             20% {
                 opacity: 0;
-                transform: scale(1.1);
+                transform: scale(1.03);
             }
 
             96% {
@@ -143,7 +144,7 @@ if (isset($_SESSION['user_id'])) {
         .bg-overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(11, 28, 60, 0.2) 0%, rgba(11, 28, 60, 0.6) 40%, rgba(11, 28, 60, 0.95) 100%);
+            background: linear-gradient(to bottom, rgba(11, 28, 60, 0.1) 0%, rgba(11, 28, 60, 0.5) 50%, rgba(11, 28, 60, 1) 75%);
             z-index: -2;
             pointer-events: none;
         }
