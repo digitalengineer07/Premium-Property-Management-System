@@ -136,14 +136,20 @@
     .mobile-page-body .filter-group > div i {
         margin-right: 4px !important;
     }
-    .mobile-page-body .filter-group:nth-child(4),
-    .mobile-page-body .filter-group:nth-child(5) {
+    .mobile-page-body .filter-group:nth-child(4) {
         grid-column: 1 / -1 !important;
     }
-    .mobile-page-body .btn-outline-support {
-        width: 100% !important;
+    .mobile-page-body .filter-group:nth-child(5) {
+        grid-column: 1 / -1 !important;
+        display: flex !important;
         justify-content: center !important;
-        margin-top: 4px;
+        margin-top: 4px !important;
+    }
+    .mobile-page-body .btn-outline-support {
+        width: auto !important;
+        padding: 0 24px !important;
+        border-radius: 20px !important;
+        justify-content: center !important;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
@@ -337,14 +343,20 @@ height: 32px !important;
     .mobile-page-body .filter-group > div i {
         margin-right: 4px !important;
     }
-    .mobile-page-body .filter-group:nth-child(4),
-    .mobile-page-body .filter-group:nth-child(5) {
+    .mobile-page-body .filter-group:nth-child(4) {
         grid-column: 1 / -1 !important;
     }
-    .mobile-page-body .btn-outline-support {
-        width: 100% !important;
+    .mobile-page-body .filter-group:nth-child(5) {
+        grid-column: 1 / -1 !important;
+        display: flex !important;
         justify-content: center !important;
-        margin-top: 4px;
+        margin-top: 4px !important;
+    }
+    .mobile-page-body .btn-outline-support {
+        width: auto !important;
+        padding: 0 24px !important;
+        border-radius: 20px !important;
+        justify-content: center !important;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
