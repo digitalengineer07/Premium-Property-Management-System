@@ -431,12 +431,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 28px;
             border: 1px solid rgba(255, 255, 255, 0.4);
             background-color: rgba(255, 255, 255, 0.88);
-            background-image: radial-gradient(rgba(98, 75, 255, 0.08) 2px, transparent 2px);
-            background-size: 24px 24px;
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             margin-top: auto;
             margin-bottom: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 150px;
+            height: 150px;
+            background-image: radial-gradient(rgba(98, 75, 255, 0.25) 2px, transparent 2px);
+            background-size: 16px 16px;
+            pointer-events: none;
+            z-index: 0;
+            -webkit-mask-image: radial-gradient(circle at top left, black 30%, transparent 80%);
+            mask-image: radial-gradient(circle at top left, black 30%, transparent 80%);
+        }
+
+        .login-card::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 28px solid rgba(98, 75, 255, 0.05);
+            pointer-events: none;
+            z-index: 0;
         }
     }
   </style>
