@@ -429,8 +429,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 36px 24px;
             box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
             border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.88);
+            background-image: radial-gradient(rgba(98, 75, 255, 0.08) 2px, transparent 2px);
+            background-size: 24px 24px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             margin-top: auto;
             margin-bottom: auto;
         }
