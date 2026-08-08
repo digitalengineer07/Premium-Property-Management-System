@@ -2,7 +2,7 @@
 require 'db.php';
 
 echo "<div style='font-family: sans-serif; padding: 20px;'>";
-echo "<h3>Database Sync & Cleanup</h3>";
+echo "<h3>Database Sync & Cleanup (Advanced)</h3>";
 
 // 1. Add missing column if it doesn't exist
 $check_col = mysqli_query($conn, "SHOW COLUMNS FROM users LIKE 'move_out_date'");
@@ -23,11 +23,19 @@ while($r = mysqli_fetch_assoc($q)) {
     mysqli_query($conn, "DELETE FROM payments WHERE transaction_id='Manual/Old' AND bill_type='$bill_type' AND bill_id=$bill_id AND id != $keep");
     $dups++;
 }
-
 if ($dups > 0) {
     echo "✅ Cleaned duplicate records for <b>$dups</b> bills successfully!<br><br>";
 } else {
-    echo "✅ No duplicate payment records found.<br><br>";
+    echo "✅ No duplicate legacy payment records found.<br><br>";
+}
+
+// 3. Move legacy Advance Wallet funds to Security Deposit
+mysqli_query($conn, "UPDATE users SET security_deposit = security_deposit + advance_payment, advance_payment = 0 WHERE advance_payment > 0");
+$migrated_adv = mysqli_affected_rows($conn);
+if ($migrated_adv > 0) {
+    echo "✅ Successfully moved legacy advance wallet funds to Security Deposit for <b>$migrated_adv</b> users. Advance wallet is now completely clean for the Auto-Deduct feature!<br><br>";
+} else {
+    echo "✅ All Advance Wallets are already clean (at 0.00).<br><br>";
 }
 
 echo "<h3>All done!</h3>";
