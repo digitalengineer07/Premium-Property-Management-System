@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             <i class='bx bx-grid-alt'></i>
             <span>Dashboard</span>
         </a>
-        <a href="my-payments.php" class="nav-item <?php echo $current_page == 'my-payments.php' ? 'active' : ''; ?>">
+        <a href="my-payments.php" class="nav-item <?php echo ($current_page == 'my-payments.php' || $current_page == 'payment-history.php') ? 'active' : ''; ?>">
             <i class='bx bx-wallet'></i>
             <span>My Payments</span>
         </a>
