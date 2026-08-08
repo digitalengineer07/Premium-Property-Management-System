@@ -1,6 +1,6 @@
 <?php
 // admin/allocate_payment.php
-require_once "../db.php";
+require_once __DIR__ . "/../db.php";
 
 /**
  * Recalculate and update the status of a specific bill based on total payments made.
