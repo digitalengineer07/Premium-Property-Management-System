@@ -34,7 +34,7 @@ if (!$bill) {
 }
 
 // Calculate Payments
-$pay_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = $bill_id");
+$pay_q = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = $bill_id");
 $pay_res = mysqli_fetch_assoc($pay_q);
 $amount_paid = (float)($pay_res['total_paid'] ?? 0);
 

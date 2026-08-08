@@ -40,7 +40,7 @@ $res_pending = mysqli_query($conn, $q_pending);
 $pending_amount = mysqli_fetch_assoc($res_pending)['total'] ?? 0;
 
   // Fetch all electricity records with total paid amounts
-  $records_q = mysqli_query($conn, "SELECT e.*, (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid FROM electricity e WHERE user_id = $user_id ORDER BY e.id DESC");
+  $records_q = mysqli_query($conn, "SELECT e.*, (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid FROM electricity e WHERE user_id = $user_id ORDER BY e.id DESC");
   $electricity_records = [];
   while($row = mysqli_fetch_assoc($records_q)) {
       $r = (float)($row['rent_amount'] ?? 0);

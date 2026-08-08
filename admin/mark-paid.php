@@ -52,7 +52,7 @@ $user_id = (int)$bill['user_id'];
 
 // Get pending due for this specific bill
 if ($type !== 'advance') {
-    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$type' AND bill_id=$id");
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid FROM payments WHERE bill_type='$type' AND bill_id=$id");
     $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
     $remaining_amount = max(0, $bill_amount - $already_paid);
 } else {

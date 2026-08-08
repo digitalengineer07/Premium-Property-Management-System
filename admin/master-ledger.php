@@ -101,7 +101,7 @@ while ($row = mysqli_fetch_assoc($res)) {
     if ($row['bill_id']) {
         // Calculate paid amount from payments table for this bill
         $bid = $row['bill_id'];
-        $pq = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id=$bid");
+        $pq = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id=$bid");
         $pr = mysqli_fetch_assoc($pq);
         $paid = (float)$pr['tp'];
         $due = max(0, $bill_amt - $paid);

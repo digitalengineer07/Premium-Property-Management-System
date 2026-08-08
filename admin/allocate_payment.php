@@ -89,7 +89,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 1. Rent
     $qRent = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount, 'rent' as type FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qRent)) {
-        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
         $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
         $due = max(0, (float)$r['total_amount'] - $paid);
         if ($due > 0) {
@@ -101,10 +101,10 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 2. Electricity (elec_rent part and electricity part)
     $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
-        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
         $epaid_specific = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
         
-        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
         $rpaid_combined = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
         
         $edue_after_specific = max(0, (float)$r['elec_part'] - $epaid_specific);

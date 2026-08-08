@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     while($e = mysqli_fetch_assoc($e_query)) {
         $b_id = $e['id'];
         $gross_amt = (float)$e['amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['extra_charges'] + (float)$e['dues'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
         $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
         
         $correct_st = 'Due';
@@ -161,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     while($r = mysqli_fetch_assoc($r_query)) {
         $b_id = $r['id'];
         $gross_amt = (float)$r['rent_amount'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
         $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
         
         $correct_st = 'Due';
