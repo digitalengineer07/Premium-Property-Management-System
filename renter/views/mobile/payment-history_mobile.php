@@ -42,6 +42,9 @@
    ------------------------------------------------------------- */
 @media screen and (max-width: 768px) {
     /* 1. Hide the duplicate Desktop Header */
+    .mobile-page-body {
+        background: transparent !important;
+    }
     .mobile-page-body .top-header {
         display: none !important;
     }
