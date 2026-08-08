@@ -38,6 +38,10 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
             $total_combined_paid = (float)(mysqli_fetch_assoc($qCombinedPaid)['tp'] ?? 0);
             
+            // Fix: If specific electricity payment exceeds the electricity bill part (e.g. legacy total payment logged as 'electricity'), spill it over to combined.
+            $elec_excess = max(0, $total_elec_specific - $elec_part);
+            $total_combined_paid += $elec_excess;
+            
             // Distribute combined (elec_rent) payment: First to Electricity, then to Rent
             $elec_due_after_specific = max(0, $elec_part - $total_elec_specific);
             $applied_to_elec = min($elec_due_after_specific, $total_combined_paid);
@@ -106,6 +110,10 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
         
         $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
         $rpaid_combined = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+        
+        // Fix: Spill over excess specific electricity payment to rent part
+        $elec_excess = max(0, $epaid_specific - (float)$r['elec_part']);
+        $rpaid_combined += $elec_excess;
         
         $edue_after_specific = max(0, (float)$r['elec_part'] - $epaid_specific);
         $applied_to_elec = min($edue_after_specific, $rpaid_combined);
