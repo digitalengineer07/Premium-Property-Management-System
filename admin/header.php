@@ -2,6 +2,24 @@
     .admin-profile-dropdown {
         position: relative;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .admin-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .admin-info h4 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+    .admin-info p {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-gray);
     }
     .dropdown-menu-custom {
         display: none;
