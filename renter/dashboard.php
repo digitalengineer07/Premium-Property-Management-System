@@ -73,13 +73,11 @@ try { mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TIN
 $sec_due = 0;
 $adv_due = 0;
 
-$has_bills = (mysqli_fetch_assoc(mysqli_query($conn, "SELECT id FROM electricity WHERE user_id=$user_id LIMIT 1")) !== null);
-
 $u_q = mysqli_query($conn, "SELECT onboarding_completed FROM users WHERE id=$user_id");
 $u_data = mysqli_fetch_assoc($u_q);
 $onboarding_completed = $u_data['onboarding_completed'] ?? 0;
 
-if (!$onboarding_completed && !$has_bills) {
+if (!$onboarding_completed) {
     $sec_target = (float)($user['security_deposit'] ?? 0);
     $qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
     $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
@@ -87,8 +85,8 @@ if (!$onboarding_completed && !$has_bills) {
 
     // 1st month rent is DUE at onboarding
     $adv_target = (float)($user['fixed_rent'] ?? 0);
-    // Advance payment is a wallet. If they have funds, they have paid advance.
-    $adv_paid = (float)($user['advance_payment'] ?? 0);
+    $qAdvPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='advance'");
+    $adv_paid = (float)(mysqli_fetch_assoc($qAdvPaid)['total'] ?? 0);
     $adv_due = max(0, $adv_target - $adv_paid);
 }
 
