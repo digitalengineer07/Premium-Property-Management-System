@@ -1099,21 +1099,38 @@ if (isset($_SESSION['user_id'])) {
                 padding: 0 1rem 2rem 1rem;
                 margin: 0;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
                 gap: 12px;
                 box-shadow: none;
             }
 
             .bf-item {
-                width: 100%;
+                width: calc(50% - 6px);
                 justify-content: flex-start;
-                padding: 16px;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 16px 10px;
                 background: rgba(15, 23, 42, 0.5);
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 16px;
-            .hide-on-mobile {
+            }
+            
+            .bf-text h5 {
+                font-size: 12px;
+                margin-bottom: 4px;
+                line-height: 1.2;
+            }
+            
+            .bf-text p {
+                font-size: 10.5px;
+                line-height: 1.3;
+            }.hide-on-mobile {
                 display: none !important;
             }
             .hide-on-desktop {
