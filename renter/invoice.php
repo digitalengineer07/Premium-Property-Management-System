@@ -429,9 +429,16 @@ $email = $bill['email'] ?? 'renter@example.com';
             letter-spacing: 0.5px;
         }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px; /* Ensure table doesn't squish too much before scrolling */
         }
 
         th {
@@ -802,13 +809,24 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         @media (max-width: 600px) {
+            html, body { overflow-x: hidden; max-width: 100vw; }
+            .invoice-container { width: 100%; max-width: 100%; }
+            body { padding: 16px 10px; }
+            .invoice-content { padding: 20px 16px; }
             .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
             .brand-section { flex-direction: column; align-items: center; text-align: center; }
             .meta-section { width: 100%; }
         }
         
         @media (max-width: 500px) {
-            th, td { padding: 12px; font-size: 13px; }
+            th, td { padding: 10px 8px; font-size: 11px; }
+            table { min-width: 100% !important; }
+            th[style], td.col-num, td.col-part { width: auto !important; }
+            .table-footer-wrapper { padding: 12px; }
+            .totals-box { padding: 12px; }
+            .qr-code { width: 100px; height: 100px; }
+            .payment-info, .bill-summary, .footer-banner { padding: 12px; }
+            .total-row.final { font-size: 16px; }
         }
     </style>
 </head>
@@ -914,11 +932,12 @@ $email = $bill['email'] ?? 'renter@example.com';
                 <div class="table-header">
                     <h3>Charges Breakdown</h3>
                 </div>
-                <table>
-                    <thead>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <th style="width: 50px;">#</th>
-                            <th style="width: 250px;">Particulars</th>
+                            <th style="width: 40px;">#</th>
+                            <th style="width: 180px;">Particulars</th>
                             <th>Description</th>
                             <th style="text-align: right;">Amount (₹)</th>
                         </tr>
@@ -950,15 +969,16 @@ $email = $bill['email'] ?? 'renter@example.com';
                         ?>
                     </tbody>
                 </table>
+                </div>
                 <div class="table-footer-wrapper">
                     <div class="warning-box">
                         <i class='bx bx-info-circle'></i>
                         <p>Kindly clear your dues before the due date to avoid additional late fees.</p>
                     </div>
                     <div class="totals-box">
-                        <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none;">
+                        <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between;">
                             <span>Total Billed Amount</span>
-                            <span>₹ <?php echo number_format($total_payable, 2); ?></span>
+                            <span style="white-space: nowrap;">₹&nbsp;<?php echo number_format($total_payable, 2); ?></span>
                         </div>
                     </div>
                 </div>
