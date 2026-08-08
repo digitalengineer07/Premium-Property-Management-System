@@ -149,7 +149,8 @@
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
     .mobile-page-body .payments-container {
         border-radius: 0 !important;
-        border: none !important;
+        border-left: none !important;
+        border-right: none !important;
         margin-left: -16px;
         margin-right: -16px;
         width: calc(100% + 32px) !important;
@@ -374,7 +375,8 @@ height: 32px !important;
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
     .mobile-page-body .payments-container {
         border-radius: 0 !important;
-        border: none !important;
+        border-left: none !important;
+        border-right: none !important;
         margin-left: -16px;
         margin-right: -16px;
         width: calc(100% + 32px) !important;
