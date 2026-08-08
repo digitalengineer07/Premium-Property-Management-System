@@ -126,25 +126,14 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: var(--primary);
-            background: var(--primary-light);
-            padding: 8px 16px;
-            border-radius: 20px;
+            color: var(--text-gray);
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(79, 70, 229, 0.15);
+            transition: 0.2s;
         }
         .back-btn:hover {
-            background: var(--primary);
-            color: var(--white);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
-        }
-        .back-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+            color: var(--primary);
         }
         .back-btn i { font-size: 18px; }
 
