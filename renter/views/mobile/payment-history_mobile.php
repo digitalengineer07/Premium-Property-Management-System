@@ -150,7 +150,9 @@
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
-    .mobile-page-body .payments-container {
+    .mobile-page-body .payments-container,
+    body.dark-theme .mobile-page-body .payments-container,
+    :root.dark-theme .mobile-page-body .payments-container {
         border-radius: 0 !important;
         border: none !important;
         margin-left: -16px;
@@ -375,7 +377,9 @@ height: 32px !important;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
-    .mobile-page-body .payments-container {
+    .mobile-page-body .payments-container,
+    body.dark-theme .mobile-page-body .payments-container,
+    :root.dark-theme .mobile-page-body .payments-container {
         border-radius: 0 !important;
         border: none !important;
         margin-left: -16px;
