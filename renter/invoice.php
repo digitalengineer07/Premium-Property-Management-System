@@ -602,7 +602,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: flex;
             flex-direction: column;
             flex: 1;
-            justify-content: space-between;
+            gap: 12px;
         }
 
         .summary-item {
@@ -623,6 +623,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         .summary-item-val {
             font-weight: 600;
             color: var(--text-dark);
+            text-align: right;
         }
         
         .summary-item.remaining .summary-item-val {
@@ -827,6 +828,8 @@ $email = $bill['email'] ?? 'renter@example.com';
             .qr-code { width: 100px; height: 100px; }
             .payment-info, .bill-summary, .footer-banner { padding: 12px; }
             .total-row.final { font-size: 16px; }
+            .summary-item { align-items: flex-start; }
+            .summary-item-val { max-width: 60%; line-height: 1.4; }
         }
     </style>
 </head>
