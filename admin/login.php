@@ -348,9 +348,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .split-layout { 
             flex-direction: column; 
-            padding: 24px; 
+            padding: 20px; 
             min-height: 100vh; 
-            justify-content: center; 
             position: relative;
             z-index: 1;
         }
@@ -360,14 +359,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; 
             width: 100%; 
+            flex: 1;
         }
         
         .mobile-home-btn {
-            position: absolute;
-            top: 24px;
-            left: 20px;
+            align-self: flex-start;
+            margin-bottom: 20px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -402,7 +400,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 28px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.98);
-            margin-top: 20px;
+            margin-top: auto;
+            margin-bottom: auto;
         }
     }
   </style>
