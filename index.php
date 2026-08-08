@@ -1034,45 +1034,56 @@ if (isset($_SESSION['user_id'])) {
 
             .top-header {
                 flex-direction: column;
-                gap: 12px;
-                padding: 1rem;
+                gap: 16px;
+                padding: 1.5rem 1rem 1rem;
             }
 
             .header-links {
                 width: 100%;
                 justify-content: center;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 12px;
-                font-size: 14px;
+                font-size: 13px;
             }
 
             .hero-section h1 {
                 font-size: 32px;
-                line-height: 1.1;
+                line-height: 1.15;
                 margin-bottom: 12px;
             }
 
             .hero-section p.hero-desc {
                 font-size: 14px;
                 margin-bottom: 1.5rem;
+                padding: 0 10px;
             }
 
             .hero-mini-features {
-                gap: 12px;
+                gap: 16px;
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
-                align-items: flex-start;
+                align-items: stretch;
                 width: 100%;
             }
 
-            .hero-mini-features>div {
-                width: auto;
-                max-width: none;
-                justify-content: center;
-                padding: 0;
-                background: transparent;
-                border: none;
+            .hero-mini-features > .mini-feat {
+                width: calc(50% - 8px);
+                max-width: 160px;
+                justify-content: flex-start;
+                padding: 12px 10px;
+                background: rgba(15, 23, 42, 0.4);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 16px;
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+            
+            .hero-mini-features > .mini-feat.mf-3 {
+                max-width: 200px;
             }
 
             .login-card {
