@@ -3,15 +3,6 @@
 require_once "db.php";
 session_start();
 
-// Mobile Detection for instant switch
-$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : '';
-$is_mobile = preg_match('/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i', $user_agent);
-
-if ($is_mobile && file_exists('index_mobile.php')) {
-    require 'index_mobile.php';
-    exit;
-}
-
 // If logged in, redirect to their dashboard
 if (isset($_SESSION['admin_id'])) {
     header("Location: admin/dashboard.php");
@@ -1108,37 +1099,20 @@ if (isset($_SESSION['user_id'])) {
                 padding: 0 1rem 2rem 1rem;
                 margin: 0;
                 display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
                 gap: 12px;
                 box-shadow: none;
             }
 
             .bf-item {
-                width: calc(50% - 6px);
+                width: 100%;
                 justify-content: flex-start;
-                align-items: center;
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-                padding: 16px 10px;
+                padding: 16px;
                 background: rgba(15, 23, 42, 0.5);
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 16px;
-            }
-            
-            .bf-text h5 {
-                font-size: 12px;
-                margin-bottom: 4px;
-                line-height: 1.2;
-            }
-            
-            .bf-text p {
-                font-size: 10.5px;
-                line-height: 1.3;
             }
         }
     </style>
