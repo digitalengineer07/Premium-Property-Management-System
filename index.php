@@ -24,6 +24,8 @@ if (isset($_SESSION['user_id'])) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+    <link rel="prefetch" href="index_mobile.php">
+
     <script>
         // Instant JS redirect based on screen width with resize listener for DevTools testing
         function checkMobileRedirect() {
