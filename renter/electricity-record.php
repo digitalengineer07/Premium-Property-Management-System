@@ -378,6 +378,13 @@ function money($val) {
             background: rgba(139, 92, 246, 0.15) !important;
         }
 
+        /* WRAPPER VISIBILITY CONTROLS */
+        .mobile-view-wrapper { display: none; }
+        .desktop-view-wrapper { display: block; }
+        @media screen and (max-width: 991px) {
+            .desktop-view-wrapper { display: none !important; }
+            .mobile-view-wrapper { display: block !important; }
+        }
     
         /* EXCLUSIVE MOBILE VIEW MODE STYLES - ZERO IMPACT ON DESKTOP */
         @media screen and (max-width: 991px) {
