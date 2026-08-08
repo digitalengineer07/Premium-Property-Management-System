@@ -309,8 +309,8 @@ height: 32px !important;
     .mobile-page-body .tabs-header {
         display: grid !important;
         grid-template-columns: 1fr 1fr 1fr !important;
-        gap: 8px !important;
-        padding: 16px 12px !important;
+        gap: 12px 8px !important;
+        padding: 16px 20px !important; /* Increased padding to give first 3 filters more space */
     }
     .mobile-page-body .filter-group {
         width: 100% !important;
@@ -340,11 +340,36 @@ height: 32px !important;
     .mobile-page-body .filter-group:nth-child(4),
     .mobile-page-body .filter-group:nth-child(5) {
         grid-column: 1 / -1 !important;
+        margin-left: -8px !important; /* counteract the extra 8px padding (20px - 12px) */
+        width: calc(100% + 16px) !important;
     }
+    
+    /* Enhance the Search Box */
+    .mobile-page-body .filter-group:nth-child(4) > div {
+        padding: 0 !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4) input {
+        padding: 12px 14px 12px 40px !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        background: rgba(128, 128, 128, 0.05) !important;
+        border: 1px solid var(--border) !important;
+        height: 44px !important;
+        width: 100% !important;
+        color: var(--text-dark) !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4) i {
+        left: 14px !important;
+        font-size: 18px !important;
+        margin-right: 0 !important;
+    }
+
     .mobile-page-body .btn-outline-support {
         width: 100% !important;
         justify-content: center !important;
         margin-top: 4px;
+        height: 42px !important;
+        border-radius: 10px !important;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
