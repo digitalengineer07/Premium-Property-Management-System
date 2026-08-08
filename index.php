@@ -1113,6 +1113,17 @@ if (isset($_SESSION['user_id'])) {
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 16px;
+            .hide-on-mobile {
+                display: none !important;
+            }
+            .hide-on-desktop {
+                display: flex !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .hide-on-desktop {
+                display: none !important;
             }
         }
     </style>
@@ -1179,7 +1190,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="hero-desc">A unified digital experience to manage your property, view bills, track payments,
                     and access important records &ndash; all in one secure place.</p>
 
-                <div class="hero-mini-features">
+                <div class="hero-mini-features hide-on-mobile">
                     <div class="mini-feat mf-1">
                         <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
                         <div class="mini-feat-text">Easy Bill<br>Management</div>
@@ -1252,6 +1263,21 @@ if (isset($_SESSION['user_id'])) {
                 </div>
             </div>
 
+        </div>
+
+        <div class="hero-mini-features hide-on-desktop" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+            <div class="mini-feat mf-1">
+                <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
+                <div class="mini-feat-text">Easy Bill<br>Management</div>
+            </div>
+            <div class="mini-feat mf-2">
+                <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
+                <div class="mini-feat-text">Secure<br>Payments</div>
+            </div>
+            <div class="mini-feat mf-3">
+                <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
+                <div class="mini-feat-text">Real-time<br>Updates</div>
+            </div>
         </div>
 
         <!-- Bottom Features Strip -->
