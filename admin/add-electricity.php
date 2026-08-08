@@ -49,18 +49,7 @@ if (isset($_POST['save'])) {
     mysqli_stmt_execute($i_stmt);
     mysqli_stmt_close($i_stmt);
 
-    // AUTO-HEALING LEDGER: Deduct from advance if available
-    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
-    if ($rowAdv = mysqli_fetch_assoc($qAdv)) {
-        $adv = (float)$rowAdv['advance_payment'];
-        if ($adv > 0.01) {
-            // Temporarily zero the advance so the allocator can redistribute it without doubling
-            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
-            require_once "allocate_payment.php";
-            $sys_id = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Wallet Auto-Deduction', $sys_id, $sys_id, null, true);
-        }
-    }
+    // End of bill insertion
 
     header("Location: view-renter.php?id=$user_id");
     exit;
