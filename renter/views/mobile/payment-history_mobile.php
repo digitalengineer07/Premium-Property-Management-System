@@ -213,7 +213,7 @@
         flex-direction: row !important;
         justify-content: flex-start !important;
         align-items: center !important;
-        background: rgba(248, 250, 252, 0.8) !important;
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
         border-bottom: 1px solid var(--border) !important;
         padding: 16px !important;
         order: 1;
@@ -234,7 +234,7 @@
         order: 6; 
         grid-column: 1 / span 2 !important; 
         border-bottom: none !important; 
-        background: rgba(248, 250, 252, 0.4) !important;
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
         padding: 14px !important;
     } /* Mode */
     
