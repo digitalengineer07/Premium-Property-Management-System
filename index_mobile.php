@@ -83,7 +83,7 @@ if (isset($_SESSION['user_id'])) {
         .bg-slider .slide {
             position: absolute;
             inset: 0;
-            background-size: auto 75%;
+            background-size: auto 55%;
             background-position: center top;
             background-repeat: no-repeat;
             filter: brightness(0.95);
@@ -144,7 +144,7 @@ if (isset($_SESSION['user_id'])) {
         .bg-overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to bottom, rgba(11, 28, 60, 0.1) 0%, rgba(11, 28, 60, 0.5) 50%, rgba(11, 28, 60, 1) 75%);
+            background: linear-gradient(to bottom, rgba(11, 28, 60, 0) 0%, rgba(11, 28, 60, 0.4) 35%, rgba(11, 28, 60, 1) 55%);
             z-index: -2;
             pointer-events: none;
         }
