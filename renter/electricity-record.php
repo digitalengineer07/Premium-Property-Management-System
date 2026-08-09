@@ -401,8 +401,9 @@ function money($val) {
             .sidebar { display: none !important; }
             .main-content { 
                 margin-left: 0 !important; 
-                max-width: 100% !important; 
-                padding: 16px !important; 
+                max-width: 100vw !important; 
+                width: 100vw !important;
+                padding: 0 !important; 
                 padding-bottom: 86px !important; /* Space for bottom nav */
             }
             .kpi-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
