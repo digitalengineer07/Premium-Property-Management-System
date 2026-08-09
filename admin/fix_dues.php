@@ -1,1 +1,0 @@
-<?php require_once db.php; require_once allocate_payment.php;  = mysqli_query(, SELECT id, bill_type, bill_id FROM payments WHERE adjustment_amount < 0); while ( = mysqli_fetch_assoc()) { 66292 = ['id']; mysqli_query(, UPDATE payments SET adjustment_amount=0 WHERE id=66292); recalculate_bill_status(, ['bill_type'], ['bill_id']); echo Fixed payment 66292\n; } echo Done.; ?>

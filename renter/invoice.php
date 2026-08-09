@@ -34,7 +34,7 @@ if (!$bill) {
 }
 
 // Calculate Payments
-$pay_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = $bill_id");
+$pay_q = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = $bill_id");
 $pay_res = mysqli_fetch_assoc($pay_q);
 $amount_paid = (float)($pay_res['total_paid'] ?? 0);
 
@@ -111,6 +111,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             box-shadow: 0 10px 40px rgba(0,0,0,0.05);
             overflow: hidden;
             border: 1px solid var(--border);
+            position: relative;
         }
 
         .invoice-content {
@@ -118,6 +119,37 @@ $email = $bill['email'] ?? 'renter@example.com';
         }
 
         /* Header Section */
+        .back-btn-wrapper {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 10;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary);
+            background: #EEF2FF;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+        }
+        .back-btn:hover {
+            background: #E0E7FF;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 4px rgba(79, 70, 229, 0.1);
+        }
+        .back-btn i { font-size: 18px; }
+
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -429,9 +461,16 @@ $email = $bill['email'] ?? 'renter@example.com';
             letter-spacing: 0.5px;
         }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px; /* Ensure table doesn't squish too much before scrolling */
         }
 
         th {
@@ -595,7 +634,7 @@ $email = $bill['email'] ?? 'renter@example.com';
             display: flex;
             flex-direction: column;
             flex: 1;
-            justify-content: space-between;
+            gap: 12px;
         }
 
         .summary-item {
@@ -616,6 +655,7 @@ $email = $bill['email'] ?? 'renter@example.com';
         .summary-item-val {
             font-weight: 600;
             color: var(--text-dark);
+            text-align: right;
         }
         
         .summary-item.remaining .summary-item-val {
@@ -797,24 +837,59 @@ $email = $bill['email'] ?? 'renter@example.com';
             .totals-box { width: 100%; }
             .bottom-section { grid-template-columns: 1fr; }
             .footer-banner { flex-direction: column; gap: 24px; text-align: center; }
-            .support-info { text-align: center; flex-direction: column; }
+            .support-info { 
+                text-align: left; 
+                flex-direction: row; 
+                justify-content: center; 
+                background: var(--white);
+                padding: 16px;
+                border-radius: 12px;
+                width: 100%;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+                gap: 16px;
+            }
+            .support-info i {
+                font-size: 28px;
+                background: #EEF2FF;
+                padding: 12px;
+                border-radius: 50%;
+            }
             .actions-bar { flex-direction: column; }
         }
 
         @media (max-width: 600px) {
+            html, body { overflow-x: hidden; max-width: 100vw; }
+            .invoice-container { width: 100%; max-width: 100%; }
+            body { padding: 16px 10px; }
+            .invoice-content { padding: 20px 16px; }
+            .back-btn-wrapper { top: 16px; left: 16px; }
             .header-section { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
             .brand-section { flex-direction: column; align-items: center; text-align: center; }
+            .brand-contact { flex-direction: column; gap: 6px; align-items: center; }
+            .title-section { transform: none; margin-top: 0; width: 100%; }
             .meta-section { width: 100%; }
         }
         
         @media (max-width: 500px) {
-            th, td { padding: 12px; font-size: 13px; }
+            th, td { padding: 10px 8px; font-size: 11px; }
+            table { min-width: 100% !important; }
+            th[style], td.col-num, td.col-part { width: auto !important; }
+            .table-footer-wrapper { padding: 12px; }
+            .totals-box { padding: 12px; }
+            .qr-code { width: 100px; height: 100px; }
+            .payment-info, .bill-summary, .footer-banner { padding: 12px; }
+            .total-row.final { font-size: 16px; }
+            .summary-item { align-items: flex-start; }
+            .summary-item-val { max-width: 60%; line-height: 1.4; }
         }
     </style>
 </head>
 <body>
 
     <div class="invoice-container">
+        <div class="back-btn-wrapper d-print-none">
+            <a href="my-bills.php" class="back-btn"><i class='bx bx-arrow-back'></i> Back to Bills</a>
+        </div>
         <div class="invoice-content" id="invoiceArea">
             
             <!-- Header -->
@@ -914,13 +989,14 @@ $email = $bill['email'] ?? 'renter@example.com';
                 <div class="table-header">
                     <h3>Charges Breakdown</h3>
                 </div>
-                <table>
-                    <thead>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
                         <tr>
-                            <th style="width: 50px;">#</th>
-                            <th style="width: 250px;">Particulars</th>
+                            <th style="width: 40px;">#</th>
+                            <th style="width: 180px;">Particulars</th>
                             <th>Description</th>
-                            <th style="text-align: right;">Amount (₹)</th>
+                            <th style="text-align: center;">Amount (₹)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -950,15 +1026,16 @@ $email = $bill['email'] ?? 'renter@example.com';
                         ?>
                     </tbody>
                 </table>
+                </div>
                 <div class="table-footer-wrapper">
                     <div class="warning-box">
                         <i class='bx bx-info-circle'></i>
                         <p>Kindly clear your dues before the due date to avoid additional late fees.</p>
                     </div>
                     <div class="totals-box">
-                        <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none;">
+                        <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between;">
                             <span>Total Billed Amount</span>
-                            <span>₹ <?php echo number_format($total_payable, 2); ?></span>
+                            <span style="white-space: nowrap;">₹&nbsp;<?php echo number_format($total_payable, 2); ?></span>
                         </div>
                     </div>
                 </div>
@@ -972,7 +1049,8 @@ $email = $bill['email'] ?? 'renter@example.com';
                         
                         <div style="background: linear-gradient(135deg, #4F46E5, #9333EA); padding: 2px; border-radius: 14px; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);">
                             <div style="background: white; padding: 10px; border-radius: 12px; display: inline-block;">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=nikhil119124-1@oksbi&pn=<?php echo urlencode(HOUSE_NAME . ' Residence'); ?>&cu=INR&am=<?php echo $total_payable; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px;">
+                                <?php $upi_data = urlencode("upi://pay?pa=nikhil119124-1@oksbi&pn=" . HOUSE_NAME . " Residence&cu=INR&am=" . $total_payable); ?>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=<?php echo $upi_data; ?>" alt="UPI QR Code" style="display: block; border-radius: 6px; max-width: 100%; height: auto;">
                             </div>
                         </div>
 
@@ -1041,10 +1119,12 @@ $email = $bill['email'] ?? 'renter@example.com';
                 
                 <div class="support-info">
                     <i class='bx bx-support'></i>
-                    <div>
-                        <h4>Need Help?</h4>
-                        <p style="font-size: 13px;">+91 6206936907</p>
-                        <span>madhavkunj@succorkart.in</span>
+                    <div style="display: flex; flex-direction: column; justify-content: center;">
+                        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px;">
+                            <h4 style="margin: 0; font-size: 13px;">Need Help?</h4>
+                            <p style="font-size: 14px; margin: 0; font-weight: 700; color: var(--text-dark);">+91 6206936907</p>
+                        </div>
+                        <span style="font-size: 11px; color: var(--text-gray);">madhavkunj@succorkart.in</span>
                     </div>
                 </div>
             </div>

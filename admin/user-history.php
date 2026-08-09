@@ -33,7 +33,7 @@ if (!$user) {
 // Fetch all consolidated history from electricity table
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid
+           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type = 'electricity' AND bill_id = e.id) as total_paid
     FROM electricity e 
     WHERE e.user_id = ? 
     ORDER BY e.id DESC

@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             <i class='bx bx-grid-alt'></i>
             <span>Dashboard</span>
         </a>
-        <a href="my-payments.php" class="nav-item <?php echo $current_page == 'my-payments.php' ? 'active' : ''; ?>">
+        <a href="my-payments.php" class="nav-item <?php echo ($current_page == 'my-payments.php' || $current_page == 'payment-history.php') ? 'active' : ''; ?>">
             <i class='bx bx-wallet'></i>
             <span>My Payments</span>
         </a>
@@ -51,9 +51,20 @@ if (isset($_SESSION['user_id']) && isset($conn)) {
             <i class='bx bx-message-square-dots'></i>
             <span>Raise Query</span>
         </a>
+        <?php 
+            $notice_count = 0;
+            if (isset($unread_notifications) && is_array($unread_notifications)) {
+                foreach($unread_notifications as $un) {
+                    if ($un['type'] === 'announcement') $notice_count++;
+                }
+            }
+        ?>
         <a href="notices.php" class="nav-item <?php echo $current_page == 'notices.php' ? 'active' : ''; ?>">
             <i class='bx bx-bell'></i>
             <span>Notices</span>
+            <?php if ($notice_count > 0): ?>
+                <span style="margin-left: auto; background: #EF4444; color: white; font-size: 11px; padding: 2px 6px; border-radius: 10px; font-weight: 700;"><?php echo $notice_count; ?></span>
+            <?php endif; ?>
         </a>
         <a href="documents.php" class="nav-item <?php echo $current_page == 'documents.php' ? 'active' : ''; ?>">
             <i class='bx bx-folder'></i>

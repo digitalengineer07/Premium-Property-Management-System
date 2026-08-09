@@ -24,17 +24,17 @@ if (isset($_SESSION['user_id'])) {
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <link rel="prefetch" href="index_mobile.php">
+    <link rel="prefetch" href="index.php">
 
     <script>
         // Instant JS redirect based on screen width with resize listener for DevTools testing
-        function checkMobileRedirect() {
-            if (window.innerWidth <= 768) {
-                window.location.replace('index_mobile.php');
+        function checkDesktopRedirect() {
+            if (window.innerWidth > 768) {
+                window.location.replace('index.php');
             }
         }
-        checkMobileRedirect();
-        window.addEventListener('resize', checkMobileRedirect);
+        checkDesktopRedirect();
+        window.addEventListener('resize', checkDesktopRedirect);
     </script>
 
     <!-- Fonts + Icons -->
@@ -77,14 +77,15 @@ if (isset($_SESSION['user_id'])) {
             right: -10px;
             bottom: -10px;
             z-index: -3;
-            background: transparent;
+            background: #0b1c3c;
         }
 
         .bg-slider .slide {
             position: absolute;
             inset: 0;
-            background-size: cover;
-            background-position: center;
+            background-size: auto 55%;
+            background-position: center top;
+            background-repeat: no-repeat;
             filter: brightness(0.95);
             animation: fadeSlide 30s infinite;
         }
@@ -117,6 +118,7 @@ if (isset($_SESSION['user_id'])) {
         @keyframes fadeSlide {
             0% {
                 opacity: 1;
+                transform: scale(1);
             }
 
             16% {
@@ -125,21 +127,24 @@ if (isset($_SESSION['user_id'])) {
 
             20% {
                 opacity: 0;
+                transform: scale(1.03);
             }
 
             96% {
                 opacity: 0;
+                transform: scale(1);
             }
 
             100% {
                 opacity: 1;
+                transform: scale(1);
             }
         }
 
         .bg-overlay {
             position: fixed;
             inset: 0;
-            background: linear-gradient(to right, rgba(11, 28, 60, 0.85) 0%, rgba(11, 28, 60, 0.4) 45%, rgba(11, 28, 60, 0) 100%);
+            background: linear-gradient(to bottom, rgba(11, 28, 60, 0) 0%, rgba(11, 28, 60, 0.4) 35%, rgba(11, 28, 60, 1) 55%);
             z-index: -2;
             pointer-events: none;
         }
@@ -1112,20 +1117,37 @@ if (isset($_SESSION['user_id'])) {
                 padding: 0 1rem 2rem 1rem;
                 margin: 0;
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
                 gap: 12px;
                 box-shadow: none;
             }
 
             .bf-item {
-                width: 100%;
+                width: calc(50% - 6px);
                 justify-content: flex-start;
-                padding: 16px;
+                align-items: center;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+                padding: 16px 10px;
                 background: rgba(15, 23, 42, 0.5);
                 backdrop-filter: blur(12px);
                 -webkit-backdrop-filter: blur(12px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 16px;
+            }
+            
+            .bf-text h5 {
+                font-size: 12px;
+                margin-bottom: 4px;
+                line-height: 1.2;
+            }
+            
+            .bf-text p {
+                font-size: 10.5px;
+                line-height: 1.3;
             }
         }
     </style>
@@ -1192,20 +1214,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="hero-desc">A unified digital experience to manage your property, view bills, track payments,
                     and access important records &ndash; all in one secure place.</p>
 
-                <div class="hero-mini-features">
-                    <div class="mini-feat mf-1">
-                        <div class="mini-feat-icon"><i class='bx bx-receipt'></i></div>
-                        <div class="mini-feat-text">Easy Bill<br>Management</div>
-                    </div>
-                    <div class="mini-feat mf-2">
-                        <div class="mini-feat-icon"><i class='bx bx-credit-card-front'></i></div>
-                        <div class="mini-feat-text">Secure<br>Payments</div>
-                    </div>
-                    <div class="mini-feat mf-3">
-                        <div class="mini-feat-icon"><i class='bx bx-bar-chart-alt-2'></i></div>
-                        <div class="mini-feat-text">Real-time<br>Updates</div>
-                    </div>
-                </div>
+                <!-- Hero mini features moved below login section -->
 
 
             </div>
@@ -1266,6 +1275,8 @@ if (isset($_SESSION['user_id'])) {
             </div>
 
         </div>
+
+
 
         <!-- Bottom Features Strip -->
         <div class="bottom-features">

@@ -28,7 +28,7 @@ $room_no = $user['room_no'] ?? 'N/A';
 // 1. Rent from pure 'rent' table (including Partial)
 $stmt = mysqli_prepare($conn, "SELECT 
     IFNULL(SUM(rent_amount), 0) - 
-    IFNULL((SELECT SUM(paid_amount) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
+    IFNULL((SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
     AS total 
     FROM rent r WHERE user_id = ? AND status IN ('Due', 'Partial')");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -48,7 +48,7 @@ $stmt = mysqli_prepare($conn, "SELECT
     ), 0) as rent_portion_total 
 FROM electricity e 
 LEFT JOIN (
-    SELECT bill_id, SUM(paid_amount) as total_paid 
+    SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
     FROM payments 
     WHERE bill_type IN ('electricity', 'elec_rent') 
     GROUP BY bill_id
@@ -97,7 +97,7 @@ mysqli_stmt_close($stmt);
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
     SELECT e.id, e.month, e.created_at, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
+           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type='elec_rent' AND bill_id=e.id) as total_paid
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
     WHERE e.user_id = ? AND (e.rent_amount > 0 OR e.maintenance > 0 OR e.dues > 0 OR e.extra_charges > 0) 
@@ -149,7 +149,7 @@ $merged_rents = array_slice($merged_rents, 0, 10);
 // Electricity list (only the usage part)
 $stmt = mysqli_prepare($conn, "
     SELECT e.id, e.month, e.created_at, e.units_consumed, e.amount, e.total_amount, e.status, p.adjustment_amount, p.adjustment_type,
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid 
+           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type='electricity' AND bill_id=e.id) as total_paid 
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
     WHERE e.user_id = ? 

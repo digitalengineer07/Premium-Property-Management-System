@@ -512,21 +512,23 @@ mysqli_stmt_close($stmt);
             border-color: #111827;
         }
 
-        /* Responsive Overrides */
-        @media (max-width: 992px) {
-            .sidebar { width: 80px; padding: 24px 10px; }
-            .sidebar-brand p, .sidebar-brand h2, .nav-item span, .go-mobile-widget { display: none; }
-            .nav-item { justify-content: center; padding: 10px 16px; }
-            .nav-item i { font-size: 24px; }
-            .main-content { margin-left: 80px; max-width: calc(100% - 80px); }
-        }
-        @media (max-width: 768px) {
+        /* WRAPPER VISIBILITY CONTROLS */
+        .mobile-view-wrapper { display: none; }
+        .desktop-view-wrapper { display: block; }
+        @media screen and (max-width: 991px) {
             .desktop-view-wrapper { display: none !important; }
-            .sidebar { display: none !important; }
-            .main-content { margin-left: 0; max-width: 100%; padding: 0px; }
+            .mobile-view-wrapper { display: block !important; }
         }
-        @media (min-width: 769px) {
-            .mobile-view-wrapper { display: none !important; }
+
+        /* EXCLUSIVE MOBILE VIEW MODE STYLES - ZERO IMPACT ON DESKTOP */
+        @media screen and (max-width: 991px) {
+            .sidebar { display: none !important; }
+            .main-content { 
+                margin-left: 0 !important; 
+                max-width: 100vw !important; 
+                width: 100vw !important;
+                padding: 0 !important; 
+            }
         }
 
 </style>

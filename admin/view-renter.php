@@ -15,7 +15,7 @@ if ($id <= 0) {
 }
 
 /* Fetch user */
-$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, electricity_document, electricity_upload_date, about, pending_adjustment, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date, emergency_contact_name, emergency_contact_relation, emergency_contact_phone, emergency_contact_address FROM users WHERE id = ?");
+$stmt = mysqli_prepare($conn, "SELECT id, username, name, phone, email, whatsapp, room_no, profile_pic, aadhaar_file, agreement_document, agreement_expiry_date, electricity_document, electricity_upload_date, about, pending_adjustment, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, joining_date, emergency_contact_name, emergency_contact_relation, emergency_contact_phone, emergency_contact_address, onboarding_completed FROM users WHERE id = ?");
 
 if (!$stmt) {
     die("<div style='padding:20px; background:#ffebeb; color:#d32f2f; border:1px solid #d32f2f; margin:20px;'><strong>Database Query Failed!</strong><br>Error details: " . mysqli_error($conn) . "</div>");
@@ -32,10 +32,38 @@ if (!$user) {
     exit;
 }
 
+/* Calculate actual Total Outstanding dynamically */
+$stmt_r1 = mysqli_prepare($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = ? AND status = 'Due'");
+mysqli_stmt_bind_param($stmt_r1, "i", $id);
+mysqli_stmt_execute($stmt_r1);
+$pure_rent_due = (float)(mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_r1))['total'] ?? 0);
+mysqli_stmt_close($stmt_r1);
+
+$stmt_r2 = mysqli_prepare($conn, "SELECT 
+    IFNULL(SUM(GREATEST(0, e.amount - IFNULL(p.total_paid, 0))), 0) as elec_total, 
+    IFNULL(SUM(GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))), 0) as rent_portion_total 
+FROM electricity e 
+LEFT JOIN (
+    SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
+    FROM payments 
+    WHERE bill_type IN ('electricity', 'elec_rent') 
+    GROUP BY bill_id
+) p ON p.bill_id = e.id
+WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
+mysqli_stmt_bind_param($stmt_r2, "i", $id);
+mysqli_stmt_execute($stmt_r2);
+$r2a = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt_r2));
+$elec_due = (float)($r2a['elec_total'] ?? 0);
+$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
+mysqli_stmt_close($stmt_r2);
+
+$total_outstanding = max(0, $pure_rent_due + $rent_portion_due + $elec_due - (float)($user['pending_adjustment'] ?? 0));
+
+
 /* Fetch electricity records */
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
-           (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
+           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
            (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as adjustment_amount
     FROM electricity e 
     WHERE e.user_id = ? AND e.amount > 0
@@ -52,7 +80,7 @@ $stmt = mysqli_prepare($conn, "
     SELECT id, month, rent_amount, maintenance, status, source, total_paid, elec_amount FROM (
         SELECT r.id, r.month, r.rent_amount, r.maintenance, IFNULL(NULLIF(r.rent_status, ''), r.status) as status, 
                'electricity' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
+               (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
                r.amount as elec_amount
         FROM electricity r 
         WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
@@ -61,7 +89,7 @@ $stmt = mysqli_prepare($conn, "
         
         SELECT rt.id, rt.month, rt.rent_amount, 0 as maintenance, rt.status as status,
                'rent' as source,
-               (SELECT SUM(paid_amount) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
+               (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
                0 as elec_amount
         FROM rent rt
 
@@ -359,15 +387,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(239,68,68,0.1); display: flex; align-items: center; justify-content: center; color: #EF4444; font-size: 28px; flex-shrink: 0;"><i class='bx bx-file'></i></div>
                           <div>
                               <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Total Outstanding</div>
-                              <?php if(($user['pending_adjustment'] ?? 0) > 0): ?>
-                                  <div style="color: #EF4444; font-size: 13px; font-weight: 600; background: #FEF2F2; padding: 4px 10px; border-radius: 6px; display: inline-block;">Action required</div>
+                              <?php if($total_outstanding > 0): ?>
+                                  <div style="color: #EF4444; font-size: 13px; font-weight: 600; background: #FEF2F2; padding: 4px 10px; border-radius: 6px; display: inline-block;">Payment Due</div>
                               <?php else: ?>
                                   <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">All pending dues cleared</div>
                               <?php endif; ?>
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: var(--text-dark);">₹<?php echo number_format($user['pending_adjustment'] ?? 0, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: <?php echo $total_outstanding > 0 ? '#EF4444' : 'var(--text-dark)'; ?>;">₹<?php echo number_format($total_outstanding, 2); ?></div>
                       </div>
                   </div>
   

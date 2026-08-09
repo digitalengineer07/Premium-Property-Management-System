@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rms-v3';
+const CACHE_NAME = 'rms-v4';
 const urlsToCache = [
   'assets/css/main.css',
   'assets/css/admin-design-system.css',
@@ -44,3 +44,5 @@ self.addEventListener('fetch', event => {
       .catch(() => caches.match(event.request))
   );
 });
+
+// End

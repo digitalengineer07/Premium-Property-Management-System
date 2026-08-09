@@ -82,7 +82,7 @@
 
 <div id="mobileProfileDropdown" class="m-profile-dropdown">
     <a href="profile.php" class="m-profile-menu-item"><i class='bx bx-user'></i> My Profile</a>
-    <a href="logout.php" class="m-profile-menu-item text-danger"><i class='bx bx-log-out'></i> Logout</a>
+    <a href="../logout.php" class="m-profile-menu-item text-danger"><i class='bx bx-log-out'></i> Logout</a>
 </div>
 
 <?php include __DIR__ . '/global_profile_upload.php'; ?>

@@ -100,7 +100,7 @@ try {
             IFNULL(SUM(GREATEST(0, (e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount - e.rent_amount - e.maintenance))), 0) as other_dues_total
         FROM electricity e 
         LEFT JOIN (
-            SELECT bill_id, SUM(paid_amount) as total_paid 
+            SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
             FROM payments 
             WHERE bill_type IN ('electricity', 'elec_rent') 
             GROUP BY bill_id

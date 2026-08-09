@@ -62,6 +62,8 @@ if (isset($_POST['save'])) {
         }
     }
 
+    // End of bill insertion
+
     header("Location: view-renter.php?id=$user_id");
     exit;
     }

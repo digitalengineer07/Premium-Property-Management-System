@@ -50,6 +50,9 @@ if(mysqli_num_rows($chk_elec) > 0) $has_missing_data = true;
 $chk_rent = mysqli_query($conn, "SELECT id FROM rent WHERE status = 'Paid' AND id NOT IN (SELECT bill_id FROM payments WHERE bill_type = 'rent') LIMIT 1");
 if(mysqli_num_rows($chk_rent) > 0) $has_missing_data = true;
 
+$chk_hash = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id IS NOT NULL AND (verification_hash = '' OR verification_hash IS NULL) LIMIT 1");
+if(mysqli_num_rows($chk_hash) > 0) $has_missing_data = true;
+
 // Handle Sync Action
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'sync') {
@@ -138,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     while($e = mysqli_fetch_assoc($e_query)) {
         $b_id = $e['id'];
         $gross_amt = (float)$e['amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['extra_charges'] + (float)$e['dues'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
         $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
         
         $correct_st = 'Due';
@@ -158,7 +161,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     while($r = mysqli_fetch_assoc($r_query)) {
         $b_id = $r['id'];
         $gross_amt = (float)$r['rent_amount'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
+        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
         $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
         
         $correct_st = 'Due';
@@ -265,7 +268,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
     }
     if ($repaired_advances > 0) {
-        $sync_results[] = "<span style='color:#10B981;'>✔ Recovered $repaired_advances missing advance wallet credits from overpayments.</span>";
+        $sync_results[] = "<span style='color:#10B981;'>✅ Recovered $repaired_advances missing advance wallet credits from overpayments.</span>";
+    }
+
+    // Repair missing hashes
+    $q_hash = mysqli_query($conn, "SELECT id, user_id, paid_amount, sys_tx_id FROM payments WHERE sys_tx_id IS NOT NULL AND (verification_hash = '' OR verification_hash IS NULL)");
+    $repaired_hashes = 0;
+    while($r = mysqli_fetch_assoc($q_hash)){
+        $h = generate_payment_hash($r['user_id'], $r['paid_amount'], $r['sys_tx_id']);
+        mysqli_query($conn, "UPDATE payments SET verification_hash = '$h' WHERE id = {$r['id']}");
+        $repaired_hashes++;
+    }
+    if ($repaired_hashes > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✅ Repaired $repaired_hashes missing payment hashes.</span>";
     }
 
     // Clear the arrays so they don't show up again
@@ -359,7 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <div class="card">
                             <h4>Legacy Data Migration <span class="badge" style="background:#FEF3C7; color:#D97706;">Required</span></h4>
                             <ul>
-                                <li>Missing payment receipts detected for old 'Paid' bills. A migration will be performed.</li>
+                                <li>Missing payment receipts detected for old 'Paid' bills, or missing hashes. A migration will be performed.</li>
                             </ul>
                         </div>
                     <?php endif; ?>

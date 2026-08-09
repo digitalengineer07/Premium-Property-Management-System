@@ -11,6 +11,26 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = (int) $_SESSION['user_id'];
 require_once "fetch_notifications.php";
 
+// Auto-dismiss announcements when visiting the notices page
+$new_dismissed = [];
+if (isset($unread_notifications) && is_array($unread_notifications)) {
+    foreach ($unread_notifications as $k => $un) {
+        if ($un['type'] === 'announcement') {
+            $new_dismissed[] = $un['id'];
+            unset($unread_notifications[$k]);
+        }
+    }
+}
+if (!empty($new_dismissed)) {
+    $current_dismissed = $_COOKIE['dismissed_notifs'] ?? '';
+    $arr = $current_dismissed ? explode(',', $current_dismissed) : [];
+    $arr = array_unique(array_merge($arr, $new_dismissed));
+    $new_cookie_val = implode(',', $arr);
+    setcookie('dismissed_notifs', $new_cookie_val, time() + (86400 * 30), "/");
+    $_COOKIE['dismissed_notifs'] = $new_cookie_val;
+    $unread_notifications = array_values($unread_notifications);
+}
+
 // User Profile for Header
 $stmt = mysqli_prepare($conn, "SELECT username, name, profile_pic, room_no FROM users WHERE id = ?");
 mysqli_stmt_bind_param($stmt, "i", $user_id);

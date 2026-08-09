@@ -1,6 +1,6 @@
 <?php
 // admin/allocate_payment.php
-require_once "../db.php";
+require_once __DIR__ . "/../db.php";
 
 /**
  * Recalculate and update the status of a specific bill based on total payments made.
@@ -10,7 +10,7 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
     $bill_id = (int)$bill_id;
     
     // 1. Calculate total paid
-    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid FROM payments WHERE bill_type='$bill_type' AND bill_id=$bill_id");
     $total_paid = round((float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0), 2);
     
     // 2. Fetch bill amount and update status
@@ -32,11 +32,18 @@ function recalculate_bill_status($conn, $bill_type, $bill_id) {
             $elec_part = (float)$b['amount'];
             $rent_part = (float)$b['rent_amount'] + (float)$b['maintenance'] + (float)$b['dues'] + (float)$b['extra_charges'];
             
-            $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
+            $qElecPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='electricity' AND bill_id=$bill_id");
             $total_elec_specific = (float)(mysqli_fetch_assoc($qElecPaid)['tp'] ?? 0);
             
-            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
+            $qCombinedPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id=$bill_id");
             $total_combined_paid = (float)(mysqli_fetch_assoc($qCombinedPaid)['tp'] ?? 0);
+            
+            // Fix: If specific electricity payment exceeds the electricity bill part, spill it over to combined.
+            // Admin requested to exclude User 6 from this fix for now
+            if ($b['user_id'] != 6) {
+                $elec_excess = max(0, $total_elec_specific - $elec_part);
+                $total_combined_paid += $elec_excess;
+            }
             
             // Distribute combined (elec_rent) payment: First to Electricity, then to Rent
             $elec_due_after_specific = max(0, $elec_part - $total_elec_specific);
@@ -89,7 +96,7 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 1. Rent
     $qRent = mysqli_query($conn, "SELECT id, month, due_date, rent_amount as total_amount, 'rent' as type FROM rent WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qRent)) {
-        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+        $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
         $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
         $due = max(0, (float)$r['total_amount'] - $paid);
         if ($due > 0) {
@@ -101,11 +108,18 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     // 2. Electricity (elec_rent part and electricity part)
     $qElec = mysqli_query($conn, "SELECT id, month, due_date, amount as elec_part, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE user_id=$user_id AND status IN ('Due', 'Partial')");
     while ($r = mysqli_fetch_assoc($qElec)) {
-        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
+        $qEPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='electricity' AND bill_id={$r['id']}");
         $epaid_specific = (float)(mysqli_fetch_assoc($qEPaid)['tp'] ?? 0);
         
-        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
+        $qRPaid = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_type='elec_rent' AND bill_id={$r['id']}");
         $rpaid_combined = (float)(mysqli_fetch_assoc($qRPaid)['tp'] ?? 0);
+        
+        // Fix: Spill over excess specific electricity payment to rent part
+        // Admin requested to exclude User 6 from this fix for now
+        if ($user_id != 6) {
+            $elec_excess = max(0, $epaid_specific - (float)$r['elec_part']);
+            $rpaid_combined += $elec_excess;
+        }
         
         $edue_after_specific = max(0, (float)$r['elec_part'] - $epaid_specific);
         $applied_to_elec = min($edue_after_specific, $rpaid_combined);

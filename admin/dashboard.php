@@ -18,15 +18,15 @@ if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
 }
 
 // 1) Rent Collected: overall total rent amount collected (combining explicit rent and the rent portion of combined bills)
-$explicit_rent = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
+$explicit_rent = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount - COALESCE(adjustment_amount, 0)),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
 $rent_from_combined = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance + extra_charges + dues), 0) AS total FROM electricity WHERE status = 'Paid'"))['total'];
 $rent_collected_total = $explicit_rent + $rent_from_combined;
 
 // 2) Total Dues: total due amount of all renters combined
 $d_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity"))['total'];
 $d_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent"))['total'];
-$p_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type IN ('electricity', 'elec_rent', 'total')"))['total'];
-$p_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
+$p_elec_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount - COALESCE(adjustment_amount, 0)),0) AS total FROM payments WHERE bill_type IN ('electricity', 'elec_rent', 'total')"))['total'];
+$p_rent_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount - COALESCE(adjustment_amount, 0)),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
 
 // Include pending negative adjustments (money users owe)
 $d_adj = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(ABS(pending_adjustment)),0) AS total FROM users WHERE pending_adjustment < 0"))['total'];

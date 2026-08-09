@@ -5,7 +5,7 @@
     .m-queries-container { background: var(--bg-main); padding-bottom: 85px; font-family: 'Outfit', sans-serif; min-height: 100vh; }
     .m-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: transparent; position: sticky; top: 0; z-index: 100; }
     
-    .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 24px; }
+    .m-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 24px; margin-bottom: 24px; }
     .m-kpi-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .m-kpi-top { display: flex; align-items: center; gap: 12px; }
     .m-kpi-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
@@ -13,11 +13,11 @@
     .m-kpi-value { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px; }
     .m-kpi-pill { font-size: 9px; font-weight: 700; padding: 4px 8px; border-radius: 12px; display: inline-block; white-space: nowrap; margin-top: auto; align-self: center; }
 
-    .m-tabs { display: flex; gap: 24px; padding: 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
+    .m-tabs { display: flex; gap: 24px; padding: 0 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; overflow-x: auto; padding-bottom: 8px; }
     .m-tab { font-size: 13px; font-weight: 600; color: var(--text-gray); padding-bottom: 4px; cursor: pointer; white-space: nowrap; }
     .m-tab.active { font-weight: 700; color: #624BFF; border-bottom: 2px solid #624BFF; }
 
-    .m-form-container { padding: 0 16px; display: none; }
+    .m-form-container { padding: 0 24px; display: none; }
     .m-form-container.active { display: block; animation: fadeIn 0.3s ease; }
     
     .m-form-group { margin-bottom: 12px; }
@@ -35,7 +35,7 @@
     
     .m-btn-submit { width: 100%; background: #624BFF; color: white; border: none; border-radius: 10px; padding: 14px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 2px; margin-top: 16px; box-shadow: 0 4px 15px rgba(98, 75, 255, 0.2); cursor: pointer; }
 
-    .m-list-container { padding: 0 16px; display: none; }
+    .m-list-container { padding: 0 24px; display: none; }
     .m-list-container.active { display: block; animation: fadeIn 0.3s ease; }
     
     .m-query-item { background: var(--white); border: 1px solid var(--border); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
