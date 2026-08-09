@@ -42,6 +42,9 @@
    ------------------------------------------------------------- */
 @media screen and (max-width: 768px) {
     /* 1. Hide the duplicate Desktop Header */
+    .mobile-page-body {
+        background: transparent !important;
+    }
     .mobile-page-body .top-header {
         display: none !important;
     }
@@ -147,10 +150,11 @@
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
-    .mobile-page-body .payments-container {
+    .mobile-page-body .payments-container,
+    body.dark-theme .mobile-page-body .payments-container,
+    :root.dark-theme .mobile-page-body .payments-container {
         border-radius: 0 !important;
-        border-left: none !important;
-        border-right: none !important;
+        border: none !important;
         margin-left: -16px;
         margin-right: -16px;
         width: calc(100% + 32px) !important;
@@ -213,10 +217,12 @@
         flex-direction: row !important;
         justify-content: flex-start !important;
         align-items: center !important;
-        background: rgba(248, 250, 252, 0.8) !important;
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
         border-bottom: 1px solid var(--border) !important;
         padding: 16px !important;
         order: 1;
+        white-space: normal !important;
+        word-break: break-word !important;
     }
     
     .mobile-page-body .td-bill-type {
@@ -226,9 +232,15 @@
     /* Grid placement and borders for the rest of the cells */
     .mobile-page-body .payments-table td:nth-child(5) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
     .mobile-page-body .payments-table td:nth-child(6) { order: 3; } /* Status */
-    .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
-    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
-    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-bottom: none !important; } /* Mode */
+    .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
+    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-bottom: 1px solid rgba(0,0,0,0.05) !important; } /* Paid On */
+    .mobile-page-body .payments-table td:nth-child(8) { 
+        order: 6; 
+        grid-column: 1 / span 2 !important; 
+        border-bottom: none !important; 
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
+        padding: 14px !important;
+    } /* Mode */
     
     /* Inject Labels on top of values */
     .mobile-page-body .payments-table td::before {
@@ -301,8 +313,8 @@ height: 32px !important;
     .mobile-page-body .tabs-header {
         display: grid !important;
         grid-template-columns: 1fr 1fr 1fr !important;
-        gap: 8px !important;
-        padding: 16px 12px !important;
+        gap: 12px 8px !important;
+        padding: 16px 20px !important; /* Increased padding to give first 3 filters more space */
     }
     .mobile-page-body .filter-group {
         width: 100% !important;
@@ -332,18 +344,44 @@ height: 32px !important;
     .mobile-page-body .filter-group:nth-child(4),
     .mobile-page-body .filter-group:nth-child(5) {
         grid-column: 1 / -1 !important;
+        margin-left: -8px !important; /* counteract the extra 8px padding (20px - 12px) */
+        width: calc(100% + 16px) !important;
     }
+    
+    /* Enhance the Search Box */
+    .mobile-page-body .filter-group:nth-child(4) > div {
+        padding: 0 !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4) input {
+        padding: 12px 14px 12px 40px !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        background: rgba(128, 128, 128, 0.05) !important;
+        border: 1px solid var(--border) !important;
+        height: 44px !important;
+        width: 100% !important;
+        color: var(--text-dark) !important;
+    }
+    .mobile-page-body .filter-group:nth-child(4) i {
+        left: 14px !important;
+        font-size: 18px !important;
+        margin-right: 0 !important;
+    }
+
     .mobile-page-body .btn-outline-support {
         width: 100% !important;
         justify-content: center !important;
         margin-top: 4px;
+        height: 42px !important;
+        border-radius: 10px !important;
     }
 
     /* 4. Fix Table Layout (Convert to Mobile Box Type) */
-    .mobile-page-body .payments-container {
+    .mobile-page-body .payments-container,
+    body.dark-theme .mobile-page-body .payments-container,
+    :root.dark-theme .mobile-page-body .payments-container {
         border-radius: 0 !important;
-        border-left: none !important;
-        border-right: none !important;
+        border: none !important;
         margin-left: -16px;
         margin-right: -16px;
         width: calc(100% + 32px) !important;
@@ -406,10 +444,12 @@ height: 32px !important;
         flex-direction: row !important;
         justify-content: flex-start !important;
         align-items: center !important;
-        background: rgba(248, 250, 252, 0.8) !important;
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
         border-bottom: 1px solid var(--border) !important;
         padding: 16px !important;
         order: 1;
+        white-space: normal !important;
+        word-break: break-word !important;
     }
     
     .mobile-page-body .td-bill-type {
@@ -419,9 +459,15 @@ height: 32px !important;
     /* Grid placement and borders for the rest of the cells */
     .mobile-page-body .payments-table td:nth-child(5) { order: 2; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Amount */
     .mobile-page-body .payments-table td:nth-child(6) { order: 3; } /* Status */
-    .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
-    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: none !important; } /* Paid On */
-    .mobile-page-body .payments-table td:nth-child(8) { order: 6; border-bottom: none !important; } /* Mode */
+    .mobile-page-body .payments-table td:nth-child(3) { order: 4; border-right: 1px solid rgba(0,0,0,0.05) !important; border-bottom: 1px solid rgba(0,0,0,0.05) !important; } /* Period */
+    .mobile-page-body .payments-table td:nth-child(7) { order: 5; border-bottom: 1px solid rgba(0,0,0,0.05) !important; } /* Paid On */
+    .mobile-page-body .payments-table td:nth-child(8) { 
+        order: 6; 
+        grid-column: 1 / span 2 !important; 
+        border-bottom: none !important; 
+        background: var(--bg-body, rgba(128, 128, 128, 0.1)) !important;
+        padding: 14px !important;
+    } /* Mode */
     
     /* Inject Labels on top of values */
     .mobile-page-body .payments-table td::before {
