@@ -44,7 +44,7 @@ $stmt_r2 = mysqli_prepare($conn, "SELECT
     IFNULL(SUM(GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))), 0) as rent_portion_total 
 FROM electricity e 
 LEFT JOIN (
-    SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
+    SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as total_paid 
     FROM payments 
     WHERE bill_type IN ('electricity', 'elec_rent') 
     GROUP BY bill_id
@@ -63,7 +63,7 @@ $total_outstanding = max(0, $pure_rent_due + $rent_portion_due + $elec_due - (fl
 /* Fetch electricity records */
 $stmt = mysqli_prepare($conn, "
     SELECT e.*, 
-           (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
+           (SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as total_paid,
            (SELECT SUM(adjustment_amount) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = e.id) as adjustment_amount
     FROM electricity e 
     WHERE e.user_id = ? AND e.amount > 0
@@ -80,7 +80,7 @@ $stmt = mysqli_prepare($conn, "
     SELECT id, month, rent_amount, maintenance, status, source, total_paid, elec_amount FROM (
         SELECT r.id, r.month, r.rent_amount, r.maintenance, IFNULL(NULLIF(r.rent_status, ''), r.status) as status, 
                'electricity' as source,
-               (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
+               (SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id = r.id) as total_paid,
                r.amount as elec_amount
         FROM electricity r 
         WHERE r.user_id = ? AND (r.rent_amount > 0 OR r.maintenance > 0)
@@ -89,7 +89,7 @@ $stmt = mysqli_prepare($conn, "
         
         SELECT rt.id, rt.month, rt.rent_amount, 0 as maintenance, rt.status as status,
                'rent' as source,
-               (SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
+               (SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type = 'rent' AND bill_id = rt.id) as total_paid,
                0 as elec_amount
         FROM rent rt
 

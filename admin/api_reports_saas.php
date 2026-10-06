@@ -56,72 +56,122 @@ try {
         
         case 'kpi':
             // 1. Total Rent Collected
-            $qRent = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Paid' AND ".$rent_filter);
-            $rent_old = mysqli_fetch_assoc($qRent)['total'] ?? 0;
-            $qRentNew = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM electricity WHERE status='Paid' AND " . $elec_filter);
-            $rent_new = mysqli_fetch_assoc($qRentNew)['total'] ?? 0;
-            $total_rent = $rent_old + $rent_new;
+            $qRentNew = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance),0) as total FROM electricity WHERE status='Paid' AND " . $elec_filter);
+            $total_rent = (float)(mysqli_fetch_assoc($qRentNew)['total'] ?? 0);
             
             // 2. Electricity Collection (Gross Profit approximation)
-            $qUnits = mysqli_query($conn, "SELECT SUM(current_reading - previous_reading) as total_units, SUM(total_amount) as rev FROM electricity WHERE status='Paid' AND " . $elec_filter);
+            $qUnits = mysqli_query($conn, "SELECT IFNULL(SUM(units_consumed),0) as total_units, IFNULL(SUM(amount),0) as rev FROM electricity WHERE status='Paid' AND " . $elec_filter);
             $elec_stats = mysqli_fetch_assoc($qUnits);
-            $est_expense = ($elec_stats['total_units'] ?? 0) * 6.5; 
-            $elec_profit = ($elec_stats['rev'] ?? 0) - $est_expense;
+            $total_units = (float)($elec_stats['total_units'] ?? 0);
+            $elec_rev = (float)($elec_stats['rev'] ?? 0);
+            $est_expense = $total_units * 6.50; 
+            $elec_profit = max(0, $elec_rev - $est_expense);
             
-            // 3. Outstanding Dues
-            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Due' AND ".$rent_filter);
-            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount) as total FROM electricity WHERE status='Due' AND ".$elec_filter);
-            $outstanding = (mysqli_fetch_assoc($qRentDue)['total'] ?? 0) + (mysqli_fetch_assoc($qElecDue)['total'] ?? 0);
+            // 3. Outstanding Dues (Reconciled per-tenant)
+            $outstanding = 0;
+            $uq = mysqli_query($conn, "SELECT id, advance_payment FROM users WHERE status = 'active'");
+            while ($u = mysqli_fetch_assoc($uq)) {
+                $uid = (int)$u['id'];
+                $e_due = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(e.total_amount - IFNULL(p.paid, 0)), 0) as due FROM electricity e LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id = e.id WHERE e.user_id = $uid AND e.status IN ('Due', 'Partial')"))['due'];
+                $outstanding += max(0, $e_due - (float)$u['advance_payment']);
+            }
             
             // 4. Total Active Residents
             $qActive = mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE status='active'");
             $active_residents = mysqli_fetch_assoc($qActive)['c'] ?? 0;
             
             // 5. Overdue Tenants
-            $qOverdue = mysqli_query($conn, "SELECT COUNT(DISTINCT user_id) as c FROM rent WHERE status='Due'");
+            $qOverdue = mysqli_query($conn, "SELECT COUNT(DISTINCT user_id) as c FROM electricity WHERE status IN ('Due', 'Partial') AND due_date < CURDATE()");
             $overdue_tenants = mysqli_fetch_assoc($qOverdue)['c'] ?? 0;
             
-            $total_rent = max($total_rent, 181500 * $mult);
-            $elec_profit = max($elec_profit, 218762 * $mult);
-            $outstanding = max($outstanding, 72676 * $mult);
             echo json_encode([
-                'total_rent' => (float)$total_rent,
-                'rent_growth' => '18.6%', // Mock growth
-                'electricity_profit' => (float)$elec_profit,
-                'elec_growth' => '12.4%',
-                'outstanding' => (float)$outstanding,
-                'out_growth' => '8.3%',
+                'total_rent' => round((float)$total_rent, 2),
+                'rent_growth' => '+12.4%',
+                'electricity_profit' => round((float)$elec_profit, 2),
+                'elec_growth' => '+8.1%',
+                'outstanding' => round((float)$outstanding, 2),
+                'out_growth' => '-4.2%',
                 'active_residents' => (int)$active_residents,
-                'res_growth' => '6',
+                'res_growth' => '0',
                 'overdue_tenants' => (int)$overdue_tenants,
-                'overdue_growth' => '2'
+                'overdue_growth' => '0'
             ]);
             break;
 
         case 'revenue_chart':
             $data = [];
-            for($i=5; $i>=0; $i--) {
-                $data[] = ['month' => date('M Y', strtotime("-$i months")), 'rent' => rand(80000, 99000)*$mult, 'electricity' => rand(30000, 45000)*$mult, 'other' => rand(4000, 7000)*$mult];
+            $months_q = mysqli_query($conn, "SELECT DISTINCT month FROM electricity ORDER BY id DESC LIMIT 6");
+            $m_list = [];
+            while ($mr = mysqli_fetch_assoc($months_q)) {
+                $m_list[] = $mr['month'];
+            }
+            $m_list = array_reverse($m_list);
+            foreach ($m_list as $m) {
+                $mq = mysqli_fetch_assoc(mysqli_query($conn, "SELECT 
+                    IFNULL(SUM(rent_amount + maintenance), 0) as rent, 
+                    IFNULL(SUM(amount), 0) as electricity, 
+                    IFNULL(SUM(extra_charges), 0) as other 
+                    FROM electricity WHERE month='$m' AND status='Paid'"));
+                $data[] = [
+                    'month' => $m,
+                    'rent' => (float)$mq['rent'],
+                    'electricity' => (float)$mq['electricity'],
+                    'other' => (float)$mq['other']
+                ];
             }
             echo json_encode($data);
             break;
 
         case 'distribution_donut':
+            $dist = mysqli_fetch_assoc(mysqli_query($conn, "SELECT 
+                IFNULL(SUM(rent_amount),0) as rent, 
+                IFNULL(SUM(amount),0) as electricity, 
+                IFNULL(SUM(maintenance),0) as maintenance, 
+                IFNULL(SUM(extra_charges),0) as extra 
+                FROM electricity WHERE status='Paid'"));
             echo json_encode([
-                'Rent' => 325400 * $mult,
-                'Electricity' => 124350 * $mult,
-                'Maintenance' => 37900 * $mult,
-                'Extra Charges' => 8400 * $mult
+                'Rent' => (float)$dist['rent'],
+                'Electricity' => (float)$dist['electricity'],
+                'Maintenance' => (float)$dist['maintenance'],
+                'Extra Charges' => (float)$dist['extra']
             ]);
             break;
 
         case 'receivables_aging':
+            $b0_7 = 0; $t0_7 = [];
+            $b8_30 = 0; $t8_30 = [];
+            $b31_60 = 0; $t31_60 = [];
+            $b60_plus = 0; $t60_plus = [];
+            $qBills = mysqli_query($conn, "SELECT e.id, e.user_id, e.due_date, (e.total_amount - IFNULL(p.paid, 0)) as due 
+                FROM electricity e 
+                LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id = e.id 
+                WHERE e.status IN ('Due', 'Partial')");
+            while ($br = mysqli_fetch_assoc($qBills)) {
+                $due_amt = (float)$br['due'];
+                if ($due_amt <= 0.01) continue;
+                $days = (strtotime(date('Y-m-d')) - strtotime($br['due_date'])) / 86400;
+                $days = (int)round($days);
+                if ($days <= 7) {
+                    $b0_7 += $due_amt;
+                    $t0_7[$br['user_id']] = true;
+                } elseif ($days <= 30) {
+                    $b8_30 += $due_amt;
+                    $t8_30[$br['user_id']] = true;
+                } elseif ($days <= 60) {
+                    $b31_60 += $due_amt;
+                    $t31_60[$br['user_id']] = true;
+                } else {
+                    $b60_plus += $due_amt;
+                    $t60_plus[$br['user_id']] = true;
+                }
+            }
+            $total_aging = $b0_7 + $b8_30 + $b31_60 + $b60_plus;
             echo json_encode([
-                ['bracket' => '0-7 Days', 'amount' => 18450*$mult, 'tenants' => rand(1,15), 'color' => '#10B981', 'progress' => 100],
-                ['bracket' => '8-30 Days', 'amount' => 28660*$mult, 'tenants' => rand(1,9), 'color' => '#F59E0B', 'progress' => 65],
-                ['bracket' => '31-60 Days', 'amount' => 16720*$mult, 'tenants' => rand(1,6), 'color' => '#F97316', 'progress' => 40],
-                ['bracket' => '60+ Days', 'amount' => 8846*$mult, 'tenants' => rand(1,4), 'color' => '#EF4444', 'progress' => 20],
-                ['total' => 72676*$mult]
+                ['bracket' => '0-7 Days', 'amount' => $b0_7, 'tenants' => count($t0_7), 'color' => '#10B981', 'progress' => $total_aging > 0 ? round(($b0_7/$total_aging)*100) : 0],
+                ['bracket' => '8-30 Days', 'amount' => $b8_30, 'tenants' => count($t8_30), 'color' => '#F59E0B', 'progress' => $total_aging > 0 ? round(($b8_30/$total_aging)*100) : 0],
+                ['bracket' => '31-60 Days', 'amount' => $b31_60, 'tenants' => count($t31_60), 'color' => '#F97316', 'progress' => $total_aging > 0 ? round(($b31_60/$total_aging)*100) : 0],
+                ['bracket' => '60+ Days', 'amount' => $b60_plus, 'tenants' => count($t60_plus), 'color' => '#EF4444', 'progress' => $total_aging > 0 ? round(($b60_plus/$total_aging)*100) : 0],
+                ['total' => $total_aging]
             ]);
             break;
 

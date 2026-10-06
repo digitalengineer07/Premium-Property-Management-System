@@ -21,28 +21,30 @@ if ($month_filter !== '') {
 }
 
 /* Aggregate rent by month */
-$qRent = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(rent_amount),0) as total_rent FROM rent $where GROUP BY month ORDER BY month DESC");
+$rent_rows = [];
+$qRent = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(rent_amount),0) as total_rent FROM rent $where GROUP BY month");
 if ($params) {
     mysqli_stmt_bind_param($qRent, $types, ...$params);
 }
 mysqli_stmt_execute($qRent);
 $rents = mysqli_stmt_get_result($qRent);
-$rent_rows = [];
 while ($rr = mysqli_fetch_assoc($rents)) {
-    $rent_rows[$rr['month']] = $rr['total_rent'];
+    $rent_rows[$rr['month']] = (float)$rr['total_rent'];
 }
 mysqli_stmt_close($qRent);
 
-/* Aggregate electricity by month */
-$qElec = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(total_amount),0) as total_elec FROM electricity $where GROUP BY month ORDER BY month DESC");
+/* Aggregate electricity energy charges and combined rent from electricity table */
+$elec_rows = [];
+$qElec = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(rent_amount + maintenance),0) as total_rent, IFNULL(SUM(amount),0) as total_elec FROM electricity $where GROUP BY month");
 if ($params) {
     mysqli_stmt_bind_param($qElec, $types, ...$params);
 }
 mysqli_stmt_execute($qElec);
 $elecs = mysqli_stmt_get_result($qElec);
-$elec_rows = [];
 while ($er = mysqli_fetch_assoc($elecs)) {
-    $elec_rows[$er['month']] = $er['total_elec'];
+    $m = $er['month'];
+    $rent_rows[$m] = ($rent_rows[$m] ?? 0) + (float)$er['total_rent'];
+    $elec_rows[$m] = (float)$er['total_elec'];
 }
 mysqli_stmt_close($qElec);
 

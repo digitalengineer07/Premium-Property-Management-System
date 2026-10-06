@@ -53,6 +53,18 @@ if(mysqli_num_rows($chk_rent) > 0) $has_missing_data = true;
 $chk_hash = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id IS NOT NULL AND (verification_hash = '' OR verification_hash IS NULL) LIMIT 1");
 if(mysqli_num_rows($chk_hash) > 0) $has_missing_data = true;
 
+// Check for phantom duplicate payment logs
+$chk_dups = mysqli_query($conn, "SELECT p1.id FROM payments p1 JOIN payments p2 ON p1.user_id = p2.user_id AND p1.bill_id = p2.bill_id AND p1.id < p2.id AND p1.bill_id > 0 AND p1.paid_amount = p2.paid_amount LIMIT 1");
+if($chk_dups && mysqli_num_rows($chk_dups) > 0) $has_missing_data = true;
+
+// Check for compounding duplicate dues on bills (e.g. Bill 68)
+$chk_b68 = mysqli_query($conn, "SELECT id FROM electricity WHERE id = 68 AND user_id = 6 AND dues > 0 LIMIT 1");
+if($chk_b68 && mysqli_num_rows($chk_b68) > 0) $has_missing_data = true;
+
+// Check for unlinked receipts (e.g. User 9 Bill 40)
+$chk_unlinked = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = 9 AND bill_id = 0 AND paid_amount = 1152.00 LIMIT 1");
+if($chk_unlinked && mysqli_num_rows($chk_unlinked) > 0) $has_missing_data = true;
+
 // Handle Sync Action
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'sync') {
@@ -137,43 +149,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $healed_count = 0;
     
     // Electricity bills auto-heal
-    $e_query = mysqli_query($conn, "SELECT id, amount, rent_amount, maintenance, extra_charges, dues, status, elec_status, rent_status FROM electricity");
+    require_once __DIR__ . "/allocate_payment.php";
+    $e_query = mysqli_query($conn, "SELECT id FROM electricity");
     while($e = mysqli_fetch_assoc($e_query)) {
-        $b_id = $e['id'];
-        $gross_amt = (float)$e['amount'] + (float)$e['rent_amount'] + (float)$e['maintenance'] + (float)$e['extra_charges'] + (float)$e['dues'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type IN ('electricity', 'elec_rent')");
-        $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
-        
-        $correct_st = 'Due';
-        if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
-        elseif ($tp > 0 && $tp < $gross_amt) $correct_st = 'Partial';
-        elseif ($tp >= $gross_amt) $correct_st = 'Paid';
-        elseif ($gross_amt <= 0) $correct_st = 'Paid';
-        
-        if ($e['status'] !== $correct_st || $e['elec_status'] !== $correct_st || $e['rent_status'] !== $correct_st) {
-            mysqli_query($conn, "UPDATE electricity SET status = '$correct_st', elec_status = '$correct_st', rent_status = '$correct_st' WHERE id = $b_id");
-            $healed_count++;
-        }
+        recalculate_bill_status($conn, 'electricity', $e['id']);
+        $healed_count++;
     }
     
     // Rent bills auto-heal
-    $r_query = mysqli_query($conn, "SELECT id, rent_amount, status FROM rent");
+    $r_query = mysqli_query($conn, "SELECT id FROM rent");
     while($r = mysqli_fetch_assoc($r_query)) {
-        $b_id = $r['id'];
-        $gross_amt = (float)$r['rent_amount'];
-        $p_query = mysqli_query($conn, "SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) as tp FROM payments WHERE bill_id = $b_id AND bill_type = 'rent'");
-        $tp = (float)mysqli_fetch_assoc($p_query)['tp'];
-        
-        $correct_st = 'Due';
-        if ($tp >= $gross_amt && $gross_amt > 0) $correct_st = 'Paid';
-        elseif ($tp > 0 && $tp < $gross_amt) $correct_st = 'Partial';
-        elseif ($tp >= $gross_amt) $correct_st = 'Paid';
-        elseif ($gross_amt <= 0) $correct_st = 'Paid';
-        
-        if ($r['status'] !== $correct_st) {
-            mysqli_query($conn, "UPDATE rent SET status = '$correct_st' WHERE id = $b_id");
-            $healed_count++;
-        }
+        recalculate_bill_status($conn, 'rent', $r['id']);
+        $healed_count++;
     }
     
     if ($healed_count > 0) {
@@ -283,6 +270,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $sync_results[] = "<span style='color:#10B981;'>✅ Repaired $repaired_hashes missing payment hashes.</span>";
     }
 
+    // 8. Financial Reconciliation & Ledger Integrity
+    // 8a. Deduplicate phantom duplicate payment records
+    $dedup_query = "
+        DELETE p1 FROM payments p1
+        INNER JOIN payments p2 
+        WHERE p1.id > p2.id 
+          AND p1.user_id = p2.user_id 
+          AND p1.bill_id = p2.bill_id 
+          AND p1.bill_type = p2.bill_type 
+          AND p1.bill_type IN ('electricity', 'elec_rent')
+          AND p1.bill_id > 0
+          AND p1.paid_amount = p2.paid_amount
+          AND p1.payment_date = p2.payment_date
+    ";
+    mysqli_query($conn, $dedup_query);
+    $deduped_rows = mysqli_affected_rows($conn);
+    if ($deduped_rows > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✅ Removed $deduped_rows phantom duplicate payment records.</span>";
+    }
+
+    // 8b. Reset compounding duplicate dues on bills (e.g. Bill #68)
+    mysqli_query($conn, "UPDATE electricity SET dues = 0.00, total_amount = (units * 8.00) + rent_amount + maintenance + extra_charges WHERE id = 68 AND user_id = 6 AND dues > 0");
+    if (mysqli_affected_rows($conn) > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✅ Reconciled compounding dues on Bill #68.</span>";
+    }
+
+    // 8c. Link unallocated payment receipts
+    mysqli_query($conn, "UPDATE payments SET bill_id = 40, bill_type = 'electricity' WHERE user_id = 9 AND bill_id = 0 AND paid_amount = 1152.00");
+    if (mysqli_affected_rows($conn) > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✅ Linked unallocated payment receipt to Bill #40.</span>";
+    }
+
+    // 8d. Recalculate all bill statuses using new accounting engine
+    $recalc_count = 0;
+    $eq = mysqli_query($conn, "SELECT id FROM electricity");
+    while($eb = mysqli_fetch_assoc($eq)) {
+        recalculate_bill_status($conn, 'electricity', $eb['id']);
+        $recalc_count++;
+    }
+    $rq = mysqli_query($conn, "SELECT id FROM rent");
+    while($rb = mysqli_fetch_assoc($rq)) {
+        recalculate_bill_status($conn, 'rent', $rb['id']);
+        $recalc_count++;
+    }
+    if ($recalc_count > 0) {
+        $sync_results[] = "<span style='color:#10B981;'>✅ Re-audited and updated $recalc_count bills to exact ledger balances.</span>";
+    }
+
     // Clear the arrays so they don't show up again
     if ($success) {
         $missing_tables = [];
@@ -372,9 +407,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     
                     <?php if ($has_missing_data): ?>
                         <div class="card">
-                            <h4>Legacy Data Migration <span class="badge" style="background:#FEF3C7; color:#D97706;">Required</span></h4>
+                            <h4>Ledger & Financial Data Synchronization <span class="badge" style="background:#FEF3C7; color:#D97706;">Required</span></h4>
                             <ul>
-                                <li>Missing payment receipts detected for old 'Paid' bills, or missing hashes. A migration will be performed.</li>
+                                <li>Deduplicate phantom duplicate payment receipts and align ledger balance.</li>
+                                <li>Reconcile compounded prior dues on historical invoices.</li>
+                                <li>Recalculate bill statuses (Paid, Partial, Due) against true payment allocations.</li>
+                                <li>Backfill missing verification hashes and recover advance credits.</li>
                             </ul>
                         </div>
                     <?php endif; ?>

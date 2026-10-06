@@ -54,26 +54,28 @@ try {
             $total_elec = mysqli_fetch_assoc($qElec)['total'] ?? 0;
 
             // Outstanding Amount
-            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount - IFNULL((SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type='rent' AND bill_id=rent.id), 0)) as total FROM rent WHERE status IN ('Due', 'Partial') $rent_where");
-            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount - IFNULL((SELECT SUM(paid_amount - COALESCE(adjustment_amount, 0)) FROM payments WHERE bill_type='electricity' AND bill_id=electricity.id), 0)) as total FROM electricity WHERE status IN ('Due', 'Partial') $elec_where");
+            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type='rent' AND bill_id=rent.id), 0)) as total FROM rent WHERE status IN ('Due', 'Partial') $rent_where");
+            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=electricity.id), 0)) as total FROM electricity WHERE status IN ('Due', 'Partial') $elec_where");
             $outstanding = (mysqli_fetch_assoc($qRentDue)['total'] ?? 0) + (mysqli_fetch_assoc($qElecDue)['total'] ?? 0);
 
             // Renters Due count
             $qDueCount = mysqli_query($conn, "
                 SELECT COUNT(DISTINCT user_id) as count 
                 FROM (
-                    SELECT user_id FROM rent WHERE status='Due' $rent_where
+                    SELECT user_id FROM rent WHERE status IN ('Due', 'Partial') $rent_where
                     UNION
-                    SELECT user_id FROM electricity WHERE status='Due' $elec_where
+                    SELECT user_id FROM electricity WHERE status IN ('Due', 'Partial') $elec_where
                 ) as combined
             ");
             $renters_due = mysqli_fetch_assoc($qDueCount)['count'] ?? 0;
 
             // Simple PL approximation (assuming ~6.5 per unit cost)
-            $qUnits = mysqli_query($conn, "SELECT SUM(current_reading - previous_reading) as total_units, SUM(total_amount) as rev FROM electricity WHERE status='Paid' $elec_where");
+            $qUnits = mysqli_query($conn, "SELECT SUM(units_consumed) as total_units, SUM(amount) as rev FROM electricity WHERE status='Paid' $elec_where");
             $elec_stats = mysqli_fetch_assoc($qUnits);
-            $est_expense = ($elec_stats['total_units'] ?? 0) * 6.5; 
-            $elec_profit = ($elec_stats['rev'] ?? 0) - $est_expense;
+            $total_units = (float)($elec_stats['total_units'] ?? 0);
+            $elec_rev = (float)($elec_stats['rev'] ?? 0);
+            $est_expense = $total_units * 6.50; 
+            $elec_profit = max(0, $elec_rev - $est_expense);
 
             echo json_encode([
                 'total_rent_collected' => (float)$total_rent,

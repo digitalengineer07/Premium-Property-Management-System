@@ -57,20 +57,34 @@ if (isset($_GET['action']) && $_GET['action'] == 'toggle') {
     mysqli_stmt_close($stmt);
 }
 
-// Fetch all Due Bills
+// Fetch all Due and Partial Bills
 $dues = [];
-$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND u.status = 'active'");
+$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type, 
+    (SELECT IFNULL(SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)), 0) FROM payments WHERE bill_type='rent' AND bill_id=r.id) as already_paid 
+    FROM rent r JOIN users u ON r.user_id = u.id 
+    WHERE r.status IN ('Due', 'Partial') AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res1)) {
-    $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Rent' ORDER BY sent_at DESC LIMIT 1");
-    $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
-    $dues[] = $row;
+    $row_due = max(0, (float)$row['rent_amount'] - (float)$row['already_paid']);
+    if ($row_due > 0.01) {
+        $row['remaining_due'] = $row_due;
+        $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Rent' ORDER BY sent_at DESC LIMIT 1");
+        $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
+        $dues[] = $row;
+    }
 }
 
-$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND u.status = 'active'");
+$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type, 
+    (SELECT IFNULL(SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)), 0) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as already_paid 
+    FROM electricity e JOIN users u ON e.user_id = u.id 
+    WHERE e.status IN ('Due', 'Partial') AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res2)) {
-    $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Electricity' ORDER BY sent_at DESC LIMIT 1");
-    $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
-    $dues[] = $row;
+    $row_due = max(0, (float)$row['total_amount'] - (float)$row['already_paid']);
+    if ($row_due > 0.01) {
+        $row['remaining_due'] = $row_due;
+        $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Electricity' ORDER BY sent_at DESC LIMIT 1");
+        $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
+        $dues[] = $row;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -159,36 +173,52 @@ while($row = mysqli_fetch_assoc($res2)) {
         <?php else: foreach($dues as $d): 
             $isDisabled = ($d['reminder_status'] == 'Disabled');
             
-            // Mock days logic for demonstration of the design
-            $days = ($d['id'] * 3) % 15;
-            if ($days == 0) $days = 3;
-            $isOverdue = ($d['id'] % 2 == 0);
+            // True calendar days logic based on due_date
+            $due_date_str = $d['due_date'] ?? null;
+            $isOverdue = false;
+            $days = 0;
+            if (!empty($due_date_str) && $due_date_str !== '0000-00-00') {
+                $diff = (strtotime(date('Y-m-d')) - strtotime($due_date_str)) / 86400;
+                $diff = (int)round($diff);
+                if ($diff > 0) {
+                    $isOverdue = true;
+                    $days = $diff;
+                } else {
+                    $isOverdue = false;
+                    $days = abs($diff);
+                }
+            }
         ?>
             <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>" style="margin-bottom: 0;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                     <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
                         <div style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: <?php echo $d['type'] == 'Rent' ? 'rgba(59,130,246,0.08); color: #3B82F6;' : 'rgba(245,158,11,0.08); color: #F59E0B;'; ?>">
-                            <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-droplet' : 'bx-bulb'; ?>'></i>
+                            <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-home-alt' : 'bx-bulb'; ?>'></i>
                         </div>
                         <div style="flex: 1; min-width: 0;">
                             <h3 style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <?php echo htmlspecialchars($d['name']); ?>
                                 <span style="font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; flex-shrink: 0; <?php echo $d['type'] == 'Rent' ? 'background: #EFF6FF; color: #3B82F6;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
-                                    <?php echo strtoupper($d['type'] == 'Rent' ? 'Water' : 'Electricity'); ?>
+                                    <?php echo strtoupper($d['type'] == 'Rent' ? 'Rent' : 'Combined Bill'); ?>
                                 </span>
                             </h3>
                             <div style="color: var(--text-gray); font-size: 12px; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room <?php echo htmlspecialchars($d['room_no']); ?> • <?php echo htmlspecialchars($d['month']); ?></div>
                             <?php if ($isOverdue): ?>
                                 <span style="font-size: 10px; font-weight: 700; color: #EF4444; background: #FEF2F2; padding: 3px 8px; border-radius: 20px; display: inline-block;">Overdue <?php echo $days; ?> days</span>
-                            <?php else: ?>
+                            <?php elseif ($days > 0): ?>
                                 <span style="font-size: 10px; font-weight: 700; color: #F59E0B; background: #FFF7ED; padding: 3px 8px; border-radius: 20px; display: inline-block;">Due in <?php echo $days; ?> days</span>
+                            <?php else: ?>
+                                <span style="font-size: 10px; font-weight: 700; color: #3B82F6; background: #EFF6FF; padding: 3px 8px; border-radius: 20px; display: inline-block;">Due Today</span>
                             <?php endif; ?>
                         </div>
                     </div>
                     
                     <div style="text-align: right; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 8px 12px; border-radius: 10px; flex-shrink: 0;">
-                        <div style="font-size: 9px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">DUE AMOUNT</div>
-                        <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
+                        <div style="font-size: 9px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">REMAINING DUE</div>
+                        <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['remaining_due'] ?? ($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount']), 2); ?></div>
+                        <?php if (!empty($d['already_paid']) && (float)$d['already_paid'] > 0): ?>
+                            <div style="font-size: 9px; color: #10B981; font-weight: 600; margin-top: 2px;">Paid: ₹<?php echo number_format((float)$d['already_paid'], 2); ?></div>
+                        <?php endif; ?>
                     </div>
                 </div>
 

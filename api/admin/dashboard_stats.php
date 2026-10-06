@@ -119,10 +119,16 @@ try {
         $trend_rent_collected = 100;
     }
 
-    // 6) Total Dues
-    $d_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid'");
-    $d_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status!='Paid'");
-    $total_dues = max(0, ($d_elec + $d_rent) - ($p_elec + $p_rent));
+    // 6) Total Dues: exact sum of per-tenant net dues
+    $total_dues = 0;
+    $uq_dues = mysqli_query($conn, "SELECT id, advance_payment FROM users WHERE status = 'active'");
+    while ($u = mysqli_fetch_assoc($uq_dues)) {
+        $uid = (int)$u['id'];
+        $wallet = (float)$u['advance_payment'];
+        $r_due = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(r.rent_amount - IFNULL(p.paid, 0)), 0) as due FROM rent r LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id WHERE r.user_id = $uid AND r.status IN ('Due', 'Partial')"))['due'];
+        $e_due = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(e.total_amount - IFNULL(p.paid, 0)), 0) as due FROM electricity e LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id = e.id WHERE e.user_id = $uid AND e.status IN ('Due', 'Partial')"))['due'];
+        $total_dues += max(0, ($r_due + $e_due) - $wallet);
+    }
 
     // Dues Trend (Comparing this month's generated dues vs last month's generated dues)
     $dues_curr_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid' AND month='$curr_month_str'");

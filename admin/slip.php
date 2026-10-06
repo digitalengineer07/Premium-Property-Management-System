@@ -58,7 +58,10 @@ $dues = (float)($row['dues'] ?? 0);
 $extra_charges = (float)($row['extra_charges'] ?? 0);
 $extra_charges_desc = $row['extra_charges_desc'] ?? '';
 
-$total_amount = $electricity_amount;
+$total_amount = (float)($row['total_amount'] ?? ($electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges));
+if ($total_amount <= 0) {
+    $total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
+}
 
 // Back URL for fallback
 $back_url = "dashboard.php";
@@ -903,7 +906,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
         <table class="charges-table">
             <thead>
                 <tr>
-                    <th><i class='bx bxs-zap' style="margin-right: 8px;"></i> Electricity Charges Breakdown</th>
+                    <th><i class='bx bxs-receipt' style="margin-right: 8px;"></i> Bill Charges Breakdown</th>
                     <th>Amount (₹)</th>
                 </tr>
             </thead>
@@ -912,9 +915,30 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                     <td>Energy Charges (<?php echo $units_consumed; ?> Units @ ₹<?php echo number_format($rate_per_unit, 2); ?>)</td>
                     <td>₹<?php echo number_format($electricity_amount, 2); ?></td>
                 </tr>
-                
-                <!-- Display dynamically based on DB values -->
-                
+                <?php if ($rent_amount > 0): ?>
+                <tr>
+                    <td>Room Rent Charges</td>
+                    <td>₹<?php echo number_format($rent_amount, 2); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($maintenance > 0): ?>
+                <tr>
+                    <td>Maintenance Charges</td>
+                    <td>₹<?php echo number_format($maintenance, 2); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($extra_charges > 0): ?>
+                <tr>
+                    <td><?php echo !empty($extra_charges_desc) ? htmlspecialchars($extra_charges_desc) : 'Extra Charges'; ?></td>
+                    <td>₹<?php echo number_format($extra_charges, 2); ?></td>
+                </tr>
+                <?php endif; ?>
+                <?php if ($dues > 0): ?>
+                <tr>
+                    <td>Previous Dues / Arrears</td>
+                    <td>₹<?php echo number_format($dues, 2); ?></td>
+                </tr>
+                <?php endif; ?>
             </tbody>
         </table>
 
