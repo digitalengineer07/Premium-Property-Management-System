@@ -129,11 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (file_exists('../audit.php')) {
                     require_once '../audit.php';
                     if ($old_rent != $fixed_rent) {
-                        $action = "Rent Amount updated from ₹" . number_format($old_rent, 2) . " to ₹" . number_format($fixed_rent, 2);
+                        $action = "Rent Amount updated from ₹" . format_inr($old_rent, 2) . " to ₹" . format_inr($fixed_rent, 2);
                         logAction($conn, 'admin', $id, $action);
                     }
                     if ($old_maint != $fixed_maintenance) {
-                        $action = "Maintenance Amount updated from ₹" . number_format($old_maint, 2) . " to ₹" . number_format($fixed_maintenance, 2);
+                        $action = "Maintenance Amount updated from ₹" . format_inr($old_maint, 2) . " to ₹" . format_inr($fixed_maintenance, 2);
                         logAction($conn, 'admin', $id, $action);
                     }
                 }

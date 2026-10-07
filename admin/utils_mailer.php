@@ -77,7 +77,7 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
                     
                     <div class='bill-box'>
                         <p style='margin-bottom:10px;'>Total Amount Due:</p>
-                        <div class='total'>₹" . number_format($amount_due, 2) . "</div>
+                        <div class='total'>₹" . format_inr($amount_due, 2) . "</div>
                     </div>
                     
                     <p style='margin-top:30px;'>You can view the detailed breakdown and pay your bill from your resident dashboard.</p>
@@ -94,7 +94,7 @@ function send_new_bill_notification($to_email, $renter_name, $bill_month, $amoun
         ";
 
         $mail->Body = $message;
-        $mail->AltBody = "Hi $renter_name, your bill for $bill_month has been generated. Total due: ₹$amount_due. Please login to your dashboard to view.";
+        $mail->AltBody = "Hi $renter_name, your bill for $bill_month has been generated. Total due: ₹" . format_inr($amount_due, 2) . ". Please login to your dashboard to view.";
 
         return $mail->send();
     } catch (Exception $e) {
@@ -148,7 +148,7 @@ function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $a
                     </div>
                     
                     <p style='margin-bottom:10px;'>Total Amount Due:</p>
-                    <div class='total'>₹" . number_format($amount_due, 2) . "</div>
+                    <div class='total'>₹" . format_inr($amount_due, 2) . "</div>
                     
                     <p style='margin-top:30px;'>Please clear these payments by visiting your dashboard. If you have already paid, please ignore this email or upload your receipt for verification.</p>
                     
@@ -164,7 +164,7 @@ function send_payment_reminder_email($to_email, $renter_name, $overdue_bills, $a
         ";
 
         $mail->Body = $message;
-        $mail->AltBody = "Hi $renter_name, this is a reminder to clear your pending dues of ₹" . number_format($amount_due, 2) . ". Please login to your dashboard.";
+        $mail->AltBody = "Hi $renter_name, this is a reminder to clear your pending dues of ₹" . format_inr($amount_due, 2) . ". Please login to your dashboard.";
 
         if ($pdf_file_path && file_exists(__DIR__ . '/../' . $pdf_file_path)) {
             $mail->addAttachment(__DIR__ . '/../' . $pdf_file_path);
@@ -277,7 +277,7 @@ function send_payment_receipt_email($to_email, $renter_name, $details, $amount_p
                 </div>
                 
                 <p style='margin-bottom:10px;'>Amount Paid:</p>
-                <div class='total'>₹" . number_format($amount_paid, 2) . "</div>
+                <div class='total'>₹" . format_inr($amount_paid, 2) . "</div>
                 
                 <p style='margin-top:30px;'>Thank you for your prompt payment!</p>
                 

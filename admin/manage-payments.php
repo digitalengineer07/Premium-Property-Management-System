@@ -241,25 +241,25 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
                 <div style="background: var(--white); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
                     <div style="color: var(--text-gray); font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">Total Collection</div>
-                    <div style="font-size: 24px; font-weight: 800; color: var(--primary-purple);">₹<?php echo number_format((float)$kpi['total_amount'], 2); ?></div>
+                    <div style="font-size: 24px; font-weight: 800; color: var(--primary-purple);">₹<?php echo format_inr((float)$kpi['total_amount'], 2); ?></div>
                     <div style="font-size: 12px; color: var(--text-gray); margin-top: 4px;"><?php echo $kpi['total_tx']; ?> transactions</div>
                 </div>
                 <div style="background: var(--white); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
                     <div style="color: var(--text-gray); font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">Online vs Cash</div>
                     <div style="display: flex; gap: 16px;">
                         <div>
-                            <div style="font-size: 18px; font-weight: 800; color: #10B981;">₹<?php echo number_format((float)$kpi['online_amount'], 2); ?></div>
+                            <div style="font-size: 18px; font-weight: 800; color: #10B981;">₹<?php echo format_inr((float)$kpi['online_amount'], 2); ?></div>
                             <div style="font-size: 11px; color: var(--text-gray);">Online</div>
                         </div>
                         <div>
-                            <div style="font-size: 18px; font-weight: 800; color: #F59E0B;">₹<?php echo number_format((float)$kpi['cash_amount'], 2); ?></div>
+                            <div style="font-size: 18px; font-weight: 800; color: #F59E0B;">₹<?php echo format_inr((float)$kpi['cash_amount'], 2); ?></div>
                             <div style="font-size: 11px; color: var(--text-gray);">Cash</div>
                         </div>
                     </div>
                 </div>
                 <div style="background: var(--white); padding: 20px; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--card-shadow);">
                     <div style="color: var(--text-gray); font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">This Month</div>
-                    <div style="font-size: 24px; font-weight: 800; color: var(--text-dark);">₹<?php echo number_format((float)$kpi['this_month_amount'], 2); ?></div>
+                    <div style="font-size: 24px; font-weight: 800; color: var(--text-dark);">₹<?php echo format_inr((float)$kpi['this_month_amount'], 2); ?></div>
                 </div>
             </div>
 
@@ -321,7 +321,7 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                                             <div style="font-size: 12px; color: var(--text-gray);"><?php echo htmlspecialchars($p['month'] ?? '-'); ?></div>
                                         </td>
                                         <td>
-                                            <div style="font-weight: 800; color: #10B981;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
+                                            <div style="font-weight: 800; color: #10B981;">₹<?php echo format_inr($p['paid_amount'], 2); ?></div>
                                         </td>
                                         <td>
                                             <span style="background: rgba(98,75,255,0.1); color: var(--primary-purple); padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700;"><?php echo htmlspecialchars($p['payment_mode']); ?></span>

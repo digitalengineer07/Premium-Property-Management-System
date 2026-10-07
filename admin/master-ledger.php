@@ -249,7 +249,7 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                     </div>
                     <div class="ledger-kpi-info">
                         <p>Total Billed</p>
-                        <h3>₹<?php echo number_format($kpi_billed); ?></h3>
+                        <h3>₹<?php echo format_inr($kpi_billed); ?></h3>
                     </div>
                 </div>
                 <div class="ledger-kpi-card">
@@ -258,7 +258,7 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                     </div>
                     <div class="ledger-kpi-info">
                         <p>Total Paid</p>
-                        <h3>₹<?php echo number_format($kpi_paid); ?></h3>
+                        <h3>₹<?php echo format_inr($kpi_paid); ?></h3>
                     </div>
                 </div>
                 <div class="ledger-kpi-card">
@@ -267,7 +267,7 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                     </div>
                     <div class="ledger-kpi-info">
                         <p>Remaining Dues</p>
-                        <h3>₹<?php echo number_format($kpi_dues); ?></h3>
+                        <h3>₹<?php echo format_inr($kpi_dues); ?></h3>
                     </div>
                 </div>
                 <div class="ledger-kpi-card">
@@ -304,9 +304,9 @@ while ($row = mysqli_fetch_assoc($users_res)) {
                                 </div>
                                 <?php if($rec['user_status'] == 'inactive') echo '<span style="color:#EF4444; font-size:10px; border:1px solid #EF4444; border-radius:4px; padding:2px 4px; margin-left:6px; vertical-align: middle;">Inactive</span>'; ?>
                             </td>
-                            <td>₹<?php echo number_format((float)$rec['total_amount'], 2); ?></td>
-                            <td style="color:#10B981;">₹<?php echo number_format((float)$rec['paid'], 2); ?></td>
-                            <td style="color:#EF4444;">₹<?php echo number_format((float)$rec['due'], 2); ?></td>
+                            <td>₹<?php echo format_inr((float)$rec['total_amount'], 2); ?></td>
+                            <td style="color:#10B981;">₹<?php echo format_inr((float)$rec['paid'], 2); ?></td>
+                            <td style="color:#EF4444;">₹<?php echo format_inr((float)$rec['due'], 2); ?></td>
                             <td>
                                 <span class="status-pill" style="background: <?php echo $rec['status_bg']; ?>; color: <?php echo $rec['status_color']; ?>;">
                                     <?php echo htmlspecialchars($rec['display_status']); ?>

@@ -546,7 +546,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 </div>
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> 4.5%</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($rent_collected_total); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($rent_collected_total); ?></div>
             <div class="kpi-label">Rent Collected</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -556,7 +556,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 </div>
                 <div class="trend trend-down"><i class='bx bx-trending-down'></i> 1.2%</div>
             </div>
-            <div class="kpi-value" style="color: #EF4444;">₹<?php echo number_format($total_dues_total); ?></div>
+            <div class="kpi-value" style="color: #EF4444;">₹<?php echo format_inr($total_dues_total); ?></div>
             <div class="kpi-label">Total Dues</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -567,7 +567,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> 2.1%</div>
             </div>
             <?php $display_month = date('M', strtotime('01 ' . $prev_month_str)); ?>
-            <div class="kpi-value">₹<?php echo number_format($elec_collected_total); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($elec_collected_total); ?></div>
             <div class="kpi-label">Electricity Paid (<?php echo $display_month; ?>)</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -587,7 +587,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 </div>
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> 8.4%</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($total_revenue_total); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($total_revenue_total); ?></div>
             <div class="kpi-label">Total Revenue</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -772,9 +772,9 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                     <code style="font-size: 10px; background: var(--bg-main); padding: 2px 4px; border-radius: 4px;">#<?php echo $tx['id']; ?></code>
                                 </td>
                                 <td data-label="Amount">
-                                    <div style="font-weight: 700;">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                    <div style="font-weight: 700;">₹<?php echo format_inr($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
                                     <?php if ($tx['adjustment_amount'] < 0): ?>
-                                    <div style="font-size: 10px; color: #10B981; font-weight: 600; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> Wallet</div>
+                                    <div style="font-size: 10px; color: #10B981; font-weight: 600; margin-top: 2px;">+ ₹<?php echo format_inr(abs($tx['adjustment_amount'])); ?> Wallet</div>
                                     <?php endif; ?>
                                 </td>
                                 <td data-label="Type" style="font-size: 11px;">
@@ -825,9 +825,9 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo number_format($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
+                                <div style="font-weight: 800; font-size: 15px; color: var(--text-dark);">₹<?php echo format_inr($tx['amount'] + ($tx['adjustment_amount'] < 0 ? abs($tx['adjustment_amount']) : 0)); ?></div>
                                 <?php if($tx['adjustment_amount'] < 0): ?>
-                                    <div style="font-size: 9px; color: #10B981; font-weight: 700; margin-top: 2px;">+ ₹<?php echo number_format(abs($tx['adjustment_amount'])); ?> WALLET</div>
+                                    <div style="font-size: 9px; color: #10B981; font-weight: 700; margin-top: 2px;">+ ₹<?php echo format_inr(abs($tx['adjustment_amount'])); ?> WALLET</div>
                                 <?php endif; ?>
                                 <div style="font-size: 10px; color: var(--text-gray); text-transform: uppercase; margin-top: 2px; font-weight: 600;">
                                     <?php echo $tx['type']; ?> &bull; <?php echo $tx['mode']; ?>
@@ -886,7 +886,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                 </td>
                                 <td data-label="Month"><?php echo $e['month']; ?></td>
                                 <td data-label="Units"><?php echo ($e['current_reading'] - $e['previous_reading']); ?></td>
-                                <td data-label="Amount" style="font-weight: 600;">₹<?php echo number_format($e['amount']); ?></td>
+                                <td data-label="Amount" style="font-weight: 600;">₹<?php echo format_inr($e['amount']); ?></td>
                                 <td data-label="Status"><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $e['status']; ?></span></td>
                             </tr>
                             <?php endwhile; ?>
@@ -943,7 +943,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                                     </a>
                                     <div style="font-size: 10px; color: var(--text-gray);">Room <?php echo s($row['room_no']); ?> | <?php echo s($row['month']); ?></div>
                                 </td>
-                                <td>₹<?php echo number_format($row['total_amount']); ?></td>
+                                <td>₹<?php echo format_inr($row['total_amount']); ?></td>
                                 <td>₹0</td>
                                 <td>
                                     <span class="badge badge-due" style="background: #FEE2E2; color: #EF4444;">Due</span>
@@ -974,7 +974,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                             <span class="badge" style="background: #FEE2E2; color: #EF4444; height: 100%;">Due</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                            <span>Due Amount: <strong style="color: #EF4444;">₹<?php echo number_format($row['total_amount']); ?></strong></span>
+                            <span>Due Amount: <strong style="color: #EF4444;">₹<?php echo format_inr($row['total_amount']); ?></strong></span>
                             <span style="font-weight: 600;">Bill: <?php echo $row['month']; ?></span>
                         </div>
                         <div class="rent-history-details">
@@ -1016,7 +1016,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
 
             <div class="panel stats-card-mini" style="background: var(--primary-purple); color: white; border: none;">
                 <p style="opacity: 0.8; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">Estimated Revenue</p>
-                <h2 style="font-size: 32px; font-weight: 800; margin: 12px 0;">₹<?php echo number_format($total_revenue_total); ?></h2>
+                <h2 style="font-size: 32px; font-weight: 800; margin: 12px 0;">₹<?php echo format_inr($total_revenue_total); ?></h2>
                 <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
                     <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 8px; font-weight: 600;">+12.5%</span>
                     <span style="opacity: 0.9;">Growth this month</span>
@@ -1162,7 +1162,8 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         document.getElementById('paymentBillType').value = type;
         document.getElementById('paymentBillAmount').value = amount;
         document.getElementById('paidAmountInput').value = amount;
-        document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${amount})`;
+        const formattedAmt = Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${formattedAmt})`;
         
         // Init date/time
         const now = new Date();

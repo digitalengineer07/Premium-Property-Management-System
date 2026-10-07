@@ -204,7 +204,7 @@ $admin_user = s($_SESSION['admin']);
                 <i class='bx bx-wallet kpi-icon' style="color: #F59E0B; background: rgba(245, 158, 11, 0.1);"></i>
                 <div class="trend" style="background: rgba(245, 158, 11, 0.1); color: #B45309;">Expense</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($total_recharged, 0); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($total_recharged, 2); ?></div>
             <div class="kpi-label">Meter Recharged (<?php echo (new DateTime('first day of last month'))->format('M'); ?>)</div>
         </div>
         <div class="kpi-card" style="border-left: 4px solid #10B981;">
@@ -212,7 +212,7 @@ $admin_user = s($_SESSION['admin']);
                 <i class='bx bx-trending-up kpi-icon' style="color: #10B981; background: rgba(16, 185, 129, 0.1);"></i>
                 <div class="trend trend-up">Revenue</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($total_billed, 0); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($total_billed, 2); ?></div>
             <div class="kpi-label">Resident Bills (<?php echo (new DateTime('first day of last month'))->format('M'); ?>)</div>
         </div>
         <div class="kpi-card" style="border-left: 4px solid <?php echo $balance_color; ?>;">
@@ -221,7 +221,7 @@ $admin_user = s($_SESSION['admin']);
                 <div class="trend" style="background: <?php echo $balance_color; ?>15; color: <?php echo $balance_color; ?>;">Status</div>
             </div>
             <div class="kpi-value" style="color: <?php echo $balance_color; ?>;">
-                ₹<?php echo number_format(abs($net_balance), 0); ?>
+                ₹<?php echo format_inr(abs($net_balance), 2); ?>
                 <small style="font-size: 12px; opacity: 0.7;"><?php echo $net_balance >= 0 ? '(Profit)' : '(Loss)'; ?></small>
             </div>
             <div class="kpi-label">Monthly Recovery Status</div>
@@ -355,7 +355,7 @@ $admin_user = s($_SESSION['admin']);
                             <?php endif; ?>
                         </td>
                         <td><?php echo htmlspecialchars($r['units']); ?></td>
-                        <td style="font-weight: 700; color: var(--text-dark);">₹<?php echo number_format($r['amount'], 2); ?></td>
+                        <td style="font-weight: 700; color: var(--text-dark);">₹<?php echo format_inr($r['amount'], 2); ?></td>
                         <td><span class="badge <?php echo $r['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $r['status']; ?></span></td>
                         <td style="white-space: nowrap;">
                             <div style="display: flex; gap: 4px; align-items: center; flex-wrap: nowrap;">

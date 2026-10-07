@@ -110,7 +110,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                             <div style="color: var(--text-gray); font-size: 12px; font-weight: 500; margin-top: 2px;">Sum of all transactions</div>
                         </div>
                     </div>
-                    <div style="font-weight: 800; font-size: 20px; color: #10B981;">₹<?php echo number_format($total_paid, 2); ?></div>
+                    <div style="font-weight: 800; font-size: 20px; color: #10B981;">₹<?php echo format_inr($total_paid, 2); ?></div>
                 </div>
             </div>
 
@@ -129,7 +129,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                 <div style="background: var(--white); padding: 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: border-color 0.2s;" onmouseover="this.style.borderColor='#CBD5E1'" onmouseout="this.style.borderColor='var(--border)'">
                                     <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
                                         <div style="display: flex; flex-direction: column; gap: 4px;">
-                                            <div style="font-weight: 800; color: var(--text-dark); font-size: 20px;">₹<?php echo number_format($p['paid_amount'], 2); ?></div>
+                                            <div style="font-weight: 800; color: var(--text-dark); font-size: 20px;">₹<?php echo format_inr($p['paid_amount'], 2); ?></div>
                                             <div style="font-size: 13px; color: var(--text-gray); font-weight: 500;">
                                                 <span style="color: var(--text-dark); font-weight: 600; text-transform: capitalize;"><?php echo htmlspecialchars($p['bill_type']); ?></span> Bill • <?php echo htmlspecialchars($p['month'] ?? 'N/A'); ?>
                                             </div>
@@ -160,24 +160,24 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                                             <div style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Bill Breakdown</div>
                                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px; color: var(--text-dark);">
                                                 <?php if ($p['rent_amount'] > 0): ?>
-                                                    <div style="display: flex; justify-content: space-between;"><span>Rent:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['rent_amount'], 2); ?></span></div>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Rent:</span> <span style="font-weight: 600;">₹<?php echo format_inr($p['rent_amount'], 2); ?></span></div>
                                                 <?php endif; ?>
                                                 <?php if ($p['elec_amount'] > 0): ?>
-                                                    <div style="display: flex; justify-content: space-between;"><span>Electricity:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['elec_amount'], 2); ?></span></div>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Electricity:</span> <span style="font-weight: 600;">₹<?php echo format_inr($p['elec_amount'], 2); ?></span></div>
                                                 <?php endif; ?>
                                                 <?php if ($p['maintenance'] > 0): ?>
-                                                    <div style="display: flex; justify-content: space-between;"><span>Maintenance:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['maintenance'], 2); ?></span></div>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Maintenance:</span> <span style="font-weight: 600;">₹<?php echo format_inr($p['maintenance'], 2); ?></span></div>
                                                 <?php endif; ?>
                                                 <?php if ($p['past_dues'] > 0): ?>
-                                                    <div style="display: flex; justify-content: space-between;"><span>Past Dues:</span> <span style="font-weight: 600;">₹<?php echo number_format($p['past_dues'], 2); ?></span></div>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Past Dues:</span> <span style="font-weight: 600;">₹<?php echo format_inr($p['past_dues'], 2); ?></span></div>
                                                 <?php endif; ?>
                                                 <?php if ($p['extra_charges'] > 0): ?>
-                                                    <div style="display: flex; justify-content: space-between;"><span>Extra (<?php echo htmlspecialchars($p['extra_charges_desc'] ?? 'Charge'); ?>):</span> <span style="font-weight: 600;">₹<?php echo number_format($p['extra_charges'], 2); ?></span></div>
+                                                    <div style="display: flex; justify-content: space-between;"><span>Extra (<?php echo htmlspecialchars($p['extra_charges_desc'] ?? 'Charge'); ?>):</span> <span style="font-weight: 600;">₹<?php echo format_inr($p['extra_charges'], 2); ?></span></div>
                                                 <?php endif; ?>
                                                 <?php if ($p['adjustment_amount'] > 0): ?>
                                                     <div style="display: flex; justify-content: space-between;">
                                                         <span>Adjustment (<?php echo htmlspecialchars($p['adjustment_type'] ?? 'discount'); ?>):</span>
-                                                        <span style="font-weight: 600; color: #EF4444;">-₹<?php echo number_format($p['adjustment_amount'], 2); ?></span>
+                                                        <span style="font-weight: 600; color: #EF4444;">-₹<?php echo format_inr($p['adjustment_amount'], 2); ?></span>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>

@@ -90,7 +90,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                 </div>
                 <div>
                     <p style="font-size: 13px; font-weight: 600; color: var(--text-gray); text-transform: uppercase; margin: 0 0 4px 0;">Total Billed</p>
-                    <h3 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">₹<?php echo number_format($total_billed, 2); ?></h3>
+                    <h3 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">₹<?php echo format_inr($total_billed, 2); ?></h3>
                 </div>
             </div>
 
@@ -100,7 +100,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                 </div>
                 <div>
                     <p style="font-size: 13px; font-weight: 600; color: var(--text-gray); text-transform: uppercase; margin: 0 0 4px 0;">Total Paid</p>
-                    <h3 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">₹<?php echo number_format($total_paid_overall, 2); ?></h3>
+                    <h3 style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0;">₹<?php echo format_inr($total_paid_overall, 2); ?></h3>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                 </div>
                 <div>
                     <p style="font-size: 13px; font-weight: 600; color: var(--text-gray); text-transform: uppercase; margin: 0 0 4px 0;">Total Outstanding</p>
-                    <h3 style="font-size: 24px; font-weight: 800; color: <?php echo $total_outstanding > 0 ? '#EF4444' : 'var(--text-dark)'; ?>; margin: 0;">₹<?php echo number_format($total_outstanding, 2); ?></h3>
+                    <h3 style="font-size: 24px; font-weight: 800; color: <?php echo $total_outstanding > 0 ? '#EF4444' : 'var(--text-dark)'; ?>; margin: 0;">₹<?php echo format_inr($total_outstanding, 2); ?></h3>
                 </div>
             </div>
         </div>
@@ -143,19 +143,19 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
                             <tr style="border-bottom: 1px solid var(--border); transition: background 0.2s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
                                 <td style="padding: 16px 12px; font-weight: 700; font-size: 14px; color: var(--text-dark);"><?php echo htmlspecialchars($h['month']); ?></td>
                                 <td style="padding: 16px 12px; font-size: 13px; color: var(--text-gray);">
-                                    Rent: ₹<?php echo number_format($h['rent_amount'], 2); ?><br>
-                                    Maint: ₹<?php echo number_format($h['maintenance'], 2); ?>
+                                    Rent: ₹<?php echo format_inr($h['rent_amount'], 2); ?><br>
+                                    Maint: ₹<?php echo format_inr($h['maintenance'], 2); ?>
                                 </td>
                                 <td style="padding: 16px 12px; font-size: 13px; color: var(--text-gray);">
                                     <?php echo htmlspecialchars($h['units_consumed'] ?? ($h['current_reading'] - $h['previous_reading'])); ?> Units<br>
-                                    ₹<?php echo number_format($h['amount'], 2); ?>
+                                    ₹<?php echo format_inr($h['amount'], 2); ?>
                                 </td>
                                 <td style="padding: 16px 12px; font-size: 13px; color: var(--text-gray);">
-                                    Extras: ₹<?php echo number_format($h['extra_charges'], 2); ?><br>
-                                    Dues: ₹<?php echo number_format($h['dues'], 2); ?>
+                                    Extras: ₹<?php echo format_inr($h['extra_charges'], 2); ?><br>
+                                    Dues: ₹<?php echo format_inr($h['dues'], 2); ?>
                                 </td>
                                 <td style="padding: 16px 12px; font-weight: 800; font-size: 14px; color: var(--text-dark);">
-                                    ₹<?php echo number_format($h['total_amount'], 2); ?>
+                                    ₹<?php echo format_inr($h['total_amount'], 2); ?>
                                 </td>
                                 <td style="padding: 16px 12px;">
                                     <span style="font-size: 11px; font-weight: 700; padding: 6px 10px; border-radius: 6px; 

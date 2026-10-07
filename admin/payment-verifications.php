@@ -148,12 +148,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     // Send email
                     if (!empty($notif['user_email'])) {
                         $sub = "Payment Approved - " . HOUSE_NAME;
-                        $msg = "Hello {$notif['user_name']},<br><br>Your payment of Rs. {$notif['amount']} (Ref: {$notif['transaction_id']}) has been approved.<br><br>Thank you!";
+                        $msg = "Hello {$notif['user_name']},<br><br>Your payment of ₹" . format_inr($notif['amount'], 2) . " (Ref: {$notif['transaction_id']}) has been approved.<br><br>Thank you!";
                         @sendEmail($notif['user_email'], $sub, $msg);
                     }
                     
                     // App notification
-                    $msg_safe = mysqli_real_escape_string($conn, "Your payment of ₹" . number_format($notif['amount'], 2) . " (Ref: {$notif['transaction_id']}) has been approved.");
+                    $msg_safe = mysqli_real_escape_string($conn, "Your payment of ₹" . format_inr($notif['amount'], 2) . " (Ref: {$notif['transaction_id']}) has been approved.");
                     mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$notif['user_id']}, 'Payment Approved', '$msg_safe', 'payment_verified')");
 
                 } else {
@@ -857,7 +857,7 @@ include "sidebar.php";
 
                         </td>
                         <td>
-                            <span class="pv-amount-text">₹<?php echo number_format($n['amount'], 2); ?></span>
+                            <span class="pv-amount-text">₹<?php echo format_inr($n['amount'], 2); ?></span>
                         </td>
                         <td>
                             <div class="pv-utr-text" style="margin-bottom:4px;">

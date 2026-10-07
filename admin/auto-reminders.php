@@ -33,7 +33,7 @@ while ($r = mysqli_fetch_assoc($rent_q)) {
             log_reminder($conn, $r['user_id'], $r['id'], 'Rent', $r['month'], 'Auto', 'Sent');
             
             // Add to user panel notification
-            $msg_safe = mysqli_real_escape_string($conn, "Your rent for " . $r['month'] . " (Remaining Due: ₹" . number_format($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
+            $msg_safe = mysqli_real_escape_string($conn, "Your rent for " . $r['month'] . " (Remaining Due: ₹" . format_inr($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
             mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$r['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
 
             $sent_count++;
@@ -57,7 +57,7 @@ while ($e = mysqli_fetch_assoc($elec_q)) {
             log_reminder($conn, $e['user_id'], $e['id'], 'Electricity', $e['month'], 'Auto', 'Sent');
             
             // Add to user panel notification
-            $msg_safe = mysqli_real_escape_string($conn, "Your bill for " . $e['month'] . " (Remaining Due: ₹" . number_format($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
+            $msg_safe = mysqli_real_escape_string($conn, "Your bill for " . $e['month'] . " (Remaining Due: ₹" . format_inr($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
             mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$e['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
 
             $sent_count++;

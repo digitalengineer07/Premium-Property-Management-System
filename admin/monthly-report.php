@@ -136,7 +136,7 @@ $disp_total = $disp_rent + $disp_elec;
                 <i class='bx bx-credit-card kpi-icon'></i>
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> Healthy</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($disp_rent); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($disp_rent, 2); ?></div>
             <div class="kpi-label">Total Rent Collected</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -144,14 +144,14 @@ $disp_total = $disp_rent + $disp_elec;
                 <i class='bx bx-bolt kpi-icon' style="color: #F59E0B; background: rgba(245, 158, 11, 0.1);"></i>
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> Stable</div>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($disp_elec); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($disp_elec, 2); ?></div>
             <div class="kpi-label">Electricity Revenue</div>
         </div>
         <div class="kpi-card hover-lift">
             <div class="kpi-header">
                 <i class='bx bx-wallet kpi-icon' style="color: #10B981; background: rgba(16, 185, 129, 0.1);"></i>
             </div>
-            <div class="kpi-value">₹<?php echo number_format($disp_total); ?></div>
+            <div class="kpi-value">₹<?php echo format_inr($disp_total, 2); ?></div>
             <div class="kpi-label">Gross Revenue</div>
         </div>
         <div class="kpi-card hover-lift">
@@ -202,9 +202,9 @@ $disp_total = $disp_rent + $disp_elec;
                             ?>
                                 <tr class="animate-up">
                                     <td data-label="Month / Period" style="font-weight: 600;"><?php echo htmlspecialchars($m); ?></td>
-                                    <td data-label="Rent Revenue" style="color: var(--text-gray);">₹<?php echo number_format($tr, 2); ?></td>
-                                    <td data-label="Elec. Revenue" style="color: var(--text-gray);">₹<?php echo number_format($te, 2); ?></td>
-                                    <td data-label="Grand Total" style="font-weight: 700; color: var(--primary-purple);">₹<?php echo number_format($tr + $te, 2); ?></td>
+                                    <td data-label="Rent Revenue" style="color: var(--text-gray);">₹<?php echo format_inr($tr, 2); ?></td>
+                                    <td data-label="Elec. Revenue" style="color: var(--text-gray);">₹<?php echo format_inr($te, 2); ?></td>
+                                    <td data-label="Grand Total" style="font-weight: 700; color: var(--primary-purple);">₹<?php echo format_inr($tr + $te, 2); ?></td>
                                 </tr>
                             <?php endforeach; endif; ?>
                         </tbody>

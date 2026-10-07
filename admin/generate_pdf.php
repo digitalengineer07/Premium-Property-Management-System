@@ -38,10 +38,10 @@ if (!function_exists('generateSlipPdf')) {
         $prev = (int)($row['previous_reading'] ?? 0);
         $curr = (int)($row['current_reading'] ?? 0);
         $units = (int)($row['units_consumed'] ?? ($curr - $prev));
-        $rate = number_format((float)($row['rate_per_unit'] ?? 0), 2);
-        $amount = number_format((float)($row['amount'] ?? ($units * ($row['rate_per_unit'] ?? 0))), 2);
-        $total_amount = number_format((float)($row['total_amount'] ?? $row['amount'] ?? 0), 2);
-        $rent_text = isset($row['rent_amount']) ? "₹" . number_format((float)$row['rent_amount'],2) : "N.A";
+        $rate = format_inr((float)($row['rate_per_unit'] ?? 0), 2);
+        $amount = format_inr((float)($row['amount'] ?? ($units * ($row['rate_per_unit'] ?? 0))), 2);
+        $total_amount = format_inr((float)($row['total_amount'] ?? $row['amount'] ?? 0), 2);
+        $rent_text = isset($row['rent_amount']) ? "₹" . format_inr((float)$row['rent_amount'], 2) : "N.A";
 
         // Build simple HTML for slip (inline styles for PDF)
         $html = '
@@ -72,7 +72,7 @@ if (!function_exists('generateSlipPdf')) {
             </td>
             <td style="padding:12px;">
               <strong>Rent:</strong> ' . $rent_text . '<br>
-              <strong>Maintenance:</strong> ₹' . number_format((float)($row['maintenance'] ?? 0), 2) . '
+              <strong>Maintenance:</strong> ₹' . format_inr((float)($row['maintenance'] ?? 0), 2) . '
             </td>
             <td style="padding:12px; vertical-align:top;">
               <strong>Total Amount:</strong> ₹' . $total_amount . '<br>

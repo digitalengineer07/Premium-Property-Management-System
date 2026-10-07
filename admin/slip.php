@@ -836,7 +836,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                     <i class='bx bx-money'></i>
                     <div class="meta-sm">
                         <h5>Unit Rate</h5>
-                        <p>₹<?php echo number_format($rate_per_unit, 2); ?></p>
+                        <p>₹<?php echo format_inr($rate_per_unit, 2); ?></p>
                     </div>
                 </div>
                 <div class="meter-meta-item">
@@ -912,31 +912,31 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
             </thead>
             <tbody>
                 <tr>
-                    <td>Energy Charges (<?php echo $units_consumed; ?> Units @ ₹<?php echo number_format($rate_per_unit, 2); ?>)</td>
-                    <td>₹<?php echo number_format($electricity_amount, 2); ?></td>
+                    <td>Energy Charges (<?php echo $units_consumed; ?> Units @ ₹<?php echo format_inr($rate_per_unit, 2); ?>)</td>
+                    <td>₹<?php echo format_inr($electricity_amount, 2); ?></td>
                 </tr>
                 <?php if ($rent_amount > 0): ?>
                 <tr>
                     <td>Room Rent Charges</td>
-                    <td>₹<?php echo number_format($rent_amount, 2); ?></td>
+                    <td>₹<?php echo format_inr($rent_amount, 2); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($maintenance > 0): ?>
                 <tr>
                     <td>Maintenance Charges</td>
-                    <td>₹<?php echo number_format($maintenance, 2); ?></td>
+                    <td>₹<?php echo format_inr($maintenance, 2); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($extra_charges > 0): ?>
                 <tr>
                     <td><?php echo !empty($extra_charges_desc) ? htmlspecialchars($extra_charges_desc) : 'Extra Charges'; ?></td>
-                    <td>₹<?php echo number_format($extra_charges, 2); ?></td>
+                    <td>₹<?php echo format_inr($extra_charges, 2); ?></td>
                 </tr>
                 <?php endif; ?>
                 <?php if ($dues > 0): ?>
                 <tr>
                     <td>Previous Dues / Arrears</td>
-                    <td>₹<?php echo number_format($dues, 2); ?></td>
+                    <td>₹<?php echo format_inr($dues, 2); ?></td>
                 </tr>
                 <?php endif; ?>
             </tbody>
@@ -954,7 +954,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 </div>
             </div>
             <div class="total-amount">
-                ₹<?php echo number_format($total_amount, 2); ?>
+                ₹<?php echo format_inr($total_amount, 2); ?>
             </div>
         </div>
 

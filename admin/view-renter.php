@@ -337,7 +337,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: var(--primary-purple);">₹<?php echo number_format($user['advance_payment'] ?? 0, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: var(--primary-purple);">₹<?php echo format_inr($user['advance_payment'] ?? 0, 2); ?></div>
                       </div>
                   </div>
                     
@@ -357,13 +357,13 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
                                 <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo number_format($sec_paid); ?> / Target: ₹<?php echo number_format($sec_target); ?></div>
+                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo format_inr($sec_paid); ?> / Target: ₹<?php echo format_inr($sec_target); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo number_format($sec_paid, 2); ?></div>
+                            <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo format_inr($sec_paid, 2); ?></div>
                             <?php if (!$is_fully_paid && $sec_target > 0): ?>
-                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo number_format($sec_target - $sec_paid); ?></div>
+                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo format_inr($sec_target - $sec_paid); ?></div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -373,11 +373,11 @@ $admin_user = s($_SESSION['admin'] ?? '');
                           <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(59,130,246,0.1); display: flex; align-items: center; justify-content: center; color: #3B82F6; font-size: 28px; flex-shrink: 0;"><i class='bx bx-home'></i></div>
                           <div>
                               <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Fixed Charges</div>
-                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo number_format($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo number_format($user['fixed_maintenance'] ?? 0); ?></div>
+                              <div style="color: var(--text-gray); font-size: 13px; font-weight: 500; line-height: 1.5;">Rent: ₹<?php echo format_inr($user['fixed_rent'] ?? 0); ?><br>Maint: ₹<?php echo format_inr($user['fixed_maintenance'] ?? 0); ?></div>
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: #3B82F6;">₹<?php echo number_format(($user['fixed_rent'] ?? 0) + ($user['fixed_maintenance'] ?? 0), 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: #3B82F6;">₹<?php echo format_inr(($user['fixed_rent'] ?? 0) + ($user['fixed_maintenance'] ?? 0), 2); ?></div>
                       </div>
                   </div>
   
@@ -395,7 +395,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                           </div>
                       </div>
                       <div style="text-align: right;">
-                          <div style="font-weight: 800; font-size: 22px; color: <?php echo $total_outstanding > 0 ? '#EF4444' : 'var(--text-dark)'; ?>;">₹<?php echo number_format($total_outstanding, 2); ?></div>
+                          <div style="font-weight: 800; font-size: 22px; color: <?php echo $total_outstanding > 0 ? '#EF4444' : 'var(--text-dark)'; ?>;">₹<?php echo format_inr($total_outstanding, 2); ?></div>
                       </div>
                   </div>
   
@@ -412,7 +412,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                           <div style="font-weight: 800; font-size: 22px; color: var(--primary-purple);">
                               <?php 
                               $total_paid = array_sum(array_column($payment_history, 'paid_amount'));
-                              echo '₹' . number_format($total_paid, 2); 
+                              echo '₹' . format_inr($total_paid, 2); 
                               ?>
                           </div>
                       </div>
@@ -502,7 +502,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <tr style="border-bottom: 1px solid var(--border);">
                                 <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($e['month']); ?></td>
                                 <td style="padding: 12px 8px; font-size: 12px; color: var(--text-gray);"><?php echo htmlspecialchars($e['units_consumed'] ?? ($e['current_reading'] - $e['previous_reading'])); ?> Units</td>
-                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($e['amount'], 2); ?></td>
+                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo format_inr($e['amount'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $e['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($e['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $e['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
                                     <?php $remaining = max(0, $e['amount'] - $e['total_paid']); ?>
@@ -548,8 +548,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <?php $shown_rents = array_slice($rents, 0, 3); foreach ($shown_rents as $r): ?>
                             <tr style="border-bottom: 1px solid var(--border);">
                                 <td style="padding: 12px 8px; font-weight: 600; font-size: 12px; color: var(--text-dark);"><?php echo htmlspecialchars($r['month']); ?></td>
-                                <td style="padding: 12px 8px; font-size: 10px; color: var(--text-gray);">Rent: ₹<?php echo number_format($r['rent_amount']); ?><br>Maint: ₹<?php echo number_format($r['maintenance']); ?></td>
-                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo number_format($r['rent_amount'] + $r['maintenance'], 2); ?></td>
+                                <td style="padding: 12px 8px; font-size: 10px; color: var(--text-gray);">Rent: ₹<?php echo format_inr($r['rent_amount']); ?><br>Maint: ₹<?php echo format_inr($r['maintenance']); ?></td>
+                                <td style="padding: 12px 8px; font-weight: 700; font-size: 12px; color: var(--text-dark);">₹<?php echo format_inr($r['rent_amount'] + $r['maintenance'], 2); ?></td>
                                 <td style="padding: 12px 8px;"><span style="font-size: 10px; font-weight: 600; padding: 4px 8px; border-radius: 4px; <?php echo $r['status'] == 'Paid' ? 'color: #10B981; background: rgba(16,185,129,0.1);' : ($r['status'] == 'Partial' ? 'color: #F59E0B; background: rgba(245,158,11,0.1);' : 'color: #EF4444; background: rgba(239,68,68,0.1);'); ?>"><?php echo $r['status']; ?></span></td>
                                 <td style="padding: 12px 8px;">
                                     <?php 
@@ -917,7 +917,8 @@ $admin_user = s($_SESSION['admin'] ?? '');
         document.getElementById('paymentBillType').value = type;
         document.getElementById('paymentBillAmount').value = amount;
         document.getElementById('paidAmountInput').value = amount;
-        document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${amount})`;
+        const formattedAmt = Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${formattedAmt})`;
         
         // Init date/time
         const now = new Date();

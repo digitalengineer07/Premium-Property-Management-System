@@ -215,9 +215,9 @@ while($row = mysqli_fetch_assoc($res2)) {
                     
                     <div style="text-align: right; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 8px 12px; border-radius: 10px; flex-shrink: 0;">
                         <div style="font-size: 9px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">REMAINING DUE</div>
-                        <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['remaining_due'] ?? ($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount']), 2); ?></div>
+                        <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo format_inr($d['remaining_due'] ?? ($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount']), 2); ?></div>
                         <?php if (!empty($d['already_paid']) && (float)$d['already_paid'] > 0): ?>
-                            <div style="font-size: 9px; color: #10B981; font-weight: 600; margin-top: 2px;">Paid: ₹<?php echo number_format((float)$d['already_paid'], 2); ?></div>
+                            <div style="font-size: 9px; color: #10B981; font-weight: 600; margin-top: 2px;">Paid: ₹<?php echo format_inr((float)$d['already_paid'], 2); ?></div>
                         <?php endif; ?>
                     </div>
                 </div>
