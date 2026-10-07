@@ -575,9 +575,9 @@ function money($val) {
                         color: '#64748B',
                         callback: function(value) {
                             if (currentMetric === 'amount') {
-                                return '₹' + value;
+                                return '₹' + Number(value).toLocaleString('en-IN');
                             }
-                            return value;
+                            return Number(value).toLocaleString('en-IN');
                         }
                     }
                 },

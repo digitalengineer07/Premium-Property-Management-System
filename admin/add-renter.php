@@ -443,8 +443,10 @@ function confirmSubmission(e) {
     
     const expectedFull = securityDeposit + fixedRent;
     
-    if (totalPayment > 0 && totalPayment !== expectedFull && totalPayment !== securityDeposit) {
-        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${totalPayment}) does not exactly match the expected Security Deposit (₹${securityDeposit}) or Full Onboarding (₹${expectedFull}).\n\nAre you sure you want to proceed with this custom amount?`);
+        const fmtTotal = totalPayment.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const fmtSec = securityDeposit.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const fmtFull = expectedFull.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${fmtTotal}) does not exactly match the expected Security Deposit (₹${fmtSec}) or Full Onboarding (₹${fmtFull}).\n\nAre you sure you want to proceed with this custom amount?`);
         if (!proceed) {
             e.preventDefault();
             return false;

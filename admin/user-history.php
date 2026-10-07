@@ -254,7 +254,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'] ?? '');
             document.getElementById('paymentBillType').value = type;
             document.getElementById('paymentBillAmount').value = amount;
             document.getElementById('paidAmountInput').value = amount;
-            document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${amount})`;
+            const formattedAmt = Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${formattedAmt})`;
             
             const now = new Date();
             document.getElementById('paymentDateInput').value = now.toISOString().split('T')[0];

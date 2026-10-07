@@ -557,7 +557,8 @@ $admin_user = s($_SESSION['admin']);
         document.getElementById('paymentBillId').value = id;
         document.getElementById('paymentBillAmount').value = amount;
         document.getElementById('paidAmountInput').value = amount;
-        document.getElementById('paymentBillInfo').textContent = `Electricity for ${name} (${month}) - ₹${amount}`;
+        const formattedAmt = Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('paymentBillInfo').textContent = `Electricity for ${name} (${month}) - ₹${formattedAmt}`;
         
         const now = new Date();
         document.getElementById('paymentDateInput').value = now.toISOString().split('T')[0];
