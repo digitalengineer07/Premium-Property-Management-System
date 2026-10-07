@@ -253,9 +253,9 @@
                                     <?php echo htmlspecialchars($rec['month']); ?>
                                 </div>
                             </td>
-                            <td style="text-align: right;"><?php echo number_format($rec['previous_reading']); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($rec['current_reading']); ?></td>
-                            <td style="text-align: right;"><?php echo number_format($rec['units_consumed']); ?></td>
+                            <td style="text-align: right;"><?php echo format_inr($rec['previous_reading'], 0); ?></td>
+                            <td style="text-align: right;"><?php echo format_inr($rec['current_reading'], 0); ?></td>
+                            <td style="text-align: right;"><?php echo format_inr($rec['units_consumed'], 0); ?></td>
                             <td style="text-align: right; font-weight: 800;"><?php echo money($rec['amount']); ?></td>
                             <td style="text-align: center;">
                                 <span class="status-badge <?php echo $status_class; ?>"><?php echo $status_text; ?></span>

@@ -257,7 +257,7 @@
                 $wallet_used = (float)($row['wallet_used'] ?? 0);
                 if ($wallet_used > 0) {
                     $total_settled = (float)$row['amount'] + $wallet_used;
-                    $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . number_format($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . number_format($total_settled) . ')</span>';
+                    $subtitle .= '<br><span style="color: #10B981; font-weight: 600; font-size: 11px; display: inline-block; margin-top: 4px;">+ ₹' . format_inr($wallet_used) . ' Auto-Adjusted from Wallet (Total Settled: ₹' . format_inr($total_settled) . ')</span>';
                 }
                 
                 $pm_db = $row['payment_mode'] ?? '';

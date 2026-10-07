@@ -164,7 +164,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             <?php else: while ($e = mysqli_fetch_assoc($elec)): ?>
                                 <tr>
                                     <td><?php echo htmlspecialchars($e['month']); ?></td>
-                                    <td style="font-weight: 600;">₹<?php echo number_format($e['amount']); ?></td>
+                                    <td style="font-weight: 600;">₹<?php echo format_inr($e['amount'], 2); ?></td>
                                     <td><span class="badge <?php echo $e['status'] == 'Paid' ? 'badge-paid' : 'badge-due'; ?>"><?php echo $e['status']; ?></span></td>
                                 </tr>
                             <?php endwhile; endif; ?>

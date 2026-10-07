@@ -146,7 +146,7 @@
                             </div>
                         </td>
                         <td>
-                            <div style="font-weight: 800; color: var(--primary-purple);">&#8377;<?php echo number_format($ap['amount'], 2); ?></div>
+                            <div style="font-weight: 800; color: var(--primary-purple);">&#8377;<?php echo format_inr($ap['amount'], 2); ?></div>
                         </td>
                         <td>
                             <div style="display: flex; align-items: center; gap: 6px; font-weight: 600;">
