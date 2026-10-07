@@ -165,7 +165,7 @@
                 </div>
             </div>
             <button onclick="openPaymentModal(<?php echo (float)$onboarding_due; ?>, 'Onboarding Security & Advance', 'onboarding')" class="btn-pay-now">
-                Pay ₹<?php echo number_format($onboarding_due); ?> <i class='bx bx-right-arrow-alt'></i>
+                Pay ₹<?php echo format_inr($onboarding_due); ?> <i class='bx bx-right-arrow-alt'></i>
             </button>
             <i class='bx bx-shield-quarter reminder-bg-art'></i>
         </div>

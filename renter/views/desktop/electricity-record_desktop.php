@@ -115,7 +115,7 @@
                 <div class="kpi-icon purple"><i class='bx bx-credit-card'></i></div>
                 <div class="kpi-info">
                     <h4>Total Units (This Year)</h4>
-                    <h2><?php echo number_format($total_units); ?></h2>
+                    <h2><?php echo format_inr($total_units, 0); ?></h2>
                     <p>Total electricity consumed</p>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                 <div class="kpi-icon blue"><i class='bx bx-tachometer'></i></div>
                 <div class="kpi-info">
                     <h4>Last Recorded Reading</h4>
-                    <h2><?php echo number_format($last_reading); ?></h2>
+                    <h2><?php echo format_inr($last_reading, 0); ?></h2>
                     <p><?php echo $last_reading_date; ?></p>
                 </div>
             </div>

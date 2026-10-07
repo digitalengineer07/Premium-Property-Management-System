@@ -184,7 +184,7 @@ if (isset($_SESSION['payment_success'])) {
     $payment_success = $_SESSION['payment_success'];
     unset($_SESSION['payment_success']);
 }
-function money($v) { return '₹' . number_format((float)$v); }
+function money($v) { return '₹' . format_inr((float)$v); }
 
 // Reminder System Logic
 $current_day = (int)date('d');

@@ -47,7 +47,7 @@ $upiLink = generateUPILink(
 <div class="container-app">
   <div class="card" style="max-width:420px;margin:auto;text-align:center">
 
-    <h3>Pay ₹<?php echo number_format($amount); ?></h3>
+    <h3>Pay ₹<?php echo format_inr($amount); ?></h3>
     <p class="small-muted">Scan QR using any UPI app</p>
 
     <!-- QR Code -->
