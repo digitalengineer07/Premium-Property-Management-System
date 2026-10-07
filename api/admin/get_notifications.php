@@ -48,7 +48,7 @@ try {
                 'id' => 'pay_' . $row['id'],
                 'type' => 'payment',
                 'title' => 'Payment Verification',
-                'message' => $row['name'] . " (Room " . $row['room_no'] . ") uploaded a ₹" . floatval($row['amount']) . " payment receipt for " . $row['bill_type'] . ".",
+                'message' => $row['name'] . " (Room " . $row['room_no'] . ") uploaded a ₹" . format_inr($row['amount'], 2) . " payment receipt for " . $row['bill_type'] . ".",
                 'date' => $row['created_at'],
                 'icon' => 'cash-outline',
                 'color' => '#10B981'
