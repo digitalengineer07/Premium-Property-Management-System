@@ -19,16 +19,21 @@ $sent_count = 0;
 $process_done = false;
 
 // 1. Process Rent Reminders
-$rent_q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND r.reminder_status = 'Enabled' AND r.due_date < CURDATE()");
+$rent_q = mysqli_query($conn, "SELECT r.*, u.name, u.email FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status IN ('Due', 'Partial') AND r.reminder_status = 'Enabled' AND r.due_date < CURDATE()");
 while ($r = mysqli_fetch_assoc($rent_q)) {
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_type='rent' AND bill_id={$r['id']}");
+    $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+    $rem_due = max(0, (float)$r['rent_amount'] - $paid);
+    if ($rem_due <= 0.01) continue;
+
     $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$r['id']} AND bill_type='Rent' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
     if (mysqli_num_rows($check) == 0 && !empty($r['email'])) {
         $details = ["Rent for " . $r['month']];
-        if (send_payment_reminder_email($r['email'], $r['name'], $details, $r['rent_amount'])) {
+        if (send_payment_reminder_email($r['email'], $r['name'], $details, $rem_due)) {
             log_reminder($conn, $r['user_id'], $r['id'], 'Rent', $r['month'], 'Auto', 'Sent');
             
             // Add to user panel notification
-            $msg_safe = mysqli_real_escape_string($conn, "Your rent for " . $r['month'] . " is overdue. Please pay at your earliest convenience.");
+            $msg_safe = mysqli_real_escape_string($conn, "Your rent for " . $r['month'] . " (Remaining Due: ₹" . number_format($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
             mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$r['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
 
             $sent_count++;
@@ -37,17 +42,22 @@ while ($r = mysqli_fetch_assoc($rent_q)) {
 }
 
 // 2. Process Electricity Reminders
-$elec_q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND e.reminder_status = 'Enabled' AND e.due_date < CURDATE()");
+$elec_q = mysqli_query($conn, "SELECT e.*, u.name, u.email FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status IN ('Due', 'Partial') AND e.reminder_status = 'Enabled' AND e.due_date < CURDATE()");
 while ($e = mysqli_fetch_assoc($elec_q)) {
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id={$e['id']}");
+    $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+    $rem_due = max(0, (float)$e['total_amount'] - $paid);
+    if ($rem_due <= 0.01) continue;
+
     $check = mysqli_query($conn, "SELECT id FROM payment_reminders WHERE bill_id = {$e['id']} AND bill_type='Electricity' AND sent_at > DATE_SUB(NOW(), INTERVAL 3 DAY)");
     if (mysqli_num_rows($check) == 0 && !empty($e['email'])) {
         $details = ["Monthly Rent & Electricity Bill for " . $e['month']];
         $pdf_path = !empty($e['bill_file']) ? $e['bill_file'] : null;
-        if (send_payment_reminder_email($e['email'], $e['name'], $details, $e['total_amount'], $pdf_path)) {
+        if (send_payment_reminder_email($e['email'], $e['name'], $details, $rem_due, $pdf_path)) {
             log_reminder($conn, $e['user_id'], $e['id'], 'Electricity', $e['month'], 'Auto', 'Sent');
             
             // Add to user panel notification
-            $msg_safe = mysqli_real_escape_string($conn, "Your bill for " . $e['month'] . " is overdue. Please pay at your earliest convenience.");
+            $msg_safe = mysqli_real_escape_string($conn, "Your bill for " . $e['month'] . " (Remaining Due: ₹" . number_format($rem_due, 2) . ") is overdue. Please pay at your earliest convenience.");
             mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ({$e['user_id']}, 'Payment Overdue', '$msg_safe', 'alert')");
 
             $sent_count++;

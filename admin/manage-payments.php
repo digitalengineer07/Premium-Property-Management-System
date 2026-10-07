@@ -38,10 +38,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_manual_payment'])
 // Handle Delete Payment
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_payment_id'])) {
     $del_id = (int)$_POST['delete_payment_id'];
+    
+    // Fetch payment details first to reverse accounting impacts
+    $fetch_stmt = mysqli_prepare($conn, "SELECT user_id, bill_type, bill_id, paid_amount FROM payments WHERE id = ?");
+    mysqli_stmt_bind_param($fetch_stmt, "i", $del_id);
+    mysqli_stmt_execute($fetch_stmt);
+    $pay_info = mysqli_fetch_assoc(mysqli_stmt_get_result($fetch_stmt));
+    mysqli_stmt_close($fetch_stmt);
+
     $stmt = mysqli_prepare($conn, "DELETE FROM payments WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "i", $del_id);
     if (mysqli_stmt_execute($stmt)) {
         $success_msg = "Payment deleted successfully.";
+        
+        // Auto-heal associated bill status and wallet
+        if ($pay_info) {
+            require_once __DIR__ . "/allocate_payment.php";
+            if (!empty($pay_info['bill_id']) && $pay_info['bill_id'] > 0) {
+                recalculate_bill_status($conn, $pay_info['bill_type'], $pay_info['bill_id']);
+            }
+            if ($pay_info['bill_type'] === 'advance' && $pay_info['paid_amount'] > 0) {
+                $uid = (int)$pay_info['user_id'];
+                $deduct = (float)$pay_info['paid_amount'];
+                mysqli_query($conn, "UPDATE users SET advance_payment = GREATEST(0, advance_payment - $deduct) WHERE id = $uid");
+            }
+        }
     } else {
         $error_msg = "Failed to delete payment.";
     }
@@ -75,7 +96,7 @@ $kpi_sql = "SELECT
             COUNT(*) as total_tx, 
             SUM(paid_amount) as total_amount,
             SUM(CASE WHEN payment_mode IN ('Online', 'UPI') THEN paid_amount ELSE 0 END) as online_amount,
-            SUM(CASE WHEN payment_mode IN ('Offline', 'Cash') THEN paid_amount ELSE 0 END) as cash_amount,
+            SUM(CASE WHEN payment_mode IN ('Offline', 'Cash', 'Cash/Offline') THEN paid_amount ELSE 0 END) as cash_amount,
             SUM(CASE WHEN MONTH(payment_date) = MONTH(CURRENT_DATE()) AND YEAR(payment_date) = YEAR(CURRENT_DATE()) THEN paid_amount ELSE 0 END) as this_month_amount
             FROM payments p JOIN users u ON p.user_id = u.id WHERE $where_sql";
 $kpi_res = mysqli_query($conn, $kpi_sql);

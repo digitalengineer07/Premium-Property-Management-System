@@ -173,7 +173,7 @@
                 "bill_id": "int(11) DEFAULT NULL",
                 "month": "varchar(20) NOT NULL",
                 "total_amount": "int(10) NOT NULL",
-                "payment_mode": "enum('Online','Offline') DEFAULT NULL DEFAULT 'Online'",
+                "payment_mode": "varchar(50) DEFAULT 'Online'",
                 "paid_amount": "decimal(10,2) DEFAULT NULL",
                 "adjustment_amount": "decimal(10,2) DEFAULT NULL DEFAULT '0.00'",
                 "adjustment_type": "enum('extra','remaining') DEFAULT NULL",
@@ -185,7 +185,7 @@
                 "verification_hash": "varchar(64) DEFAULT NULL"
             },
             "primary_key": "id",
-            "create_statement": "CREATE TABLE `payments` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_type` varchar(50) NOT NULL,\n  `bill_id` int(11) DEFAULT NULL,\n  `month` varchar(20) NOT NULL,\n  `total_amount` int(10) NOT NULL,\n  `payment_mode` enum('Online','Offline') DEFAULT 'Online',\n  `paid_amount` decimal(10,2) DEFAULT NULL,\n  `adjustment_amount` decimal(10,2) DEFAULT 0.00,\n  `adjustment_type` enum('extra','remaining') DEFAULT NULL,\n  `payment_date` date NOT NULL,\n  `payment_time` time DEFAULT NULL,\n  `transaction_id` varchar(100) DEFAULT NULL,\n  `sys_tx_id` varchar(50) DEFAULT NULL,\n  `admin_name` varchar(100) DEFAULT NULL,\n  `verification_hash` varchar(64) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+            "create_statement": "CREATE TABLE `payments` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `user_id` int(11) NOT NULL,\n  `bill_type` varchar(50) NOT NULL,\n  `bill_id` int(11) DEFAULT NULL,\n  `month` varchar(20) NOT NULL,\n  `total_amount` int(10) NOT NULL,\n  `payment_mode` varchar(50) DEFAULT 'Online',\n  `paid_amount` decimal(10,2) DEFAULT NULL,\n  `adjustment_amount` decimal(10,2) DEFAULT 0.00,\n  `adjustment_type` enum('extra','remaining') DEFAULT NULL,\n  `payment_date` date NOT NULL,\n  `payment_time` time DEFAULT NULL,\n  `transaction_id` varchar(100) DEFAULT NULL,\n  `sys_tx_id` varchar(50) DEFAULT NULL,\n  `admin_name` varchar(100) DEFAULT NULL,\n  `verification_hash` varchar(64) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
         },
         "queries": {
             "columns": {

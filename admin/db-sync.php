@@ -65,6 +65,10 @@ if($chk_b68 && mysqli_num_rows($chk_b68) > 0) $has_missing_data = true;
 $chk_unlinked = mysqli_query($conn, "SELECT id FROM payments WHERE user_id = 9 AND bill_id = 0 AND paid_amount = 1152.00 LIMIT 1");
 if($chk_unlinked && mysqli_num_rows($chk_unlinked) > 0) $has_missing_data = true;
 
+// Check for unpopulated or corrupted payment modes
+$chk_pmode = mysqli_query($conn, "SELECT id FROM payments WHERE payment_mode = '' OR payment_mode IS NULL LIMIT 1");
+if($chk_pmode && mysqli_num_rows($chk_pmode) > 0) $has_missing_data = true;
+
 // Handle Sync Action
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'sync') {
@@ -317,6 +321,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if ($recalc_count > 0) {
         $sync_results[] = "<span style='color:#10B981;'>✅ Re-audited and updated $recalc_count bills to exact ledger balances.</span>";
     }
+
+    // 8e. Upgrade payment_mode column to VARCHAR(50) and restore corrupted payment modes
+    mysqli_query($conn, "ALTER TABLE payments MODIFY COLUMN payment_mode VARCHAR(50) DEFAULT 'Online'");
+    mysqli_query($conn, "UPDATE payments SET payment_mode = 'Cash/Offline' WHERE (payment_mode = '' OR payment_mode IS NULL) AND transaction_id = 'Manual/Old'");
+    mysqli_query($conn, "UPDATE payments SET payment_mode = 'Cash' WHERE (payment_mode = '' OR payment_mode IS NULL) AND transaction_id LIKE 'CASH-%'");
+    mysqli_query($conn, "UPDATE payments SET payment_mode = 'Extra from Bill' WHERE (payment_mode = '' OR payment_mode IS NULL) AND transaction_id = 'Auto-Recovered'");
+    mysqli_query($conn, "UPDATE payments SET payment_mode = 'UPI' WHERE (payment_mode = '' OR payment_mode IS NULL) AND transaction_id REGEXP '^[0-9]{12}$'");
+    mysqli_query($conn, "UPDATE payments SET payment_mode = 'Cash' WHERE (payment_mode = '' OR payment_mode IS NULL)");
+    $sync_results[] = "<span style='color:#10B981;'>✅ Upgraded payment_mode schema to VARCHAR and restored payment channels.</span>";
 
     // Clear the arrays so they don't show up again
     if ($success) {

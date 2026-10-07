@@ -48,7 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
             $maintenance = (float)($_POST['maintenance'] ?? 0);
             $extra_charges = (float)($_POST['extra_charges'] ?? 0);
             $extra_charges_desc = trim($_POST['extra_charges_desc'] ?? '');
-            $total_amount = round($amount + $rent + $maintenance + $extra_charges, 2);
+
+            $dues = 0;
+            if ($elec_id > 0) {
+                $cur_b_q = mysqli_query($conn, "SELECT dues FROM electricity WHERE id = $elec_id");
+                if ($cur_b = mysqli_fetch_assoc($cur_b_q)) {
+                    $dues = (float)$cur_b['dues'];
+                }
+            }
+            $total_amount = round($amount + $rent + $maintenance + $extra_charges + $dues, 2);
 
             /* ---------- Handle scanned bill upload ---------- */
             $billPath = null;
@@ -91,15 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
                         $stmt = mysqli_prepare($conn,
                             "UPDATE electricity 
                              SET month=?, previous_reading=?, current_reading=?, 
-                                 units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
+                                 units=?, units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
                                  extra_charges=?, extra_charges_desc=?, total_amount=?, 
-                                 bill_file=?, status='Due'
+                                 bill_file=?
                              WHERE id=?"
                         );
                         mysqli_stmt_bind_param(
                             $stmt,
-                            "siiiiddddsssi",
-                            $month, $prev, $curr, $units,
+                            "siiiiiddddsssi",
+                            $month, $prev, $curr, $units, $units,
                             $rate, $amount, $rent, $maintenance,
                             $extra_charges, $extra_charges_desc, $total_amount,
                             $billPath, $elec_id
@@ -108,15 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
                         $stmt = mysqli_prepare($conn,
                             "UPDATE electricity 
                              SET month=?, previous_reading=?, current_reading=?, 
-                                 units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
-                                 extra_charges=?, extra_charges_desc=?, total_amount=?, 
-                                 status='Due'
+                                 units=?, units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
+                                 extra_charges=?, extra_charges_desc=?, total_amount=?
                              WHERE id=?"
                         );
                         mysqli_stmt_bind_param(
                             $stmt,
-                            "siiiiddddssi",
-                            $month, $prev, $curr, $units,
+                            "siiiiiddddssi",
+                            $month, $prev, $curr, $units, $units,
                             $rate, $amount, $rent, $maintenance,
                             $extra_charges, $extra_charges_desc, $total_amount,
                             $elec_id
@@ -125,20 +132,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
 
+                    require_once __DIR__ . "/allocate_payment.php";
+                    recalculate_bill_status($conn, 'electricity', $elec_id);
+
                     logAction($conn, "admin", $_SESSION['admin_id'], "Updated electricity ID $elec_id");
 
                 } else {
                     // INSERT
                     $stmt = mysqli_prepare($conn,
                         "INSERT INTO electricity
-                         (user_id, month, previous_reading, current_reading, units_consumed,
+                         (user_id, month, previous_reading, current_reading, units, units_consumed,
                           rate_per_unit, amount, rent_amount, maintenance, extra_charges, extra_charges_desc, total_amount, bill_file, status)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due')"
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due')"
                     );
                     mysqli_stmt_bind_param(
                         $stmt,
-                        "isiiiiddddsss",
-                        $user_id, $month, $prev, $curr, $units,
+                        "isiiiiiddddsss",
+                        $user_id, $month, $prev, $curr, $units, $units,
                         $rate, $amount, $rent, $maintenance, $extra_charges, $extra_charges_desc, $total_amount, $billPath
                     );
                     mysqli_stmt_execute($stmt);

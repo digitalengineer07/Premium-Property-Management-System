@@ -95,18 +95,28 @@ if (isset($_POST['send_custom_reminder'])) {
     }
 }
 
-// Fetch all Due Bills
+// Fetch all Due and Partial Bills
 $dues = [];
-$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status = 'Due' AND u.status = 'active'");
+$res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status IN ('Due', 'Partial') AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res1)) {
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_type='rent' AND bill_id={$row['id']}");
+    $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+    $row['remaining_due'] = max(0, (float)$row['rent_amount'] - $paid);
+    if ($row['remaining_due'] <= 0.01) continue;
+
     // Get last reminder date
     $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Rent' ORDER BY sent_at DESC LIMIT 1");
     $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
     $dues[] = $row;
 }
 
-$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status = 'Due' AND u.status = 'active'");
+$res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status IN ('Due', 'Partial') AND u.status = 'active'");
 while($row = mysqli_fetch_assoc($res2)) {
+    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id={$row['id']}");
+    $paid = (float)(mysqli_fetch_assoc($qPaid)['tp'] ?? 0);
+    $row['remaining_due'] = max(0, (float)$row['total_amount'] - $paid);
+    if ($row['remaining_due'] <= 0.01) continue;
+
     $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Electricity' ORDER BY sent_at DESC LIMIT 1");
     $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
     $dues[] = $row;
@@ -119,10 +129,11 @@ $history = mysqli_query($conn, "SELECT h.*, u.name as renter_name, u.room_no FRO
 $kpi_unpaid = count($dues);
 
 $month_q = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM payment_reminders WHERE MONTH(sent_at) = MONTH(CURRENT_DATE()) AND YEAR(sent_at) = YEAR(CURRENT_DATE())");
-$kpi_sent = mysqli_fetch_assoc($month_q)['cnt'];
+$kpi_sent = mysqli_fetch_assoc($month_q)['cnt'] ?? 0;
 
 $kpi_scheduled = count(array_filter($dues, function($d) { return $d['reminder_status'] == 'Enabled'; }));
-$kpi_success = 92.5;
+$total_due_bills = $kpi_unpaid + $kpi_sent;
+$kpi_success = ($total_due_bills > 0) ? round(($kpi_sent / $total_due_bills) * 100, 1) : 100.0;
 
 $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 ?>
@@ -342,22 +353,24 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                 <?php else: foreach($dues as $d): 
                     $isDisabled = ($d['reminder_status'] == 'Disabled');
                     
-                    // Mock days logic for demonstration of the design
-                    $days = ($d['id'] * 3) % 15;
-                    if ($days == 0) $days = 3;
-                    $isOverdue = ($d['id'] % 2 == 0);
+                    // True days calculation based on due_date
+                    $due_ts = !empty($d['due_date']) ? strtotime($d['due_date']) : strtotime($d['created_at']);
+                    $today_ts = strtotime(date('Y-m-d'));
+                    $diff_days = round(($today_ts - $due_ts) / 86400);
+                    $isOverdue = ($diff_days > 0);
+                    $days = abs($diff_days);
                 ?>
                     <div class="reminder-card <?php echo $isDisabled ? 'disabled' : ''; ?>" style="margin-bottom: 12px; padding: 16px;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
                             <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0;">
                                 <div style="width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: <?php echo $d['type'] == 'Rent' ? 'rgba(59,130,246,0.08); color: #3B82F6;' : 'rgba(245,158,11,0.08); color: #F59E0B;'; ?>">
-                                    <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-droplet' : 'bx-bulb'; ?>'></i>
+                                    <i class='bx <?php echo $d['type'] == 'Rent' ? 'bx-home-alt' : 'bx-bulb'; ?>'></i>
                                 </div>
                                 <div style="flex: 1; min-width: 0;">
                                     <h3 style="font-size: 15px; font-weight: 800; color: var(--text-dark); margin: 0 0 2px 0; display: flex; align-items: center; gap: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                         <?php echo htmlspecialchars($d['name']); ?>
                                         <span style="font-size: 8px; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px; flex-shrink: 0; <?php echo $d['type'] == 'Rent' ? 'background: #EFF6FF; color: #3B82F6;' : 'background: #FFF7ED; color: #F59E0B;'; ?>">
-                                            <?php echo strtoupper($d['type'] == 'Rent' ? 'Water' : 'Electricity'); ?>
+                                            <?php echo strtoupper($d['type'] == 'Rent' ? 'Rent' : 'Electricity'); ?>
                                         </span>
                                     </h3>
                                     <div style="color: var(--text-gray); font-size: 12px; font-weight: 600; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Room <?php echo $d['room_no']; ?> • <?php echo $d['month']; ?></div>
@@ -371,7 +384,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                             
                             <div style="text-align: right; background: <?php echo $isOverdue ? '#FEF2F2' : '#FFF1F2'; ?>; padding: 8px 12px; border-radius: 10px; flex-shrink: 0;">
                                 <div style="font-size: 9px; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>; font-weight: 700; margin-bottom: 2px; letter-spacing: 0.5px; opacity: 0.8;">DUE AMOUNT</div>
-                                <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['type'] == 'Rent' ? $d['rent_amount'] : $d['total_amount'], 2); ?></div>
+                                <div style="font-size: 16px; font-weight: 800; color: <?php echo $isOverdue ? '#EF4444' : '#F43F5E'; ?>;">₹<?php echo number_format($d['remaining_due'], 2); ?></div>
                             </div>
                         </div>
 

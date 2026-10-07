@@ -111,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                                     }
                                 }
                                 
-                                $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total_paid FROM payments WHERE bill_type='$p_btype' AND bill_id=$p_bid");
+                                $btype_cond = ($p_btype === 'electricity' || $p_btype === 'elec_rent') ? "bill_type IN ('electricity', 'elec_rent')" : "bill_type='$p_btype'";
+                                $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as total_paid FROM payments WHERE $btype_cond AND bill_id=$p_bid");
                                 $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
                                 $remaining_amount = max(0, $bill_amount - $already_paid);
                             }

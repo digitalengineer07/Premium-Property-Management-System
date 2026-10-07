@@ -89,7 +89,7 @@ if (empty(trim($transaction_id))) {
 if ($type === 'advance') {
     $vhash = generate_payment_hash($user_id, $paid_amount, $sys_tx_id);
     $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "iddssssss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
+    mysqli_stmt_bind_param($stmt, "idsdsssss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
     mysqli_stmt_execute($stmt);
     
     mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $paid_amount WHERE id=$user_id");
@@ -118,7 +118,7 @@ if ($type === 'advance') {
     if ($excess > 0) {
         $vhash = generate_payment_hash($user_id, $excess, $sys_tx_id);
         $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "iddssssss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
+        mysqli_stmt_bind_param($stmt, "idsdsssss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
         mysqli_stmt_execute($stmt);
         
         mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$user_id");
