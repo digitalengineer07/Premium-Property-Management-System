@@ -337,8 +337,8 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                         </td>
                         <td style="padding: 12px 10px;">
                             <div style="font-size: 12px;">
-                                <span style="color: #10B981; font-weight: 600;">Rent:</span> ₹<?php echo number_format($u['fixed_rent'], 2); ?> <br>
-                                <span style="color: #F59E0B; font-weight: 600;">Maint:</span> ₹<?php echo number_format($u['fixed_maintenance'], 2); ?>
+                                <span style="color: #10B981; font-weight: 600;">Rent:</span> ₹<?php echo format_inr($u['fixed_rent'], 2); ?> <br>
+                                <span style="color: #F59E0B; font-weight: 600;">Maint:</span> ₹<?php echo format_inr($u['fixed_maintenance'], 2); ?>
                             </div>
                         </td>
                         <td style="padding: 12px 10px;">

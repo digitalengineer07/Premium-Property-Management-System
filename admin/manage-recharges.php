@@ -222,7 +222,7 @@ while ($row = mysqli_fetch_assoc($res)) $recharges[] = $row;
                                     </td>
                                     <td data-label="Amount" style="padding: 24px; background: var(--white); border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">
                                         <span style="background: #FEF2F2; color: #EF4444; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 16px; border: 1px solid #FEE2E2; display: inline-block;">
-                                            - ₹<?php echo number_format($r['amount'], 2); ?>
+                                            - ₹<?php echo format_inr($r['amount'], 2); ?>
                                         </span>
                                     </td>
                                     <td data-label="Note" style="padding: 24px; background: var(--white); border-top: 1px solid #F1F5F9; border-bottom: 1px solid #F1F5F9;">

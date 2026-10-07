@@ -1333,19 +1333,19 @@ $admin_user = s($_SESSION['admin']);
             const total = elecCost + rent + maint + dues + extra;
 
             document.getElementById('calcUnits').textContent = units;
-            document.getElementById('calcElectricity').textContent = '₹' + Math.round(elecCost).toLocaleString();
-            document.getElementById('calcRent').textContent = '₹' + rent.toLocaleString();
-            document.getElementById('calcMaintenance').textContent = '₹' + maint.toLocaleString();
-            document.getElementById('calcDues').textContent = '₹' + dues.toLocaleString();
+            document.getElementById('calcElectricity').textContent = '₹' + Math.round(elecCost).toLocaleString('en-IN');
+            document.getElementById('calcRent').textContent = '₹' + rent.toLocaleString('en-IN');
+            document.getElementById('calcMaintenance').textContent = '₹' + maint.toLocaleString('en-IN');
+            document.getElementById('calcDues').textContent = '₹' + dues.toLocaleString('en-IN');
 
             if (extra > 0) {
                 document.getElementById('extraChargesDiv').style.display = 'flex';
-                document.getElementById('calcExtraCharges').textContent = '₹' + Math.round(extra).toLocaleString();
+                document.getElementById('calcExtraCharges').textContent = '₹' + Math.round(extra).toLocaleString('en-IN');
             } else {
                 document.getElementById('extraChargesDiv').style.display = 'none';
             }
 
-            document.getElementById('calcTotal').textContent = '₹' + Math.round(total).toLocaleString();
+            document.getElementById('calcTotal').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
             
             if (curr > 0 && curr >= prev) {
                 updateSteps(3); // Bill Summary active

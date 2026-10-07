@@ -104,7 +104,7 @@ $recent_bills = mysqli_query($conn, "
             <div class="kpi-header">
                 <i class='bx bx-time-five kpi-icon' style="color: #F59E0B; background: rgba(245, 158, 11, 0.1);"></i>
             </div>
-            <div class="kpi-value" style="color: #F59E0B;">₹<?php echo number_format($total_pending, 2); ?></div>
+            <div class="kpi-value" style="color: #F59E0B;">₹<?php echo format_inr($total_pending, 2); ?></div>
             <div class="kpi-label">Awaiting Collection</div>
         </div>
         <div class="kpi-card">
@@ -193,7 +193,7 @@ $recent_bills = mysqli_query($conn, "
                             <div style="font-size: 11px; font-weight: 400; color: var(--text-gray);">Room <?php echo htmlspecialchars($bill['room_no']); ?></div>
                         </td>
                         <td><?php echo htmlspecialchars($bill['month']); ?></td>
-                        <td style="font-weight: 700;">₹<?php echo number_format($bill['total_amount'], 2); ?></td>
+                        <td style="font-weight: 700;">₹<?php echo format_inr($bill['total_amount'], 2); ?></td>
                         <td style="color: var(--text-gray); font-size: 14px;"><?php echo date('M d, H:i', strtotime($bill['created_at'])); ?></td>
                         <td>
                             <a href="slip.php?elec_id=<?php echo $bill['id']; ?>" class="btn-outline" style="padding: 6px 12px; font-size: 11px;" target="_blank">View Slip</a>

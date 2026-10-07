@@ -213,7 +213,7 @@ $total_pages = ceil($total_rows / $limit);
                             </div>
                         </td>
                         <td data-label="Amount">
-                              <div style="font-weight: 700; color: #10B981;">₹<?php echo number_format($tx['amount']); ?></div>
+                              <div style="font-weight: 700; color: #10B981;">₹<?php echo format_inr($tx['amount'], 2); ?></div>
                         </td>
                         <td data-label="Type & Mode" style="font-size: 12px;">
                             <span style="font-weight: 600;">
