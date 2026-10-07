@@ -50,7 +50,7 @@ if (isset($_POST['save'])) {
                 send_new_bill_notification($u_data['email'], $u_data['name'], $month, $amount);
             }
         }
-        $msg_safe = mysqli_real_escape_string($conn, "A new rent bill for $month (₹" . number_format((float)$amount, 2) . ") has been assigned to you.");
+        $msg_safe = mysqli_real_escape_string($conn, "A new rent bill for $month (₹" . format_inr((float)$amount, 2) . ") has been assigned to you.");
         mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
     }
 
