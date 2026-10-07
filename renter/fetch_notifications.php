@@ -50,7 +50,7 @@ if ($rej_notif_q) {
             'id' => $nid,
             'type' => 'rejection',
             'title' => 'Payment Rejected',
-            'message' => '₹' . number_format($r['amount']) . ' (UTR: ' . $r['transaction_id'] . ') ' . (!empty($r['admin_note']) ? '- ' . $r['admin_note'] : ''),
+            'message' => '₹' . format_inr($r['amount']) . ' (UTR: ' . $r['transaction_id'] . ') ' . (!empty($r['admin_note']) ? '- ' . $r['admin_note'] : ''),
             'time' => $r['created_at'],
             'icon' => 'bx-x-circle',
             'color' => '#EF4444'
@@ -101,7 +101,7 @@ if ($notif_total_due > 0) {
             'id' => $nid,
             'type' => 'due',
             'title' => 'Payment Due',
-            'message' => 'You have an outstanding balance of ₹' . number_format($notif_total_due),
+            'message' => 'You have an outstanding balance of ₹' . format_inr($notif_total_due),
             'time' => date('Y-m-d H:i:s'),
             'icon' => 'bx-wallet',
             'color' => '#F59E0B'

@@ -169,7 +169,7 @@ try {
         $reminders[] = [
             'id' => 'due_rem',
             'type' => 'due',
-            'message' => "You have an outstanding balance of ₹" . number_format($total_net_due, 2),
+            'message' => "You have an outstanding balance of ₹" . format_inr($total_net_due, 2),
             'date' => date('Y-m-d H:i:s')
         ];
     }
