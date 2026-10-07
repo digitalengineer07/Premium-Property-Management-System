@@ -51,7 +51,7 @@ $receipt['date'] = date('d M Y, h:i A', strtotime($payment['payment_date'] . ' '
 $receipt['payment_id'] = $payment['sys_tx_id'] ?: 'SYS_TX_' . $payment['id'];
 $receipt['payment_method'] = $payment['payment_mode'] ?? 'UPI';
 $receipt['utr'] = $payment['transaction_id'] ?: 'N/A';
-$receipt['total_amount'] = number_format($payment['paid_amount'], 2);
+$receipt['total_amount'] = format_inr($payment['paid_amount'], 2);
 
 function numberToWords($number) {
     $no = floor($number);
@@ -117,7 +117,7 @@ while ($p = mysqli_fetch_assoc($all_pay_res)) {
     $tx_id = $p['sys_tx_id'] ?: 'SYS_TX_' . $p['id'];
     $charges[] = [
         'particular' => 'Payment ' . $pay_count . ' (' . $tx_id . ')',
-        'amount' => number_format($p['paid_amount'], 2)
+        'amount' => format_inr($p['paid_amount'], 2)
     ];
     $total_paid_so_far += $p['paid_amount'];
     if (!empty($p['payment_mode'])) {
@@ -148,12 +148,12 @@ if ($payment['bill_type'] == 'electricity' || $payment['bill_type'] == 'elec_ren
         
         // Fix: always show the breakdown if it's an electricity record, because elec_rent and electricity are often split.
         $breakdown = [];
-        if ($bill['rent_amount'] > 0) $breakdown[] = ['particular' => 'Room Rent', 'amount' => number_format($bill['rent_amount'], 2)];
+        if ($bill['rent_amount'] > 0) $breakdown[] = ['particular' => 'Room Rent', 'amount' => format_inr($bill['rent_amount'], 2)];
         $elec_amt = ($bill['current_reading'] - $bill['previous_reading']) * $bill['rate_per_unit'];
-        if ($elec_amt > 0) $breakdown[] = ['particular' => 'Electricity Charges', 'amount' => number_format($elec_amt, 2)];
-        if ($bill['maintenance'] > 0) $breakdown[] = ['particular' => 'Maintenance', 'amount' => number_format($bill['maintenance'], 2)];
-        if ($bill['dues'] > 0) $breakdown[] = ['particular' => 'Previous Dues', 'amount' => number_format($bill['dues'], 2)];
-        if ($bill['extra_charges'] > 0) $breakdown[] = ['particular' => ($bill['extra_charges_desc'] ?: 'Extra Charges'), 'amount' => number_format($bill['extra_charges'], 2)];
+        if ($elec_amt > 0) $breakdown[] = ['particular' => 'Electricity Charges', 'amount' => format_inr($elec_amt, 2)];
+        if ($bill['maintenance'] > 0) $breakdown[] = ['particular' => 'Maintenance', 'amount' => format_inr($bill['maintenance'], 2)];
+        if ($bill['dues'] > 0) $breakdown[] = ['particular' => 'Previous Dues', 'amount' => format_inr($bill['dues'], 2)];
+        if ($bill['extra_charges'] > 0) $breakdown[] = ['particular' => ($bill['extra_charges_desc'] ?: 'Extra Charges'), 'amount' => format_inr($bill['extra_charges'], 2)];
         
         if (!empty($breakdown)) {
             $charges = array_merge($breakdown, [['particular' => '--- Payments Received ---', 'amount' => '']], $charges);
@@ -177,14 +177,14 @@ $receipt['due_date'] = $due_date;
 
 if ($payment['adjustment_amount'] > 0) {
     if ($payment['adjustment_type'] == 'extra') {
-        $charges[] = ['particular' => 'Extra Paid (Added to Advance)', 'amount' => '+' . number_format($payment['adjustment_amount'], 2)];
+        $charges[] = ['particular' => 'Extra Paid (Added to Advance)', 'amount' => '+' . format_inr($payment['adjustment_amount'], 2)];
     } else if ($payment['adjustment_type'] == 'remaining') {
-        $charges[] = ['particular' => 'Used from Advance', 'amount' => number_format($payment['adjustment_amount'], 2)];
+        $charges[] = ['particular' => 'Used from Advance', 'amount' => format_inr($payment['adjustment_amount'], 2)];
         $total_paid_so_far += $payment['adjustment_amount'];
     }
 }
 
-$receipt['total_amount'] = number_format($total_paid_so_far, 2);
+$receipt['total_amount'] = format_inr($total_paid_so_far, 2);
 $receipt['amount_words'] = numberToWords($total_paid_so_far);
 
 $receipt['charges'] = $charges;

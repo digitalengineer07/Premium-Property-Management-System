@@ -974,7 +974,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <span class="info-title" style="margin-bottom:16px;">Payment Status</span>
                     <div class="info-content">
                         <p style="margin-bottom: 4px; color:var(--text-gray); font-weight: 500;">Total Billed Amount</p>
-                        <div class="payable-amount">₹ <?php echo number_format($total_payable, 2); ?></div>
+                        <div class="payable-amount">₹ <?php echo format_inr($total_payable, 2); ?></div>
                         <?php if (strtolower($status) !== 'paid'): ?>
                         <p class="payable-note">Please make the payment before<br><strong><?php echo $due_date; ?></strong> to avoid late fee.</p>
                         <?php else: ?>
@@ -1003,24 +1003,24 @@ $email = $bill['email'] ?? 'renter@example.com';
                         <?php 
                         $idx = 1;
                         if ((float)$bill['rent_amount'] > 0) {
-                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Rent</td><td class='col-desc'>Monthly Rent for ".date('F Y', strtotime($bill['month']))."</td><td class='col-amt'>".number_format($bill['rent_amount'], 2)."</td></tr>";
+                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Rent</td><td class='col-desc'>Monthly Rent for ".date('F Y', strtotime($bill['month']))."</td><td class='col-amt'>".format_inr($bill['rent_amount'], 2)."</td></tr>";
                             $idx++;
                         }
                         if ((float)$bill['amount'] > 0) {
-                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Electricity Charges</td><td class='col-desc'>Electricity usage charges ({$bill['units_consumed']} units)</td><td class='col-amt'>".number_format($bill['amount'], 2)."</td></tr>";
+                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Electricity Charges</td><td class='col-desc'>Electricity usage charges ({$bill['units_consumed']} units)</td><td class='col-amt'>".format_inr($bill['amount'], 2)."</td></tr>";
                             $idx++;
                         }
                         if ((float)$bill['maintenance'] > 0) {
-                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Maintenance Charges</td><td class='col-desc'>Society maintenance for ".date('F Y', strtotime($bill['month']))."</td><td class='col-amt'>".number_format($bill['maintenance'], 2)."</td></tr>";
+                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Maintenance Charges</td><td class='col-desc'>Society maintenance for ".date('F Y', strtotime($bill['month']))."</td><td class='col-amt'>".format_inr($bill['maintenance'], 2)."</td></tr>";
                             $idx++;
                         }
                         if ((float)$bill['extra_charges'] > 0) {
                             $desc = !empty($bill['extra_charges_desc']) ? htmlspecialchars($bill['extra_charges_desc']) : 'Other miscellaneous charges';
-                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Other Charges</td><td class='col-desc'>{$desc}</td><td class='col-amt'>".number_format($bill['extra_charges'], 2)."</td></tr>";
+                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Other Charges</td><td class='col-desc'>{$desc}</td><td class='col-amt'>".format_inr($bill['extra_charges'], 2)."</td></tr>";
                             $idx++;
                         }
                         if ((float)$bill['dues'] > 0) {
-                            echo "<tr class='danger-row'><td class='col-num'>{$idx}</td><td class='col-part'>Previous Dues</td><td class='col-desc'>Pending balance carried forward</td><td class='col-amt'>".number_format($bill['dues'], 2)."</td></tr>";
+                            echo "<tr class='danger-row'><td class='col-num'>{$idx}</td><td class='col-part'>Previous Dues</td><td class='col-desc'>Pending balance carried forward</td><td class='col-amt'>".format_inr($bill['dues'], 2)."</td></tr>";
                             $idx++;
                         }
                         ?>
@@ -1035,7 +1035,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                     <div class="totals-box">
                         <div class="total-row final" style="margin-top: 0; padding-top: 0; border-top: none; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between;">
                             <span>Total Billed Amount</span>
-                            <span style="white-space: nowrap;">₹&nbsp;<?php echo number_format($total_payable, 2); ?></span>
+                            <span style="white-space: nowrap;">₹&nbsp;<?php echo format_inr($total_payable, 2); ?></span>
                         </div>
                     </div>
                 </div>
@@ -1096,11 +1096,11 @@ $email = $bill['email'] ?? 'renter@example.com';
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-receipt'></i> Total Billed</div>
-                            <div class="summary-item-val">₹ <?php echo number_format($total_payable, 2); ?></div>
+                            <div class="summary-item-val">₹ <?php echo format_inr($total_payable, 2); ?></div>
                         </div>
                         <div class="summary-item">
                             <div class="summary-item-label"><i class='bx bx-error-circle'></i> Extra Charges</div>
-                            <div class="summary-item-val">₹ <?php echo number_format((float)$bill['dues'] + (float)$bill['extra_charges'], 2); ?></div>
+                            <div class="summary-item-val">₹ <?php echo format_inr((float)$bill['dues'] + (float)$bill['extra_charges'], 2); ?></div>
                         </div>
                         <div class="summary-item remaining">
                             <div class="summary-item-label"><i class='bx bx-credit-card-front'></i> Payment Method</div>
