@@ -178,19 +178,19 @@
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Previous Reading</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['previous_reading']); ?></span>
+                        <span class="cmd-value"><?php echo format_inr($latest_record['previous_reading'], 0); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Current Reading</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['current_reading']); ?></span>
+                        <span class="cmd-value"><?php echo format_inr($latest_record['current_reading'], 0); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Units Consumed</span>
-                        <span class="cmd-value"><?php echo number_format($latest_record['units_consumed']); ?></span>
+                        <span class="cmd-value"><?php echo format_inr($latest_record['units_consumed'], 0); ?></span>
                     </div>
                     <div class="cmd-item">
                         <span class="cmd-label">Rate per Unit</span>
-                        <span class="cmd-value">₹<?php echo number_format((float)$latest_record['rate_per_unit']); ?></span>
+                        <span class="cmd-value">₹<?php echo format_inr((float)$latest_record['rate_per_unit'], 2); ?></span>
                     </div>
                 </div>
                 <div class="cmd-total">
