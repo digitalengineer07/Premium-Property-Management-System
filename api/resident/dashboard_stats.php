@@ -130,8 +130,8 @@ try {
             ],
             "kpis" => [
                 "total_due" => $total_net_due,
-                "rent_due" => max(0, $rent_due - $p_rent),
-                "electricity_due" => max(0, $elec_due - $p_elec),
+                "rent_due" => max(0, $rent_due),
+                "electricity_due" => max(0, $elec_due),
                 "maintenance_due" => $maintenance_due,
                 "advance_deposit" => $total_advance_deposit,
                 "advance_due" => $advance_due,

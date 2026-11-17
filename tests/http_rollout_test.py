@@ -36,7 +36,7 @@ def login(opener, path, username):
 admin = client(); login(admin, 'admin/login.php', fixture['admin'])
 for path in ['admin/dashboard.php','admin/manage-payments.php','admin/master-ledger.php','admin/reports.php','admin/monthly-report.php','admin/bill-generator.php','admin/electricity-list.php']:
     status, html=request(admin,path)
-    check(status==200 and not re.search(r'(Fatal error|Parse error|Warning:|Deprecated:)',html), 'Admin page '+path)
+    check(status==200 and not re.search(r'(Fatal error|Parse error|Warning(?:</b>)?:|Deprecated(?:</b>)?:)',html), 'Admin page '+path)
 for endpoint in ['kpi','revenue_chart','distribution_donut','receivables_aging','resident_performance','electricity_insights','electricity_bar','top_defaulters','anomalies','expense_donut','recent_activity','ai_insights']:
     status, body=request(admin,'admin/api_reports_saas.php?endpoint='+endpoint+'&range=all_time')
     result=json.loads(body)
@@ -58,7 +58,14 @@ for mode, resident in fixture['residents'].items():
     renter=client(); login(renter,'login.php',resident['username'])
     for path in ['renter/dashboard.php','renter/my-bills.php','renter/my-payments.php','renter/electricity-record.php']:
         status,html=request(renter,path)
-        check(status==200 and not re.search(r'(Fatal error|Parse error|Warning:|Deprecated:)',html), 'Resident page '+path)
+        check(status==200 and not re.search(r'(Fatal error|Parse error|Warning(?:</b>)?:|Deprecated(?:</b>)?:)',html), 'Resident page '+path)
+
+_, html=request(admin,'admin/electricity-list.php')
+payment={'csrf':hidden(html,'csrf'),'payment_request_id':hidden(html,'payment_request_id'),'type':'electricity','id':bills['arrears'],'paid_amount':'500.01','payment_mode':'Cash','ajax':'1'}
+status,body=request(admin,'admin/mark-paid.php',payment)
+check(status==200 and json.loads(body).get('success') is True,'AJAX partial payment returns JSON')
+status,body=request(admin,'admin/mark-paid.php',payment)
+check(status==200 and 'already recorded' in json.loads(body)['message'],'Double submission does not duplicate cash receipt')
 
 opener=client()
 status,body=request(opener,'api/auth/login.php',{'username':fixture['admin'],'password':fixture['password'],'role':'admin'},as_json=True)
@@ -77,6 +84,7 @@ resident_token=json.loads(body)['token']
 check(request(opener,'api/admin/mobile_save_bill.php',{},resident_token,True)[0]==401,'Resident cannot create bills')
 status,body=request(opener,'api/resident/dashboard_stats.php',token=resident_token)
 check(status==200 and json.loads(body).get('status')=='success','Resident API balance')
+check(json.loads(body)['data']['kpis']['total_due']==10799.99,'Resident API agrees with partial-payment ledger')
 request(opener,'api/auth/logout.php',{},resident_token,True)
 check(request(opener,'api/resident/dashboard_stats.php',token=resident_token)[0]==401,'Logged-out token revoked')
 print(f'{checks} HTTP checks passed')

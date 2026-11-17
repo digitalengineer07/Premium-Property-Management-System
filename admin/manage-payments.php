@@ -174,7 +174,7 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                     <p style="color: var(--text-gray); font-size: 14px; margin: 4px 0 0 0;">Complete history of payments and monthly billing status</p>
                 </div>
                 <div style="display: flex; gap: 12px;">
-                    <a href="export_payments.php?<?php echo $_SERVER['QUERY_STRING']; ?>" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <a href="export_payments.php?<?php echo ($_SERVER['QUERY_STRING'] ?? ''); ?>" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                         <i class='bx bx-export'></i> Export CSV
                     </a>
                     <button onclick="document.getElementById('manualPaymentModal').style.display='flex'" class="btn-primary" style="border: none; padding: 10px 20px; font-size: 14px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
