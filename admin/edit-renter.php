@@ -48,7 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $emg_phone = empty($_POST['emergency_contact_phone']) ? null : $_POST['emergency_contact_phone'];
         $emg_addr = empty($_POST['emergency_contact_address']) ? null : $_POST['emergency_contact_address'];
         
-        if (empty($name)) {
+        $billing_mode = $_POST['rent_billing_mode'] ?? '';
+        if (!in_array($billing_mode, ['advance', 'arrears'], true)) {
+            $error = 'Choose the rent billing mode.';
+        } elseif ($has_bills && !empty($user['rent_billing_mode']) && $billing_mode !== $user['rent_billing_mode']) {
+            $error = 'Billing mode cannot change after invoices exist; a documented rent adjustment is required.';
+        } elseif ($fixed_rent <= 0 || $fixed_maintenance < 0 || $security_deposit < 0) {
+            $error = 'Rent must be positive and charges cannot be negative.';
+        } elseif (empty($name)) {
             $error = "Name is required.";
         } else {
             $admin_id = $_SESSION['admin_id'] ?? 1; // Fallback
@@ -58,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $aadhaar_update = "";
             $agreement_update = "";
-            $types = "sssssssdddddssss";
-            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $advance_payment, $advance_payment, $security_deposit, $fixed_rent, $fixed_maintenance, $emg_name, $emg_rel, $emg_phone, $emg_addr];
+            $types = "sssssssdddssss";
+            $params = [$name, $room_no, $phone, $email, $whatsapp, $about, $joining_date, $security_deposit, $fixed_rent, $fixed_maintenance, $emg_name, $emg_rel, $emg_phone, $emg_addr];
 
             // Handle Aadhaar Upload
             if (isset($_FILES['aadhaar_file']) && $_FILES['aadhaar_file']['error'] === UPLOAD_ERR_OK) {
@@ -100,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // If advance_payment is changed, update advance_updated_at
-            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, advance_updated_at = IF(advance_payment != ?, NOW(), advance_updated_at), advance_payment=?, security_deposit=?, fixed_rent=?, fixed_maintenance=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? {$aadhaar_update} {$agreement_update}";
+            $sql = "UPDATE users SET name=?, room_no=?, phone=?, email=?, whatsapp=?, about=?, joining_date=?, security_deposit=?, fixed_rent=?, fixed_maintenance=?, emergency_contact_name=?, emergency_contact_relation=?, emergency_contact_phone=?, emergency_contact_address=? {$aadhaar_update} {$agreement_update}";
 
             if ($rent_maint_changed) {
                 $sql .= ", rent_maint_updated_at=NOW(), rent_maint_updated_by=?";
@@ -115,7 +122,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $params[] = (int)($_POST['base_reading'] ?? 0);
             }
 
-            $sql .= " WHERE id=?";
+            $sql .= ", rent_billing_mode=? WHERE id=?";
+            $types .= "s";
+            $params[] = $billing_mode;
             $types .= "i";
             $params[] = $id;
 
@@ -275,6 +284,12 @@ $admin_user = s($_SESSION['admin']);
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                                 <div class="form-group" style="margin: 0;">
+                                    <label for="rent_billing_mode">Rent billing mode</label>
+                                    <select name="rent_billing_mode" id="rent_billing_mode" required style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--white);color:var(--text-dark);margin-bottom:12px">
+                                        <option value="">Choose mode</option>
+                                        <option value="arrears" <?php echo ($user['rent_billing_mode'] ?? '') === 'arrears' ? 'selected' : ''; ?>>Arrears: same month as utilities</option>
+                                        <option value="advance" <?php echo ($user['rent_billing_mode'] ?? '') === 'advance' ? 'selected' : ''; ?>>Advance: next month rent</option>
+                                    </select>
                                     <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Monthly Rent</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
@@ -292,7 +307,7 @@ $admin_user = s($_SESSION['admin']);
                                     <label style="font-size: 11px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;">Advance Wallet</label>
                                     <div style="position: relative; display: flex; align-items: center;">
                                         <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                        <input type="number" step="0.01" name="advance_payment" value="<?php echo number_format($user['advance_payment'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
+                                        <input type="number" step="0.01" name="advance_payment" readonly value="<?php echo number_format($user['advance_payment'] ?? 0, 2, '.', ''); ?>" style="width: 100%; padding: 12px 16px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--white); font-size: 14px; font-weight: 500; color: var(--text-dark); outline: none; transition: all 0.2s ease;" onfocus="this.style.borderColor='var(--primary-purple)'; this.style.boxShadow='0 0 0 3px rgba(98, 75, 255, 0.1)';" onblur="this.style.borderColor='#E2E8F0'; this.style.boxShadow='none';">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin: 0;">

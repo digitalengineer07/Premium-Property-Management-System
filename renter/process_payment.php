@@ -10,16 +10,30 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = (int) $_SESSION['user_id'];
 $return_url = $_POST['return_url'] ?? 'dashboard.php';
+if (!in_array($return_url, ['dashboard.php', 'my-bills.php', 'my-payments.php', 'electricity-record.php', 'payment-history.php'], true)) $return_url = 'dashboard.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_payment_notif'])) {
-    if (!isset($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
+    if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
         $_SESSION['payment_error'] = "Invalid CSRF token.";
         header("Location: " . $return_url);
         exit;
     } else {
         $b_type = $_POST['bill_type'] ?? 'general';
         $b_id = !empty($_POST['bill_id']) ? (int)$_POST['bill_id'] : 0;
-        $amt = (float)$_POST['amount'];
+        require_once __DIR__ . '/../includes/accounting_store.php';
+        try {
+            $amt = accounting_decimal(accounting_paise($_POST['amount'] ?? '0'));
+            if (!in_array($b_type, ['rent','electricity','elec_rent','total','monthly','general','advance','onboarding'], true)) throw new InvalidArgumentException('Invalid payment type.');
+            if ($b_id > 0) {
+                $table = $b_type === 'rent' ? 'rent' : 'electricity';
+                if (!mysqli_num_rows(accounting_query($conn, "SELECT id FROM $table WHERE id=$b_id AND user_id=$user_id"))) throw new InvalidArgumentException('Bill not found for this account.');
+            }
+        } catch (Throwable $failure) {
+            $_SESSION['payment_error'] = 'Invalid payment amount or bill.';
+            header('Location: ' . $return_url);
+            exit;
+        }
+
         $tr_id = trim($_POST['transaction_id'] ?? '');
         if (!empty($_POST['bill_month']) && $_POST['bill_month'] !== 'undefined') {
             $p_month = date('F Y', strtotime($_POST['bill_month'].'-01'));

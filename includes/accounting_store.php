@@ -79,11 +79,6 @@ function accounting_specific_payment($conn, int $user, string $type, int $id, $a
             $total = accounting_paise($bill[$table === 'rent' ? 'rent_amount' : 'total_amount']);
             $paid = accounting_bill_paid($conn, $user, $table, $id);
             $due = max(0, $total - $paid);
-            // elec_rent requests from the renter UI target the non-electricity component.
-            if ($type === 'elec_rent') {
-                $parts = accounting_components($bill, $paid);
-                $due = array_sum($parts) - $parts['amount'];
-            }
             $used = min($due, $received);
             if ($used > 0) {
                 accounting_post($conn, $user, $type, $id, $bill['month'], $total, $mode, $used, $transaction, $reference, $date, $time);
@@ -96,6 +91,42 @@ function accounting_specific_payment($conn, int $user, string $type, int $id, $a
             $credit = accounting_decimal($excess);
             accounting_query($conn, "UPDATE users SET advance_payment=advance_payment+$credit WHERE id=$user");
         }
+        return true;
+    });
+}
+
+function accounting_onboarding($conn, int $user, $amount, string $mode, string $transaction, string $reference) {
+    return accounting_atomic($conn, function () use ($conn, $user, $amount, $mode, $transaction, $reference) {
+        $profile = mysqli_fetch_assoc(accounting_query($conn, "SELECT * FROM users WHERE id=$user FOR UPDATE"));
+        if (!$profile) throw new RuntimeException('Resident not found.');
+        $received = accounting_paise($amount);
+        if ($received < 0) throw new InvalidArgumentException('Negative joining payment.');
+        $ref = mysqli_real_escape_string($conn, $reference);
+        if (mysqli_num_rows(accounting_query($conn, "SELECT id FROM payments WHERE user_id=$user AND sys_tx_id='$ref'"))) return false;
+        $rent = accounting_paise($profile['fixed_rent']);
+        $secPaid = accounting_paise(mysqli_fetch_row(accounting_query($conn, "SELECT COALESCE(SUM(paid_amount),0) FROM payments WHERE user_id=$user AND bill_type='security_deposit'"))[0]);
+        $sec = min($received, max(0, accounting_paise($profile['security_deposit']) - $secPaid));
+        if ($sec > 0) accounting_post($conn, $user, 'security_deposit', 0, 'Security Deposit', $sec, $mode, $sec, $transaction, $reference);
+        $left = $received - $sec;
+        $billingMode = $profile['rent_billing_mode'] ?? ($left >= $rent && $rent > 0 ? 'advance' : 'arrears');
+        if (empty($profile['rent_billing_mode']) && $billingMode === 'advance') {
+            $month = (new DateTimeImmutable($profile['joining_date']))->format('F Y');
+            $rentDecimal = accounting_decimal($rent);
+            $stmt = mysqli_prepare($conn, "INSERT INTO rent(user_id,month,rent_amount,status,due_date) VALUES (?, ?, ?, 'Due', ?)");
+            mysqli_stmt_bind_param($stmt, 'isss', $user, $month, $rentDecimal, $profile['joining_date']);
+            if (!mysqli_stmt_execute($stmt)) throw new RuntimeException('Unable to create joining rent invoice.');
+            $bill = mysqli_insert_id($conn);
+            accounting_post($conn, $user, 'rent', $bill, $month, $rent, $mode, $rent, $transaction, $reference);
+            recalculate_bill_status($conn, 'rent', $bill);
+            $left -= $rent;
+        }
+        if ($left > 0) {
+            accounting_post($conn, $user, 'advance', 0, 'Advance', $left, $mode, $left, $transaction, $reference);
+            $credit = accounting_decimal($left);
+            accounting_query($conn, "UPDATE users SET advance_payment=advance_payment+$credit WHERE id=$user");
+        }
+        $complete = $sec + $secPaid >= accounting_paise($profile['security_deposit']) ? 1 : 0;
+        accounting_query($conn, "UPDATE users SET rent_billing_mode='$billingMode', onboarding_completed=$complete WHERE id=$user");
         return true;
     });
 }

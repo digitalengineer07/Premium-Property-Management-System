@@ -49,16 +49,13 @@ if (!$onboarding_completed) {
     $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
     $sec_due = max(0, $sec_target - $sec_paid);
 
-    // 1st month rent is DUE at onboarding
-    $adv_target = (float)($user['fixed_rent'] ?? 0);
-    $qAdvPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='advance'");
-    $adv_paid = (float)(mysqli_fetch_assoc($qAdvPaid)['total'] ?? 0);
-    $adv_due = max(0, $adv_target - $adv_paid);
+    // Rent is charged through invoices; never demand a second joining payment.
+    $adv_due = 0;
 }
 
 $onboarding_due = $sec_due + $adv_due;
 /* Last payment */
-$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+$stmt = mysqli_prepare($conn, "SELECT payment_date, paid_amount AS total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $lastp = mysqli_stmt_get_result($stmt);

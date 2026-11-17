@@ -917,7 +917,7 @@ if (!isset($_SESSION['admin']) && isset($_SESSION['user_id'])) {
                 </tr>
                 <?php if ($rent_amount > 0): ?>
                 <tr>
-                    <td>Room Rent Charges</td>
+                    <td>Room Rent Charges<?php if (!empty($row['rent_month'])) echo " (" . htmlspecialchars(date("F Y", strtotime($row['rent_month'] . "-01"))) . ")"; ?></td>
                     <td>₹<?php echo format_inr($rent_amount, 2); ?></td>
                 </tr>
                 <?php endif; ?>

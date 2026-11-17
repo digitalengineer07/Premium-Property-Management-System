@@ -46,7 +46,7 @@ if ($user_id <= 0) {
     exit;
 }
 
-if ($current_reading <= 0) {
+if ($current_reading < 0) {
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Current reading must be greater than 0"]);
     exit;
@@ -66,7 +66,7 @@ if (empty($bill_month)) {
 }
 
 $incoming_date = DateTime::createFromFormat('!Y-m', $bill_month);
-if (!$incoming_date) {
+if (!$incoming_date || $incoming_date->format('Y-m') !== $bill_month) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Invalid bill month format']);
     exit;
@@ -112,10 +112,19 @@ if ($latest_query && mysqli_num_rows($latest_query) > 0) {
     }
 }
 
-// Calculate totals securely on the backend
-$units_consumed = $current_reading - $previous_reading;
-$electricity_amount = $units_consumed * $rate_per_unit;
-$total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
+require_once __DIR__ . '/../../includes/billing.php';
+try {
+    accounting_query($conn, 'START TRANSACTION');
+    $validated = accounting_validate_bill($conn, $user_id, (array)$data);
+    $units_consumed = $validated['units'];
+    $electricity_amount = $validated['values']['amount'];
+    $total_amount = $validated['values']['total_amount'];
+} catch (Throwable $failure) {
+    mysqli_rollback($conn);
+    http_response_code(400);
+    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$failure->getMessage()]);
+    exit;
+}
 
 // Convert month string if needed (e.g., from '2025-01' to 'January 2025')
 $month_display = $bill_month;
@@ -129,7 +138,7 @@ if (strpos($bill_month, '-') !== false && strlen($bill_month) === 7) {
 // Ensure the connection works
 try {
     // Start transaction
-    mysqli_begin_transaction($conn);
+    // Transaction started before validation and resident locking.
 
     $stmt = mysqli_prepare($conn, 
         "INSERT INTO electricity (
@@ -166,10 +175,21 @@ try {
     }
 
     $bill_id = mysqli_insert_id($conn);
+    require_once __DIR__ . '/../../admin/allocate_payment.php';
+    recalculate_bill_status($conn, 'electricity', $bill_id);
+    $rent_period = $validated['rent_month'];
+    accounting_query($conn, "UPDATE electricity SET rent_month='$rent_period', due_date=DATE_ADD(payment_date, INTERVAL 10 DAY) WHERE id=$bill_id");
+
     
     
     // Legacy pending_adjustment logic removed
 
+    require_once __DIR__ . '/../../admin/allocate_payment.php';
+    $wallet = mysqli_fetch_assoc(accounting_query($conn, "SELECT advance_payment FROM users WHERE id=$user_id"))['advance_payment'];
+    if (accounting_paise($wallet) > 0) {
+        $ref = 'SYS_ADV_' . bin2hex(random_bytes(8));
+        allocate_bulk_payment($conn, $user_id, $wallet, 'Advance Wallet Auto-Deduction', $ref, $ref, null, true);
+    }
     mysqli_commit($conn);
 
     http_response_code(200);
@@ -180,7 +200,7 @@ try {
         'total_amount' => $total_amount
     ]);
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     mysqli_rollback($conn);
     http_response_code(500);
     echo json_encode([

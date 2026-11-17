@@ -1003,7 +1003,7 @@ $email = $bill['email'] ?? 'renter@example.com';
                         <?php 
                         $idx = 1;
                         if ((float)$bill['rent_amount'] > 0) {
-                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Rent</td><td class='col-desc'>Monthly Rent for ".date('F Y', strtotime($bill['month']))."</td><td class='col-amt'>".format_inr($bill['rent_amount'], 2)."</td></tr>";
+                            echo "<tr><td class='col-num'>{$idx}</td><td class='col-part'>Rent</td><td class='col-desc'>Monthly Rent for ".date('F Y', strtotime(!empty($bill['rent_month']) ? $bill['rent_month'].'-01' : $bill['month']))."</td><td class='col-amt'>".format_inr($bill['rent_amount'], 2)."</td></tr>";
                             $idx++;
                         }
                         if ((float)$bill['amount'] > 0) {

@@ -2,6 +2,7 @@
 // admin/add-renter.php
 require_once "../db.php";
 session_start();
+require_once __DIR__ . '/allocate_payment.php';
 
 if (!isset($_SESSION['admin'])) {
     header("Location: login.php");
@@ -62,9 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     
                     // The actual security deposit stored in the DB is what they paid
-                    $security_deposit = $amount_to_sec;
+                    $security_deposit = $fixed_rent; // Deposit target is separate from collected cash.
                 }
                 
+                if ($error !== '' || $fixed_rent <= 0 || $fixed_maintenance < 0 || $total_collected < 0 || $base_reading < 0) {
+                    $_SESSION['error'] = $error ?: 'Rent must be positive and charges cannot be negative.';
+                    header('Location: add-renter.php');
+                    exit;
+                }
                 // Set onboarding completed flag if they fully paid
                 $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
                 
@@ -80,6 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
                 }
 
+                try {
+                accounting_query($conn, 'START TRANSACTION');
                 $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, name, room_no, phone, email, base_reading, advance_payment, security_deposit, advance_updated_at, fixed_rent, fixed_maintenance, rent_maint_updated_at, rent_maint_updated_by, must_change_password, joining_date, block, floor, parking, onboarding_completed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?, NOW(), ?, 1, ?, ?, ?, ?, ?)");
                 $admin_id = $_SESSION['admin_id'] ?? 1; // Basic fallback if admin_id is not set
                 $zero_advance = 0; // We do not put it in the advance wallet anymore
@@ -89,15 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $new_id = mysqli_insert_id($conn);
                     $success = "Resident profile created successfully! <a href='../onboarding-guide.php?id=$new_id&pass=" . urlencode($password) . "' target='_blank' style='color: #10B981; text-decoration: underline; margin-left:10px;'>Print Onboarding Guide</a>";
 
-                    // Insert payment records for the ledger
-                    $sys_tx_id = 'SYS_ONB_' . strtoupper(substr(md5(uniqid()), 0, 10));
-                    if ($amount_to_sec > 0) {
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, 'Cash/Offline', $amount_to_sec, CURDATE(), 'Cash', '$sys_tx_id')");
-                    }
-                    if ($amount_to_first_month > 0) {
-                        $joining_month = date('M Y', strtotime($joining_date));
-                        mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id) VALUES ($new_id, 'rent', 0, '$joining_month', $amount_to_first_month, 'Cash/Offline', $amount_to_first_month, CURDATE(), 'Cash', '$sys_tx_id')");
-                    }
+                    $sys_tx_id = 'SYS_ONB_' . bin2hex(random_bytes(10));
+                    accounting_onboarding($conn, $new_id, $total_collected, 'Cash/Offline', $sys_tx_id, $sys_tx_id);
+                    accounting_query($conn, 'COMMIT');
 
                     // Welcome Email Logic
                     require_once "utils_mailer.php";
@@ -116,7 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_POST = [];
 
                 } else {
+                    mysqli_rollback($conn);
                     $error = "Error creating profile: " . mysqli_error($conn);
+                }
+                } catch (Throwable $failure) {
+                    mysqli_rollback($conn);
+                    error_log($failure->getMessage());
+                    $success = '';
+                    $error = 'Unable to create resident and joining ledger. Check the accounting migration has been applied.';
                 }
                 if (isset($stmt)) {
                     mysqli_stmt_close($stmt);

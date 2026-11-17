@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         $admin_note = e($conn, $_POST['admin_note'] ?? '');
         
         require_once __DIR__ . '/allocate_payment.php';
+$accounting_committed = false;
         try {
         accounting_query($conn, 'START TRANSACTION');
         $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id FOR UPDATE");
@@ -62,37 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     } 
                     // 1.5 Handle Onboarding Payment (Split into Security Deposit and Advance)
                     else if ($p_btype == 'onboarding') {
-                        $user_q = mysqli_query($conn, "SELECT security_deposit FROM users WHERE id = $p_uid");
-                        $u_row = mysqli_fetch_assoc($user_q);
-                        $sec_target = (float)($u_row['security_deposit'] ?? 0);
-                        
-                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $p_uid AND bill_type = 'security_deposit'");
-                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
-                        $sec_due = max(0, $sec_target - $sec_paid);
-                        
-                        $amount_to_sec = min($p_amt, $sec_due);
-                        $amount_to_adv = $p_amt - $amount_to_sec;
-                        
-                        // Insert Security Deposit component
-                        if ($amount_to_sec > 0) {
-                            $sys_sec_tx = 'SYS_SEC_' . strtoupper(bin2hex(random_bytes(6)));
-                            $vhash_sec = generate_payment_hash($p_uid, $amount_to_sec, $sys_sec_tx);
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'security_deposit', 0, 'Security Deposit', $amount_to_sec, '$p_pmode', $amount_to_sec, CURDATE(), '$p_tx', '$sys_sec_tx', '$vhash_sec')");
-                        }
-                        
-                        // Insert remaining to Advance Wallet (Logs as 1st Month Rent, but DOES NOT add to auto-deduct wallet)
-                        if ($amount_to_adv > 0) {
-                            $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-                            $vhash_adv = generate_payment_hash($p_uid, $amount_to_adv, $sys_adv_tx);
-                            mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'advance', 0, 'Advance (1st Month Rent)', $amount_to_adv, '$p_pmode', $amount_to_adv, CURDATE(), '$p_tx', '$sys_adv_tx', '$vhash_adv')");
-                            // Removed: UPDATE users SET advance_payment = advance_payment + $amount_to_adv
-                        }
+                        accounting_onboarding($conn, $p_uid, $notif['amount'], $p_pmode, $notif['transaction_id'], $p_sys_tx);
                     }
                     // 2. Handle Specific Bill Payments
                     else {
                         accounting_specific_payment($conn, $p_uid, $p_btype, $p_bid, $notif['amount'], $p_pmode, $notif['transaction_id'], $p_sys_tx);
                     }
                     accounting_query($conn, 'COMMIT');
+                    $accounting_committed = true;
 
                     $safe_tx = htmlspecialchars($notif['transaction_id']);
                     $success = "Payment #{$safe_tx} approved successfully.";
@@ -133,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         } catch (Throwable $failure) {
             mysqli_rollback($conn);
             error_log($failure->getMessage());
-            $error = 'Payment approval failed. No accounting changes were saved.';
+            $error = $accounting_committed ? 'Payment saved, but notification delivery failed.' : 'Payment approval failed. No accounting changes were saved.';
             $success = '';
         }
     }

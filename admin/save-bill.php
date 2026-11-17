@@ -39,7 +39,7 @@ if ($user_id <= 0) {
     exit;
 }
 
-if ($current_reading <= 0) {
+if ($current_reading < 0) {
     echo json_encode(['success' => false, 'message' => 'Current reading is required']);
     exit;
 }
@@ -51,7 +51,7 @@ if (empty($bill_month)) {
 }
 
 $incoming_date = DateTime::createFromFormat('!Y-m', $bill_month);
-if (!$incoming_date) {
+if (!$incoming_date || $incoming_date->format('Y-m') !== $bill_month) {
     echo json_encode(['success' => false, 'message' => 'Invalid bill month format']);
     exit;
 }
@@ -112,10 +112,19 @@ if ($latest_query && mysqli_num_rows($latest_query) > 0) {
     }
 }
 
-// Calculate values
-$units_consumed = max(0, $current_reading - $previous_reading);
-$electricity_amount = $units_consumed * $rate_per_unit;
-$total_amount = $electricity_amount + $rent_amount + $maintenance + $dues + $extra_charges;
+require_once __DIR__ . '/../includes/billing.php';
+try {
+    accounting_query($conn, 'START TRANSACTION');
+    $validated = accounting_validate_bill($conn, $user_id, $_POST);
+    $units_consumed = $validated['units'];
+    $electricity_amount = $validated['values']['amount'];
+    $total_amount = $validated['values']['total_amount'];
+} catch (Throwable $failure) {
+    mysqli_rollback($conn);
+    http_response_code(400);
+    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$failure->getMessage()]);
+    exit;
+}
 
 // Convert month to readable format (e.g., "2025-01" to "January 2025")
 $month_display = $bill_month;
@@ -202,6 +211,8 @@ if (isset($_FILES['meter_crop']) && $_FILES['meter_crop']['error'] === UPLOAD_ER
 
 $bill_id_str = "BILL-" . date("Ymd") . "-" . strtoupper(substr(md5(uniqid('', true)), 0, 8));
 
+$accounting_committed = false;
+try {
 // Insert into electricity table
 $stmt = mysqli_prepare($conn, 
     "INSERT INTO electricity (
@@ -241,7 +252,28 @@ mysqli_stmt_bind_param($stmt, "issiiiiddddddsssdss",
 
 if (mysqli_stmt_execute($stmt)) {
     $bill_id = mysqli_insert_id($conn);
+    require_once __DIR__ . '/allocate_payment.php';
+    recalculate_bill_status($conn, 'electricity', $bill_id);
+    $rent_period = $validated['rent_month'];
+    accounting_query($conn, "UPDATE electricity SET rent_month='$rent_period', due_date=DATE_ADD(payment_date, INTERVAL 10 DAY) WHERE id=$bill_id");
+
     
+    // --- NEW: Enterprise Auto-Credit Application ---
+    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
+    if ($qAdv && $rowAdv = mysqli_fetch_assoc($qAdv)) {
+        $adv = (float)$rowAdv['advance_payment'];
+        if ($adv > 0) {
+            // Temporarily zero the advance so the allocator can redistribute it without doubling
+            // Wallet balance is debited atomically by the allocator.
+            require_once __DIR__ . "/allocate_payment.php";
+            $sys_id = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
+            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Wallet Auto-Deduction', $sys_id, $sys_id, null, true);
+        }
+    }
+    // -----------------------------------------------
+
+    accounting_query($conn, 'COMMIT');
+    $accounting_committed = true;
     // Legacy pending_adjustment logic removed to prevent debt wiping loophole
     
     // Fetch user details for email notification
@@ -258,20 +290,6 @@ if (mysqli_stmt_execute($stmt)) {
     $msg_safe = mysqli_real_escape_string($conn, "A new electricity bill for $month_display (₹" . format_inr($total_amount, 2) . ") has been assigned to you.");
     mysqli_query($conn, "INSERT INTO app_notifications (user_id, title, message, type) VALUES ($user_id, 'New Bill Assigned', '$msg_safe', 'bill')");
 
-    // --- NEW: Enterprise Auto-Credit Application ---
-    $qAdv = mysqli_query($conn, "SELECT advance_payment FROM users WHERE id = $user_id");
-    if ($qAdv && $rowAdv = mysqli_fetch_assoc($qAdv)) {
-        $adv = (float)$rowAdv['advance_payment'];
-        if ($adv > 0) {
-            // Temporarily zero the advance so the allocator can redistribute it without doubling
-            // Wallet balance is debited atomically by the allocator.
-            require_once __DIR__ . "/allocate_payment.php";
-            $sys_id = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-            allocate_bulk_payment($conn, $user_id, $adv, 'Advance Wallet Auto-Deduction', $sys_id, $sys_id, null, true);
-        }
-    }
-    // -----------------------------------------------
-
     // Clean buffer and send success
     if (ob_get_length()) ob_clean();
     echo json_encode([
@@ -282,6 +300,7 @@ if (mysqli_stmt_execute($stmt)) {
     ]);
     exit;
 } else {
+    mysqli_rollback($conn);
     $error_msg = mysqli_stmt_error($stmt) ?: mysqli_error($conn);
     if (ob_get_length()) ob_clean();
     echo json_encode([
@@ -289,4 +308,12 @@ if (mysqli_stmt_execute($stmt)) {
         'message' => 'Database error: ' . $error_msg
     ]);
     exit;
+}
+
+} catch (Throwable $failure) {
+    mysqli_rollback($conn);
+    error_log($failure->getMessage());
+    if (ob_get_length()) ob_clean();
+    http_response_code(500);
+    echo json_encode(['success'=>$accounting_committed ?? false, 'bill_id'=>$bill_id ?? null, 'message'=>!empty($accounting_committed) ? 'Bill saved, but notification delivery failed.' : 'Unable to save bill. No accounting changes were saved.']);
 }

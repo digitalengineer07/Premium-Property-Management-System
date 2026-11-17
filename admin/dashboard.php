@@ -31,30 +31,12 @@ while ($pr = mysqli_fetch_assoc($qPart)) {
 }
 $rent_collected_total = $explicit_rent + $rent_from_paid_bills + $rent_from_partial;
 
-// 2) Total Dues: total due amount calculated as exact sum of per-tenant net dues
-$total_dues_total = 0;
-$uq = mysqli_query($conn, "SELECT id, advance_payment FROM users WHERE status = 'active'");
-while ($u = mysqli_fetch_assoc($uq)) {
-    $uid = (int)$u['id'];
-    $wallet = (float)$u['advance_payment'];
-    
-    $r_due = (float)mysqli_fetch_assoc(mysqli_query($conn, "
-        SELECT IFNULL(SUM(r.rent_amount - IFNULL(p.paid, 0)), 0) as due 
-        FROM rent r 
-        LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type = 'rent' GROUP BY bill_id) p ON p.bill_id = r.id 
-        WHERE r.user_id = $uid AND r.status IN ('Due', 'Partial')
-    "))['due'];
-    
-    $e_due = (float)mysqli_fetch_assoc(mysqli_query($conn, "
-        SELECT IFNULL(SUM(e.total_amount - IFNULL(p.paid, 0)), 0) as due 
-        FROM electricity e 
-        LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id = e.id 
-        WHERE e.user_id = $uid AND e.status IN ('Due', 'Partial')
-    "))['due'];
-    
-    $tenant_net = max(0, ($r_due + $e_due) - $wallet);
-    $total_dues_total += $tenant_net;
-}
+// Outstanding balances use the same posting ledger as the resident dashboard.
+require_once __DIR__ . '/../includes/accounting_store.php';
+$total_dues_paise = 0;
+$uq = accounting_query($conn, "SELECT id FROM users WHERE status='active'");
+while ($u = mysqli_fetch_assoc($uq)) $total_dues_paise += accounting_balances($conn, (int)$u['id'])['net_paise'];
+$total_dues_total = $total_dues_paise / 100;
 
 // 3) Electricity Paid: sum of all electricity amounts paid for the selected month (electricity portion only)
 $qElecM = mysqli_query($conn, "SELECT e.id, e.amount, e.status, IFNULL(p.paid, 0) as paid 

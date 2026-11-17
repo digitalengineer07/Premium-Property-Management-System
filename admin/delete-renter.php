@@ -37,6 +37,13 @@ function deleteIfExists($conn, $table, $id) {
 }
 
 try {
+    require_once __DIR__ . '/../includes/accounting_store.php';
+    accounting_query($conn, "SELECT id FROM users WHERE id=$id FOR UPDATE");
+    foreach (['payments', 'rent', 'electricity'] as $ledgerTable) {
+        if (mysqli_num_rows(accounting_query($conn, "SELECT id FROM $ledgerTable WHERE user_id=$id LIMIT 1"))) {
+            throw new RuntimeException('This resident has accounting history. Mark the resident inactive instead of deleting the ledger.');
+        }
+    }
     // 1. Delete bills and payments
     deleteIfExists($conn, 'electricity', $id);
     deleteIfExists($conn, 'rent', $id);

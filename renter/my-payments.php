@@ -24,51 +24,15 @@ $display_name = $user['name'] ?: $user['username'];
 $profile_pic = $user['profile_pic'] ?: "assets/img/default-avatar.png";
 $room_no = $user['room_no'] ?? 'N/A';
 
-/* Calculate totals */
-// 1. Rent from pure 'rent' table (including Partial)
-$stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(rent_amount), 0) - 
-    IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments p WHERE p.bill_type='rent' AND p.bill_id=r.id), 0)
-    AS total 
-    FROM rent r WHERE user_id = ? AND status IN ('Due', 'Partial')");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$r1 = mysqli_stmt_get_result($stmt);
-$r1a = mysqli_fetch_assoc($r1);
-$pure_rent_due = (float)($r1a['total'] ?? 0);
-mysqli_stmt_close($stmt);
-
-// 2. Electricity and Rent components from 'electricity' table (including Partial)
-$stmt = mysqli_prepare($conn, "SELECT 
-    IFNULL(SUM(
-        GREATEST(0, e.amount - IFNULL(p.total_paid, 0))
-    ), 0) as elec_total, 
-    IFNULL(SUM(
-        GREATEST(0, (e.rent_amount + e.maintenance + e.extra_charges + e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))
-    ), 0) as rent_portion_total 
-FROM electricity e 
-LEFT JOIN (
-    SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as total_paid 
-    FROM payments 
-    WHERE bill_type IN ('electricity', 'elec_rent') 
-    GROUP BY bill_id
-) p ON p.bill_id = e.id
-WHERE e.user_id = ? AND e.status IN ('Due', 'Partial')");
-mysqli_stmt_bind_param($stmt, "i", $user_id);
-mysqli_stmt_execute($stmt);
-$r2 = mysqli_stmt_get_result($stmt);
-$r2a = mysqli_fetch_assoc($r2);
-$elec_due = (float)($r2a['elec_total'] ?? 0);
-$rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
-mysqli_stmt_close($stmt);
-
-$rent_due = $pure_rent_due + $rent_portion_due;
-$unbilled_adj = (float)($user['pending_adjustment'] ?? 0);
-$total_due = $elec_due + $rent_due - $unbilled_adj; // If adj is negative (remaining), it adds to total. If positive, subtracts.
-
+require_once __DIR__ . '/../includes/accounting_store.php';
+$balance = accounting_balances($conn, $user_id);
+$elec_due = $balance['components']['amount'] / 100;
+$rent_due = ($balance['gross_paise'] - $balance['components']['amount']) / 100;
+$unbilled_adj = 0;
+$total_due = $balance['net_paise'] / 100;
 
 /* Last payment */
-$stmt = mysqli_prepare($conn, "SELECT payment_date, total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
+$stmt = mysqli_prepare($conn, "SELECT payment_date, paid_amount AS total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $lastp = mysqli_stmt_get_result($stmt);
@@ -97,7 +61,7 @@ mysqli_stmt_close($stmt);
 
 // Get rent portions from electricity bills (slips)
 $stmt = mysqli_prepare($conn, "
-    SELECT e.id, e.month, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
+    SELECT e.id, e.month, e.amount AS electricity_charge, e.rent_amount, e.maintenance, e.dues, e.extra_charges, e.extra_charges_desc, e.status, p.adjustment_amount, p.adjustment_type,
            (SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as total_paid
     FROM electricity e 
     LEFT JOIN (SELECT bill_id, MAX(adjustment_amount) as adjustment_amount, MAX(adjustment_type) as adjustment_type FROM payments WHERE bill_type = 'electricity' GROUP BY bill_id) p ON p.bill_id = e.id 
@@ -111,7 +75,7 @@ while ($row = mysqli_fetch_assoc($elec_rent_res)) {
     $total_paid = (float)$row['total_paid'];
     $rent_maint_amt = (float)$row['rent_amount'] + (float)$row['maintenance'] + (float)$row['dues'] + (float)$row['extra_charges'];
 
-    $rem = max(0, $rent_maint_amt - $total_paid);
+    $rem = max(0, $rent_maint_amt - max(0, $total_paid - (float)$row['electricity_charge']));
     $r_status = $row['status'];
     if ($row['status'] == 'Partial' && $rem == 0) $r_status = 'Paid';
     
@@ -178,7 +142,7 @@ $adv_paid_res = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
 $adv_paid = (float)$adv_paid_res['adv_paid'];
 mysqli_stmt_close($stmt);
 
-$advance_due = max(0, ($user['advance_payment'] ?? 0) - $adv_paid);
+$advance_due = 0; // Wallet credit is not a receivable.
 
 // Check for recent announcements (last 24h)
 $dismissed_cookie_val = $_COOKIE['dismissed_notifs'] ?? '';
