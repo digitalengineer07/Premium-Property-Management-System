@@ -1297,7 +1297,7 @@ $admin_user = s($_SESSION['admin']);
 
                 // Handle Advance Wallet (Auto-Credit applied backend)
                 const balanceDiv = document.getElementById('infoBalance');
-                balanceDiv.textContent = 'Auto (Backend)';
+                balanceDiv.textContent = data.rent_billing_mode === 'advance' ? 'Advance rent · utilities for selected month' : (data.rent_billing_mode === 'arrears' ? 'Arrears rent · selected month' : 'Joining payment evidence needed: review resident billing mode');
                 balanceDiv.style.color = 'rgba(255,255,255,0.7)';
                 
                 // Note: Advance wallet is handled entirely securely on the backend in save-bill.php

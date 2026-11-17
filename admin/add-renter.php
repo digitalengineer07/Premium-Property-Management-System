@@ -10,7 +10,8 @@ if (!isset($_SESSION['admin'])) {
 }
 
 $success = "";
-$error = "";
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['error']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
@@ -42,6 +43,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $security_deposit = (float)($_POST['security_deposit'] ?? 0);
                 $fixed_rent = (float)($_POST['fixed_rent'] ?? 0);
                 $fixed_maintenance = (float)($_POST['fixed_maintenance'] ?? 0);
+                try {
+                    foreach (['advance_payment','fixed_rent','fixed_maintenance'] as $field) accounting_paise($_POST[$field] ?? '0');
+                    $joining_input = $_POST['joining_date'] ?? date('Y-m-d');
+                    if ($joining_input !== '') {
+                        $joining_check = DateTimeImmutable::createFromFormat('!Y-m-d', $joining_input);
+                        if (!$joining_check || $joining_check->format('Y-m-d') !== $joining_input) throw new InvalidArgumentException('Invalid joining date.');
+                    }
+                } catch (Throwable $failure) {
+                    $_SESSION['error'] = $failure->getMessage();
+                    header('Location: add-renter.php'); exit;
+                }
                 // --- STRICT ONBOARDING PROTOCOL ---
                 // The collected amount must be either exactly 1x Rent (goes to Sec Deposit) 
                 // or exactly 2x Rent (1x Sec Deposit, 1x Advance for first month).

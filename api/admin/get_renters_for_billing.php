@@ -42,7 +42,7 @@ try {
             u.room_no, 
             u.phone, 
             u.fixed_rent, 
-            u.fixed_maintenance, 
+            u.fixed_maintenance, u.rent_billing_mode, 
             u.pending_adjustment, 
             COALESCE(
                 (SELECT current_reading FROM electricity e WHERE e.user_id = u.id ORDER BY id DESC LIMIT 1), 
@@ -66,7 +66,8 @@ try {
                 'phone' => $row['phone'],
                 'fixed_rent' => (float)$row['fixed_rent'],
                 'fixed_maintenance' => (float)$row['fixed_maintenance'],
-                'pending_adjustment' => (float)$row['pending_adjustment'], // Dues
+                'pending_adjustment' => 0,
+                'rent_billing_mode' => $row['rent_billing_mode'], // Dues
                 'last_reading' => (int)$row['last_reading']
             ];
         }

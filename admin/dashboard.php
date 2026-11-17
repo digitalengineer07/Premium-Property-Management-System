@@ -17,52 +17,13 @@ if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
     $prev_month_str = date('F Y', strtotime('first day of last month'));
 }
 
-// 1) Rent Collected: overall total rent amount collected (combining explicit rent and the rent portion of combined bills)
-$explicit_rent = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)),0) AS total FROM payments WHERE bill_type = 'rent'"))['total'];
-$rent_from_paid_bills = (float)mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount + maintenance + extra_charges + dues), 0) AS total FROM electricity WHERE status = 'Paid'"))['total'];
-$qPart = mysqli_query($conn, "SELECT e.id, e.amount, e.rent_amount, e.maintenance, e.dues, e.extra_charges, IFNULL(p.paid, 0) as paid 
-    FROM electricity e 
-    LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
-    WHERE e.status = 'Partial'");
-$rent_from_partial = 0;
-while ($pr = mysqli_fetch_assoc($qPart)) {
-    $rent_paid = max(0, (float)$pr['paid'] - (float)$pr['amount']);
-    $rent_from_partial += min((float)$pr['rent_amount'] + (float)$pr['maintenance'] + (float)$pr['dues'] + (float)$pr['extra_charges'], $rent_paid);
-}
-$rent_collected_total = $explicit_rent + $rent_from_paid_bills + $rent_from_partial;
-
-// Outstanding balances use the same posting ledger as the resident dashboard.
-require_once __DIR__ . '/../includes/accounting_store.php';
-$total_dues_paise = 0;
-$uq = accounting_query($conn, "SELECT id FROM users WHERE status='active'");
-while ($u = mysqli_fetch_assoc($uq)) $total_dues_paise += accounting_balances($conn, (int)$u['id'])['net_paise'];
-$total_dues_total = $total_dues_paise / 100;
-
-// 3) Electricity Paid: sum of all electricity amounts paid for the selected month (electricity portion only)
-$qElecM = mysqli_query($conn, "SELECT e.id, e.amount, e.status, IFNULL(p.paid, 0) as paid 
-    FROM electricity e 
-    LEFT JOIN (SELECT bill_id, SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as paid FROM payments WHERE bill_type IN ('electricity', 'elec_rent') GROUP BY bill_id) p ON p.bill_id=e.id 
-    WHERE e.month='$prev_month_str'");
-$elec_collected_total = 0;
-while ($em = mysqli_fetch_assoc($qElecM)) {
-    $elec_cost = (float)$em['amount'];
-    $paid = (float)$em['paid'];
-    if ($em['status'] === 'Paid') {
-        $elec_collected_total += $elec_cost;
-    } else {
-        $elec_collected_total += min($elec_cost, $paid);
-    }
-}
-
-// 5) Total Revenue: actual cash/bank/UPI received (excluding wallet auto-deductions)
-$total_revenue_total = (float)mysqli_fetch_assoc(mysqli_query($conn, "
-    SELECT IFNULL(SUM(paid_amount),0) AS total 
-    FROM payments 
-    WHERE (payment_mode NOT LIKE '%Wallet Auto-Deduction%' OR payment_mode IS NULL) 
-    AND (sys_tx_id NOT LIKE 'SYS_ADV_%' OR sys_tx_id IS NULL) 
-    AND (payment_mode != 'wallet' OR payment_mode IS NULL)
-    AND paid_amount > 0
-"))['total'];
+require_once __DIR__ . '/../includes/accounting_reports.php';
+$financial = accounting_report($conn);
+$latest_financial = accounting_report($conn, $prev_month_str);
+$rent_collected_total = $financial['applied']['rent_amount'] / 100;
+$total_dues_total = $financial['net_paise'] / 100;
+$elec_collected_total = $latest_financial['applied']['amount'] / 100;
+$total_revenue_total = $financial['cash_paise'] / 100;
 
 $renters = mysqli_query($conn, "SELECT * FROM users WHERE status = 'active' ORDER BY id ASC");
 $elec_records = mysqli_query($conn, "SELECT e.*, u.name as renter_name FROM electricity e JOIN users u ON e.user_id = u.id ORDER BY e.id DESC LIMIT 6");
@@ -570,7 +531,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> 8.4%</div>
             </div>
             <div class="kpi-value">₹<?php echo format_inr($total_revenue_total); ?></div>
-            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-label">Cash Received</div>
         </div>
         <div class="kpi-card hover-lift">
             <div class="kpi-header">

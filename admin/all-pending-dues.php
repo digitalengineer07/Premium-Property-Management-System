@@ -58,14 +58,17 @@ if (isset($_GET['action']) && $_GET['action'] == 'toggle') {
 }
 
 // Fetch all Due and Partial Bills
+require_once __DIR__ . '/../includes/accounting_reports.php';
+$open_map=[];
+foreach(accounting_open_items($conn) as $item) $open_map[$item['type'].':'.$item['id']]=$item['due_paise']/100;
 $dues = [];
 $res1 = mysqli_query($conn, "SELECT r.*, u.name, u.room_no, 'Rent' as type, 
     (SELECT IFNULL(SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)), 0) FROM payments WHERE bill_type='rent' AND bill_id=r.id) as already_paid 
     FROM rent r JOIN users u ON r.user_id = u.id 
-    WHERE r.status IN ('Due', 'Partial') AND u.status = 'active'");
+    WHERE u.status = 'active'");
 while($row = mysqli_fetch_assoc($res1)) {
-    $row_due = max(0, (float)$row['rent_amount'] - (float)$row['already_paid']);
-    if ($row_due > 0.01) {
+    $row_due = $open_map['rent:'.$row['id']] ?? 0;
+    if ($row_due > 0) {
         $row['remaining_due'] = $row_due;
         $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Rent' ORDER BY sent_at DESC LIMIT 1");
         $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';
@@ -76,10 +79,10 @@ while($row = mysqli_fetch_assoc($res1)) {
 $res2 = mysqli_query($conn, "SELECT e.*, u.name, u.room_no, 'Electricity' as type, 
     (SELECT IFNULL(SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)), 0) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=e.id) as already_paid 
     FROM electricity e JOIN users u ON e.user_id = u.id 
-    WHERE e.status IN ('Due', 'Partial') AND u.status = 'active'");
+    WHERE u.status = 'active'");
 while($row = mysqli_fetch_assoc($res2)) {
-    $row_due = max(0, (float)$row['total_amount'] - (float)$row['already_paid']);
-    if ($row_due > 0.01) {
+    $row_due = $open_map['electricity:'.$row['id']] ?? 0;
+    if ($row_due > 0) {
         $row['remaining_due'] = $row_due;
         $rem = mysqli_query($conn, "SELECT sent_at FROM payment_reminders WHERE bill_id = {$row['id']} AND bill_type='Electricity' ORDER BY sent_at DESC LIMIT 1");
         $row['last_reminder'] = mysqli_fetch_assoc($rem)['sent_at'] ?? 'Never';

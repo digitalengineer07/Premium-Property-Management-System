@@ -35,38 +35,12 @@ if (!$decoded || !isset($decoded['id']) || $decoded['role'] !== 'admin') {
 }
 
 try {
-    $sql = "(SELECT e.id, u.name, u.room_no, 
-             (e.total_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_id=e.id AND bill_type IN ('electricity', 'elec_rent')), 0)) as amount, 
-             e.status, e.created_at, 'Electricity' as type 
-             FROM electricity e 
-             JOIN users u ON e.user_id = u.id 
-             WHERE e.status IN ('Due', 'Partial') AND u.status = 'active')
-            UNION ALL
-            (SELECT r.id, u.name, u.room_no, 
-             (r.rent_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_id=r.id AND bill_type = 'rent'), 0)) as amount, 
-             r.status, r.created_at, 'Rent' as type 
-             FROM rent r 
-             JOIN users u ON r.user_id = u.id 
-             WHERE r.status IN ('Due', 'Partial') AND u.status = 'active')
-            HAVING amount > 0.01
-            ORDER BY created_at DESC 
-            LIMIT 100";
-            
-    $res = mysqli_query($conn, $sql);
-    $records = [];
-    if ($res) {
-        while ($r = mysqli_fetch_assoc($res)) {
-            $records[] = [
-                'id' => $r['id'],
-                'name' => $r['name'],
-                'room_no' => $r['room_no'],
-                'amount' => (float)$r['amount'],
-                'status' => $r['status'],
-                'type' => $r['type'],
-                'date' => $r['created_at']
-            ];
-        }
-    }
+    require_once __DIR__ . '/../../includes/accounting_reports.php';
+    $records=[];
+    foreach (accounting_open_items($conn) as $item) $records[]=[
+        'id'=>$item['id'],'name'=>$item['name'],'room_no'=>$item['room_no'],'amount'=>$item['due_paise']/100,
+        'status'=>'Due','type'=>$item['type']==='rent' ? 'Rent' : 'Electricity','date'=>$item['due_date'] ?? $item['month'].'-01'
+    ];
 
     http_response_code(200);
     echo json_encode([

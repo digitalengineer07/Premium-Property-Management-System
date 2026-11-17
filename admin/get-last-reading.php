@@ -25,7 +25,7 @@ $result = mysqli_stmt_get_result($stmt);
 $row = mysqli_fetch_assoc($result);
 
 // Get user profile fields
-$u_stmt = mysqli_prepare($conn, "SELECT base_reading, pending_adjustment, fixed_rent, fixed_maintenance FROM users WHERE id = ?");
+$u_stmt = mysqli_prepare($conn, "SELECT base_reading, pending_adjustment, fixed_rent, fixed_maintenance, rent_billing_mode FROM users WHERE id = ?");
 mysqli_stmt_bind_param($u_stmt, "i", $user_id);
 mysqli_stmt_execute($u_stmt);
 $u_res = mysqli_stmt_get_result($u_stmt);
@@ -36,7 +36,8 @@ if ($row) {
         'success' => true,
         'last_reading' => (float)$row['current_reading'],
         'last_month' => $row['month'],
-        'pending_adjustment' => (float)($u_row['pending_adjustment'] ?? 0),
+        'pending_adjustment' => 0,
+        'rent_billing_mode' => $u_row['rent_billing_mode'] ?? null,
         'fixed_rent' => (float)($u_row['fixed_rent'] ?? 0),
         'fixed_maintenance' => (float)($u_row['fixed_maintenance'] ?? 0),
         'is_base' => false
@@ -45,7 +46,8 @@ if ($row) {
     echo json_encode([
         'success' => true,
         'last_reading' => (float)($u_row['base_reading'] ?? 0),
-        'pending_adjustment' => (float)($u_row['pending_adjustment'] ?? 0),
+        'pending_adjustment' => 0,
+        'rent_billing_mode' => $u_row['rent_billing_mode'] ?? null,
         'fixed_rent' => (float)($u_row['fixed_rent'] ?? 0),
         'fixed_maintenance' => (float)($u_row['fixed_maintenance'] ?? 0),
         'is_base' => true

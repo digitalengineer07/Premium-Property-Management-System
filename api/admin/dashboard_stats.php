@@ -56,92 +56,21 @@ try {
         return 0;
     }
 
-    // 3) Rent Collected (All Time)
-    $r_coll_elec = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM electricity WHERE status='Paid'");
-    $r_coll_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'");
-    $rent_collected = $r_coll_elec + $r_coll_rent;
-
-    // 4) Electricity Paid (Current Month)
-    $latest_month_query = mysqli_query($conn, "SELECT month FROM electricity ORDER BY STR_TO_DATE(CONCAT('01 ', month), '%d %M %Y') DESC LIMIT 1");
-    if ($latest_month_row = mysqli_fetch_assoc($latest_month_query)) {
-        $curr_month_str = $latest_month_row['month'];
-        $prev_month_str = date('F Y', strtotime('first day of last month', strtotime('01 ' . $curr_month_str)));
-    } else {
-        $curr_month_str = date('F Y');
-        $prev_month_str = date('F Y', strtotime('first day of last month'));
-    }
-    
-    $elec_paid_curr = getScalar($conn, "SELECT IFNULL(SUM(amount),0) AS total FROM electricity WHERE status='Paid' AND month='$curr_month_str'");
-    $elec_paid_prev = getScalar($conn, "SELECT IFNULL(SUM(amount),0) AS total FROM electricity WHERE status='Paid' AND month='$prev_month_str'");
-    
-    $trend_elec = 0;
-    if ($elec_paid_prev > 0) {
-        $trend_elec = (($elec_paid_curr - $elec_paid_prev) / $elec_paid_prev) * 100;
-    } elseif ($elec_paid_curr > 0) {
-        $trend_elec = 100;
-    }
-
-    // 5) Total Revenue
-    $p_elec = getScalar($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='electricity' AND e.status='Partial'");
-    $p_rent = getScalar($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial'");
-    $rev_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status='Paid'");
-    $rev_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid'");
-    $rev_adv = getScalar($conn, "SELECT IFNULL(SUM(paid_amount),0) AS total FROM payments WHERE bill_type='advance'");
-    $total_revenue = $rev_elec + $rev_rent + $p_elec + $p_rent + $rev_adv;
-
-    // Revenue Trend
-    $rev_curr_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status='Paid' AND month='$curr_month_str'");
-    $rev_curr_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid' AND month='$curr_month_str'");
-    $rev_curr = $rev_curr_elec + $rev_curr_rent;
-
-    $rev_prev_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status='Paid' AND month='$prev_month_str'");
-    $rev_prev_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid' AND month='$prev_month_str'");
-    $rev_prev = $rev_prev_elec + $rev_prev_rent;
-
-    $trend_rev = 0;
-    if ($rev_prev > 0) {
-        $trend_rev = (($rev_curr - $rev_prev) / $rev_prev) * 100;
-    } elseif ($rev_curr > 0) {
-        $trend_rev = 100;
-    }
-
-    // Rent Collected Trend
-    $rent_curr_elec = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM electricity WHERE status='Paid' AND month='$curr_month_str'");
-    $rent_curr_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid' AND month='$curr_month_str'");
-    $rent_curr = $rent_curr_elec + $rent_curr_rent;
-
-    $rent_prev_elec = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM electricity WHERE status='Paid' AND month='$prev_month_str'");
-    $rent_prev_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status='Paid' AND month='$prev_month_str'");
-    $rent_prev = $rent_prev_elec + $rent_prev_rent;
-
-    $trend_rent_collected = 0;
-    if ($rent_prev > 0) {
-        $trend_rent_collected = (($rent_curr - $rent_prev) / $rent_prev) * 100;
-    } elseif ($rent_curr > 0) {
-        $trend_rent_collected = 100;
-    }
-
-    require_once __DIR__ . '/../../includes/accounting_store.php';
-    $total_dues_paise = 0;
-    $uq_dues = accounting_query($conn, "SELECT id FROM users WHERE status='active'");
-    while ($u = mysqli_fetch_assoc($uq_dues)) $total_dues_paise += accounting_balances($conn, (int)$u['id'])['net_paise'];
-    $total_dues = $total_dues_paise / 100;
-
-    // Dues Trend (Comparing this month's generated dues vs last month's generated dues)
-    $dues_curr_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid' AND month='$curr_month_str'");
-    $dues_curr_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status!='Paid' AND month='$curr_month_str'");
-    $dues_curr = $dues_curr_elec + $dues_curr_rent;
-
-    $dues_prev_elec = getScalar($conn, "SELECT IFNULL(SUM(total_amount),0) AS total FROM electricity WHERE status!='Paid' AND month='$prev_month_str'");
-    $dues_prev_rent = getScalar($conn, "SELECT IFNULL(SUM(rent_amount),0) AS total FROM rent WHERE status!='Paid' AND month='$prev_month_str'");
-    $dues_prev = $dues_prev_elec + $dues_prev_rent;
-
-    $trend_dues = 0;
-    if ($dues_prev > 0) {
-        $trend_dues = (($dues_curr - $dues_prev) / $dues_prev) * 100;
-    } elseif ($dues_curr > 0) {
-        $trend_dues = 100;
-    }
+    require_once __DIR__ . '/../../includes/accounting_reports.php';
+    $financial = accounting_report($conn);
+    $curr_month_str = date('F Y');
+    $prev_month_str = date('F Y', strtotime('first day of last month'));
+    $current = accounting_report($conn, $curr_month_str);
+    $previous = accounting_report($conn, $prev_month_str);
+    $growth = fn($now,$before) => $before ? (($now-$before)/abs($before))*100 : ($now ? 100 : 0);
+    $rent_collected = $financial['applied']['rent_amount']/100;
+    $total_revenue = $financial['cash_paise']/100;
+    $total_dues = $financial['net_paise']/100;
+    $elec_paid_curr = $current['applied']['amount']/100;
+    $trend_elec = $growth($current['applied']['amount'],$previous['applied']['amount']);
+    $trend_rev = $growth($current['cash_paise'],$previous['cash_paise']);
+    $trend_rent_collected = $growth($current['applied']['rent_amount'],$previous['applied']['rent_amount']);
+    $trend_dues = $growth($current['gross_paise'],$previous['gross_paise']);
 
     // Recent Electricity (Last 4)
     $rec_elec_sql = "SELECT e.id, u.name, u.profile_pic, e.month, (e.current_reading - e.previous_reading) as units, e.status, e.total_amount 
@@ -163,33 +92,12 @@ try {
         }
     }
 
-    // Pending Payments (Last 3)
-    $pend_pay_sql = "(SELECT e.id, u.name, u.room_no, e.total_amount as amount, e.status, e.created_at 
-                      FROM electricity e JOIN users u ON e.user_id = u.id WHERE e.status != 'Paid')
-                     UNION ALL
-                     (SELECT r.id, u.name, u.room_no, r.rent_amount as amount, r.status, r.created_at 
-                      FROM rent r JOIN users u ON r.user_id = u.id WHERE r.status != 'Paid')
-                     ORDER BY created_at DESC LIMIT 3";
-    $pend_pay_res = mysqli_query($conn, $pend_pay_sql);
+    $open_items = accounting_open_items($conn);
     $pending_payments = [];
-    if ($pend_pay_res) {
-        while ($p = mysqli_fetch_assoc($pend_pay_res)) {
-            $pending_payments[] = [
-                'id' => $p['id'],
-                'name' => $p['name'],
-                'room_no' => $p['room_no'],
-                'amount' => (float)$p['amount'],
-                'status' => $p['status']
-            ];
-        }
-    }
-
-    // Total Pending Count
-    $pend_count_sql = "SELECT 
-                        (SELECT COUNT(*) FROM electricity WHERE status != 'Paid') + 
-                        (SELECT COUNT(*) FROM rent WHERE status != 'Paid') as total_pending";
-    $pend_count_res = mysqli_query($conn, $pend_count_sql);
-    $total_pending_count = $pend_count_res ? (int)mysqli_fetch_assoc($pend_count_res)['total_pending'] : 0;
+    foreach (array_slice($open_items,0,3) as $item) $pending_payments[] = [
+        'id'=>$item['id'],'name'=>$item['name'],'room_no'=>$item['room_no'],'amount'=>$item['due_paise']/100,'status'=>'Due','type'=>$item['type']
+    ];
+    $total_pending_count = count($open_items);
 
     // Notifications Count (Pending Verifications + Pending Queries)
     $notif_count_sql = "SELECT 
@@ -203,6 +111,8 @@ try {
         "status" => "success",
         "data" => [
             "totalRevenue" => $total_revenue,
+            "cashReceived" => $total_revenue,
+            "revenueBasis" => "Cash receipts, including deposits and advances",
             "trendRevenue" => round($trend_rev, 1),
             "rentCollected" => $rent_collected,
             "trendRent" => round($trend_rent_collected, 1),

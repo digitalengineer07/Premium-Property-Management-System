@@ -93,3 +93,22 @@ function accounting_cash_in_range($conn, ?string $start, string $end): array {
     }
     return ['cash'=>$cash,'deposits'=>$deposits,'advances'=>$advances];
 }
+
+function accounting_open_items($conn): array {
+    $report = accounting_report($conn);
+    $users=[];
+    $rows=accounting_query($conn,"SELECT id,name,room_no,advance_payment FROM users WHERE status='active'");
+    while($u=mysqli_fetch_assoc($rows)) $users[(int)$u['id']]=$u+['wallet'=>accounting_paise($u['advance_payment'])];
+    usort($report['invoices'],fn($a,$b)=>[$a['month'],$a['id'],$a['type']] <=> [$b['month'],$b['id'],$b['type']]);
+    $open=[];
+    foreach($report['invoices'] as $invoice) {
+        $uid=$invoice['user_id'];
+        if (!isset($users[$uid])) continue;
+        $used=min(max(0,$users[$uid]['wallet']),$invoice['due_paise']);
+        $users[$uid]['wallet']-=$used;
+        $invoice['original_due_paise']=$invoice['due_paise'];
+        $invoice['due_paise']-=$used;
+        if ($invoice['due_paise']>0) $open[]=$invoice+['name'=>$users[$uid]['name'],'room_no'=>$users[$uid]['room_no']];
+    }
+    return $open;
+}
