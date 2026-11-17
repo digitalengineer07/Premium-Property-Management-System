@@ -57,7 +57,7 @@ try {
             echo json_encode($data); break;
         case 'aging':
             $r=accounting_report($conn,$month_filter); $ages=[0,0,0,0,0];
-            foreach($r['invoices'] as $i) {
+            foreach($month_filter ? $r['invoices'] : accounting_open_items($conn) as $i) {
                 if (!isset($r['active_users'][$i['user_id']]) || ($month_filter && $i['month']!==accounting_month($month_filter))) continue;
                 $days=$i['due_date'] ? (int)floor((strtotime(date('Y-m-d'))-strtotime($i['due_date']))/86400) : 0;
                 $bucket=$days<=7 ? 0 : ($days<=30 ? 1 : ($days<=60 ? 2 : ($days<=90 ? 3 : 4)));

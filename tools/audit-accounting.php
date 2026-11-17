@@ -1,5 +1,5 @@
 <?php
-// Read-only audit: intentionally does not load db.php (it performs runtime schema writes).
+// Read-only CLI audit: connects independently of web sessions and application bootstrap.
 if (PHP_SAPI !== 'cli') exit;
 require_once __DIR__ . '/../includes/accounting_store.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
