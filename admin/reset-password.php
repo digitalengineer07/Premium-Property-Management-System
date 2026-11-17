@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (mysqli_stmt_execute($stmt)) {
         echo json_encode(['success' => true, 'message' => 'Password reset successfully!']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)]);
+        echo json_encode(['success' => false, 'message' => 'Unable to reset password.']);
     }
     mysqli_stmt_close($stmt);
 }

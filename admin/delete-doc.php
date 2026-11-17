@@ -8,12 +8,19 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
+    http_response_code(405);
+    exit;
+}
+
+if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+    http_response_code(403);
     die("Security validation failed. Access denied.");
 }
 
-$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
-$type = isset($_GET['type']) ? $_GET['type'] : '';
+$user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
+$type = isset($_POST['type']) ? $_POST['type'] : '';
 
 if ($user_id <= 0 || !in_array($type, ['aadhaar', 'agreement', 'electricity'])) {
     die("Invalid request.");

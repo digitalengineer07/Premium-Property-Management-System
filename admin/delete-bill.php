@@ -8,12 +8,19 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-if (!verifyCsrfToken($_GET['csrf'] ?? '')) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
+    http_response_code(405);
+    exit;
+}
+
+if (!verifyCsrfToken($_POST['csrf'] ?? '')) {
+    http_response_code(403);
     die("<script>alert('Security validation failed. Access denied.'); window.history.back();</script>");
 }
 
-$type = $_GET['type'] ?? 'electricity';
-$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$type = $_POST['type'] ?? 'electricity';
+$id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
 if ($id > 0) {
     require_once __DIR__ . '/../includes/accounting_store.php';

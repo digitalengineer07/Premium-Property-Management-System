@@ -33,12 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_query'])) {
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
-        $fileName = time() . '_' . preg_replace("/[^a-zA-Z0-9.]/", "_", basename($_FILES['attachment']['name']));
-        $targetFile = $uploadDir . $fileName;
-        
-        $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-        $allowedTypes = ['jpg', 'jpeg', 'png'];
-        if (in_array($fileType, $allowedTypes) && $_FILES['attachment']['size'] <= 5 * 1024 * 1024) {
+        require_once __DIR__ . '/../includes/upload_validation.php';
+        $extension = validated_upload_extension($_FILES['attachment']);
+        if ($extension !== null) {
+            $fileName = bin2hex(random_bytes(16)) . '.' . $extension;
+            $targetFile = $uploadDir . $fileName;
             if (move_uploaded_file($_FILES['attachment']['tmp_name'], $targetFile)) {
                 $attachment = 'uploads/queries/' . $fileName;
             }

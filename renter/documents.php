@@ -2,6 +2,7 @@
 // renter/documents.php - Redesigned with Unified SaaS UI
 session_start();
 require_once "../db.php";
+require_once __DIR__ . '/../includes/upload_validation.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login.php");
@@ -28,10 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['aadhar_file'])) {
     $file = $_FILES['aadhar_file'];
     $is_ajax = isset($_POST['ajax_upload']);
     
-    if ($file['error'] === UPLOAD_ERR_OK) {
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'pdf'];
-        if (in_array($ext, $allowed)) {
+    if (verifyCsrfToken($_POST['csrf'] ?? '') && $file['error'] === UPLOAD_ERR_OK) {
+        $ext = validated_upload_extension($file, true);
+        if ($ext !== null) {
             $upload_dir = '../uploads/documents/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
             
@@ -504,6 +504,7 @@ $pending_count = 3 - $verified_count;
         let formData = new FormData();
         formData.append('aadhar_file', input.files[0]);
         formData.append('ajax_upload', '1');
+        formData.append('csrf', <?php echo json_encode(getCsrfToken()); ?>);
         
         let btn = document.getElementById('choose-file-btn');
         let originalText = btn.innerHTML;

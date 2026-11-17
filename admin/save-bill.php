@@ -122,7 +122,7 @@ try {
 } catch (Throwable $failure) {
     mysqli_rollback($conn);
     http_response_code(400);
-    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$failure->getMessage()]);
+    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$failure instanceof InvalidArgumentException ? $failure->getMessage() : 'Unable to validate invoice.']);
     exit;
 }
 
@@ -224,7 +224,7 @@ $stmt = mysqli_prepare($conn,
 );
 
 if (!$stmt) {
-    echo json_encode(['success' => false, 'message' => 'Database prepare error: ' . mysqli_error($conn)]);
+    echo json_encode(['success' => false, 'message' => 'Unable to prepare invoice.']);
     exit;
 }
 
@@ -301,11 +301,11 @@ if (mysqli_stmt_execute($stmt)) {
     exit;
 } else {
     mysqli_rollback($conn);
-    $error_msg = mysqli_stmt_error($stmt) ?: mysqli_error($conn);
+    error_log('Bill save failed: ' . (mysqli_stmt_error($stmt) ?: mysqli_error($conn)));
     if (ob_get_length()) ob_clean();
     echo json_encode([
         'success' => false,
-        'message' => 'Database error: ' . $error_msg
+        'message' => 'Unable to save invoice.'
     ]);
     exit;
 }

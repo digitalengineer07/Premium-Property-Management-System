@@ -17,3 +17,27 @@ Scope covers local MariaDB metadata and application source. Access was read-only
 | Server monitoring | Local general query logging is off. Centralized database audit logs, alerts, storage encryption and the production patch level were not verified. |
 
 Prioritize the database account and network settings first. Then close the identified request and error-handling gaps and verify host controls against the actual deployment.
+
+## Follow-up after application hardening
+
+Local Apache returned 403 for anonymous private document requests, direct database credential access and a nested Git backup path. The resident profile API returned 401 without authentication. These checks establish anonymous denial for the sampled routes. Authenticated cross-account access and live hosting remain unverified.
+
+Source review confirmed the admin move-out action now checks a CSRF token, the document proxy compares exact stored paths, and the central API authentication helper ignores query-string tokens. The changed mobile source uses Authorization headers for the affected requests. Installed mobile builds and existing access log retention were not verified.
+
+| Remaining finding | Evidence and impact |
+| --- | --- |
+| High: local database access | The local root connection still succeeds without a supplied password. MariaDB reports a blank bind address, TLS disabled and binary logging off. Firewall reachability and the production settings were not tested. |
+| High before a shared launch: admin isolation | Admins still operate on the same renter dataset. Keep unrelated landlords out until tenant and property ownership are enforced across routes, reports and files. |
+| Medium: deletions via GET | `admin/delete-bill.php` and `admin/delete-doc.php` mutate state via GET and put session CSRF tokens in the URL. Use POST forms and validate tokens in the body. |
+| Medium: upload validation varies | Resident query and document uploads check filename extensions. Apply consistent server-side MIME checks, size limits and safe file handling across upload routes. |
+| Medium: database error disclosure remains | `admin/save-bill.php` and `admin/reset-password.php` still have paths that return raw database errors. Keep diagnostic details in server logs and send safe client messages. |
+| Needs runtime verification: login throttling | No throttling was identified in the reviewed web and API login handlers. Check proxy and host limits before treating the login routes as protected against repeated attempts. |
+| Needs deployment verification: API CORS | Several API routes allow any browser origin. Check the intended clients and configured headers before narrowing the policy. Wildcard CORS alone does not bypass bearer authentication. |
+
+All eight ledger protection triggers remain installed. The follow-up used read-only metadata checks and anonymous requests. It did not exercise destructive routes, perform a full authenticated authorization matrix or verify production controls.
+
+## Application fixes after the follow-up
+
+Bill and document deletion now require POST and a session CSRF token in the submitted form. Resident identity and query uploads use server-side MIME detection, a 5 MiB limit and an extension selected from the detected MIME type. The identity upload also requires a CSRF token. Apache denies common executable extensions under uploads. Bill generation and password reset now send generic database failure messages.
+
+PHP syntax and the accounting unit checks passed. A full authenticated upload/deletion test and production verification remain open. Host-wide MariaDB changes and property-level isolation remain separate rollout work.
