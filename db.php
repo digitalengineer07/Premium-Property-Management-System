@@ -49,7 +49,7 @@ if (!function_exists('e')) {
 
 if (!function_exists('generate_payment_hash')) {
     function generate_payment_hash($user_id, $amount, $sys_tx_id) {
-        if (!defined('PAYMENT_SECRET_KEY')) return '';
+        if (!defined('PAYMENT_SECRET_KEY') || PAYMENT_SECRET_KEY === '') throw new RuntimeException('Configure the receipt signing secret before recording payments.');
         $formatted_amount = number_format((float)$amount, 2, '.', '');
         return hash_hmac('sha256', $user_id . '_' . $formatted_amount . '_' . $sys_tx_id, PAYMENT_SECRET_KEY);
     }

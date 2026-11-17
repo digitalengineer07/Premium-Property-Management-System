@@ -32,6 +32,15 @@ try {
     $external = trim($_POST['transaction_id'] ?? '');
     if ($external === '' && in_array($mode,['Cash','Cash/Offline','Offline'],true)) $external = $ref;
     $posted = accounting_specific_payment($conn,$user,$type,$id,$amount,$mode,$external,$ref,$_POST['payment_date'] ?? null,$_POST['payment_time'] ?? null);
+    if ($posted) {
+        $resident = mysqli_fetch_assoc(accounting_query($conn,"SELECT name,email FROM users WHERE id=$user"));
+        if (!empty($resident['email'])) {
+            try {
+                require_once __DIR__ . '/utils_mailer.php';
+                sendEmail($resident['email'], 'Payment Receipt - '.HOUSE_NAME, 'Payment of ₹'.htmlspecialchars((string)$amount).' recorded. Receipt reference: '.htmlspecialchars($ref));
+            } catch (Throwable $mailFailure) { error_log('Receipt delivery failed: '.$mailFailure->getMessage()); }
+        }
+    }
     payment_response(true,$posted ? 'Payment recorded. Balance updated from the ledger.' : 'This receipt was already recorded. No duplicate payment was added.',$ajax);
 } catch (Throwable $failure) {
     error_log($failure->getMessage());

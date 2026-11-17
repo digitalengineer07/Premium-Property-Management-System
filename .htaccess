@@ -6,6 +6,9 @@ DirectoryIndex index.php
 
 # Apache 2.4+ - Modern Security
 <IfModule mod_authz_core.c>
+    <FilesMatch "^(db|config|.*credentials)\.php$">
+        Require all denied
+    </FilesMatch>
     # Prevent access to sensitive files
     <FilesMatch "^\.|\.(txt|sql|log|ini|sh|bak|swp|dist|exe|bin|zip)$">
         Require all denied
