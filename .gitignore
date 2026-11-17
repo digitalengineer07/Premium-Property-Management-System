@@ -6,6 +6,7 @@ secret*.php
 db.php
 
 # Logs and databases
+.accounting-test-db/
 *.log
 *.sql
 *.sqlite

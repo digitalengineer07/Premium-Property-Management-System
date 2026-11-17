@@ -86,43 +86,13 @@ if (empty(trim($transaction_id))) {
     $transaction_id = trim($transaction_id);
 }
 
-if ($type === 'advance') {
-    $vhash = generate_payment_hash($user_id, $paid_amount, $sys_tx_id);
-    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "idsdsssss", $user_id, $paid_amount, $payment_mode, $paid_amount, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
-    mysqli_stmt_execute($stmt);
-    
-    mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $paid_amount WHERE id=$user_id");
-} else {
-    // Specific bill payment
-    $excess = 0;
-    $amount_to_apply = $paid_amount;
-    
-    if ($paid_amount > $remaining_amount) {
-        $amount_to_apply = $remaining_amount;
-        $excess = $paid_amount - $remaining_amount;
-    }
-    
-    // Insert core payment
-    if ($amount_to_apply > 0) {
-        $vhash = generate_payment_hash($user_id, $amount_to_apply, $sys_tx_id);
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisdsdsssss", $user_id, $type, $id, $bill['month'], $bill_amount, $payment_mode, $amount_to_apply, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
-        mysqli_stmt_execute($stmt);
-        
-        // Use central engine to recalculate status mathematically
-        recalculate_bill_status($conn, $type, $id);
-    }
-    
-    // Deposit any excess into advance_payment automatically
-    if ($excess > 0) {
-        $vhash = generate_payment_hash($user_id, $excess, $sys_tx_id);
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, payment_time, sys_tx_id, transaction_id, verification_hash) VALUES (?, 'advance', 0, 'Advance', ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "idsdsssss", $user_id, $excess, $payment_mode, $excess, $payment_date, $payment_time, $sys_tx_id, $transaction_id, $vhash);
-        mysqli_stmt_execute($stmt);
-        
-        mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$user_id");
-    }
+try {
+    accounting_specific_payment($conn, $user_id, $type, $id, $_POST['paid_amount'] ?? $remaining_amount, $payment_mode, $transaction_id, $sys_tx_id, $payment_date, $payment_time);
+} catch (Throwable $e) {
+    error_log($e->getMessage());
+    $_SESSION['error'] = 'Payment was not recorded. Check the amount and try again.';
+    header('Location: manage-payments.php');
+    exit;
 }
 
 // Send Email Receipt

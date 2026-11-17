@@ -60,7 +60,7 @@ if (isset($_POST['save'])) {
         $adv = (float)$rowAdv['advance_payment'];
         if ($adv > 0) {
             // Temporarily zero the advance so the allocator can redistribute it without doubling
-            mysqli_query($conn, "UPDATE users SET advance_payment = 0 WHERE id = $user_id");
+            // Wallet balance is debited atomically by the allocator.
             require_once "allocate_payment.php";
             $sys_id = 'SYS_ADJ_' . strtoupper(bin2hex(random_bytes(6)));
             allocate_bulk_payment($conn, $user_id, $adv, 'Advance Credit', $sys_id, $sys_id, null, true);

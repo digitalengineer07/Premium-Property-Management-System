@@ -59,77 +59,19 @@ try {
         exit;
     }
 
-    $req_month = isset($_GET['month']) ? mysqli_real_escape_string($conn, trim(urldecode($_GET['month']))) : null;
-    
-    if ($req_month) {
-        // Month-specific mode: show generated bills for that month and how much was paid
-        $r1 = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) as total, SUM(CASE WHEN status='Paid' THEN rent_amount ELSE 0 END) as paid FROM rent WHERE user_id = $user_id AND month = '$req_month'");
-        $rent_data = mysqli_fetch_assoc($r1);
-        $pure_rent_due = (float)$rent_data['total'];
-        
-        $r2 = mysqli_query($conn, "SELECT 
-            IFNULL(SUM(amount),0) as elec_total, 
-            IFNULL(SUM(rent_amount),0) as rent_total,
-            IFNULL(SUM(maintenance),0) as maint_total,
-            IFNULL(SUM(dues),0) as other_dues_total,
-            SUM(CASE WHEN status='Paid' THEN total_amount ELSE 0 END) as paid
-            FROM electricity WHERE user_id = $user_id AND month = '$req_month'");
-        $bill = mysqli_fetch_assoc($r2);
-        
-        $elec_due = (float)$bill['elec_total'];
-        $maintenance_due = (float)$bill['maint_total'];
-        $rent_due = $pure_rent_due + (float)$bill['rent_total'];
-        $other_dues = (float)$bill['other_dues_total'];
-        
-        // Paid amount for the month
-        $p_elec = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN electricity e ON p.bill_id = e.id WHERE p.bill_type='electricity' AND e.month='$req_month' AND p.user_id = $user_id"))['total'];
-        $p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.month='$req_month' AND p.user_id = $user_id"))['total'];
-        
-        $total_paid_this_month = (float)$rent_data['paid'] + (float)$bill['paid'] + $p_elec + $p_rent;
-        $total_gross_due = $elec_due + $maintenance_due + $rent_due + $other_dues;
-        $total_net_due = max(0, $total_gross_due - $total_paid_this_month); // This represents the remaining due for this specific month
-    } else {
-        // Global dues mode
-        $r1 = mysqli_query($conn, "SELECT IFNULL(SUM(rent_amount),0) as total FROM rent WHERE user_id = $user_id AND status != 'Paid'");
-        $pure_rent_due = (float)mysqli_fetch_assoc($r1)['total'];
-
-        $stmt = mysqli_prepare($conn, "SELECT 
-            IFNULL(SUM(GREATEST(0, e.amount - IFNULL(p.total_paid, 0))), 0) as elec_total, 
-            IFNULL(SUM(GREATEST(0, (e.rent_amount) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount))), 0) as rent_total,
-            IFNULL(SUM(GREATEST(0, (e.maintenance) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount - e.rent_amount))), 0) as maint_total,
-            IFNULL(SUM(GREATEST(0, (e.dues) - GREATEST(0, IFNULL(p.total_paid, 0) - e.amount - e.rent_amount - e.maintenance))), 0) as other_dues_total
-        FROM electricity e 
-        LEFT JOIN (
-            SELECT bill_id, SUM(paid_amount - COALESCE(adjustment_amount, 0)) as total_paid 
-            FROM payments 
-            WHERE bill_type IN ('electricity', 'elec_rent') 
-            GROUP BY bill_id
-        ) p ON p.bill_id = e.id
-        WHERE e.user_id = $user_id AND e.status IN ('Due', 'Partial')");
-        mysqli_stmt_execute($stmt);
-        $bill = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
-
-        $elec_due = (float)$bill['elec_total'];
-        $maintenance_due = (float)$bill['maint_total'];
-        $rent_due = $pure_rent_due + (float)$bill['rent_total'];
-        $other_dues = (float)$bill['other_dues_total'];
-
-        $p_rent = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(p.paid_amount),0) AS total FROM payments p JOIN rent r ON p.bill_id = r.id WHERE p.bill_type='rent' AND r.status='Partial' AND p.user_id = $user_id"))['total'];
-        
-        $total_paid_this_month = $p_rent;
-        $total_gross_due = $elec_due + $maintenance_due + $rent_due + $other_dues;
-        $total_net_due = max(0, $total_gross_due - $p_rent - (float)$user['pending_adjustment']);
-    }
-
-    $unbilled_adj = (float)$user['pending_adjustment'];
-
-    // 5. Advance Payment calculation
-
-    // Advance Payment calculation
-    $adv_paid_res = mysqli_fetch_assoc(mysqli_query($conn, "SELECT IFNULL(SUM(paid_amount), 0) as adv_paid FROM payments WHERE user_id = $user_id AND bill_type = 'advance'"));
-    $adv_paid = (float)$adv_paid_res['adv_paid'];
-    $advance_due = max(0, (float)$user['advance_payment'] - $adv_paid);
-    $total_advance_deposit = (float)$user['advance_payment'];
+    require_once __DIR__ . '/../../includes/accounting_store.php';
+    $req_month = !empty($_GET['month']) ? trim($_GET['month']) : null;
+    $balance = accounting_balances($conn, $user_id, $req_month);
+    $elec_due = $balance['components']['amount'] / 100;
+    $rent_due = $balance['components']['rent_amount'] / 100;
+    $maintenance_due = $balance['components']['maintenance'] / 100;
+    $other_dues = ($balance['components']['dues'] + $balance['components']['extra_charges']) / 100;
+    $total_paid_this_month = $balance['paid_paise'] / 100;
+    $total_gross_due = $balance['gross_paise'] / 100;
+    $total_net_due = $balance['net_paise'] / 100;
+    $unbilled_adj = 0; // Historical deficit annotations are not payment credits.
+    $advance_due = 0; // A wallet balance is an asset of the renter, not an amount owed.
+    $total_advance_deposit = $balance['credit_paise'] / 100;
 
     // 5. Recent Payment History (Unified)
     $history = [];
@@ -137,7 +79,7 @@ try {
         SELECT id, amount, 'UPI' as mode, DATE(created_at) as payment_date, status, bill_type as type, transaction_id as ref
         FROM payment_notifications WHERE user_id = $user_id
         UNION ALL
-        SELECT id, total_amount as amount, payment_mode as mode, payment_date, 'Success' as status, bill_type as type, 'SYSTEM' as ref
+        SELECT id, paid_amount as amount, payment_mode as mode, payment_date, 'Success' as status, bill_type as type, 'SYSTEM' as ref
         FROM payments WHERE user_id = $user_id
         ORDER BY payment_date DESC LIMIT 10
     ";

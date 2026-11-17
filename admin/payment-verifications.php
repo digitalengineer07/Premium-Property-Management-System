@@ -22,7 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
         $action = $_POST['action'];
         $admin_note = e($conn, $_POST['admin_note'] ?? '');
         
-        $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id");
+        require_once __DIR__ . '/allocate_payment.php';
+        try {
+        accounting_query($conn, 'START TRANSACTION');
+        $q = mysqli_query($conn, "SELECT pn.*, u.email as user_email, u.name as user_name FROM payment_notifications pn JOIN users u ON pn.user_id = u.id WHERE pn.id = $id FOR UPDATE");
         $notif = mysqli_fetch_assoc($q);
         
         if ($notif && $notif['status'] == 'Pending') {
@@ -49,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     $p_bid = (int)$notif['bill_id'];
                     $p_amt = (float)$notif['amount'];
                     $p_pmode = !empty($notif['payment_method']) ? $notif['payment_method'] : 'UPI';
-                    $p_tx = mysqli_real_escape_string($conn, $notif['transaction_id']);
-                    $p_sys_tx = !empty($notif['sys_tx_id']) ? mysqli_real_escape_string($conn, $notif['sys_tx_id']) : '';
+                    $p_tx = $notif['transaction_id'];
+                    $p_sys_tx = !empty($notif['sys_tx_id']) ? $notif['sys_tx_id'] : 'NOTIF-' . $id;
                     
                     // 1. Handle Bulk/Total/Monthly Payments
                     if ($p_btype == 'total' || $p_btype == 'monthly' || $p_btype == 'general' || $p_btype == 'advance') {
@@ -87,60 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     }
                     // 2. Handle Specific Bill Payments
                     else {
-                        // Check if payment already recorded (Legacy / Duplication fallback)
-                        if (!empty($p_sys_tx)) {
-                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE sys_tx_id='$p_sys_tx'");
-                        } else {
-                            $ck_p = mysqli_query($conn, "SELECT id FROM payments WHERE user_id=$p_uid AND transaction_id='$p_tx' AND '$p_tx' != ''");
-                        }
-                        
-                        if ($ck_p && mysqli_num_rows($ck_p) == 0) {
-                            $p_month = date('F Y');
-                            $bill_amount = $p_amt;
-                            $remaining_amount = $p_amt;
-                            
-                            if ($p_bid > 0) {
-                                if ($p_btype == 'rent') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, rent_amount FROM rent WHERE id=$p_bid"));
-                                    if ($mr) { $p_month = $mr['month']; $bill_amount = (float)$mr['rent_amount']; }
-                                } elseif ($p_btype == 'electricity' || $p_btype == 'elec_rent') {
-                                    $mr = mysqli_fetch_assoc(mysqli_query($conn, "SELECT month, amount, (rent_amount + maintenance + dues + extra_charges) as rent_part FROM electricity WHERE id=$p_bid"));
-                                    if ($mr) {
-                                        $p_month = $mr['month'];
-                                        $bill_amount = ($p_btype == 'electricity') ? (float)$mr['amount'] : (float)$mr['rent_part'];
-                                    }
-                                }
-                                
-                                $btype_cond = ($p_btype === 'electricity' || $p_btype === 'elec_rent') ? "bill_type IN ('electricity', 'elec_rent')" : "bill_type='$p_btype'";
-                                $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as total_paid FROM payments WHERE $btype_cond AND bill_id=$p_bid");
-                                $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
-                                $remaining_amount = max(0, $bill_amount - $already_paid);
-                            }
-                            
-                            $excess = 0;
-                            $amount_to_apply = $p_amt;
-                            
-                            if ($p_amt > $remaining_amount) {
-                                $amount_to_apply = $remaining_amount;
-                                $excess = $p_amt - $remaining_amount;
-                            }
-                            
-                            // Insert core payment if any due is left
-                            if ($amount_to_apply > 0) {
-                                $vhash_core = generate_payment_hash($p_uid, $amount_to_apply, $p_sys_tx);
-                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, '$p_btype', $p_bid, '$p_month', $bill_amount, '$p_pmode', $amount_to_apply, CURDATE(), '$p_tx', '$p_sys_tx', '$vhash_core')");
-                                recalculate_bill_status($conn, $p_btype, $p_bid);
-                            }
-                            
-                            // Route overpayments directly to the wallet safely
-                            if ($excess > 0) {
-                                $sys_adv_tx = 'SYS_ADV_' . strtoupper(bin2hex(random_bytes(6)));
-                                $vhash_exc = generate_payment_hash($p_uid, $excess, $sys_adv_tx);
-                                mysqli_query($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, payment_mode, paid_amount, payment_date, transaction_id, sys_tx_id, verification_hash) VALUES ($p_uid, 'advance', 0, 'Advance', $excess, '$p_pmode', $excess, CURDATE(), '$p_tx', '$sys_adv_tx', '$vhash_exc')");
-                                mysqli_query($conn, "UPDATE users SET advance_payment = advance_payment + $excess WHERE id=$p_uid");
-                            }
-                        }
+                        accounting_specific_payment($conn, $p_uid, $p_btype, $p_bid, $notif['amount'], $p_pmode, $notif['transaction_id'], $p_sys_tx);
                     }
+                    accounting_query($conn, 'COMMIT');
 
                     $safe_tx = htmlspecialchars($notif['transaction_id']);
                     $success = "Payment #{$safe_tx} approved successfully.";
@@ -176,6 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'], $_POST['id']
                     $error = "Failed to reject payment: " . mysqli_error($conn);
                 }
             }
+        }
+        accounting_query($conn, 'COMMIT');
+        } catch (Throwable $failure) {
+            mysqli_rollback($conn);
+            error_log($failure->getMessage());
+            $error = 'Payment approval failed. No accounting changes were saved.';
+            $success = '';
         }
     }
 }
