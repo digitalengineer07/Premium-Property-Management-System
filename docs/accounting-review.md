@@ -1,47 +1,81 @@
 # Accounting repair and rollout
 
-This change strengthens the existing open-invoice ledger. It is not a completed double-entry accounting package, a CA certification, or a multi-landlord release.
+## Local rollout — 18 November 2026
+
+The changes were tested on a restored database and applied to the local `renter_system` database. No remote hosting deployment was performed. The existing theme and page layouts are retained.
+
+A fresh private backup is `.rollout-backups/renter_system_20261118_before_schema.sql`. Do not publish or commit it. Before/after control totals agree: 10 residents, deposit profile total INR 50,000.00, wallet total INR 0.00, 53 combined invoices totaling INR 625,644.00, and 51 payment rows with `total_amount` sum INR 493,340.00. The payment control sum verifies preservation; it is not a cash-received report (which uses `paid_amount` and excludes internal transfers).
+
+Four incorrect Paid labels on invoices 25, 44, 50 and 62 were changed to Partial from the receipt ledger, with an append-only audit event for each. A second reconciliation run found no changes. Historical invoice and payment amounts were preserved.
 
 ## Rules implemented
 
-- Calculate money in integer paise; serialize decimal values at the database boundary. Do not forgive a one-paise shortfall.
-- Deposit-only joining payments select arrears billing. A deposit plus the first rent creates a paid joining-rent invoice and selects advance billing. Security deposits do not pay utility invoices.
-- Electricity and maintenance belong to the consumption month. Advance rent belongs to the next calendar month; arrears rent belongs to the consumption month. New combined invoices record `rent_month` separately.
-- Outstanding invoices remain open across any number of months. New invoices must not rebill their balances as `dues`.
-- Bulk receipts settle oldest invoices first, with excess retained as wallet credit. Invoice components settle electricity, rent, maintenance, extra charges, then historical opening dues.
-- Wallet deduction, payment postings and status updates commit together or roll back together. Replaying a bulk receipt reference does not post it again.
-- Resident dashboard, bills, payments and mobile balance totals, and admin outstanding totals use the shared ledger calculation. Negative deficit annotations are not receipts. Month-specific balances subtract each posting once.
-- Profile editing cannot silently replace wallet balances. Residents with financial history cannot be deleted; invoices with payment history cannot be deleted.
+- Money uses integer paise and decimal storage. A one-paise shortfall remains due.
+- Under the requested joining rule, one month's rent pays the security deposit and selects arrears; two months pay the deposit plus a real, paid joining-rent invoice and select advance. Deposits stay separate from rent/utilities. This assumes a deposit equal to one month's rent; other contractual arrangements need explicit configuration.
+- Zero received leaves the mode unresolved until a joining payment is verified. Ambiguous amounts are rejected rather than guessed. Billing mode belongs to the account, never a hardcoded flat number or later payment delay.
+- For January consumption, advance billing includes February rent with January electricity/maintenance; arrears includes January rent and utilities. Rent periods are stored separately.
+- Electricity is (current reading minus previous reading) times unit rate. Validation checks meter continuity, month order, duplicate rent periods and nonnegative charges.
+- Outstanding invoices remain open for any number of months; new invoices cannot rebill those balances as dues.
+- Bulk receipts settle oldest invoices first; components settle electricity, rent, maintenance, extra charges, then historical dues. Excess stays as wallet credit. This is the application's documented allocation policy, not a statutory allocation rule.
+- Posting, wallet movement and status changes commit atomically. Repeated submissions and reused bank references cannot create duplicate receipts.
+- QR submissions require admin verification. Scanning a QR is not bank settlement confirmation.
+- Reversals append correcting entries and a reason; originals are retained. Already-consumed wallet credit needs allocation reconciliation before reversal.
+- Only the latest unpaid invoice without payment history can be edited. Financial-history deletion, direct wallet replacement and the destructive legacy database repair are blocked.
 
-## Confirmed causes in the previous code
+## Other corrections
 
-1. Mobile monthly reporting added settled invoice totals to their payments, subtracting payments twice. Global reporting subtracted negative adjustments and omitted extra charges.
-2. Bills/payments pages summed multiple rent invoices but subtracted payments for only one grouped invoice. They also counted electricity payments against rent a second time.
-3. Wallet credit was set to zero before allocation, outside a transaction. Partial database failure could lose money or leave a partially posted receipt.
-4. Payment approval was marked approved before its financial writes were guaranteed. Specific-bill approval compared total combined payments with one component.
-5. One-paise payments/credits were discarded by `0.01` thresholds. Integer database columns could truncate fractional rupees.
-6. Joining rent was recorded against bill ID zero, with no matching invoice; rent periods were not persisted. Invalid joining-payment validation did not stop resident creation.
-7. Profile edits changed wallet amounts without receipts. Resident deletion purged financial history.
+Shared calculations drive resident balances, outstanding lists, principal dashboard totals and financial reports. Fixes address double-subtracted payments, incomplete multi-month balances, lost wallet credits and repeated carried balances in new invoices.
 
-## Deployment order
+Reports distinguish cash received, invoice components paid, deposits and advances. Invented expenses, profit, growth and activity were removed. Supplier costs are not recorded, so profit is not fabricated.
 
-1. Back up the real database and files. Run the audit against a restored copy first. The local production database was unavailable during this work; no real balances were altered or reconciled.
-2. Run `php migrations/20261117_accounting.php` against the intended database. This adds billing mode and rent period fields and converts integer money columns to decimals. The script uses the application's database configuration; inspect that configuration first.
-3. In Edit Resident, select advance or arrears for each existing resident based on their agreement and joining receipts. The migration deliberately does not guess. New invoices are blocked until this is selected.
-4. Run `php tools/audit-accounting.php`. Set `AUDIT_DB_HOST`, `AUDIT_DB_PORT`, `AUDIT_DB_NAME`, `AUDIT_DB_USER`, and `AUDIT_DB_PASSWORD` as needed. This tool runs SELECTs in a read-only transaction and reports IDs, not personal details. Exit 2 means discrepancies need review.
-5. Reconcile carried-forward dues, orphan joining receipts, stale statuses, old wallet transfers and manual adjustments against source receipts. Do not delete payments or zero dues automatically. Historical invoices and amounts are deliberately left untouched.
-6. Test the existing desktop/mobile payment flows on the restored copy before production rollout.
+API access now uses opaque server-validated tokens, expiry, role checks and logout revocation. Password changes invalidate tokens. Existing mobile users must sign in again; old unsigned tokens are rejected. Payment routes check ownership and authorization. Private configuration/environment variables supply database credentials and the signing secret. Preserve the existing signing secret for historical receipt verification.
 
-## Validation
+## Historical records still requiring review
 
-`php tests/accounting_test.php` runs database-independent rules. `php tests/accounting_database_test.php` uses only temporary tables on a dedicated localhost MariaDB instance on port 3308. It must never be pointed at production. Tests cover joining splits, period assignment, three-month balances, partial payments, one-paise allocations, receipt replay, wallet conservation, rollback and bill ownership.
+The audit reports 15 remaining flags:
 
-## Remaining release blockers
+- Ten existing accounts lack reliable recorded billing modes. Review agreements/joining receipts and set the mode in Edit Resident before generating bills. Automatic future onboarding cannot reconstruct missing historical facts.
+- Five invoices contain carried dues: 44, 57, 64, 76 and 77. Compare against original invoices and receipts to determine duplication. No automatic write-off or deletion was performed.
 
-- The application still has one shared property and unscoped admin access. Multi-landlord use needs landlord/property/tenancy ownership throughout queries, uploads, payment destinations, reports, authentication and authorization. It is not enabled by these changes.
-- Mobile API authentication currently trusts unsigned base64 identity data, and some routes only test that a header exists. Replace this with server-validated expiring tokens across every API before exposing the app to other landlords. Embedded production credentials also need rotation and environment-based configuration.
-- Legacy standalone bill creation and invoice-edit routes do not yet use the complete new billing validator. Restrict these during rollout; use Bill Generation for combined monthly invoices. A complete correction/reversal workflow, immutable audit records, period closing, bank reconciliation and deposit refunds remain to be built.
-- Other historical reports still use stored status flags and bespoke cash/revenue formulas. Cash received, earned rent, refundable deposits and unearned advances must be reported separately before calling this a full accounting system.
-- The QR workflow records a renter's claim of payment; admin approval remains necessary. Scanning a QR is not bank confirmation.
+The private audit is `.rollout-backups/accounting-audit-20261118.json`. Audit exit 2 means review flags, not migration failure. Balances containing these historical amounts remain subject to reconciliation.
 
-The existing theme and layouts are retained. The only added form control is the rent billing mode within the existing Edit Resident financial section; the wallet field is now read-only.
+## Verification
+
+- 62 total unit/database checks passed, including 18 pure accounting checks: `php tests/accounting_database_test.php`. It selects `accounting_test` on localhost port 3306 (`ACCOUNTING_TEST_PORT` overrides) and uses temporary tables. Run on a development/test server only.
+- 57 HTTP checks passed on `renter_rollout_test`: web login/pages, reports, both billing modes, duplicate invoice rejection, partial receipts, replay protection, resident balance agreement, token forgery, role checks and logout.
+- 165 PHP files passed syntax checks; whitespace validation passed.
+- Status reconciliation was tested on the clone first and verified idempotent.
+
+The HTTP suite requires its synthetic fixture and loopback PHP server. `tests/prepare_rollout_fixture.php` is restricted to `renter_rollout_test`. Never restore this synthetic database over real accounts. These are functional tests, not visual browser or bank-integration tests.
+
+## Deployment to another environment
+
+1. Stop financial writes during a maintenance window. Back up the current code and database including triggers. Restore and verify a separate staging copy first.
+2. Configure `RMS_ENV=production`, `RMS_DB_HOST`, `RMS_DB_PORT`, `RMS_DB_NAME`, `RMS_DB_USER`, `RMS_DB_PASSWORD`, and `RMS_PAYMENT_SECRET`, or use the private variables in `db_credentials.example.php`. Keep the existing signing secret; rotate exposed database credentials separately. HTTP Host headers never select the database environment.
+3. Deploy matching code and run the explicit migration while writes remain stopped:
+
+   ```text
+   php migrations/20261117_accounting.php --database=TARGET_NAME --backup=ABSOLUTE_BACKUP_PATH
+   ```
+
+   Verify the printed target and financial control totals. The migration adds fields, decimal types, token/receipt/audit tables and append-only triggers. MariaDB DDL is not fully transactional; inspect failures before resuming traffic. Rerun only after resolving the cause.
+4. Set `AUDIT_DB_HOST`, `AUDIT_DB_PORT`, `AUDIT_DB_NAME`, `AUDIT_DB_USER`, and `AUDIT_DB_PASSWORD` for the same target; run `php tools/audit-accounting.php`. Preview and apply derived status corrections only:
+
+   ```text
+   php tools/reconcile-statuses.php --database=TARGET_NAME
+   php tools/reconcile-statuses.php --database=TARGET_NAME --apply --backup=ABSOLUTE_BACKUP_PATH
+   ```
+
+5. Resolve missing historic modes from evidence and reconcile carried dues. On staging, verify login, invoice generation, partial payment, repeated submission, reversal, downloads, reports and mobile re-login.
+6. Verify web-server restrictions on credentials, includes, tests, tools, migrations and backups. Apache restrictions are included; other web servers need equivalent rules. Use HTTPS and appropriate database privileges. Keep development tooling outside public deployment where practical.
+7. Resume writes after checks pass; monitor errors and rerun the audit after the first billing cycle.
+
+## Recovery
+
+Before new postings exist, restore matching pre-rollout code and database together during maintenance. After new receipts exist, restoring an older backup loses those receipts: stop writes, take another backup and reconcile/export new postings before any restore. Do not disable append-only triggers or use the retired database-sync repair to force a rollback.
+
+## Release limits
+
+This is a strengthened rental invoice/receipt ledger, not CA certification or a complete double-entry accounting package. Deposit refunds, period closing, bank reconciliation and a general journal remain outside this implementation.
+
+Multi-landlord release is not enabled. Admins still share the current property's data. Landlord/property/tenancy ownership must be enforced across queries, files, payment destinations and reports before unrelated landlords can use it. Separate admin logins alone do not provide data isolation.
