@@ -43,7 +43,7 @@ export default function ResidentDashboardScreen({ route, navigation }) {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await axios.get(`${API_URL}?token=${encodeURIComponent(token)}&month=${encodeURIComponent(selectedMonth)}`, {
+      const response = await axios.get(`${API_URL}?month=${encodeURIComponent(selectedMonth)}`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Cache-Control': 'no-cache' }
       });
       if (response.data.status === 'success') {

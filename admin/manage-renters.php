@@ -600,7 +600,11 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             const res = await fetch('ajax_move_out.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `user_id=${id}&move_out_date=${encodeURIComponent(moveDate)}`
+                body: new URLSearchParams({
+                    user_id: id,
+                    move_out_date: moveDate,
+                    csrf_token: <?php echo json_encode(getCsrfToken()); ?>
+                })
             });
             const data = await res.json();
             if (data.success) {

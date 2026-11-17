@@ -11,6 +11,11 @@ if (!isset($_SESSION['admin'])) {
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Invalid request token.']);
+        exit;
+    }
     $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
     $move_out_date = isset($_POST['move_out_date']) ? mysqli_real_escape_string($conn, $_POST['move_out_date']) : '';
 
@@ -44,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         echo json_encode(['success' => true, 'message' => 'Renter successfully moved out. A thank you email has been sent to them.']);
     } else {
-        echo json_encode(['success' => false, 'error' => 'Database update failed: ' . mysqli_error($conn)]);
+        error_log('Move-out update failed: ' . mysqli_stmt_error($stmt));
+        echo json_encode(['success' => false, 'error' => 'Unable to update renter.']);
     }
     mysqli_stmt_close($stmt);
 } else {

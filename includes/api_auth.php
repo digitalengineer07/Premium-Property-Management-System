@@ -36,8 +36,9 @@ function api_request_token(): string {
         foreach (getallheaders() as $key=>$value) if (strcasecmp($key, 'Authorization') === 0) $header = $value;
     }
     if (preg_match('/^Bearer\s+(\S+)$/i', trim($header), $match)) return $match[1];
-    // Compatibility for existing native clients; these are still server-validated tokens.
-    return trim((string)($_GET['token'] ?? $_POST['token'] ?? ''));
+    // Older uploads can supply a token in the request body. URLs never authenticate.
+    $token = $_POST['token'] ?? '';
+    return is_string($token) ? trim($token) : '';
 }
 
 function api_require_auth($conn, string $role): array {

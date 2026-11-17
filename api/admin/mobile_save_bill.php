@@ -124,7 +124,8 @@ try {
 } catch (Throwable $failure) {
     mysqli_rollback($conn);
     http_response_code(400);
-    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$failure->getMessage()]);
+    $message = $failure instanceof InvalidArgumentException ? $failure->getMessage() : 'Unable to validate invoice.';
+    echo json_encode(['success'=>false, 'status'=>'error', 'message'=>$message]);
     exit;
 }
 
@@ -207,8 +208,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'status' => 'error',
-        'message' => 'Failed to save bill',
-        'error' => $e->getMessage()
+        'message' => 'Failed to save bill'
     ]);
 }
 ?>

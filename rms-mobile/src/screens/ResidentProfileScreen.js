@@ -18,7 +18,7 @@ export default function ResidentProfileScreen({ route, navigation }) {
 
   const fetchProfileData = async () => {
     try {
-      const response = await axios.get(`${API_URL}?token=${encodeURIComponent(token)}`, {
+      const response = await axios.get(API_URL, {
         headers: { 'Authorization': `Bearer ${token}`, 'Cache-Control': 'no-cache' }
       });
       if (response.data.status === 'success') {

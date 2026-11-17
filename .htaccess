@@ -1,6 +1,12 @@
 # Disable directory browsing
 Options -Indexes
 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule "(^|/)\.(git|git_backup)(/|$)" - [F,END,NC]
+    RewriteRule "^uploads/(documents|aadhaar|agreements|bills|queries)/([^/]+)$" "view_document.php?folder=$1&file=$2" [B,END,NC]
+</IfModule>
+
 # Set default index file
 DirectoryIndex index.php
 

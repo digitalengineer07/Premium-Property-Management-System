@@ -29,7 +29,7 @@ if (!function_exists('getCsrfToken')) {
 if (!function_exists('verifyCsrfToken')) {
     function verifyCsrfToken($token) {
         if (session_status() === PHP_SESSION_NONE) session_start();
-        if (empty($_SESSION['csrf']) || empty($token)) return false;
+        if (empty($_SESSION['csrf']) || !is_string($token) || $token === '') return false;
         return hash_equals($_SESSION['csrf'], $token);
     }
 }

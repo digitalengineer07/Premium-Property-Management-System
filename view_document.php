@@ -11,51 +11,52 @@ if (!$is_admin && !$user_id) {
     die("Forbidden: Not logged in.");
 }
 
-$file_param = basename($_GET['file'] ?? ''); // Prevent directory traversal
-$folder_param = basename($_GET['folder'] ?? 'documents');
-
+$file_param = $_GET['file'] ?? '';
+$folder_param = $_GET['folder'] ?? 'documents';
 $allowed_folders = ['documents', 'aadhaar', 'agreements', 'bills', 'queries'];
-if (!in_array($folder_param, $allowed_folders) || empty($file_param)) {
+if (!in_array($folder_param, $allowed_folders, true) || !is_string($file_param) ||
+    !preg_match('/^[A-Za-z0-9_. -]+\.(pdf|jpe?g|png)$/iD', $file_param)) {
     http_response_code(400);
-    die("Bad Request: Invalid folder or no file specified.");
+    exit('Invalid document.');
 }
 
-$physical_path = __DIR__ . '/uploads/' . $folder_param . '/' . $file_param;
-
-if (!file_exists($physical_path)) {
-    http_response_code(404);
-    die("Not Found: File does not exist.");
-}
-
-// Ownership Verification
+$relative = 'uploads/' . $folder_param . '/' . $file_param;
 if (!$is_admin) {
-    $safe_file_param = mysqli_real_escape_string($conn, $file_param);
-    if ($folder_param === 'aadhaar' || strpos($file_param, 'aadhar_') === 0) {
-        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND aadhaar_file LIKE '%$safe_file_param%'");
-        if (mysqli_num_rows($q) == 0) {
-            http_response_code(403);
-            die("Forbidden: You do not have permission to view this Aadhar card.");
+    $checks = match ($folder_param) {
+        'aadhaar' => [['users', 'id', 'aadhaar_file']],
+        'agreements' => [['users', 'id', 'agreement_document']],
+        'queries' => [['queries', 'user_id', 'attachment']],
+        'bills' => [['electricity', 'user_id', 'bill_file'], ['documents', 'user_id', 'file_path']],
+        default => [
+            ['documents', 'user_id', 'file_path'],
+            ['users', 'id', 'electricity_document'],
+            ['users', 'id', 'aadhaar_file'],
+            ['users', 'id', 'agreement_document'],
+        ],
+    };
+    $ownsDocument = false;
+    foreach ($checks as [$table, $ownerColumn, $pathColumn]) {
+        $stmt = mysqli_prepare($conn, "SELECT 1 FROM $table WHERE $ownerColumn=? AND BINARY $pathColumn=? LIMIT 1");
+        if (!$stmt) continue;
+        mysqli_stmt_bind_param($stmt, 'is', $user_id, $relative);
+        if (mysqli_stmt_execute($stmt) && mysqli_stmt_get_result($stmt)->num_rows > 0) {
+            $ownsDocument = true;
+            mysqli_stmt_close($stmt);
+            break;
         }
-    } else if ($folder_param === 'agreements') {
-        $q = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND agreement_document LIKE '%$safe_file_param%'");
-        if (mysqli_num_rows($q) == 0) {
-            http_response_code(403);
-            die("Forbidden: You do not have permission to view this agreement.");
-        }
-    } else if ($folder_param === 'documents' || $folder_param === 'bills') {
-        $q = mysqli_query($conn, "SELECT id FROM documents WHERE user_id = $user_id AND file_path LIKE '%$safe_file_param%'");
-        $q2 = mysqli_query($conn, "SELECT id FROM users WHERE id = $user_id AND electricity_document LIKE '%$safe_file_param%'");
-        if (mysqli_num_rows($q) == 0 && mysqli_num_rows($q2) == 0) {
-            http_response_code(403);
-            die("Forbidden: You do not have permission to view this document.");
-        }
-    } else if ($folder_param === 'queries') {
-        $q = mysqli_query($conn, "SELECT id FROM queries WHERE user_id = $user_id AND attachment LIKE '%$safe_file_param%'");
-        if (mysqli_num_rows($q) == 0) {
-            http_response_code(403);
-            die("Forbidden: You do not have permission to view this query attachment.");
-        }
+        mysqli_stmt_close($stmt);
     }
+    if (!$ownsDocument) {
+        http_response_code(404);
+        exit('Document not found.');
+    }
+}
+
+$directory = realpath(__DIR__ . '/uploads/' . $folder_param);
+$physical_path = realpath(__DIR__ . '/' . $relative);
+if (!$directory || !$physical_path || dirname($physical_path) !== $directory || !is_file($physical_path)) {
+    http_response_code(404);
+    exit('Document not found.');
 }
 
 // Determine mime type
@@ -69,6 +70,8 @@ $mime_types = [
 $mime = $mime_types[$ext] ?? 'application/octet-stream';
 
 // Serve the file
+header('Cache-Control: private, no-store');
+header('X-Content-Type-Options: nosniff');
 header('Content-Type: ' . $mime);
 header('Content-Disposition: inline; filename="' . $file_param . '"');
 header('Content-Length: ' . filesize($physical_path));
