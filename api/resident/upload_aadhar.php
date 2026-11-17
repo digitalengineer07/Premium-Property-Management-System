@@ -1,5 +1,7 @@
 <?php
 require_once "../../db.php";
+require_once __DIR__ . '/../../includes/api_auth.php';
+$api_identity = api_require_auth($conn, 'resident');
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -36,7 +38,7 @@ if (!$token) {
     echo json_encode(["status" => "error", "message" => "Unauthorized. No token provided.", "post" => $_POST, "files" => $_FILES]);
     exit;
 }
-$decoded = json_decode(base64_decode($token), true);
+$decoded = api_validate_token($conn, $token);
 
 if (!$decoded || !isset($decoded['id']) || $decoded['role'] !== 'resident') {
     http_response_code(401);

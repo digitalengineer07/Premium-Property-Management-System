@@ -7,6 +7,7 @@ db.php
 
 # Logs and databases
 .accounting-test-db/
+.rollout-backups/
 *.log
 *.sql
 *.sqlite

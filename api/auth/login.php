@@ -1,5 +1,7 @@
 <?php
 require_once "../config/database.php";
+require_once __DIR__ . "/../../includes/api_auth.php";
+header("Cache-Control: no-store");
 
 // Parse JSON payload
 $data = json_decode(file_get_contents("php://input"));
@@ -12,7 +14,8 @@ if (empty($data->username) || empty($data->password) || empty($data->role)) {
 
 $username = trim($data->username);
 $password = $data->password;
-$role = $data->role; // 'admin' or 'resident'
+$role = $data->role;
+if (!in_array($role, ['admin','resident'], true)) { http_response_code(400); echo json_encode(['status'=>'error','message'=>'Invalid role']); exit; } // 'admin' or 'resident'
 
 $table = ($role === 'admin') ? 'admin' : 'users';
 
@@ -37,13 +40,11 @@ if ($stmt) {
                 @mysqli_query($conn, "UPDATE users SET last_login = NOW() WHERE id = $user_id");
             }
             
-            // Generate a simple token (for Phase 1 simulation)
-            $token = base64_encode(json_encode([
-                "id" => $user['id'],
-                "username" => $user['username'],
-                "role" => $role,
-                "time" => time()
-            ]));
+            if ($role === 'resident') {
+                $active = mysqli_fetch_assoc(mysqli_query($conn, "SELECT status FROM users WHERE id=$user_id"));
+                if (($active['status'] ?? '') !== 'active') { http_response_code(401); echo json_encode(['status'=>'error','message'=>'Account is inactive.']); exit; }
+            }
+            $token = api_issue_token($conn, (int)$user['id'], $role, $user['password']);
 
             http_response_code(200);
             echo json_encode([

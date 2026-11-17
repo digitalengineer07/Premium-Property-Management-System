@@ -1,5 +1,7 @@
 <?php
 require_once "../../db.php";
+require_once __DIR__ . '/../../includes/api_auth.php';
+$api_identity = api_require_auth($conn, 'resident');
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -30,16 +32,16 @@ if (!$authHeader && isset($_GET['token'])) {
 
 if (!$authHeader || !preg_match('/Bearer\s+(\S+)/i', $authHeader, $matches)) {
     http_response_code(401);
-    echo json_encode(["status" => "error", "message" => "Unauthorized. No token provided. Auth header was: " . $authHeader]);
+    echo json_encode(["status" => "error", "message" => "Invalid session."]);
     exit;
 }
 
 $token = $matches[1];
-$decoded = json_decode(base64_decode($token), true);
+$decoded = api_validate_token($conn, $token);
 
 if (!$decoded || !isset($decoded['id']) || $decoded['role'] !== 'resident') {
     http_response_code(401);
-    echo json_encode(["status" => "error", "message" => "Unauthorized. Invalid token. " . print_r($decoded, true)]);
+    echo json_encode(["status" => "error", "message" => "Invalid session."]);
     exit;
 }
 

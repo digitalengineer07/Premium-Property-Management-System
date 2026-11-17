@@ -28,9 +28,8 @@ function allocate_bulk_payment($conn, $user_id, $amount, $payment_mode, $transac
     return accounting_atomic($conn, function () use ($conn, $user_id, $received, $payment_mode, $transaction_id, $sys_tx_id, $target_month_str, $is_wallet_transfer) {
         $user = mysqli_fetch_assoc(accounting_query($conn, "SELECT advance_payment FROM users WHERE id=$user_id FOR UPDATE"));
         if (!$user) throw new RuntimeException('Resident not found.');
-        $reference = mysqli_real_escape_string($conn, $sys_tx_id);
-        $existing = accounting_query($conn, "SELECT id FROM payments WHERE user_id=$user_id AND sys_tx_id='$reference' LIMIT 1");
-        if (mysqli_num_rows($existing)) return false;
+        if ($is_wallet_transfer) $payment_mode = 'Advance Wallet Auto-Deduction';
+        if (!accounting_claim_receipt($conn, $user_id, $received, $payment_mode, $transaction_id, $sys_tx_id)) return false;
         if ($is_wallet_transfer) {
             if ($received > accounting_paise($user['advance_payment'])) throw new RuntimeException('Insufficient wallet balance.');
             $decimal = accounting_decimal($received);

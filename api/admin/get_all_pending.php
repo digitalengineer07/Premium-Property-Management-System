@@ -1,5 +1,7 @@
 <?php
 require_once "../../db.php";
+require_once __DIR__ . '/../../includes/api_auth.php';
+$api_identity = api_require_auth($conn, 'admin');
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -9,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$headers = apache_request_headers();
+$headers = ['Authorization' => 'Bearer ' . api_request_token()];
 $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
 if (!$authHeader && isset($_GET['token'])) {
     $authHeader = "Bearer " . trim($_GET['token']);
@@ -25,7 +27,7 @@ if (!$token) {
     echo json_encode(["status" => "error", "message" => "Unauthorized access. No token provided."]);
     exit;
 }
-$decoded = json_decode(base64_decode($token), true);
+$decoded = api_validate_token($conn, $token);
 if (!$decoded || !isset($decoded['id']) || $decoded['role'] !== 'admin') {
     http_response_code(401);
     echo json_encode(["status" => "error", "message" => "Unauthorized access. Invalid token or role."]);

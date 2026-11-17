@@ -1,5 +1,7 @@
 <?php
 require_once "../config/database.php";
+require_once __DIR__ . '/../../includes/api_auth.php';
+$api_identity = api_require_auth($conn, 'admin');
 
 // Fetch all logs with user names
 $logs_query = "

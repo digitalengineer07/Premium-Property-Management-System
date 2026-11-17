@@ -1,5 +1,7 @@
 <?php
 require_once "../config/database.php";
+require_once __DIR__ . '/../../includes/api_auth.php';
+$api_identity = api_require_auth($conn, 'admin');
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -12,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Basic Authentication via Headers
-$headers = apache_request_headers();
+$headers = ['Authorization' => 'Bearer ' . api_request_token()];
 $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
 if (empty($authHeader)) {
     http_response_code(401);

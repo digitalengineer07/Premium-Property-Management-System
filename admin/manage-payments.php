@@ -8,65 +8,31 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-// Handle Add Manual Payment
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_manual_payment'])) {
-    // Basic CSRF validation could be added here
-    $user_id = (int)$_POST['user_id'];
-    $bill_type = mysqli_real_escape_string($conn, $_POST['bill_type']);
-    $month = mysqli_real_escape_string($conn, $_POST['month']);
-    $amount = (float)$_POST['amount'];
-    $payment_mode = mysqli_real_escape_string($conn, $_POST['payment_mode']);
-    $transaction_id = mysqli_real_escape_string($conn, $_POST['transaction_id']);
-    $payment_date = date('Y-m-d');
-    $payment_time = date('H:i:s');
-    $admin_name = $_SESSION['admin'];
-    
-    $sys_tx_id = uniqid('sys_');
-    $vhash = generate_payment_hash($user_id, $amount, $sys_tx_id);
-    
-    $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, month, total_amount, paid_amount, payment_mode, payment_date, payment_time, transaction_id, admin_name, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    mysqli_stmt_bind_param($stmt, "issddsssssss", $user_id, $bill_type, $month, $amount, $amount, $payment_mode, $payment_date, $payment_time, $transaction_id, $admin_name, $sys_tx_id, $vhash);
-    
-    if (mysqli_stmt_execute($stmt)) {
-        $success_msg = "Manual payment recorded successfully!";
-    } else {
-        $error_msg = "Failed to record payment.";
-    }
-    mysqli_stmt_close($stmt);
-}
-
-// Handle Delete Payment
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_payment_id'])) {
-    $del_id = (int)$_POST['delete_payment_id'];
-    
-    // Fetch payment details first to reverse accounting impacts
-    $fetch_stmt = mysqli_prepare($conn, "SELECT user_id, bill_type, bill_id, paid_amount FROM payments WHERE id = ?");
-    mysqli_stmt_bind_param($fetch_stmt, "i", $del_id);
-    mysqli_stmt_execute($fetch_stmt);
-    $pay_info = mysqli_fetch_assoc(mysqli_stmt_get_result($fetch_stmt));
-    mysqli_stmt_close($fetch_stmt);
-
-    $stmt = mysqli_prepare($conn, "DELETE FROM payments WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $del_id);
-    if (mysqli_stmt_execute($stmt)) {
-        $success_msg = "Payment deleted successfully.";
-        
-        // Auto-heal associated bill status and wallet
-        if ($pay_info) {
-            require_once __DIR__ . "/allocate_payment.php";
-            if (!empty($pay_info['bill_id']) && $pay_info['bill_id'] > 0) {
-                recalculate_bill_status($conn, $pay_info['bill_type'], $pay_info['bill_id']);
+require_once __DIR__ . '/allocate_payment.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if (!verifyCsrfToken($_POST['csrf'] ?? '')) throw new RuntimeException('Security validation failed.');
+        if (isset($_POST['add_manual_payment'])) {
+            $uid = (int)($_POST['user_id'] ?? 0);
+            $reference = 'MAN-' . bin2hex(random_bytes(12));
+            $mode = $_POST['payment_mode'] ?? 'Cash';
+            if (!in_array($mode, ['Cash','Cash/Offline','Offline','UPI','Bank Transfer','Online'], true)) throw new InvalidArgumentException('Invalid payment mode.');
+            $external = trim($_POST['transaction_id'] ?? '');
+            if ($external === '' && in_array($mode, ['Cash','Cash/Offline','Offline'], true)) $external = $reference;
+            $target = !empty($_POST['month']) ? accounting_month($_POST['month']) : null;
+            if (($_POST['bill_type'] ?? '') === 'advance') {
+                accounting_specific_payment($conn, $uid, 'advance', 0, $_POST['amount'] ?? 0, $mode, $external, $reference);
+            } else {
+                allocate_bulk_payment($conn, $uid, $_POST['amount'] ?? 0, $mode, $external, $reference, $target);
             }
-            if ($pay_info['bill_type'] === 'advance' && $pay_info['paid_amount'] > 0) {
-                $uid = (int)$pay_info['user_id'];
-                $deduct = (float)$pay_info['paid_amount'];
-                mysqli_query($conn, "UPDATE users SET advance_payment = GREATEST(0, advance_payment - $deduct) WHERE id = $uid");
-            }
+            $success_msg = 'Receipt posted to open invoices; any excess is wallet credit.';
+        } elseif (isset($_POST['delete_payment_id'])) {
+            accounting_reverse_receipt($conn, (int)$_POST['delete_payment_id'], $_POST['reversal_reason'] ?? '');
+            $success_msg = 'Receipt reversed. Original accounting history has been retained.';
         }
-    } else {
-        $error_msg = "Failed to delete payment.";
+    } catch (Throwable $failure) {
+        $error_msg = $failure->getMessage();
     }
-    mysqli_stmt_close($stmt);
 }
 
 // Filters
@@ -332,9 +298,10 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                                         </td>
                                         <td style="text-align: right;">
                                             <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                                <form method="POST" onsubmit="return confirm('Are you sure you want to delete this payment record? This cannot be undone.');" style="margin:0;">
+                                                <form method="POST" onsubmit="const reason = prompt('Reason for reversing the entire receipt:'); if (!reason) return false; this.elements.reversal_reason.value = reason; return confirm('Reverse this receipt and retain its original history?');" style="margin:0;">
+                                                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars(getCsrfToken()); ?>"><input type="hidden" name="reversal_reason">
                                                     <input type="hidden" name="delete_payment_id" value="<?php echo $p['id']; ?>">
-                                                    <button type="submit" class="btn-action btn-delete" title="Delete Payment"><i class='bx bx-trash'></i></button>
+                                                    <button type="submit" class="btn-action btn-delete" title="Reverse Receipt"><i class='bx bx-trash'></i></button>
                                                 </form>
                                             </div>
                                         </td>
@@ -365,6 +332,7 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
             <h2 style="margin: 0 0 24px 0; font-size: 20px; color: var(--text-dark);">Record Manual Payment</h2>
             
             <form method="POST">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
                 <input type="hidden" name="add_manual_payment" value="1">
                 
                 <div style="margin-bottom: 16px;">

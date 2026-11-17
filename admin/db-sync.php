@@ -6,6 +6,10 @@ if (!isset($_SESSION['admin'])) {
     die("Unauthorized access.");
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    http_response_code(409);
+    exit('Automatic rewriting of financial history has been retired. Use the versioned migration and accounting audit tools.');
+}
 $schema_file = __DIR__ . '/schema.json';
 $schema = [];
 if (file_exists($schema_file)) {

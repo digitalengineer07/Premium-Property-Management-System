@@ -9,58 +9,32 @@ if (!isset($_SESSION['admin'])) {
     exit;
 }
 
-// Handle Add Manual Payment
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_manual_payment'])) {
-    $user_id = (int)$_POST['user_id'];
-    $bill_type = mysqli_real_escape_string($conn, $_POST['bill_type']);
-    // For month we expect "April 2026" or similar format in DB, the form sends "2026-04"
-    $raw_month = $_POST['month'];
-    $month = '';
-    if (!empty($raw_month)) {
-        $month = date('F Y', strtotime($raw_month . '-01'));
-    }
-    
-    $amount = (float)$_POST['amount'];
-    $payment_mode = mysqli_real_escape_string($conn, $_POST['payment_mode']);
-    $sys_tx_id = 'SYS_REC_' . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 8));
-    
-    $transaction_id = mysqli_real_escape_string($conn, $_POST['transaction_id'] ?? '');
-    if(empty(trim($transaction_id))) {
-        $prefix = ($payment_mode === 'Cash') ? 'CASH-' : (($payment_mode === 'UPI') ? 'UPI-' : 'MAN-');
-        $transaction_id = $prefix . date('Ymd') . '-' . strtoupper(substr(md5($sys_tx_id), 0, 6));
-    }
-    
-    $payment_date = date('Y-m-d');
-    $payment_time = date('H:i:s');
-    $admin_name = $_SESSION['admin'];
-    
-    $vhash = generate_payment_hash($user_id, $amount, $sys_tx_id);
-    
-    // We need to resolve the bill_id if possible
-    $bill_id = 0;
-    if ($bill_type === 'rent' || $bill_type === 'electricity' || $bill_type === 'elec_rent') {
-        $bq = mysqli_query($conn, "SELECT id FROM electricity WHERE user_id=$user_id AND month='$month' LIMIT 1");
-        if ($br = mysqli_fetch_assoc($bq)) {
-            $bill_id = $br['id'];
+require_once __DIR__ . '/allocate_payment.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if (!verifyCsrfToken($_POST['csrf'] ?? '')) throw new RuntimeException('Security validation failed.');
+        if (isset($_POST['add_manual_payment'])) {
+            $uid = (int)($_POST['user_id'] ?? 0);
+            $reference = 'MAN-' . bin2hex(random_bytes(12));
+            $mode = $_POST['payment_mode'] ?? 'Cash';
+            if (!in_array($mode, ['Cash','Cash/Offline','Offline','UPI','Bank Transfer','Online'], true)) throw new InvalidArgumentException('Invalid payment mode.');
+            $external = trim($_POST['transaction_id'] ?? '');
+            if ($external === '' && in_array($mode, ['Cash','Cash/Offline','Offline'], true)) $external = $reference;
+            $target = !empty($_POST['month']) ? accounting_month($_POST['month']) : null;
+            if (($_POST['bill_type'] ?? '') === 'advance') {
+                accounting_specific_payment($conn, $uid, 'advance', 0, $_POST['amount'] ?? 0, $mode, $external, $reference);
+            } else {
+                allocate_bulk_payment($conn, $uid, $_POST['amount'] ?? 0, $mode, $external, $reference, $target);
+            }
+            $success_msg = 'Receipt posted to open invoices; any excess is wallet credit.';
+        } elseif (isset($_POST['delete_payment_id'])) {
+            accounting_reverse_receipt($conn, (int)$_POST['delete_payment_id'], $_POST['reversal_reason'] ?? '');
+            $success_msg = 'Receipt reversed. Original accounting history has been retained.';
         }
-    }
-    
-    if ($bill_id > 0) {
-        $stmt = mysqli_prepare($conn, "INSERT INTO payments (user_id, bill_type, bill_id, month, total_amount, paid_amount, payment_mode, payment_date, payment_time, transaction_id, admin_name, sys_tx_id, verification_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "isisddsssssss", $user_id, $bill_type, $bill_id, $month, $amount, $amount, $payment_mode, $payment_date, $payment_time, $transaction_id, $admin_name, $sys_tx_id, $vhash);
-        
-        if (mysqli_stmt_execute($stmt)) {
-            $success_msg = "Manual payment recorded successfully!";
-            recalculate_bill_status($conn, $bill_type, $bill_id);
-        } else {
-            $error_msg = "Failed to record payment.";
-        }
-        mysqli_stmt_close($stmt);
-    } else {
-        $error_msg = "No bill found for the selected month. Please generate a bill first.";
+    } catch (Throwable $failure) {
+        $error_msg = $failure->getMessage();
     }
 }
-
 
 // Set up the month filter
 $cy = date('Y');
@@ -347,6 +321,7 @@ while ($row = mysqli_fetch_assoc($users_res)) {
             <h2 style="margin: 0 0 24px 0; font-size: 20px; color: var(--text-dark);">Record Manual Payment</h2>
             
             <form method="POST">
+                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
                 <input type="hidden" name="add_manual_payment" value="1">
                 
                 <div style="margin-bottom: 16px;">
