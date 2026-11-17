@@ -170,6 +170,21 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
 
     <style>
         .welcome-header { margin-top: 20px; display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+
+        @media (min-width: 1025px) {
+            .welcome-header {
+                align-items: center;
+                gap: 16px;
+            }
+
+            .welcome-header .print-btn {
+                flex-shrink: 0;
+            }
+
+            .dashboard-grid-70 > :is(.left-col, .right-col) {
+                min-width: 0;
+            }
+        }
         
         @media (max-width: 1024px) {
             .dashboard-grid-70 {
