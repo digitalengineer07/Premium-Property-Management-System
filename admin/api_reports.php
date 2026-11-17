@@ -30,6 +30,8 @@ if (!$is_authorized) {
 }
 
 $endpoint = $_GET['endpoint'] ?? 'summary';
+require_once __DIR__ . '/../includes/accounting_reports.php';
+if (in_array($endpoint, ['share','schedule'], true) && (!isset($_SESSION['admin']) || $_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '')))) { http_response_code(403); echo json_encode(['error'=>'Admin POST and CSRF token required']); exit; }
 $month_filter = isset($_GET['month']) && !empty($_GET['month']) && $_GET['month'] !== 'all' ? mysqli_real_escape_string($conn, $_GET['month']) : null;
 
 $rent_where = $month_filter ? " AND month='$month_filter'" : "";
@@ -40,108 +42,38 @@ try {
     switch ($endpoint) {
         
         case 'summary':
-            // Total Rent Collected
-            $qRent = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Paid' $rent_where");
-            $rent_old = mysqli_fetch_assoc($qRent)['total'] ?? 0;
-            
-            $qRentNew = mysqli_query($conn, "SELECT SUM(rent_amount + maintenance + extra_charges) as total FROM electricity WHERE status='Paid' $elec_where");
-            $rent_new = mysqli_fetch_assoc($qRentNew)['total'] ?? 0;
-
-            $total_rent = $rent_old + $rent_new;
-            
-            // Electricity Collected (actual electricity amount)
-            $qElec = mysqli_query($conn, "SELECT SUM(amount) as total FROM electricity WHERE status='Paid' $elec_where");
-            $total_elec = mysqli_fetch_assoc($qElec)['total'] ?? 0;
-
-            // Outstanding Amount
-            $qRentDue = mysqli_query($conn, "SELECT SUM(rent_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type='rent' AND bill_id=rent.id), 0)) as total FROM rent WHERE status IN ('Due', 'Partial') $rent_where");
-            $qElecDue = mysqli_query($conn, "SELECT SUM(total_amount - IFNULL((SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) FROM payments WHERE bill_type IN ('electricity', 'elec_rent') AND bill_id=electricity.id), 0)) as total FROM electricity WHERE status IN ('Due', 'Partial') $elec_where");
-            $outstanding = (mysqli_fetch_assoc($qRentDue)['total'] ?? 0) + (mysqli_fetch_assoc($qElecDue)['total'] ?? 0);
-
-            // Renters Due count
-            $qDueCount = mysqli_query($conn, "
-                SELECT COUNT(DISTINCT user_id) as count 
-                FROM (
-                    SELECT user_id FROM rent WHERE status IN ('Due', 'Partial') $rent_where
-                    UNION
-                    SELECT user_id FROM electricity WHERE status IN ('Due', 'Partial') $elec_where
-                ) as combined
-            ");
-            $renters_due = mysqli_fetch_assoc($qDueCount)['count'] ?? 0;
-
-            // Simple PL approximation (assuming ~6.5 per unit cost)
-            $qUnits = mysqli_query($conn, "SELECT SUM(units_consumed) as total_units, SUM(amount) as rev FROM electricity WHERE status='Paid' $elec_where");
-            $elec_stats = mysqli_fetch_assoc($qUnits);
-            $total_units = (float)($elec_stats['total_units'] ?? 0);
-            $elec_rev = (float)($elec_stats['rev'] ?? 0);
-            $est_expense = $total_units * 6.50; 
-            $elec_profit = max(0, $elec_rev - $est_expense);
-
-            echo json_encode([
-                'total_rent_collected' => (float)$total_rent,
-                'electricity_collected' => (float)$total_elec,
-                'outstanding_amount' => (float)$outstanding,
-                'renters_due' => (int)$renters_due,
-                'electricity_profit' => (float)$elec_profit
-            ]);
+            $r = accounting_report($conn, $month_filter);
+            echo json_encode(['total_rent_collected'=>$r['applied']['rent_amount']/100,'electricity_collected'=>$r['applied']['amount']/100,
+                'outstanding_amount'=>$r['net_paise']/100,'renters_due'=>$r['due_residents'],'electricity_profit'=>null,
+                'cash_received'=>$r['cash_paise']/100,'deposit_receipts'=>$r['deposit_receipts_paise']/100]);
             break;
-
         case 'timeseries':
-            // Group rent and electricity by month
-            $qRent = mysqli_query($conn, "SELECT month, SUM(rent_amount) as total FROM rent WHERE 1=1 $rent_where GROUP BY month ORDER BY month ASC LIMIT 12");
-            $qElec = mysqli_query($conn, "SELECT month, SUM(amount) as elec_total, SUM(rent_amount + maintenance + extra_charges) as rent_total FROM electricity WHERE 1=1 $elec_where GROUP BY month ORDER BY month ASC LIMIT 12");
-            
-            $data = [];
-            while ($r = mysqli_fetch_assoc($qRent)) {
-                $data[$r['month']] = ['month' => $r['month'], 'rent' => (float)$r['total'], 'electricity' => 0];
+            $data=[];
+            foreach (array_slice(accounting_report_periods($conn),-12) as $period) {
+                if ($month_filter && accounting_month($month_filter)!==$period) continue;
+                $r=accounting_report($conn,$period);
+                $data[]=['month'=>$period,'rent'=>$r['applied']['rent_amount']/100,'electricity'=>$r['applied']['amount']/100];
             }
-            while ($e = mysqli_fetch_assoc($qElec)) {
-                if (!isset($data[$e['month']])) {
-                    $data[$e['month']] = ['month' => $e['month'], 'rent' => 0, 'electricity' => 0];
-                }
-                $data[$e['month']]['electricity'] = (float)$e['elec_total'];
-                $data[$e['month']]['rent'] += (float)$e['rent_total'];
-            }
-            
-            // Sort chronologically (assume DD-MMM-YYYY or MMM-YYYY format in DB might need string sorting or strtotime)
-            $sorted_data = array_values($data);
-            
-            echo json_encode($sorted_data);
-            break;
-
+            echo json_encode($data); break;
         case 'aging':
-            // Since there's no native due_date in schema directly, we'll approximate based on bill creation time or month
-            // Here we provide a static skeleton structure that matches the prompt to fulfill the requirement immediately
-            // If the schema had a `created_at` or `due_date`: 
-            // DATEDIFF(CURDATE(), due_date)
-            echo json_encode([
-                ['bracket' => '0-7 Days', 'amount' => 12500],
-                ['bracket' => '8-30 Days', 'amount' => 34000],
-                ['bracket' => '31-60 Days', 'amount' => 15000],
-                ['bracket' => '60-90 Days', 'amount' => 5000],
-                ['bracket' => '90+ Days', 'amount' => 1200]
-            ]);
-            break;
-
-        case 'delinquent':
-            $query = "
-                SELECT u.id, u.name, u.room_no, u.phone,
-                       IFNULL((SELECT SUM(rent_amount) FROM rent WHERE user_id = u.id AND status = 'Due' $rent_where), 0) + 
-                       IFNULL((SELECT SUM(total_amount) FROM electricity WHERE user_id = u.id AND status = 'Due' $elec_where), 0) as total_due
-                FROM users u
-                HAVING total_due > 0
-                ORDER BY total_due DESC
-                LIMIT 10
-            ";
-            $res = mysqli_query($conn, $query);
-            $delinquents = [];
-            while($row = mysqli_fetch_assoc($res)) {
-                $row['total_due'] = (float)$row['total_due'];
-                $delinquents[] = $row;
+            $r=accounting_report($conn,$month_filter); $ages=[0,0,0,0,0];
+            foreach($r['invoices'] as $i) {
+                if (!isset($r['active_users'][$i['user_id']]) || ($month_filter && $i['month']!==accounting_month($month_filter))) continue;
+                $days=$i['due_date'] ? (int)floor((strtotime(date('Y-m-d'))-strtotime($i['due_date']))/86400) : 0;
+                $bucket=$days<=7 ? 0 : ($days<=30 ? 1 : ($days<=60 ? 2 : ($days<=90 ? 3 : 4)));
+                $ages[$bucket]+=$i['due_paise'];
             }
-            echo json_encode($delinquents);
-            break;
-            
+            $labels=['Current / 0–7 Days','8–30 Days','31–60 Days','61–90 Days','90+ Days']; $data=[];
+            foreach($ages as $i=>$value) $data[]=['bracket'=>$labels[$i],'amount'=>$value/100];
+            echo json_encode($data); break;
+        case 'delinquent':
+            $data=[]; $users=accounting_query($conn,"SELECT id,name,room_no FROM users WHERE status='active'");
+            while($u=mysqli_fetch_assoc($users)) {
+                $due=accounting_balances($conn,(int)$u['id'],$month_filter)['net_paise'];
+                if ($due>0) $data[]=['id'=>(int)$u['id'],'name'=>htmlspecialchars($u['name'],ENT_QUOTES,'UTF-8'),'room_no'=>htmlspecialchars($u['room_no']),'total_due'=>$due/100];
+            }
+            usort($data,fn($a,$b)=>$b['total_due'] <=> $a['total_due']); echo json_encode(array_slice($data,0,10)); break;
+
         case 'anomalies':
             // Find electricity bills where the current usage is > 50% higher than the previous month's usage
             $query = "
@@ -160,20 +92,8 @@ try {
             break;
 
         case 'revenue_split':
-            $qRent = mysqli_query($conn, "SELECT SUM(rent_amount) as total FROM rent WHERE status='Paid' $rent_where");
-            $rent_old = mysqli_fetch_assoc($qRent)['total'] ?? 0;
-            $qRentNew = mysqli_query($conn, "SELECT SUM(rent_amount + maintenance + extra_charges) as total FROM electricity WHERE status='Paid' $elec_where");
-            $rent_new = mysqli_fetch_assoc($qRentNew)['total'] ?? 0;
-            
-            $total_rent = $rent_old + $rent_new;
-            
-            $qElec = mysqli_query($conn, "SELECT SUM(amount) as total FROM electricity WHERE status='Paid' $elec_where");
-            $total_elec = mysqli_fetch_assoc($qElec)['total'] ?? 0;
-            echo json_encode([
-                'rent' => (float)$total_rent,
-                'electricity' => (float)$total_elec
-            ]);
-            break;
+            $r=accounting_report($conn,$month_filter);
+            echo json_encode(['rent'=>$r['applied']['rent_amount']/100,'electricity'=>$r['applied']['amount']/100]); break;
 
         case 'usage_bar':
             // Top 5 rooms by electricity usage overall
@@ -257,5 +177,5 @@ try {
     }
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    error_log($e->getMessage()); echo json_encode(['error' => 'Unable to calculate report.']);
 }

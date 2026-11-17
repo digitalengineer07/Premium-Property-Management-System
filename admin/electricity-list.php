@@ -487,6 +487,7 @@ $admin_user = s($_SESSION['admin']);
             </div>
             
             <form id="paymentForm" action="mark-paid.php" method="POST">
+            <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
                 <input type="hidden" name="csrf" value="<?php echo getCsrfToken(); ?>">
                 <input type="hidden" name="id" id="paymentBillId">
                 <input type="hidden" name="type" value="electricity">
@@ -590,22 +591,7 @@ $admin_user = s($_SESSION['admin']);
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                const billId = document.getElementById('paymentBillId').value;
-                // Find the row to update UI dynamically without refreshing
-                const editLink = document.querySelector(`a[href*="id=${billId}"]`);
-                if (editLink) {
-                    const tr = editLink.closest('tr');
-                    if (tr) {
-                        const badge = tr.querySelector('.badge');
-                        if (badge) {
-                            badge.className = 'badge badge-paid';
-                            badge.textContent = 'Paid';
-                        }
-                        const markPaidBtn = tr.querySelector(`button[onclick*="openPaymentModal(${billId}"]`);
-                        if (markPaidBtn) markPaidBtn.style.display = 'none';
-                    }
-                }
-                closePaymentModal();
+                window.location.reload();
             } else {
                 alert(data.error || 'Payment failed');
             }

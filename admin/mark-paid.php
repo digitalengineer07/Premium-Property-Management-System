@@ -1,111 +1,39 @@
 <?php
-// admin/mark-paid.php
-require_once "../db.php";
+require_once __DIR__ . '/../db.php';
 session_start();
-require_once "../audit.php";
-require_once "utils_mailer.php";
-require_once "allocate_payment.php"; // The unified engine
-
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf'] ?? '')) {
-    die("Security validation failed. Access denied.");
-}
-
-$type = $_POST['type'] ?? '';
-$id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-$admin_id = $_SESSION['admin_id'] ?? 1;
-
-$payment_mode = !empty($_POST['payment_mode']) ? $_POST['payment_mode'] : 'Cash';
-$payment_date = $_POST['payment_date'] ?? date("Y-m-d");
-$payment_time = $_POST['payment_time'] ?? date("H:i:s");
-
-if (!in_array($type, ['rent', 'electricity', 'advance'])) {
-    die("Invalid request");
-}
-
-/* 1. Fetch Bill details */
-if ($type === 'rent') {
-    $stmt = mysqli_prepare($conn, "SELECT user_id, month, rent_amount as amount, status FROM rent WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-} elseif ($type === 'electricity') {
-    $stmt = mysqli_prepare($conn, "SELECT user_id, month, total_amount as amount, bill_file, status FROM electricity WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-} elseif ($type === 'advance') {
-    $stmt = mysqli_prepare($conn, "SELECT id as user_id, 'Advance' as month, advance_payment as amount, '' as bill_file, 'Pending' as status FROM users WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "i", $id);
-}
-mysqli_stmt_execute($stmt);
-$res = mysqli_stmt_get_result($stmt);
-$bill = mysqli_fetch_assoc($res);
-mysqli_stmt_close($stmt);
-
-if (!$bill) {
-    die("Record not found");
-}
-
-$bill_amount = (float)$bill['amount'];
-$user_id = (int)$bill['user_id'];
-
-// Get pending due for this specific bill
-if ($type !== 'advance') {
-    $btype_cond = ($type === 'electricity' || $type === 'elec_rent') ? "bill_type IN ('electricity', 'elec_rent')" : "bill_type='$type'";
-    $qPaid = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as total_paid FROM payments WHERE $btype_cond AND bill_id=$id");
-    $already_paid = (float)(mysqli_fetch_assoc($qPaid)['total_paid'] ?? 0);
-    $remaining_amount = max(0, $bill_amount - $already_paid);
-} else {
-    $remaining_amount = 0; // For advance, there is no "due" amount
-}
-
-$paid_amount = $remaining_amount; // Default
-if (isset($_POST['paid_amount']) && is_numeric($_POST['paid_amount'])) {
-    $paid_amount = (float)$_POST['paid_amount'];
-}
-
-if ($paid_amount <= 0) {
-    $_SESSION['error'] = "Payment amount must be greater than zero.";
-    header("Location: " . ($_SERVER['HTTP_REFERER'] ?? 'dashboard.php'));
-    exit;
-}
-
-
-/* 2. Process via Unified Engine */
-$sys_prefix = 'SYS_MAN_';
-$usr_prefix = 'MAN-';
-if ($payment_mode === 'Cash') { $sys_prefix = 'SYS_OFF_'; $usr_prefix = 'CASH-'; }
-else if ($payment_mode === 'UPI') { $sys_prefix = 'SYS_UPI_'; $usr_prefix = 'UPI-'; }
-
-$sys_tx_id = $sys_prefix . strtoupper(bin2hex(random_bytes(6)));
-$transaction_id = $_POST['transaction_id'] ?? '';
-if (empty(trim($transaction_id))) {
-    $transaction_id = $usr_prefix . date('Ymd') . '-' . strtoupper(substr(md5($sys_tx_id), 0, 6));
-} else {
-    $transaction_id = trim($transaction_id);
-}
-
-try {
-    accounting_specific_payment($conn, $user_id, $type, $id, $_POST['paid_amount'] ?? $remaining_amount, $payment_mode, $transaction_id, $sys_tx_id, $payment_date, $payment_time);
-} catch (Throwable $e) {
-    error_log($e->getMessage());
-    $_SESSION['error'] = 'Payment was not recorded. Check the amount and try again.';
-    header('Location: manage-payments.php');
-    exit;
-}
-
-// Send Email Receipt
-$qUser = mysqli_query($conn, "SELECT name, email FROM users WHERE id = $user_id");
-if ($uRow = mysqli_fetch_assoc($qUser)) {
-    if (!empty($uRow['email'])) {
-        $sub = "Payment Receipt - " . HOUSE_NAME;
-        $msg = "Hello {$uRow['name']},<br><br>We have received a manual payment of Rs. {$paid_amount} for your {$bill['month']} " . ucfirst($type) . " bill.<br><br>Thank you!";
-        @sendEmail($uRow['email'], $sub, $msg);
+require_once __DIR__ . '/allocate_payment.php';
+$ajax = !empty($_POST['ajax']);
+function payment_response(bool $ok, string $message, bool $ajax): void {
+    if ($ajax) {
+        header('Content-Type: application/json');
+        if (!$ok) http_response_code(400);
+        echo json_encode(['success'=>$ok,'message'=>$message,'error'=>$ok ? null : $message]);
+    } else {
+        $_SESSION[$ok ? 'success' : 'error'] = $message;
+        header('Location: manage-payments.php');
     }
+    exit;
 }
-
-$_SESSION['success'] = "Payment recorded and successfully processed by the auto-allocator.";
-header("Location: " . ($_SERVER['HTTP_REFERER'] ?? 'dashboard.php'));
-exit;
-?>
+try {
+    if (!isset($_SESSION['admin'])) throw new RuntimeException('Please sign in as administrator.');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf'] ?? '')) throw new RuntimeException('Security validation failed.');
+    $type = $_POST['type'] ?? '';
+    $id = (int)($_POST['id'] ?? 0);
+    if (!in_array($type,['rent','electricity','advance'],true) || $id <= 0) throw new InvalidArgumentException('Invalid bill.');
+    $table = $type === 'rent' ? 'rent' : ($type === 'advance' ? 'users' : 'electricity');
+    $bill = mysqli_fetch_assoc(accounting_query($conn,"SELECT * FROM $table WHERE id=$id"));
+    if (!$bill) throw new RuntimeException('Bill not found.');
+    $user = $type === 'advance' ? $id : (int)$bill['user_id'];
+    $default = $type === 'advance' ? 0 : max(0, accounting_paise($bill[$type === 'rent' ? 'rent_amount' : 'total_amount'])-accounting_bill_paid($conn,$user,$table,$id));
+    $amount = $_POST['paid_amount'] ?? accounting_decimal($default);
+    $mode = $_POST['payment_mode'] ?? 'Cash';
+    if (!in_array($mode,['Cash','Cash/Offline','Offline','UPI','Online','Bank Transfer'],true)) throw new InvalidArgumentException('Invalid payment mode.');
+    $ref = payment_form_reference('MAN-');
+    $external = trim($_POST['transaction_id'] ?? '');
+    if ($external === '' && in_array($mode,['Cash','Cash/Offline','Offline'],true)) $external = $ref;
+    $posted = accounting_specific_payment($conn,$user,$type,$id,$amount,$mode,$external,$ref,$_POST['payment_date'] ?? null,$_POST['payment_time'] ?? null);
+    payment_response(true,$posted ? 'Payment recorded. Balance updated from the ledger.' : 'This receipt was already recorded. No duplicate payment was added.',$ajax);
+} catch (Throwable $failure) {
+    error_log($failure->getMessage());
+    payment_response(false,$failure instanceof InvalidArgumentException || $failure instanceof RuntimeException ? $failure->getMessage() : 'Unable to record payment. No changes were saved.',$ajax);
+}

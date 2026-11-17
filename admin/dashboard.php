@@ -1062,6 +1062,7 @@ $recent_transactions = mysqli_query($conn, $unified_tx_sql);
         </div>
         
         <form action="mark-paid.php" method="POST">
+            <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
             <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION['csrf'] ?? ''); ?>">
             <input type="hidden" name="id" id="paymentBillId">
             <input type="hidden" name="type" id="paymentBillType">

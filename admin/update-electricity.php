@@ -93,71 +93,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
             /* ---------- INSERT or UPDATE ---------- */
             if ($errmsg === "") {
 
-                if ($elec_id > 0) {
-                    // UPDATE
-                    if ($billPath) {
-                        $stmt = mysqli_prepare($conn,
-                            "UPDATE electricity 
-                             SET month=?, previous_reading=?, current_reading=?, 
-                                 units=?, units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
-                                 extra_charges=?, extra_charges_desc=?, total_amount=?, 
-                                 bill_file=?
-                             WHERE id=?"
-                        );
-                        mysqli_stmt_bind_param(
-                            $stmt,
-                            "siiiiiddddsssi",
-                            $month, $prev, $curr, $units, $units,
-                            $rate, $amount, $rent, $maintenance,
-                            $extra_charges, $extra_charges_desc, $total_amount,
-                            $billPath, $elec_id
-                        );
-                    } else {
-                        $stmt = mysqli_prepare($conn,
-                            "UPDATE electricity 
-                             SET month=?, previous_reading=?, current_reading=?, 
-                                 units=?, units_consumed=?, rate_per_unit=?, amount=?, rent_amount=?, maintenance=?,
-                                 extra_charges=?, extra_charges_desc=?, total_amount=?
-                             WHERE id=?"
-                        );
-                        mysqli_stmt_bind_param(
-                            $stmt,
-                            "siiiiiddddssi",
-                            $month, $prev, $curr, $units, $units,
-                            $rate, $amount, $rent, $maintenance,
-                            $extra_charges, $extra_charges_desc, $total_amount,
-                            $elec_id
-                        );
-                    }
-                    mysqli_stmt_execute($stmt);
-                    mysqli_stmt_close($stmt);
-
-                    require_once __DIR__ . "/allocate_payment.php";
-                    recalculate_bill_status($conn, 'electricity', $elec_id);
-
-                    logAction($conn, "admin", $_SESSION['admin_id'], "Updated electricity ID $elec_id");
-
-                } else {
-                    // INSERT
-                    $stmt = mysqli_prepare($conn,
-                        "INSERT INTO electricity
-                         (user_id, month, previous_reading, current_reading, units, units_consumed,
-                          rate_per_unit, amount, rent_amount, maintenance, extra_charges, extra_charges_desc, total_amount, bill_file, status)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Due')"
-                    );
-                    mysqli_stmt_bind_param(
-                        $stmt,
-                        "isiiiiiddddsss",
-                        $user_id, $month, $prev, $curr, $units, $units,
-                        $rate, $amount, $rent, $maintenance, $extra_charges, $extra_charges_desc, $total_amount, $billPath
-                    );
-                    mysqli_stmt_execute($stmt);
-                    $elec_id = mysqli_insert_id($conn);
-                    mysqli_stmt_close($stmt);
-
-                    logAction($conn, "admin", $_SESSION['admin_id'], "Created electricity ID $elec_id");
+                require_once __DIR__ . '/../includes/billing.php';
+                try {
+                    if ($elec_id <= 0) throw new RuntimeException('Use Bill Generation to create a new monthly invoice.');
+                    accounting_update_bill($conn, $elec_id, $user_id, $_POST, $billPath);
+                } catch (Throwable $failure) {
+                    $errmsg = $failure->getMessage();
                 }
-
+                if ($errmsg === '') {
                 /* ---------- AUTO GENERATE PDF ---------- */
                 require_once __DIR__ . "/generate_pdf.php";
                 $pdf = generateSlipPdf($conn, $elec_id);
@@ -168,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_elec'])) {
 
                 header("Location: electricity-list.php");
                 exit;
+                }
             }
         }
     }

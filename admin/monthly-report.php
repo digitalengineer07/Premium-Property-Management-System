@@ -11,52 +11,22 @@ if (!isset($_SESSION['admin'])) {
 $month_filter = trim($_GET['month'] ?? '');
 $export = (isset($_GET['export']) && $_GET['export'] === 'csv');
 
-$where = "";
-$params = [];
-$types = "";
-if ($month_filter !== '') {
-    $where = " WHERE month = ?";
-    $params[] = $month_filter;
-    $types .= "s";
+require_once __DIR__ . '/../includes/accounting_reports.php';
+$rent_rows=[]; $elec_rows=[];
+foreach (accounting_report_periods($conn) as $period) {
+    if ($month_filter !== '' && accounting_month($month_filter) !== $period) continue;
+    $r=accounting_report($conn,$period);
+    $label=(new DateTimeImmutable($period.'-01'))->format('F Y');
+    $rent_rows[$label]=($r['billed']['rent_amount']+$r['billed']['maintenance']+$r['billed']['extra_charges']+$r['billed']['dues'])/100;
+    $elec_rows[$label]=$r['billed']['amount']/100;
 }
-
-/* Aggregate rent by month */
-$rent_rows = [];
-$qRent = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(rent_amount),0) as total_rent FROM rent $where GROUP BY month");
-if ($params) {
-    mysqli_stmt_bind_param($qRent, $types, ...$params);
-}
-mysqli_stmt_execute($qRent);
-$rents = mysqli_stmt_get_result($qRent);
-while ($rr = mysqli_fetch_assoc($rents)) {
-    $rent_rows[$rr['month']] = (float)$rr['total_rent'];
-}
-mysqli_stmt_close($qRent);
-
-/* Aggregate electricity energy charges and combined rent from electricity table */
-$elec_rows = [];
-$qElec = mysqli_prepare($conn, "SELECT month, IFNULL(SUM(rent_amount + maintenance),0) as total_rent, IFNULL(SUM(amount),0) as total_elec FROM electricity $where GROUP BY month");
-if ($params) {
-    mysqli_stmt_bind_param($qElec, $types, ...$params);
-}
-mysqli_stmt_execute($qElec);
-$elecs = mysqli_stmt_get_result($qElec);
-while ($er = mysqli_fetch_assoc($elecs)) {
-    $m = $er['month'];
-    $rent_rows[$m] = ($rent_rows[$m] ?? 0) + (float)$er['total_rent'];
-    $elec_rows[$m] = (float)$er['total_elec'];
-}
-mysqli_stmt_close($qElec);
-
-/* months union */
-$months = array_unique(array_merge(array_keys($rent_rows), array_keys($elec_rows)));
-rsort($months);
+$months=array_reverse(array_keys($rent_rows));
 
 if ($export) {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="monthly_report.csv"');
     $out = fopen('php://output', 'w');
-    fputcsv($out, ['Month', 'Total Rent', 'Total Electricity', 'Grand Total']);
+    fputcsv($out, ['Month', 'Rent and Other Charges Billed', 'Electricity Billed', 'Grand Total']);
     foreach ($months as $m) {
         $tr = $rent_rows[$m] ?? 0;
         $te = $elec_rows[$m] ?? 0;
@@ -137,7 +107,7 @@ $disp_total = $disp_rent + $disp_elec;
                 <div class="trend trend-up"><i class='bx bx-trending-up'></i> Healthy</div>
             </div>
             <div class="kpi-value">₹<?php echo format_inr($disp_rent, 2); ?></div>
-            <div class="kpi-label">Total Rent Collected</div>
+            <div class="kpi-label">Rent & Other Charges Billed</div>
         </div>
         <div class="kpi-card hover-lift">
             <div class="kpi-header">
@@ -188,8 +158,8 @@ $disp_total = $disp_rent + $disp_elec;
                         <thead>
                             <tr>
                                 <th>Month / Period</th>
-                                <th>Rent Revenue</th>
-                                <th>Elec. Revenue</th>
+                                <th>Rent & Other Billed</th>
+                                <th>Electricity Billed</th>
                                 <th>Grand Total</th>
                             </tr>
                         </thead>
@@ -202,8 +172,8 @@ $disp_total = $disp_rent + $disp_elec;
                             ?>
                                 <tr class="animate-up">
                                     <td data-label="Month / Period" style="font-weight: 600;"><?php echo htmlspecialchars($m); ?></td>
-                                    <td data-label="Rent Revenue" style="color: var(--text-gray);">₹<?php echo format_inr($tr, 2); ?></td>
-                                    <td data-label="Elec. Revenue" style="color: var(--text-gray);">₹<?php echo format_inr($te, 2); ?></td>
+                                    <td data-label="Rent & Other Billed" style="color: var(--text-gray);">₹<?php echo format_inr($tr, 2); ?></td>
+                                    <td data-label="Electricity Billed" style="color: var(--text-gray);">₹<?php echo format_inr($te, 2); ?></td>
                                     <td data-label="Grand Total" style="font-weight: 700; color: var(--primary-purple);">₹<?php echo format_inr($tr + $te, 2); ?></td>
                                 </tr>
                             <?php endforeach; endif; ?>
@@ -230,7 +200,7 @@ $disp_total = $disp_rent + $disp_elec;
                         <div style="display:flex; justify-content: space-between; margin-bottom: 12px;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <div style="width:10px; height:10px; border-radius:3px; background: var(--primary-purple);"></div>
-                                <span style="font-size:13px; color: var(--text-gray);">Rent Revenue</span>
+                                <span style="font-size:13px; color: var(--text-gray);">Rent & Other Billed</span>
                             </div>
                             <span style="font-weight:600; font-size:13px; color: var(--text-dark);"><?php echo $rent_pct; ?>%</span>
                         </div>

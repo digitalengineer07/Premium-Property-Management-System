@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!verifyCsrfToken($_POST['csrf'] ?? '')) throw new RuntimeException('Security validation failed.');
         if (isset($_POST['add_manual_payment'])) {
             $uid = (int)($_POST['user_id'] ?? 0);
-            $reference = 'MAN-' . bin2hex(random_bytes(12));
+            $reference = payment_form_reference('MAN-');
             $mode = $_POST['payment_mode'] ?? 'Cash';
             if (!in_array($mode, ['Cash','Cash/Offline','Offline','UPI','Bank Transfer','Online'], true)) throw new InvalidArgumentException('Invalid payment mode.');
             $external = trim($_POST['transaction_id'] ?? '');
@@ -333,6 +333,7 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
             
             <form method="POST">
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
+                <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
                 <input type="hidden" name="add_manual_payment" value="1">
                 
                 <div style="margin-bottom: 16px;">

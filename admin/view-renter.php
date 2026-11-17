@@ -798,6 +798,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             </div>
             
             <form action="mark-paid.php" method="POST" id="formMarkPaid">
+            <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
                 <?php if ($pending_notif_count > 0): ?>
                 <div style="margin-bottom: 20px; padding: 12px; background: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 8px; font-size: 13px; font-weight: 600;">
                     ⚠️ This user has <?php echo $pending_notif_count; ?> pending payment notifications! Check the <a href="payment-verifications.php" target="_blank" style="color: #991B1B; text-decoration: underline;">verifications page</a> before adding a manual payment to avoid duplication.

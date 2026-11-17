@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!verifyCsrfToken($_POST['csrf'] ?? '')) throw new RuntimeException('Security validation failed.');
         if (isset($_POST['add_manual_payment'])) {
             $uid = (int)($_POST['user_id'] ?? 0);
-            $reference = 'MAN-' . bin2hex(random_bytes(12));
+            $reference = payment_form_reference('MAN-');
             $mode = $_POST['payment_mode'] ?? 'Cash';
             if (!in_array($mode, ['Cash','Cash/Offline','Offline','UPI','Bank Transfer','Online'], true)) throw new InvalidArgumentException('Invalid payment mode.');
             $external = trim($_POST['transaction_id'] ?? '');
@@ -75,7 +75,7 @@ while ($row = mysqli_fetch_assoc($res)) {
     if ($row['bill_id']) {
         // Calculate paid amount from payments table for this bill
         $bid = $row['bill_id'];
-        $pq = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_id=$bid");
+        $pq = mysqli_query($conn, "SELECT SUM(paid_amount - IF(adjustment_type = 'extra', adjustment_amount, 0)) as tp FROM payments WHERE bill_id=$bid AND user_id={$row['user_id']} AND bill_type IN ('electricity','elec_rent')");
         $pr = mysqli_fetch_assoc($pq);
         $paid = (float)$pr['tp'];
         $due = max(0, $bill_amt - $paid);
@@ -322,6 +322,7 @@ while ($row = mysqli_fetch_assoc($users_res)) {
             
             <form method="POST">
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars(getCsrfToken()); ?>">
+                <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
                 <input type="hidden" name="add_manual_payment" value="1">
                 
                 <div style="margin-bottom: 16px;">

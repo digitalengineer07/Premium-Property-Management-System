@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 if ($result && mysqli_num_rows($result) === 1) {
                     $user = mysqli_fetch_assoc($result);
-                    if ($user['status'] === 'moved_out') {
+                    if ($user['status'] !== 'active') {
                         $error = "This account has been archived (Moved Out). Access is restricted.";
                     } else if (password_verify($password, $user['password'])) {
                         // Success!

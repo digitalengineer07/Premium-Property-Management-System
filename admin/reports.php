@@ -121,7 +121,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
         .tl-desc { font-size: 12px; color: var(--text-gray); line-height: 1.4; }
         .tl-time { font-size: 11px; color: #94A3B8; font-weight: 600; margin-top: 4px; display: block; }
 
-        /* AI Insights */
+        /* Ledger Insights */
         .ai-card { background: linear-gradient(145deg, #F8FAFC, #F1F5F9); border: 1px solid var(--border); }
         .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-weight: 700; color: #6C4DFF; font-size: 14px; }
         .ai-list { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; font-size: 13px; color: var(--text-dark); line-height: 1.6; }
@@ -334,30 +334,18 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
     }
     
     // Formatting utils
-    const formatCur = (val) => '₹' + parseFloat(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    const formatCur = (val) => val === null || val === undefined ? 'Not recorded' : '₹' + Number(val).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     
     // Chart instances
     let charts = {};
 
-    // Filter toggles
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', () => {
+            const range = btn.dataset.range;
+            if (!range || range === 'custom') return;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            loadDashboard();
-
-    // Handle Filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            let r = this.getAttribute('data-range');
-            if(r && r !== 'custom') {
-                loadDashboard(r);
-            }
-        });
-    });
- // Re-trigger load in real scenario
+            btn.classList.add('active');
+            loadDashboard(range);
         });
     });
 
@@ -384,13 +372,13 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     <div class="kpi-header">
                         <div class="kpi-icon" style="background: #6366F1;"><i class='bx bx-wallet'></i></div>
                         <div class="kpi-title-block">
-                            <div class="kpi-label">Total Revenue</div>
+                            <div class="kpi-label">Cash Received</div>
                             <div class="kpi-val">${formatCur(kpi.total_rent)}</div>
                         </div>
                     </div>
                     <div class="kpi-trend-row">
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.rent_growth}</span> 
-                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                        <span class="kpi-trend-ctx"></span>
                     </div>
                 </div>
                 <div class="kpi-card">
@@ -403,7 +391,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                     <div class="kpi-trend-row">
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.elec_growth}</span> 
-                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                        <span class="kpi-trend-ctx"></span>
                     </div>
                 </div>
                 <div class="kpi-card">
@@ -416,7 +404,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                     <div class="kpi-trend-row">
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.out_growth}</span> 
-                        <span class="kpi-trend-ctx">vs previous 3 months</span>
+                        <span class="kpi-trend-ctx"></span>
                     </div>
                 </div>
                 <div class="kpi-card">
@@ -429,7 +417,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
                     </div>
                     <div class="kpi-trend-row">
                         <span class="kpi-trend"><i class='bx bx-trending-up'></i> ${kpi.overdue_growth}</span> 
-                        <span class="kpi-trend-ctx">more than last month</span>
+                        <span class="kpi-trend-ctx"></span>
                     </div>
                 </div>
             `;
@@ -487,7 +475,7 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
             let ageHTML = '';
             let totalOut = 0;
             ageData.forEach(a => {
-                if(a.total) totalOut = a.total;
+                if(Object.prototype.hasOwnProperty.call(a, 'total')) totalOut = a.total;
                 else {
                     ageHTML += `
                     <div class="receivable-card">
@@ -683,18 +671,6 @@ $admin_user = htmlspecialchars($_SESSION['admin'], ENT_QUOTES, 'UTF-8');
 
     // Init
     loadDashboard();
-
-    // Handle Filters
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            let r = this.getAttribute('data-range');
-            if(r && r !== 'custom') {
-                loadDashboard(r);
-            }
-        });
-    });
 
 </script>
 </body>

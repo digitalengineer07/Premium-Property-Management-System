@@ -255,7 +255,7 @@ if (!$shared_info) {
     });
 
     function formatCur(val) {
-        return '₹' + parseFloat(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+        return val === null ? 'Not recorded' : '₹' + Number(val).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     const authToken = "<?php echo $token; ?>";
