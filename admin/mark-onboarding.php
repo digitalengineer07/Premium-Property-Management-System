@@ -1,27 +1,22 @@
 <?php
-require_once "../db.php";
+require_once '../db.php';
+require_once __DIR__ . '/../includes/accounting_store.php';
 session_start();
 
-if (!isset($_SESSION['admin'])) {
-    die("Access denied");
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = (int)($_POST['user_id'] ?? 0);
-    $status = (int)($_POST['status'] ?? 1);
-    
-    // Ensure column exists
-    mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0");
-    
-    $stmt = mysqli_prepare($conn, "UPDATE users SET onboarding_completed = ? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
-    if (mysqli_stmt_execute($stmt)) {
-        $_SESSION['admin_success'] = "Onboarding status updated manually.";
-    } else {
-        $_SESSION['admin_error'] = "Failed to update onboarding status.";
-    }
-    mysqli_stmt_close($stmt);
-    
-    header("Location: view-renter.php?id=" . $user_id);
+if (!isset($_SESSION['admin']) || $_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf'] ?? '')) {
+    http_response_code(403);
     exit;
 }
+
+$user = (int)($_POST['user_id'] ?? 0);
+try {
+    accounting_record_existing_deposit($conn, $user, trim($_POST['amount'] ?? ''), trim($_POST['receipt'] ?? ''),
+        payment_form_reference('HIST-DEP-'), $_POST['received_date'] ?? '');
+    $_SESSION['deposit_notice'] = 'Verified security deposit receipt recorded.';
+} catch (InvalidArgumentException $error) {
+    $_SESSION['deposit_notice'] = $error->getMessage();
+} catch (Throwable $error) {
+    error_log('Deposit recording failed: ' . $error->getMessage());
+    $_SESSION['deposit_notice'] = 'Unable to record the security deposit.';
+}
+header('Location: view-renter.php?id=' . $user);

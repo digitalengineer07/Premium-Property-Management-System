@@ -32,28 +32,10 @@ $rent_due = ($balance['gross_paise'] - $balance['components']['amount']) / 100;
 $unbilled_adj = 0;
 $total_due = $balance['net_paise'] / 100;
 
-/* Calculate Onboarding Dues */
-// Run alter silently just in case
-try { mysqli_query($conn, "ALTER TABLE users ADD COLUMN onboarding_completed TINYINT(1) DEFAULT 0"); } catch (Exception $e) {}
-
-$sec_due = 0;
-$adv_due = 0;
-
-$u_q = mysqli_query($conn, "SELECT onboarding_completed FROM users WHERE id=$user_id");
-$u_data = mysqli_fetch_assoc($u_q);
-$onboarding_completed = $u_data['onboarding_completed'] ?? 0;
-
-if (!$onboarding_completed) {
-    $sec_target = (float)($user['security_deposit'] ?? 0);
-    $qSecPaid = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id=$user_id AND bill_type='security_deposit'");
-    $sec_paid = (float)(mysqli_fetch_assoc($qSecPaid)['total'] ?? 0);
-    $sec_due = max(0, $sec_target - $sec_paid);
-
-    // Rent is charged through invoices; never demand a second joining payment.
-    $adv_due = 0;
-}
-
-$onboarding_due = $sec_due + $adv_due;
+/* Calculate the deposit balance from posted receipts. */
+require_once __DIR__ . '/../includes/accounting_store.php';
+$depositTarget = accounting_paise($user['security_deposit'] ?? 0);
+$onboarding_due = max(0, $depositTarget - accounting_deposit_paid($conn, $user_id)) / 100;
 /* Last payment */
 $stmt = mysqli_prepare($conn, "SELECT payment_date, paid_amount AS total_amount, month FROM payments WHERE user_id = ? ORDER BY id DESC LIMIT 1");
 mysqli_stmt_bind_param($stmt, "i", $user_id);

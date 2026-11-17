@@ -54,38 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['error'] = $failure->getMessage();
                     header('Location: add-renter.php'); exit;
                 }
-                // --- STRICT ONBOARDING PROTOCOL ---
-                // The collected amount must be either exactly 1x Rent (goes to Sec Deposit) 
-                // or exactly 2x Rent (1x Sec Deposit, 1x Advance for first month).
-                // Or 0 if they haven't paid yet.
-                if ($total_collected > 0 && $total_collected != $fixed_rent && $total_collected != ($fixed_rent * 2)) {
-                    $error = "System Protocol Violation: The total collected amount (₹$total_collected) must be exactly equal to 1 month's rent (₹$fixed_rent) OR exactly double the rent (₹" . ($fixed_rent * 2) . "). Partial amounts are not accepted.";
-                } else {
-                    // Split the total collected amount based on protocol
-                    if ($total_collected == ($fixed_rent * 2)) {
-                        $amount_to_sec = $fixed_rent;
-                        $amount_to_first_month = $fixed_rent;
-                    } else if ($total_collected == $fixed_rent) {
-                        $amount_to_sec = $fixed_rent;
-                        $amount_to_first_month = 0;
-                    } else {
-                        // For 0 or other cases handled above
-                        $amount_to_sec = 0;
-                        $amount_to_first_month = 0;
-                    }
-                    
-                    // The actual security deposit stored in the DB is what they paid
-                    $security_deposit = $fixed_rent; // Deposit target is separate from collected cash.
-                }
-                
-                if ($error !== '' || $fixed_rent <= 0 || $fixed_maintenance < 0 || $total_collected < 0 || $base_reading < 0) {
-                    $_SESSION['error'] = $error ?: 'Rent must be positive and charges cannot be negative.';
+                $receivedPaise = accounting_paise($_POST['advance_payment'] ?? '0');
+                $rentPaise = accounting_paise($_POST['fixed_rent'] ?? '0');
+                if ($rentPaise <= 0 || $fixed_maintenance < 0 || $base_reading < 0 ||
+                    !in_array($receivedPaise, [0, $rentPaise, 2 * $rentPaise], true)) {
+                    $_SESSION['error'] = 'Enter a positive rent, nonnegative charges, and a joining payment of zero, one month, or two months of rent.';
                     header('Location: add-renter.php');
                     exit;
                 }
-                // Set onboarding completed flag if they fully paid
-                $onboarding_completed = ($total_collected >= ($security_deposit + $fixed_rent)) ? 1 : 0;
-                
+                $total_collected = accounting_decimal($receivedPaise);
+                $security_deposit = accounting_decimal($rentPaise);
+                $onboarding_completed = 0;
+
                 $joining_date = $_POST['joining_date'] ?? null;
                 if(empty($joining_date)) $joining_date = date('Y-m-d');
                 $block = trim($_POST['block'] ?? '');

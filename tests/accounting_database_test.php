@@ -100,4 +100,17 @@ check(null, api_validate_token($conn, $token), 'Expired session rejected');
 $token = api_issue_token($conn, 1, 'resident', 'hash-two');
 accounting_query($conn,"UPDATE users SET status='inactive' WHERE id=1");
 check(null, api_validate_token($conn, $token), 'Inactive account cannot use existing session');
+accounting_query($conn, 'INSERT INTO users(id) VALUES(5)');
+accounting_record_existing_deposit($conn, 5, '6000.01', 'paper-5a', 'historical-5a', '2026-01-01');
+accounting_record_existing_deposit($conn, 5, '6000.01', 'paper-5a', 'historical-5a', '2026-01-01');
+check(600001, accounting_deposit_paid($conn, 5), 'Historical deposit retry does not double-count');
+try {
+    accounting_record_existing_deposit($conn, 5, '100', 'paper-5a', 'historical-5b', '2026-01-01');
+    throw new LogicException('Duplicate original receipt was accepted.');
+} catch (InvalidArgumentException $expected) {
+    check(600001, accounting_deposit_paid($conn, 5), 'Historical receipt cannot be recorded twice');
+}
+accounting_record_existing_deposit($conn, 5, '3999.99', 'paper-5b', 'historical-5c', '2026-01-02');
+check(1000000, accounting_deposit_paid($conn, 5), 'Partial historical deposits add up exactly');
+check(null, mysqli_fetch_row(accounting_query($conn, 'SELECT rent_billing_mode FROM users WHERE id=5'))[0], 'Historical deposit does not infer a rent agreement');
 echo "$checks total unit and database checks passed\n";

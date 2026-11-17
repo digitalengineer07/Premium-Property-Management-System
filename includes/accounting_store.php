@@ -129,6 +129,30 @@ function accounting_specific_payment($conn, int $user, string $type, int $id, $a
     });
 }
 
+function accounting_deposit_paid($conn, int $user): int {
+    $row = mysqli_fetch_row(accounting_query($conn, "SELECT COALESCE(SUM(paid_amount),0) FROM payments WHERE user_id=$user AND bill_type='security_deposit'"));
+    return accounting_paise($row[0]);
+}
+
+function accounting_record_existing_deposit($conn, int $user, string $amount, string $transaction, string $reference, string $date): void {
+    accounting_atomic($conn, function () use ($conn, $user, $amount, $transaction, $reference, $date) {
+        $profile = mysqli_fetch_assoc(accounting_query($conn, "SELECT security_deposit FROM users WHERE id=$user FOR UPDATE"));
+        if (!$profile) throw new InvalidArgumentException('Resident not found.');
+        $received = accounting_paise($amount);
+        if ($received <= 0 || trim($transaction) === '' || strlen($transaction) > 100) throw new InvalidArgumentException('Enter a positive amount and an original receipt reference of up to 100 characters.');
+        if (!accounting_claim_receipt($conn, $user, $received, 'Historical Deposit', $transaction, $reference)) return;
+        $target = accounting_paise($profile['security_deposit']);
+        $paid = accounting_deposit_paid($conn, $user);
+        if ($received > $target - $paid) throw new InvalidArgumentException('Amount exceeds the remaining security deposit.');
+        if (mysqli_num_rows(accounting_query($conn, "SELECT id FROM payments WHERE user_id=$user AND transaction_id='" . mysqli_real_escape_string($conn, $transaction) . "' LIMIT 1"))) {
+            throw new InvalidArgumentException('This receipt is already in the ledger. Review its existing allocation.');
+        }
+        accounting_post($conn, $user, 'security_deposit', 0, 'Security Deposit', $received, 'Historical Deposit', $received, $transaction, $reference, $date);
+        if ($paid + $received === $target) accounting_query($conn, "UPDATE users SET onboarding_completed=1 WHERE id=$user");
+        accounting_event($conn, 'historical_deposit', $user, $reference, ['amount'=>accounting_decimal($received),'receipt'=>$transaction,'date'=>$date]);
+    });
+}
+
 function accounting_onboarding($conn, int $user, $amount, string $mode, string $transaction, string $reference) {
     return accounting_atomic($conn, function () use ($conn, $user, $amount, $mode, $transaction, $reference) {
         $profile = mysqli_fetch_assoc(accounting_query($conn, "SELECT * FROM users WHERE id=$user FOR UPDATE"));
@@ -138,7 +162,7 @@ function accounting_onboarding($conn, int $user, $amount, string $mode, string $
         if ($received === 0) return true; // No payment evidence means billing mode remains undecided.
         if (!accounting_claim_receipt($conn, $user, $received, $mode, $transaction, $reference)) return false;
         $rent = accounting_paise($profile['fixed_rent']);
-        $secPaid = accounting_paise(mysqli_fetch_row(accounting_query($conn, "SELECT COALESCE(SUM(paid_amount),0) FROM payments WHERE user_id=$user AND bill_type='security_deposit'"))[0]);
+        $secPaid = accounting_deposit_paid($conn, $user);
         $depositDue = max(0, accounting_paise($profile['security_deposit']) - $secPaid);
         if (empty($profile['rent_billing_mode']) && !in_array($received, [$depositDue, $depositDue + $rent], true)) throw new InvalidArgumentException('Joining payment must cover the deposit, or the deposit plus the first month rent.');
         $sec = min($received, max(0, accounting_paise($profile['security_deposit']) - $secPaid));

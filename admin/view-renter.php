@@ -261,19 +261,6 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
-                        <?php if(!($user['onboarding_completed'] ?? 0)): ?>
-                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                            <input type="hidden" name="status" value="1">
-                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #10B981; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-check-shield' style="font-size: 16px;"></i> Mark Onboarding Paid</button>
-                        </form>
-                        <?php else: ?>
-                        <form action="mark-onboarding.php" method="POST" style="margin:0;">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                            <input type="hidden" name="status" value="0">
-                            <button type="submit" style="width: 100%; padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-x-circle' style="font-size: 16px;"></i> Undo Onboarding</button>
-                        </form>
-                        <?php endif; ?>
                         <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
                     </div>
                 </div>
@@ -341,13 +328,15 @@ $admin_user = s($_SESSION['admin'] ?? '');
                       </div>
                   </div>
                     
+                    <?php if (isset($_SESSION['deposit_notice'])): ?>
+                        <p role="status"><?php echo s($_SESSION['deposit_notice']); unset($_SESSION['deposit_notice']); ?></p>
+                    <?php endif; ?>
                     <!-- Security Deposit -->
                     <?php
-                        $user_id_for_sec = $user['id'];
-                        $sec_target = (float)($user['security_deposit'] ?? 0);
-                        $sec_paid_q = mysqli_query($conn, "SELECT SUM(paid_amount) as total FROM payments WHERE user_id = $user_id_for_sec AND bill_type = 'security_deposit'");
-                        $sec_paid = (float)(mysqli_fetch_assoc($sec_paid_q)['total'] ?? 0);
-                        
+                        require_once __DIR__ . '/../includes/accounting_store.php';
+                        $sec_target = accounting_paise($user['security_deposit'] ?? 0) / 100;
+                        $sec_paid = accounting_deposit_paid($conn, (int)$user['id']) / 100;
+
                         $is_fully_paid = ($sec_paid >= $sec_target && $sec_target > 0);
                         $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
                         $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
@@ -364,6 +353,18 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo format_inr($sec_paid, 2); ?></div>
                             <?php if (!$is_fully_paid && $sec_target > 0): ?>
                                 <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo format_inr($sec_target - $sec_paid); ?></div>
+                                <details style="margin-top: 10px;">
+                                    <summary>Record verified past deposit</summary>
+                                    <form method="post" action="mark-onboarding.php">
+                                        <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
+                                        <input type="hidden" name="csrf" value="<?php echo s(getCsrfToken()); ?>">
+                                        <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
+                                        <label>Amount <input name="amount" type="number" min="0.01" max="<?php echo s(number_format($sec_target - $sec_paid, 2, '.', '')); ?>" step="0.01" required></label>
+                                        <label>Original receipt reference <input name="receipt" maxlength="100" required></label>
+                                        <label>Date received <input name="received_date" type="date" max="<?php echo date('Y-m-d'); ?>" required></label>
+                                        <button class="btn-outline" type="submit">Record deposit</button>
+                                    </form>
+                                </details>
                             <?php endif; ?>
                         </div>
                     </div>
