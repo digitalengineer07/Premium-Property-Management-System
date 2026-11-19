@@ -20,12 +20,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $external = trim($_POST['transaction_id'] ?? '');
             if ($external === '' && in_array($mode, ['Cash','Cash/Offline','Offline'], true)) $external = $reference;
             $target = !empty($_POST['month']) ? accounting_month($_POST['month']) : null;
-            if (($_POST['bill_type'] ?? '') === 'advance') {
+            if (($_POST['bill_type'] ?? '') === 'security_deposit') {
+                $ref = payment_form_reference('DEP-');
+                accounting_record_deposit($conn, $uid, $_POST['amount'] ?? 0, $mode, $external ?: $ref, $ref, $_POST['payment_date'] ?? null, $_POST['payment_time'] ?? null);
+                $success_msg = 'Security deposit payment posted successfully.';
+            } elseif (($_POST['bill_type'] ?? '') === 'advance') {
                 accounting_specific_payment($conn, $uid, 'advance', 0, $_POST['amount'] ?? 0, $mode, $external, $reference);
+                $success_msg = 'Advance payment posted to resident wallet.';
             } else {
                 allocate_bulk_payment($conn, $uid, $_POST['amount'] ?? 0, $mode, $external, $reference, $target);
+                $success_msg = 'Receipt posted to open invoices; any excess is wallet credit.';
             }
-            $success_msg = 'Receipt posted to open invoices; any excess is wallet credit.';
         } elseif (isset($_POST['delete_payment_id'])) {
             accounting_reverse_receipt($conn, (int)$_POST['delete_payment_id'], $_POST['reversal_reason'] ?? '');
             $success_msg = 'Receipt reversed. Original accounting history has been retained.';
@@ -353,6 +358,8 @@ while ($row = mysqli_fetch_assoc($users_res)) $all_users[] = $row;
                             <option value="rent">Rent</option>
                             <option value="electricity">Electricity</option>
                             <option value="elec_rent">Rent + Electricity</option>
+                            <option value="security_deposit">Security Deposit</option>
+                            <option value="advance">Advance / Wallet</option>
                             <option value="other">Other / Misc</option>
                         </select>
                     </div>

@@ -56,14 +56,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $receivedPaise = accounting_paise($_POST['advance_payment'] ?? '0');
                 $rentPaise = accounting_paise($_POST['fixed_rent'] ?? '0');
-                if ($rentPaise <= 0 || $fixed_maintenance < 0 || $base_reading < 0 ||
-                    !in_array($receivedPaise, [0, $rentPaise, 2 * $rentPaise], true)) {
-                    $_SESSION['error'] = 'Enter a positive rent, nonnegative charges, and a joining payment of zero, one month, or two months of rent.';
+                $depositInput = trim($_POST['security_deposit'] ?? '');
+                $depositPaise = ($depositInput !== '') ? accounting_paise($depositInput) : $rentPaise;
+
+                $validJoiningAmounts = [0, $depositPaise, $depositPaise + $rentPaise];
+                if ($rentPaise <= 0 || $fixed_maintenance < 0 || $base_reading < 0 || $depositPaise < 0 ||
+                    !in_array($receivedPaise, $validJoiningAmounts, true)) {
+                    $_SESSION['error'] = 'Enter positive rent, valid charges, and an initial payment of either zero (₹0), full deposit (₹' . accounting_decimal($depositPaise) . '), or deposit + 1st month rent (₹' . accounting_decimal($depositPaise + $rentPaise) . ').';
                     header('Location: add-renter.php');
                     exit;
                 }
                 $total_collected = accounting_decimal($receivedPaise);
-                $security_deposit = accounting_decimal($rentPaise);
+                $security_deposit = accounting_decimal($depositPaise);
                 $onboarding_completed = 0;
 
                 $joining_date = $_POST['joining_date'] ?? null;
@@ -344,31 +348,13 @@ $admin_user = s($_SESSION['admin']);
 
                     <div style="margin-bottom: 30px;">
                         <div class="section-title">Financial Initial Setup</div>
-                        <div class="form-group">
-                            <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
-                                <div style="flex: 1;">
-                                    <label class="form-label" style="font-weight: 600; color: var(--text-dark);" title="Total cash collected at joining">Total Initial Payment (₹)</label>
-                                <div style="position: relative; height: 48px;">
-                                    <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
-                                    <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="0" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
-                                </div>
-                            </div>
-                                <div style="display: flex; align-items: flex-end;">
-                                    <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
-                                </div>
-                            </div>
-                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Record the total payment received during onboarding. Security Deposit will be automatically set equal to 1 month's rent.</p>
-                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: var(--white); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
-                                <img id="advanceQRImg" src="" alt="Advance QR" style="width: 150px; height: 150px; display: inline-block;">
-                                <p style="font-size: 11px; font-weight: 600; color: #10B981; margin-top: 8px;">Scan to pay Advance via UPI</p>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 20px;">
                             <div class="form-group">
                                 <label>Monthly Rent Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="<?php echo htmlspecialchars($_POST['fixed_rent'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_rent" id="fixedRentInput" value="<?php echo htmlspecialchars($_POST['fixed_rent'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0" oninput="updateDepositDefaults()">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly rent for this renter.</p>
                             </div>
@@ -376,9 +362,37 @@ $admin_user = s($_SESSION['admin']);
                                 <label>Monthly Maintenance Amount</label>
                                 <div style="position: relative; display: flex; align-items: center;">
                                     <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
-                                    <input type="number" step="0.01" name="fixed_maintenance" value="<?php echo htmlspecialchars($_POST['fixed_maintenance'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0">
+                                    <input type="number" step="0.01" name="fixed_maintenance" id="fixedMaintInput" value="<?php echo htmlspecialchars($_POST['fixed_maintenance'] ?? '0'); ?>" style="padding-left: 40px;" placeholder="0" oninput="updateDepositDefaults()">
                                 </div>
                                 <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Fixed monthly maintenance for this renter.</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Security Deposit Target</label>
+                                <div style="position: relative; display: flex; align-items: center;">
+                                    <span style="position: absolute; left: 16px; font-size: 15px; color: #94A3B8; font-weight: 600; pointer-events: none;">₹</span>
+                                    <input type="number" step="0.01" name="security_deposit" id="secDepositInput" value="<?php echo htmlspecialchars($_POST['security_deposit'] ?? ''); ?>" style="padding-left: 40px;" placeholder="e.g. 11000">
+                                </div>
+                                <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Target security deposit (defaults to Rent + Maintenance).</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="display: flex; gap: 10px; align-items: stretch; width: 100%;">
+                                <div style="flex: 1;">
+                                    <label class="form-label" style="font-weight: 600; color: var(--text-dark);" title="Total cash collected at joining">Total Initial Payment Received (₹)</label>
+                                <div style="position: relative; height: 48px;">
+                                    <i class='bx bx-wallet' style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 20px;"></i>
+                                    <input type="number" step="0.01" name="advance_payment" id="totalPaymentInput" value="<?php echo htmlspecialchars($_POST['advance_payment'] ?? '0'); ?>" style="padding-left: 40px; height: 100%; border-radius: 12px; border: 1px solid var(--border);" placeholder="0">
+                                </div>
+                            </div>
+                                <div style="display: flex; align-items: flex-end;">
+                                    <button type="button" class="btn-outline" onclick="generateAdvanceQR()" style="padding: 0 16px; border-radius: 12px; height: 48px; flex-shrink: 0;"><i class='bx bx-qr-scan'></i> QR</button>
+                                </div>
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-gray); margin-top: 8px;">Enter ₹0 if unpaid at onboarding, or enter the collected deposit amount (or deposit + first month's rent).</p>
+                            <div id="advanceQRContainer" style="display: none; margin-top: 15px; text-align: center; background: var(--white); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+                                <img id="advanceQRImg" src="" alt="Advance QR" style="width: 150px; height: 150px; display: inline-block;">
+                                <p style="font-size: 11px; font-weight: 600; color: #10B981; margin-top: 8px;">Scan to pay Advance via UPI</p>
                             </div>
                         </div>
                     </div>
@@ -400,20 +414,21 @@ $admin_user = s($_SESSION['admin']);
 </main>
 
 <script>
+function updateDepositDefaults() {
+    const rent = parseFloat(document.getElementById('fixedRentInput').value) || 0;
+    const maint = parseFloat(document.getElementById('fixedMaintInput').value) || 0;
+    const secInput = document.getElementById('secDepositInput');
+    if (secInput && !secInput.dataset.manual) {
+        secInput.value = rent > 0 ? (rent + maint) : '';
+    }
+}
+document.getElementById('secDepositInput')?.addEventListener('input', function() {
+    this.dataset.manual = 'true';
+});
+
 function generateAdvanceQR() {
-    let amount = document.getElementsByName('advance_payment')[0].value;
-    if (amount === '' || parseFloat(amount) < 0) {
-        alert('Advance Payment must be 0 or greater');
-        return;
-    }
-    
-    let secAmount = document.getElementsByName('security_deposit')[0].value;
-    if (secAmount === '' || parseFloat(secAmount) < 0) {
-        alert('Security Deposit must be 0 or greater');
-        return;
-    }
-    
-    if(amount > 0) {
+    let amount = parseFloat(document.getElementById('totalPaymentInput').value) || 0;
+    if (amount > 0) {
         let upiId = "nikhil119124-1@oksbi"; 
         let name = "Nikhil Kumar";
         let upiUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(name)}&tr=ADVANCE&am=${amount}&cu=INR`;
@@ -421,7 +436,7 @@ function generateAdvanceQR() {
         qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
         document.getElementById('advanceQRContainer').style.display = 'block';
     } else {
-        alert("Please enter a valid advance amount first.");
+        alert("Please enter an initial payment amount greater than 0 first.");
     }
 }
 
@@ -439,15 +454,15 @@ document.querySelectorAll('.pwd-toggle').forEach(icon => {
 
 function confirmSubmission(e) {
     const totalPayment = parseFloat(document.getElementById('totalPaymentInput').value) || 0;
-    const securityDeposit = parseFloat(document.getElementById('securityDepositInput').value) || 0;
+    const securityDeposit = parseFloat(document.getElementById('secDepositInput')?.value) || 0;
     const fixedRent = parseFloat(document.getElementById('fixedRentInput').value) || 0;
-    
     const expectedFull = securityDeposit + fixedRent;
     
+    if (totalPayment > 0 && totalPayment !== securityDeposit && totalPayment !== expectedFull) {
         const fmtTotal = totalPayment.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const fmtSec = securityDeposit.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const fmtFull = expectedFull.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${fmtTotal}) does not exactly match the expected Security Deposit (₹${fmtSec}) or Full Onboarding (₹${fmtFull}).\n\nAre you sure you want to proceed with this custom amount?`);
+        const proceed = confirm(`Warning:\nThe Total Initial Payment entered (₹${fmtTotal}) does not match the Security Deposit (₹${fmtSec}) or Deposit + 1st Month (₹${fmtFull}).\n\nDo you want to proceed?`);
         if (!proceed) {
             e.preventDefault();
             return false;

@@ -57,7 +57,13 @@ $elec_due = (float)($r2a['elec_total'] ?? 0);
 $rent_portion_due = (float)($r2a['rent_portion_total'] ?? 0);
 mysqli_stmt_close($stmt_r2);
 
-$total_outstanding = max(0, $pure_rent_due + $rent_portion_due + $elec_due - (float)($user['pending_adjustment'] ?? 0));
+require_once __DIR__ . '/../includes/accounting_store.php';
+$sec_target = accounting_paise($user['security_deposit'] ?? 0) / 100;
+$sec_paid = accounting_deposit_paid($conn, (int)$user['id']) / 100;
+$sec_due = max(0, $sec_target - $sec_paid);
+$is_fully_paid = ($sec_paid >= $sec_target && $sec_target > 0);
+
+$total_outstanding = max(0, $pure_rent_due + $rent_portion_due + $elec_due + $sec_due - (float)($user['pending_adjustment'] ?? 0));
 
 
 /* Fetch electricity records */
@@ -261,6 +267,9 @@ $admin_user = s($_SESSION['admin'] ?? '');
                         <button onclick="openAadhaarModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-id-card' style="font-size: 16px; color: #3B82F6;"></i> Aadhaar</button>
                         <button onclick="openElectricityModal(); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-bolt-circle' style="font-size: 16px; color: #10B981;"></i> Electricity Bill Copy</button>
                         <a href="../onboarding-guide.php?id=<?php echo $user['id']; ?>" target="_blank" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-dark); cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;" onclick="document.getElementById('moreDropdown').style.display='none';"><i class='bx bx-book-open' style="font-size: 16px; color: #F59E0B;"></i> Guide</a>
+                        <?php if (!$is_fully_paid && $sec_target > 0): ?>
+                        <button onclick="openPaymentModal('security_deposit', <?php echo (int)$user['id']; ?>, <?php echo number_format($sec_due, 2, '.', ''); ?>, 'Security Deposit'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; border-bottom: 1px solid var(--border); font-size: 13px; color: #F59E0B; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-shield-plus' style="font-size: 16px; color: #F59E0B;"></i> Record Deposit</button>
+                        <?php endif; ?>
                         <button onclick="resetPassword(<?php echo $user['id']; ?>, '<?php echo addslashes($user['name']); ?>'); document.getElementById('moreDropdown').style.display='none';" style="padding: 12px 16px; text-align: left; background: none; border: none; font-size: 13px; color: #EF4444; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt' style="font-size: 16px;"></i> Password</button>
                     </div>
                 </div>
@@ -328,16 +337,24 @@ $admin_user = s($_SESSION['admin'] ?? '');
                       </div>
                   </div>
                     
-                    <?php if (isset($_SESSION['deposit_notice'])): ?>
-                        <p role="status"><?php echo s($_SESSION['deposit_notice']); unset($_SESSION['deposit_notice']); ?></p>
+                    <?php if (isset($_SESSION['success']) || isset($_SESSION['deposit_notice'])): 
+                        $msg = $_SESSION['success'] ?? $_SESSION['deposit_notice'];
+                        unset($_SESSION['success'], $_SESSION['deposit_notice']);
+                    ?>
+                        <div style="margin-bottom: 20px; padding: 14px 18px; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; border-radius: 12px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <i class='bx bx-check-circle' style="font-size: 20px; color: #10B981;"></i> <?php echo s($msg); ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['error'])): 
+                        $errMsg = $_SESSION['error'];
+                        unset($_SESSION['error']);
+                    ?>
+                        <div style="margin-bottom: 20px; padding: 14px 18px; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 12px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <i class='bx bx-error-circle' style="font-size: 20px; color: #EF4444;"></i> <?php echo s($errMsg); ?>
+                        </div>
                     <?php endif; ?>
                     <!-- Security Deposit -->
                     <?php
-                        require_once __DIR__ . '/../includes/accounting_store.php';
-                        $sec_target = accounting_paise($user['security_deposit'] ?? 0) / 100;
-                        $sec_paid = accounting_deposit_paid($conn, (int)$user['id']) / 100;
-
-                        $is_fully_paid = ($sec_paid >= $sec_target && $sec_target > 0);
                         $badge_color = $is_fully_paid ? '#10B981' : '#F59E0B';
                         $badge_bg = $is_fully_paid ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)';
                     ?>
@@ -346,25 +363,20 @@ $admin_user = s($_SESSION['admin'] ?? '');
                             <div style="width: 56px; height: 56px; border-radius: 16px; background: <?php echo $badge_bg; ?>; display: flex; align-items: center; justify-content: center; color: <?php echo $badge_color; ?>; font-size: 28px; flex-shrink: 0;"><i class='bx bx-lock-alt'></i></div>
                             <div>
                                 <div style="font-weight: 800; color: var(--text-dark); font-size: 17px; margin-bottom: 6px;">Security Deposit</div>
-                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo format_inr($sec_paid); ?> / Target: ₹<?php echo format_inr($sec_target); ?></div>
+                                <div style="color: var(--text-gray); font-size: 13px; font-weight: 500;">Paid: ₹<?php echo format_inr($sec_paid, 2); ?> / Target: ₹<?php echo format_inr($sec_target, 2); ?></div>
                             </div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-weight: 800; font-size: 22px; color: <?php echo $badge_color; ?>;">₹<?php echo format_inr($sec_paid, 2); ?></div>
-                            <?php if (!$is_fully_paid && $sec_target > 0): ?>
-                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo format_inr($sec_target - $sec_paid); ?></div>
-                                <details style="margin-top: 10px;">
-                                    <summary>Record verified past deposit</summary>
-                                    <form method="post" action="mark-onboarding.php">
-                                        <input type="hidden" name="user_id" value="<?php echo (int)$user['id']; ?>">
-                                        <input type="hidden" name="csrf" value="<?php echo s(getCsrfToken()); ?>">
-                                        <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
-                                        <label>Amount <input name="amount" type="number" min="0.01" max="<?php echo s(number_format($sec_target - $sec_paid, 2, '.', '')); ?>" step="0.01" required></label>
-                                        <label>Original receipt reference <input name="receipt" maxlength="100" required></label>
-                                        <label>Date received <input name="received_date" type="date" max="<?php echo date('Y-m-d'); ?>" required></label>
-                                        <button class="btn-outline" type="submit">Record deposit</button>
-                                    </form>
-                                </details>
+                            <?php if ($is_fully_paid): ?>
+                                <div style="margin-top: 6px;"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #10B981; background: rgba(16,185,129,0.1); padding: 3px 8px; border-radius: 6px;"><i class='bx bx-check-circle'></i> Fully Paid</span></div>
+                            <?php elseif ($sec_target > 0): ?>
+                                <div style="font-size: 12px; color: #EF4444; font-weight: 700; margin-top: 4px;">Due: ₹<?php echo format_inr($sec_due, 2); ?></div>
+                                <div style="margin-top: 8px;">
+                                    <button type="button" onclick="openPaymentModal('security_deposit', <?php echo (int)$user['id']; ?>, <?php echo number_format($sec_due, 2, '.', ''); ?>, 'Security Deposit')" class="btn-primary" style="padding: 6px 14px; font-size: 12px; font-weight: 600; border-radius: 8px; background: #F59E0B; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);">
+                                        <i class='bx bx-credit-card'></i> Record Deposit
+                                    </button>
+                                </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -800,6 +812,7 @@ $admin_user = s($_SESSION['admin'] ?? '');
             
             <form action="mark-paid.php" method="POST" id="formMarkPaid">
             <input type="hidden" name="payment_request_id" value="<?php echo payment_form_nonce(); ?>">
+            <input type="hidden" name="return_url" value="view-renter.php?id=<?php echo (int)$user['id']; ?>">
                 <?php if ($pending_notif_count > 0): ?>
                 <div style="margin-bottom: 20px; padding: 12px; background: #FEF2F2; color: #DC2626; border: 1px solid #FCA5A5; border-radius: 8px; font-size: 13px; font-weight: 600;">
                     ⚠️ This user has <?php echo $pending_notif_count; ?> pending payment notifications! Check the <a href="payment-verifications.php" target="_blank" style="color: #991B1B; text-decoration: underline;">verifications page</a> before adding a manual payment to avoid duplication.
@@ -920,7 +933,11 @@ $admin_user = s($_SESSION['admin'] ?? '');
         document.getElementById('paymentBillAmount').value = amount;
         document.getElementById('paidAmountInput').value = amount;
         const formattedAmt = Number(amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${formattedAmt})`;
+        if (type === 'security_deposit') {
+            document.getElementById('paymentBillInfo').textContent = `Security Deposit (Remaining Due: ₹${formattedAmt})`;
+        } else {
+            document.getElementById('paymentBillInfo').textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} Bill for ${month} (₹${formattedAmt})`;
+        }
         
         // Init date/time
         const now = new Date();
